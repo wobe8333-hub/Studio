@@ -1,0 +1,48 @@
+{
+  "schema_version": "v2.0",
+  "profiles": {
+    "knowledge_dark": {
+      "hook_template": "이 영상에서는 {topic}에 대해 사람들이 잘 모르는 진실을 간단하게 보여줍니다.",
+      "promise_template": "{topic}를 이해하는 데 꼭 필요한 3가지 핵심 원리를 끝까지 보면 모두 가져갈 수 있습니다.",
+      "section_heading_template": "섹션 {index}. {topic}의 핵심 포인트 {index}",
+      "section_narration_template": "{topic}의 핵심 개념 {index}를 직관적으로 설명합니다. 시청자가 바로 행동으로 옮길 수 있도록 구체적인 예시를 포함합니다.",
+      "asset_prompt_template": "Topic: {topic}. Section {index}. High quality cinematic still explaining a key concept in personal finance. Clear composition, easy to understand for beginners."
+    },
+    "storytelling": {
+      "hook_template": "이야기는 한 사람의 선택에서 시작됩니다. 오늘은 {topic}을 통해 그 선택이 어떻게 역사를 바꿨는지 따라가 봅니다.",
+      "promise_template": "끝까지 보면 {topic}을 전혀 다른 시각에서 보게 될 것입니다.",
+      "section_heading_template": "장면 {index}. {topic}을 움직인 결정적인 순간",
+      "section_narration_template": "감정선을 따라가며 {topic} 사건의 배경과 인물의 갈등을 천천히 풀어줍니다.",
+      "asset_prompt_template": "Topic: {topic}. Scene {index}. Cinematic historical reenactment style frame, dramatic lighting, emotional storytelling, no text overlay."
+    },
+    "documentary": {
+      "hook_template": "지금부터 {topic}에 대한 팩트만 차분하게 정리해 보겠습니다.",
+      "promise_template": "숫자와 자료를 기반으로 {topic}의 실제 모습을 알 수 있습니다.",
+      "section_heading_template": "파트 {index}. {topic}의 사실 관계 정리",
+      "section_narration_template": "{topic}과 관련된 데이터를 차분하게 설명하고, 시청자가 스스로 판단할 수 있도록 맥락을 제공합니다.",
+      "asset_prompt_template": "Topic: {topic}. Part {index}. Documentary style photo with natural colors and realistic lighting, showing context around the topic, no text overlay."
+    },
+    "tech_explainer": {
+      "hook_template": "{topic}을(를) 완전 기초부터 단계별로 정리해 드립니다.",
+      "promise_template": "영상이 끝날 때쯤이면 {topic}을 직접 설명할 수 있을 정도로 이해하게 됩니다.",
+      "section_heading_template": "단계 {index}. {topic}을 이해하기 위한 필수 개념",
+      "section_narration_template": "복잡해 보이는 {topic}을 최대한 단순한 비유와 단계로 나누어 설명합니다.",
+      "asset_prompt_template": "Topic: {topic}. Step {index}. Clean infographic style thumbnail frame, high contrast, large shapes, no tiny text, optimized for readability in 16:9."
+    },
+    "stickman_story": {
+      "hook_template": "오늘은 {topic} 이야기를 스틱맨으로 풀어봅니다.",
+      "promise_template": "끝까지 보면 {topic}을 한 편의 애니메이션으로 기억하게 됩니다.",
+      "section_heading_template": "장면 {index}. {topic}",
+      "section_narration_template": "{topic} 장면 {index}.",
+      "asset_prompt_template": "Simple cartoon background, clean shapes, bold outlines, bright readable composition, 16:9, no text, no watermark."
+    },
+    "simple_character_story": {
+      "hook_template": "오늘은 {topic} 이야기를 심플 캐릭터로 풀어봅니다.",
+      "promise_template": "끝까지 보면 {topic}을 한 편의 애니메이션으로 기억하게 됩니다.",
+      "section_heading_template": "장면 {index}. {topic}",
+      "section_narration_template": "{topic} 장면 {index}.",
+      "asset_prompt_template": "Background scene for {topic}, simple cartoon setting, wide composition, 16:9, no text, no watermark."
+    }
+  }
+}
+

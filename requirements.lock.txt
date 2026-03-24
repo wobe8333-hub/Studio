@@ -1,0 +1,5 @@
+# requirements.lock.txt
+# 이 파일은 .venv 기준 `pip freeze` 결과를 그대로 저장하는 하드락 파일입니다.
+# 실제 환경에서 아래 명령으로 갱신하십시오:
+#   .\.venv\Scripts\pip.exe freeze > requirements.lock.txt
+

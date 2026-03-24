@@ -1,0 +1,12 @@
+{
+  "schema_version": "v2.0",
+  "approved_profiles": [
+    "knowledge_dark",
+    "storytelling",
+    "documentary",
+    "tech_explainer",
+    "stickman_story",
+    "simple_character_story"
+  ]
+}
+

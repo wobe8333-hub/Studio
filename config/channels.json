@@ -1,0 +1,119 @@
+{
+  "schema_version": "v2.0",
+  "channels": [
+    {
+      "channel_id": "finance_01",
+      "niche": "personal finance",
+      "style_profile": "knowledge_dark",
+      "format_id": "explainer",
+      "target_duration_sec": 720,
+      "sections": 6,
+      "upload_per_week": 3,
+      "output_root": "channels/finance_01",
+      "image_provider": "gemini",
+      "image_model_id": "gemini-3.1-flash-image-preview",
+      "image_aspect_ratio": "16:9",
+      "image_size": "2K",
+      "thumbnail_text_policy": "skip",
+      "thumbnail_text_enabled": true,
+      "thumbnail_font_candidates": [
+        "C:/Windows/Fonts/malgun.ttf",
+        "C:/Windows/Fonts/malgunbd.ttf",
+        "C:/Windows/Fonts/arial.ttf"
+      ]
+    },
+    {
+      "channel_id": "history_01",
+      "niche": "history",
+      "style_profile": "storytelling",
+      "format_id": "documentary",
+      "target_duration_sec": 720,
+      "sections": 6,
+      "upload_per_week": 2,
+      "output_root": "channels/history_01",
+      "image_provider": "gemini",
+      "image_model_id": "gemini-3.1-flash-image-preview",
+      "image_aspect_ratio": "16:9",
+      "image_size": "2K",
+      "thumbnail_text_policy": "skip",
+      "thumbnail_text_enabled": true,
+      "thumbnail_font_candidates": [
+        "C:/Windows/Fonts/malgun.ttf",
+        "C:/Windows/Fonts/arial.ttf"
+      ]
+    },
+    {
+      "channel_id": "health_01",
+      "niche": "health",
+      "style_profile": "tech_explainer",
+      "format_id": "list",
+      "target_duration_sec": 720,
+      "sections": 6,
+      "upload_per_week": 2,
+      "output_root": "channels/health_01",
+      "image_provider": "gemini",
+      "image_model_id": "gemini-3.1-flash-image-preview",
+      "image_aspect_ratio": "16:9",
+      "image_size": "2K",
+      "thumbnail_text_policy": "skip",
+      "thumbnail_text_enabled": true,
+      "thumbnail_font_candidates": [
+        "C:/Windows/Fonts/malgun.ttf",
+        "C:/Windows/Fonts/arial.ttf"
+      ]
+    },
+    {
+      "channel_id": "stickman_01",
+      "niche": "stickman story animation",
+      "style_profile": "stickman_story",
+      "format_id": "story",
+      "target_duration_sec": 720,
+      "sections": 6,
+      "upload_per_week": 3,
+      "output_root": "channels/stickman_01",
+      "image_provider": "gemini",
+      "image_model_id": "gemini-2.5-flash-preview-image",
+      "text_model_id": "gemini-3-flash",
+      "image_aspect_ratio": "16:9",
+      "image_size": "2K",
+      "channel_type": "stickman_story",
+      "character_mode": "fixed_asset_overlay",
+      "background_only": true,
+      "image_cache_enabled": true,
+      "thumbnail_text_policy": "skip",
+      "thumbnail_text_enabled": true,
+      "thumbnail_font_candidates": [
+        "C:/Windows/Fonts/malgun.ttf",
+        "C:/Windows/Fonts/malgunbd.ttf",
+        "C:/Windows/Fonts/arial.ttf"
+      ]
+    },
+    {
+      "channel_id": "simplechar_01",
+      "niche": "simple character story animation",
+      "style_profile": "simple_character_story",
+      "format_id": "story",
+      "target_duration_sec": 720,
+      "sections": 6,
+      "upload_per_week": 3,
+      "output_root": "channels/simplechar_01",
+      "image_provider": "gemini",
+      "image_model_id": "gemini-2.5-flash-preview-image",
+      "text_model_id": "gemini-3-flash",
+      "image_aspect_ratio": "16:9",
+      "image_size": "2K",
+      "channel_type": "simple_character_story",
+      "character_mode": "fixed_asset_overlay",
+      "background_only": true,
+      "image_cache_enabled": true,
+      "thumbnail_text_policy": "skip",
+      "thumbnail_text_enabled": true,
+      "thumbnail_font_candidates": [
+        "C:/Windows/Fonts/malgun.ttf",
+        "C:/Windows/Fonts/malgunbd.ttf",
+        "C:/Windows/Fonts/arial.ttf"
+      ]
+    }
+  ]
+}
+

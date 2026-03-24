@@ -1,0 +1,44 @@
+﻿{
+  "updated_at": "2026-03-22T16:44:50Z",
+  "title_mode_weights": {
+    "authority": 0.35,
+    "curiosity": 0.45,
+    "benefit": 0.2
+  },
+  "channel_performance_index": {
+    "CH1": {
+      "avg_ctr_level": "TARGET",
+      "avg_avp": 0.0,
+      "avg_views": 0
+    },
+    "CH2": {
+      "avg_ctr_level": "TARGET",
+      "avg_avp": 0.0,
+      "avg_views": 0
+    },
+    "CH3": {
+      "avg_ctr_level": "TARGET",
+      "avg_avp": 0.0,
+      "avg_views": 0
+    },
+    "CH4": {
+      "avg_ctr_level": "TARGET",
+      "avg_avp": 0.0,
+      "avg_views": 0
+    },
+    "CH5": {
+      "avg_ctr_level": "TARGET",
+      "avg_avp": 0.0,
+      "avg_views": 0
+    }
+  },
+  "trend_response_patterns": [],
+  "topic_blacklist_by_channel": {
+    "CH1": [],
+    "CH2": [],
+    "CH3": [],
+    "CH4": [],
+    "CH5": []
+  },
+  "winning_animation_patterns": []
+}

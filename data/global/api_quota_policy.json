@@ -1,0 +1,80 @@
+﻿{
+  "schema_version": 1,
+  "created_at": "2026-03-22T16:44:50Z",
+  "youtube_data_api": {
+    "daily_quota_limit": 10000,
+    "daily_quota_warning_threshold": 8000,
+    "daily_quota_block_threshold": 9500,
+    "quota_tracking_file": "data/global/quota/youtube_quota_daily.json",
+    "upload_daily_limit": 5,
+    "search_calls_per_channel_per_day": 2,
+    "search_calls_max_per_day_total": 10,
+    "quota_exceeded_action": "\uc2a4\ucf00\uc904 \uc775\uc77c\ub85c \uc774\uc5f0 + decision_trace \uae30\ub85d",
+    "multi_channel_distribution_rule": "\ucc44\ub110\ubcc4 \uc21c\ucc28 \uc5c5\ub85c\ub4dc (\ub3d9\uc2dc \uc5c5\ub85c\ub4dc \uae08\uc9c0)",
+    "peak_day_buffer": 1500,
+    "analytics_api_separate": true,
+    "analytics_quota_limit": 50000
+  },
+  "gemini_api": {
+    "tier": "paid",
+    "rpm_limit": 1000,
+    "rpm_target_max": 50,
+    "rpm_safety_margin": 0.95,
+    "requests_per_video": 15,
+    "max_parallel_videos": 3,
+    "sequential_mode_threshold_rpm": 800,
+    "retry_policy": {
+      "max_retries": 3,
+      "backoff_strategy": "exponential",
+      "initial_wait_sec": 2,
+      "max_wait_sec": 60,
+      "retry_on_status": [
+        429,
+        503,
+        500
+      ]
+    },
+    "cache_policy": {
+      "enabled": true,
+      "cache_ttl_hours": 24,
+      "cacheable_requests": [
+        "system_prompt",
+        "style_template",
+        "affiliate_insert_template"
+      ],
+      "cache_store": "data/global/cache/gemini_cache.json",
+      "cache_hit_log": "data/global/cache/cache_hit_log.jsonl"
+    },
+    "image_generation": {
+      "daily_limit": 500,
+      "daily_warning_threshold": 400,
+      "images_per_video_max": 15,
+      "batch_size": 3,
+      "batch_interval_sec": 2
+    },
+    "token_optimization": {
+      "script_max_output_tokens": 4000,
+      "manim_code_max_output_tokens": 2000,
+      "title_tag_max_output_tokens": 500,
+      "system_prompt_caching": true
+    }
+  },
+  "ytdlp": {
+    "requests_per_minute_limit": 30,
+    "sleep_interval_sec": 2,
+    "sleep_interval_requests": 10,
+    "user_agent_rotation": true,
+    "user_agent_pool_size": 5,
+    "retry_on_block": true,
+    "retry_wait_min": 300,
+    "concurrent_channels_limit": 2,
+    "daily_trend_collection_limit_per_channel": 2
+  },
+  "quota_alert_rules": {
+    "youtube_80pct": "WARN + decision_trace \uae30\ub85d",
+    "youtube_95pct": "BLOCK \uc5c5\ub85c\ub4dc + \uc775\uc77c \uc774\uc5f0",
+    "gemini_rpm_80pct": "\uc21c\ucc28 \ucc98\ub9ac \uc804\ud658",
+    "gemini_image_daily_80pct": "\uc774\ubbf8\uc9c0 \uc0dd\uc131 \ud488\uc9c8 \ud558\ud5a5 + WARN",
+    "ytdlp_block_detected": "30\ubd84 \ub300\uae30 \ud6c4 \uc7ac\uc2dc\ub3c4"
+  }
+}

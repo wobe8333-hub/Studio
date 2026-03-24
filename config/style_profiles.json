@@ -1,0 +1,73 @@
+{
+  "schema_version": "v2.0",
+  "profiles": {
+    "knowledge_dark": {
+      "tone": "authoritative",
+      "subtitle_style": "minimal_bottom",
+      "transition_style": "fade",
+      "music_style": "ambient_dark",
+      "narration_speed": "medium",
+      "image_prompt_prefix": "High quality, cinematic lighting, sharp focus. ",
+      "image_negative_prompt": "blurry, low-res, watermark, illegible text",
+      "title_style": "contrarian_truth",
+      "tags_base": ["finance", "money", "investing"]
+    },
+    "storytelling": {
+      "tone": "emotional",
+      "subtitle_style": "minimal_bottom",
+      "transition_style": "fade",
+      "music_style": "piano_soft",
+      "narration_speed": "slow",
+      "image_prompt_prefix": "Cinematic scene, dramatic composition, film still. ",
+      "image_negative_prompt": "blurry, low-res, watermark, illegible text",
+      "title_style": "story_hook",
+      "tags_base": ["history", "story", "documentary"]
+    },
+    "documentary": {
+      "tone": "neutral",
+      "subtitle_style": "minimal_bottom",
+      "transition_style": "fade",
+      "music_style": "ambient_dark",
+      "narration_speed": "medium",
+      "image_prompt_prefix": "Documentary style photo, natural colors, realistic. ",
+      "image_negative_prompt": "blurry, low-res, watermark, illegible text",
+      "title_style": "fact_investigation",
+      "tags_base": ["documentary", "facts", "analysis"]
+    },
+    "tech_explainer": {
+      "tone": "clear",
+      "subtitle_style": "minimal_bottom",
+      "transition_style": "fade",
+      "music_style": "ambient_dark",
+      "narration_speed": "fast",
+      "image_prompt_prefix": "Clean infographic style, readable composition, high contrast. ",
+      "image_negative_prompt": "blurry, low-res, watermark, illegible text",
+      "title_style": "step_by_step",
+      "tags_base": ["tech", "howto", "explainer"]
+    },
+    "stickman_story": {
+      "tone": "casual",
+      "subtitle_style": "minimal_bottom",
+      "transition_style": "fade",
+      "music_style": "ambient_dark",
+      "narration_speed": "medium",
+      "image_prompt_prefix": "Simple cartoon background, clean shapes, bold outlines, 16:9, no text, no watermark. ",
+      "image_negative_prompt": "blurry, low-res, watermark, person, character, stickman",
+      "title_style": "story_hook",
+      "tags_base": ["stickman", "animation", "story"]
+    },
+    "simple_character_story": {
+      "tone": "light_storytelling",
+      "subtitle_style": "minimal_bottom",
+      "transition_style": "fade",
+      "music_style": "ambient_dark",
+      "narration_speed": "medium",
+      "image_prompt_prefix": "Simple cartoon background, clean shapes, bold outlines, readable composition, no text, no watermark. ",
+      "image_negative_prompt": "realistic human, complex anatomy, watermark, blurry, low-res, illegible text",
+      "title_style": "story_hook",
+      "tags_base": ["animation", "story", "character", "cartoon"],
+      "character_style": "simple_character_v1"
+    }
+  }
+}
+

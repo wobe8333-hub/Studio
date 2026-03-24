@@ -1,0 +1,114 @@
+{
+  "module": "backend.cli.run",
+  "commands": {
+    "keyword-discovery": {
+      "subcommand": "knowledge keyword-discovery",
+      "options": {
+        "--categories": {
+          "type": "string",
+          "default": "science,history,common_sense,economy,geography,papers",
+          "description": "Comma-separated list of categories"
+        },
+        "--mode": {
+          "type": "choice",
+          "choices": ["run", "dry-run"],
+          "default": "run",
+          "description": "Execution mode"
+        },
+        "--max-keywords": {
+          "type": "int",
+          "default": 200,
+          "description": "Maximum keywords per category"
+        }
+      },
+      "example": "python -m backend.cli.run knowledge keyword-discovery --categories science,history,common_sense,economy,geography,papers --mode run --max-keywords 30"
+    },
+    "keyword-approve": {
+      "subcommand": "knowledge keyword-approve",
+      "options": {
+        "--cycle-id": {
+          "type": "string",
+          "required": true,
+          "description": "Cycle ID or 'latest'"
+        },
+        "--categories": {
+          "type": "string",
+          "default": "",
+          "description": "Comma-separated list of categories (empty = all)"
+        }
+      },
+      "example": "python -m backend.cli.run knowledge keyword-approve --cycle-id latest --categories science,history,common_sense,economy,geography,papers"
+    },
+    "cycle": {
+      "subcommand": "knowledge cycle",
+      "options": {
+        "--categories": {
+          "type": "string",
+          "default": "science,history,common_sense,economy,geography,papers",
+          "description": "Comma-separated list of categories"
+        },
+        "--mode": {
+          "type": "choice",
+          "choices": ["run", "dry-run"],
+          "default": "run",
+          "description": "Execution mode"
+        },
+        "--keywords-dir": {
+          "type": "string",
+          "default": "",
+          "description": "Keywords directory path (empty = default)"
+        },
+        "--max-keywords-per-category": {
+          "type": "int",
+          "default": 20,
+          "description": "Maximum keywords per category"
+        },
+        "--approve-fallback": {
+          "type": "flag",
+          "default": false,
+          "description": "Allow fallback asset promotion"
+        }
+      },
+      "example": "python -m backend.cli.run knowledge cycle --categories science,history,common_sense,economy,geography,papers --mode run --max-keywords-per-category 20 --approve-fallback"
+    },
+    "v7-run": {
+      "subcommand": "knowledge v7-run",
+      "options": {
+        "--categories": {
+          "type": "string",
+          "default": "science,history,common_sense,economy,geography,papers",
+          "description": "Comma-separated list of categories"
+        },
+        "--mode": {
+          "type": "choice",
+          "choices": ["run", "dry-run"],
+          "default": "run",
+          "description": "Execution mode"
+        },
+        "--keywords-dir": {
+          "type": "string",
+          "default": "",
+          "description": "Keywords directory path (empty = default)"
+        },
+        "--max-keywords-per-category": {
+          "type": "int",
+          "default": 20,
+          "description": "Maximum keywords per category"
+        },
+        "--approve-fallback": {
+          "type": "flag",
+          "default": false,
+          "description": "Allow fallback asset promotion"
+        },
+        "--debug": {
+          "type": "flag",
+          "default": false,
+          "description": "Debug mode (ignored, for compatibility)"
+        }
+      },
+      "example": "python -m backend.cli.run knowledge v7-run --categories science,history,common_sense,economy,geography,papers --mode run --max-keywords-per-category 20 --approve-fallback"
+    }
+  },
+  "default_categories": ["science", "history", "common_sense", "economy", "geography", "papers"]
+}
+

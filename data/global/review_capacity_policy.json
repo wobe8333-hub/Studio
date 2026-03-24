@@ -1,0 +1,13 @@
+﻿{
+  "daily_capacity_per_person": 3,
+  "monthly_capacity_estimate": 66,
+  "review_required_monthly_max": 38,
+  "capacity_sufficient": true,
+  "trend_review_sla_hours": 24,
+  "normal_review_sla_hours": 48,
+  "production_upload_buffer_days": 3,
+  "backlog_trigger_count": 5,
+  "backlog_action": "trending_ratio 60% 40% \uc784\uc2dc \ucd95\uc18c",
+  "backlog_recovery_condition": "pending_review 2",
+  "72h_upload_feasibility": "\uc0dd\uc131(Day0) + review(24h) + \uc2a4\ucf00\uc904(24h) = 48h 72h \uc774\ub0b4 \ub2ec\uc131 \uac00\ub2a5"
+}

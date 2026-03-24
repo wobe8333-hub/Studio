@@ -1,0 +1,48 @@
+# Cursor ignore patterns (for performance - avoid scanning large directories)
+
+# Python virtual envs
+backend/.venv/
+.venv/
+**/.venv/
+
+# Python bytecode / caches
+**/__pycache__/
+**/*.pyc
+**/*.pyo
+**/*.pyd
+**/.pytest_cache/
+**/.mypy_cache/
+**/.ruff_cache/
+
+# Backend runtime outputs
+backend/output/
+**/output/
+
+# Frontend dependencies and build artifacts
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+**/node_modules/
+
+# Release / distribution artifacts
+release/
+releases/
+*.zip
+*.7z
+
+# Logs
+*.log
+**/*.log
+
+# Environment files (except .env.example)
+.env
+backend/.env
+frontend/.env
+**/.env
+!.env.example
+!**/.env.example
+
+# OS / editor junk
+.DS_Store
+Thumbs.db
+

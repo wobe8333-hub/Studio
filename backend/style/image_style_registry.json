@@ -1,0 +1,39 @@
+{
+  "schema_version": "v1",
+  "description": "V7.5 image style registry - visual policy for assets",
+  "entries": [
+    {
+      "id": "cinematic_realistic",
+      "description": "Cinematic look, realistic lighting and composition",
+      "visual_mode": "cinematic",
+      "realism_level": "high",
+      "lighting": "natural",
+      "color_bias": "neutral",
+      "composition_rules": ["rule_of_thirds", "depth_layers"],
+      "text_overlay_allowed": false,
+      "face_usage_policy": "optional"
+    },
+    {
+      "id": "editorial_clean",
+      "description": "Clean editorial style, readable and professional",
+      "visual_mode": "editorial",
+      "realism_level": "medium",
+      "lighting": "soft",
+      "color_bias": "slightly_warm",
+      "composition_rules": ["clean_background", "clear_subject"],
+      "text_overlay_allowed": true,
+      "face_usage_policy": "preferred"
+    },
+    {
+      "id": "dramatic_focus",
+      "description": "Dramatic contrast, strong focus on subject",
+      "visual_mode": "dramatic",
+      "realism_level": "high",
+      "lighting": "dramatic",
+      "color_bias": "contrast",
+      "composition_rules": ["center_focus", "shallow_depth"],
+      "text_overlay_allowed": false,
+      "face_usage_policy": "optional"
+    }
+  ]
+}

@@ -1,0 +1,61 @@
+# Python virtual envs
+backend/.venv/
+.venv/
+**/.venv/
+
+# Python bytecode / caches
+**/__pycache__/
+**/*.pyc
+**/*.pyo
+**/*.pyd
+**/.pytest_cache/
+**/.mypy_cache/
+**/.ruff_cache/
+**/.coverage
+
+# Backend runtime outputs (generated at runtime)
+backend/output/
+**/output/
+backend/output/runs/
+backend/output/cache/
+runs/
+output/
+cache/
+backend/output/checkruns/
+backend/output/logs/
+backend/output/plans/
+backend/output/reports/
+backend/output/verify/
+backend/output/videos/
+backend/output/youtube/
+
+# Frontend build artifacts
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+**/node_modules/
+
+# Release / distribution artifacts
+release/
+releases/
+*.zip
+*.7z
+*.tar.gz
+
+# Logs
+*.log
+**/*.log
+
+# Environment files (security + reproducibility)
+.env
+backend/.env
+frontend/.env
+**/.env
+# Allow .env.example (tracked for documentation)
+!.env.example
+!**/.env.example
+
+# OS / editor junk
+.DS_Store
+Thumbs.db
+

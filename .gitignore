@@ -1,0 +1,102 @@
+backend/credentials/yt_oauth_client.json
+backend/credentials/yt_oauth_token.json
+# Global ignores for AI Animation Studio v2
+
+# Python virtual envs
+backend/.venv/
+.venv/
+**/.venv/
+
+# Python bytecode / caches
+**/__pycache__/
+**/*.pyc
+**/*.pyo
+**/*.pyd
+**/.pytest_cache/
+**/.mypy_cache/
+**/.ruff_cache/
+**/.coverage
+
+# Backend runtime outputs (generated at runtime) - DO NOT TRACK
+backend/output/
+**/output/
+data/runs/
+data/_debug_sessions/
+data/debug_evidence/
+data/health/
+data/ops/
+
+# Frontend build artifacts
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+**/node_modules/
+
+# Release / distribution artifacts
+release/
+releases/
+*.zip
+*.7z
+*.tar.gz
+
+# Logs
+*.log
+**/*.log
+*_stdout.txt
+*_stderr.txt
+_debug_task_stdout.txt
+_debug_task_stderr.txt
+_replay_stdout.txt
+_replay_stderr.txt
+powershell_v7_real_*.txt
+v7_real_logs_*/
+v7_real_logs_*.zip
+
+# Virtual envs (redundant but explicit)
+.venv/
+**/.venv/
+
+# Archive root
+_archive/
+
+# Backup files
+*.bak
+
+# Environment files (security + reproducibility)
+.env
+backend/.env
+frontend/.env
+**/.env
+# Allow .env.example (tracked for documentation)
+!.env.example
+!**/.env.example
+
+# YouTube API Key file
+Youtube_API_key.txt
+
+# Runtime data stores
+data/knowledge_v1_store/
+data/health/
+
+# OS / editor junk
+.DS_Store
+Thumbs.db
+
+# Ops daily run outputs (evidence bundles)
+data/ops/daily/
+data/ops/daily/**
+
+
+# === KAS 정리 후 추가 ===
+artifacts/
+channels/
+backend/cache/
+_gemini_debug/
+_gemini_quota_test/
+kas_*.ps1
+kas_*.py
+리스트_요약.txt
+리스트_전체.txt
+Untitled
+_step2_file_trace.json
+_task_dump.xml

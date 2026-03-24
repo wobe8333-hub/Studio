@@ -1,0 +1,42 @@
+{
+  "categories": ["history", "mystery", "economy", "myth", "science", "war_history"],
+  "per_category_target_keywords": 5,
+  "min_keywords_step_e": 30,
+  "quota": {
+    "daily_total_limit": 200,
+    "per_category_limit": 20
+  },
+  "source_scoring": {
+    "enabled": true,
+    "threshold_auto_promote": 60,
+    "weights": {
+      "yt_api": 30,
+      "yt_dlp": 20,
+      "dataset": 15,
+      "wiki": 20,
+      "news": 15
+    }
+  },
+  "quality_circuit_breaker": {
+    "blocked_ratio_max": 0.60,
+    "unknown_ratio_max": 0.40,
+    "ready_min": 1
+  },
+  "yield_budget_allocator": {
+    "enabled": true,
+    "min_calls": 1,
+    "max_calls": 10,
+    "cooldown_cycles": 3
+  },
+  "verify_thresholds": {
+    "assets_min": 50,
+    "chunks_min": 50,
+    "ready_min": 1,
+    "avg_chunks_per_asset_min": 1.0
+  },
+  "replay": {
+    "enabled": true,
+    "require_manifest_for_promote": true
+  }
+}
+

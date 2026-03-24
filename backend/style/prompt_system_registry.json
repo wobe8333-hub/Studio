@@ -1,0 +1,36 @@
+{
+  "schema_version": "v1",
+  "description": "V7.5 prompt system registry - script/title/description/CTA generation policy",
+  "entries": [
+    {
+      "id": "hook_openloop_authority",
+      "description": "Open-loop hook, authority framing, promise then deliver",
+      "hook_template_family": "open_loop",
+      "open_loop_mode": "question_or_teaser",
+      "transition_mode": "smooth",
+      "cta_template_family": "soft_subscribe",
+      "affiliate_insertion_mode": "none",
+      "banned_patterns": ["clickbait", "misleading_promise"]
+    },
+    {
+      "id": "hook_story_empathy",
+      "description": "Story-led hook, empathy, emotional connection",
+      "hook_template_family": "story",
+      "open_loop_mode": "story_lead",
+      "transition_mode": "narrative",
+      "cta_template_family": "invitation",
+      "affiliate_insertion_mode": "none",
+      "banned_patterns": ["cold_open", "aggressive_cta"]
+    },
+    {
+      "id": "hook_practical_problem_solution",
+      "description": "Problem-solution hook, practical payoff",
+      "hook_template_family": "problem_solution",
+      "open_loop_mode": "problem_first",
+      "transition_mode": "step_by_step",
+      "cta_template_family": "action",
+      "affiliate_insertion_mode": "none",
+      "banned_patterns": ["vague_problem", "overpromise"]
+    }
+  ]
+}

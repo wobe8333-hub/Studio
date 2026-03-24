@@ -1,0 +1,30 @@
+{
+  "_note": "runtime_paths is SSOT. v7_verify_real.ps1 does NOT use this file for output paths.",
+  "deprecated_for_runtime": true,
+  "root": "data/knowledge_v1_store",
+  "stores": {
+    "discovery": {
+      "root": "data/knowledge_v1_store/discovery",
+      "assets": "data/knowledge_v1_store/discovery/raw/assets.jsonl",
+      "chunks": "data/knowledge_v1_store/discovery/derived/chunks.jsonl",
+      "audit": "data/knowledge_v1_store/discovery/audit/audit.jsonl"
+    },
+    "approved": {
+      "root": "data/knowledge_v1_store/approved",
+      "assets": "data/knowledge_v1_store/approved/raw/assets.jsonl",
+      "chunks": "data/knowledge_v1_store/approved/derived/chunks.jsonl",
+      "audit": "data/knowledge_v1_store/approved/audit/audit.jsonl"
+    }
+  },
+  "keywords_dir": "data/knowledge_v1_store/inputs/keywords",
+  "reports_dir": "data/knowledge_v1_store/reports",
+  "keyword_discovery": {
+    "reports": "data/knowledge_v1_store/keyword_discovery/reports",
+    "scored": "data/knowledge_v1_store/keyword_discovery/scored",
+    "snapshots": "data/knowledge_v1_store/keyword_discovery/snapshots"
+  },
+  "keyword_approval": {
+    "approved": "data/knowledge_v1_store/keyword_approval/approved",
+    "reports": "data/knowledge_v1_store/keyword_approval/reports"
+  }
+}

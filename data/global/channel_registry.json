@@ -1,0 +1,37 @@
+﻿{
+  "schema_version": "1.0",
+  "created_at": "2026-03-22T16:44:50Z",
+  "total_channels": 5,
+  "channels": [
+    {
+      "channel_id": "CH1",
+      "category": "\uacbd\uc81c_\uc7ac\ud14c\ud06c",
+      "launch_phase": 1,
+      "youtube_channel_id": ""
+    },
+    {
+      "channel_id": "CH2",
+      "category": "\uac74\uac15_\uc758\ud559",
+      "launch_phase": 1,
+      "youtube_channel_id": ""
+    },
+    {
+      "channel_id": "CH3",
+      "category": "\uc2ec\ub9ac_\ud589\ub3d9",
+      "launch_phase": 2,
+      "youtube_channel_id": ""
+    },
+    {
+      "channel_id": "CH4",
+      "category": "\ubd80\ub3d9\uc0b0_\uacbd\ub9e4",
+      "launch_phase": 2,
+      "youtube_channel_id": ""
+    },
+    {
+      "channel_id": "CH5",
+      "category": "AI_\ud14c\ud06c",
+      "launch_phase": 3,
+      "youtube_channel_id": ""
+    }
+  ]
+}
