@@ -87,6 +87,26 @@ data/ops/daily/
 data/ops/daily/**
 
 
+# === KAS Phase 1 추가 ===
+# SD/LoRA 모델 파일 (대용량)
+*.ckpt
+*.safetensors
+assets/lora/
+assets/characters/
+
+# diskcache 데이터베이스
+.cache/
+data/global/cache/diskcache/
+*.db
+
+# === web (Next.js) ===
+web/node_modules/
+web/.next/
+web/out/
+web/ios/
+web/android/
+web/.env.local
+
 # === KAS 정리 후 추가 ===
 artifacts/
 channels/

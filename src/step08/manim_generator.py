@@ -1,7 +1,8 @@
 """
 STEP 08 — Manim 코드 생성기 (LaTeX-free, 버그 수정 완료)
 """
-import ast, re, sys, subprocess, tempfile, time, logging, shutil
+import ast, re, sys, subprocess, tempfile, time, shutil
+from loguru import logger
 from pathlib import Path
 from tenacity import retry, stop_after_attempt, wait_exponential
 import google.generativeai as genai
@@ -9,8 +10,6 @@ from src.core.config import GEMINI_API_KEY, GEMINI_TEXT_MODEL, MANIM_QUALITY
 from src.quota.gemini_quota import throttle_if_needed, record_request
 
 genai.configure(api_key=GEMINI_API_KEY)
-logger = logging.getLogger(__name__)
-
 LATEX_FORBIDDEN_PATTERNS = [
     r"MathTex\s*\(",
     r"(?<!\w)Tex\s*\(",
@@ -156,7 +155,7 @@ def run_manim(code: str, section_id: int,
              "--media_dir", str(output_dir),
              "--disable_caching",
              str(script_path), scene_name],
-            capture_output=True, text=True,
+            capture_output=True, text=True, encoding="utf-8", errors="replace",
             timeout=MANIM_TIMEOUT_SEC,
         )
         media_videos = output_dir / "videos" / script_path.stem
