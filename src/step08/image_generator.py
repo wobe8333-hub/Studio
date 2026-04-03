@@ -2,7 +2,8 @@
 STEP 08 — 이미지 생성기
 Gemini 이미지 생성 시도 → 실패 시 ffmpeg/최소PNG 플레이스홀더 폴백
 """
-import time, base64, logging, struct, zlib, subprocess, shutil
+import time, base64, struct, zlib, subprocess, shutil
+from loguru import logger
 from pathlib import Path
 from tenacity import retry, stop_after_attempt, wait_exponential
 import google.generativeai as genai
@@ -10,8 +11,6 @@ from src.core.config import GEMINI_API_KEY, GEMINI_IMAGE_MODEL
 from src.quota.gemini_quota import throttle_if_needed, record_request, record_image
 
 genai.configure(api_key=GEMINI_API_KEY)
-logger = logging.getLogger(__name__)
-
 IMAGE_PROMPT_TEMPLATE = """Create a clean, educational animation frame for a Korean YouTube knowledge video.
 Description: {description}
 Style: Flat design, educational infographic style

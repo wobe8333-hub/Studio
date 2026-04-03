@@ -1,8 +1,6 @@
 """STEP 12 — A/B 실험 관리."""
-import logging
+from loguru import logger
 from src.core.ssot import read_json, write_json, json_exists, now_iso, get_run_dir
-
-logger = logging.getLogger(__name__)
 
 def record_experiment(channel_id: str, run_id: str, variant_ref: str, kpi: dict) -> dict:
     s12 = get_run_dir(channel_id, run_id)/"step12"; s12.mkdir(parents=True, exist_ok=True)

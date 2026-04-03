@@ -1,16 +1,16 @@
 """STEP 12 — YouTube 영상 업로드.
 버그 수정: dict 기반 로드 대신 token JSON 파일 + from_authorized_user_file 사용.
+E-2: 만료 토큰 자동 갱신 + 갱신 결과 파일 저장 추가.
 """
-import logging
+from loguru import logger
 from pathlib import Path
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaFileUpload
 from google.oauth2.credentials import Credentials
+from google.auth.transport.requests import Request
 from src.core.ssot import read_json, write_json, json_exists, sha256_file, now_iso, get_run_dir
 from src.core.config import CREDENTIALS_DIR
 from src.quota.youtube_quota import can_upload, consume, defer_job
-
-logger = logging.getLogger(__name__)
 
 SCOPES = [
     "https://www.googleapis.com/auth/youtube.upload",
@@ -19,10 +19,17 @@ SCOPES = [
 ]
 
 def _get_youtube_service(channel_id: str):
+    """YouTube API 서비스 빌드. 만료 토큰은 자동 갱신 후 파일에 저장한다."""
     token_path = CREDENTIALS_DIR / f"{channel_id}_token.json"
     if not token_path.exists():
         raise FileNotFoundError(f"token.json 없음: {token_path}")
     creds = Credentials.from_authorized_user_file(str(token_path), SCOPES)
+    if creds.expired and creds.refresh_token:
+        logger.info(f"[STEP12] {channel_id}: access token 만료 — refresh 시도")
+        creds.refresh(Request())
+        # 갱신된 토큰을 원본 파일에 덮어씀 (다음 실행에서 재사용)
+        token_path.write_text(creds.to_json(), encoding="utf-8")
+        logger.info(f"[STEP12] {channel_id}: token 갱신 완료 → {token_path.name}")
     return build("youtube", "v3", credentials=creds)
 
 def upload_video(channel_id: str, run_id: str,

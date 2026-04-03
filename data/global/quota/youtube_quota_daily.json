@@ -1,0 +1,16 @@
+﻿{
+  "date": "2026-04-02",
+  "quota_used": 7,
+  "quota_limit": 10000,
+  "quota_remaining": 9993,
+  "usage_by_operation": {
+    "uploads": 0,
+    "metadata_updates": 0,
+    "thumbnail_sets": 0,
+    "search_calls": 0,
+    "other": 7
+  },
+  "warning_triggered": false,
+  "block_triggered": false,
+  "deferred_jobs": []
+}

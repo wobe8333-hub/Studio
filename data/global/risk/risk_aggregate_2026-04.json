@@ -1,0 +1,88 @@
+﻿{
+  "schema_version": "2.0",
+  "month": "2026-04",
+  "total_net_profit_month": 0.0,
+  "target_total": 14000000,
+  "target_total_achieved": false,
+  "achievement_rate": 0.0,
+  "channels": {
+    "CH1": {
+      "channel_id": "CH1",
+      "month": "2026-04",
+      "net_profit": 0.0,
+      "target": 2000000,
+      "target_achieved": false,
+      "risks": [
+        "\uc21c\uc774\uc775 \ubbf8\ub2ec: 0\uc6d0 < 2,000,000\uc6d0"
+      ],
+      "risk_level": "HIGH"
+    },
+    "CH2": {
+      "channel_id": "CH2",
+      "month": "2026-04",
+      "net_profit": 0.0,
+      "target": 2000000,
+      "target_achieved": false,
+      "risks": [
+        "\uc21c\uc774\uc775 \ubbf8\ub2ec: 0\uc6d0 < 2,000,000\uc6d0"
+      ],
+      "risk_level": "HIGH"
+    },
+    "CH3": {
+      "channel_id": "CH3",
+      "month": "2026-04",
+      "net_profit": 0.0,
+      "target": 2000000,
+      "target_achieved": false,
+      "risks": [
+        "\uc21c\uc774\uc775 \ubbf8\ub2ec: 0\uc6d0 < 2,000,000\uc6d0"
+      ],
+      "risk_level": "HIGH"
+    },
+    "CH4": {
+      "channel_id": "CH4",
+      "month": "2026-04",
+      "net_profit": 0.0,
+      "target": 2000000,
+      "target_achieved": false,
+      "risks": [
+        "\uc21c\uc774\uc775 \ubbf8\ub2ec: 0\uc6d0 < 2,000,000\uc6d0"
+      ],
+      "risk_level": "HIGH"
+    },
+    "CH5": {
+      "channel_id": "CH5",
+      "month": "2026-04",
+      "net_profit": 0.0,
+      "target": 2000000,
+      "target_achieved": false,
+      "risks": [
+        "\uc21c\uc774\uc775 \ubbf8\ub2ec: 0\uc6d0 < 2,000,000\uc6d0"
+      ],
+      "risk_level": "HIGH"
+    },
+    "CH6": {
+      "channel_id": "CH6",
+      "month": "2026-04",
+      "net_profit": 0.0,
+      "target": 2000000,
+      "target_achieved": false,
+      "risks": [
+        "\uc21c\uc774\uc775 \ubbf8\ub2ec: 0\uc6d0 < 2,000,000\uc6d0"
+      ],
+      "risk_level": "HIGH"
+    },
+    "CH7": {
+      "channel_id": "CH7",
+      "month": "2026-04",
+      "net_profit": 0.0,
+      "target": 2000000,
+      "target_achieved": false,
+      "risks": [
+        "\uc21c\uc774\uc775 \ubbf8\ub2ec: 0\uc6d0 < 2,000,000\uc6d0"
+      ],
+      "risk_level": "HIGH"
+    }
+  },
+  "generated_at": "2026-04-02T23:50:56Z"
+}

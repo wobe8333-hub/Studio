@@ -1,5 +1,6 @@
 """STEP 10 — 제목 3종 + 썸네일 3종 변형 빌더."""
-import json, logging
+import json
+from loguru import logger
 from tenacity import retry, stop_after_attempt, wait_exponential
 import google.generativeai as genai
 from src.core.ssot import read_json, write_json, json_exists, sha256_dict, now_iso, get_run_dir
@@ -8,8 +9,6 @@ from src.quota.gemini_quota import throttle_if_needed, record_request
 from src.step10.thumbnail_generator import generate_thumbnail
 
 genai.configure(api_key=GEMINI_API_KEY)
-logger = logging.getLogger(__name__)
-
 def _get_preferred_mode(channel_id: str) -> str:
     bias = MEMORY_DIR / "topic_priority_bias.json"
     if not json_exists(bias): return "curiosity"

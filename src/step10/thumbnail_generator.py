@@ -1,6 +1,7 @@
 """STEP 10 — 썸네일 3종 생성."""
-import base64, logging
+import base64
 from pathlib import Path
+from loguru import logger
 from tenacity import retry, stop_after_attempt, wait_exponential
 import google.generativeai as genai
 from src.core.config import GEMINI_API_KEY, GEMINI_IMAGE_MODEL
@@ -8,14 +9,14 @@ from src.quota.gemini_quota import throttle_if_needed, record_request, record_im
 from src.step08.image_generator import _generate_placeholder
 
 genai.configure(api_key=GEMINI_API_KEY)
-logger = logging.getLogger(__name__)
-
 CHANNEL_THUMBNAIL_STYLE = {
-    "CH1":"숫자/그래프 강조, 임팩트 텍스트, 다크 배경, 골드/레드 색상",
-    "CH2":"신체 관련 비주얼, 경고/안심 색상 대비, 클린한 의료 스타일",
-    "CH3":"사람 실루엣/표정, 질문형 텍스트, 퍼플/블루 색상",
-    "CH4":"건물/부동산 비주얼, 손실/이익 대비, 레드/그린 색상",
-    "CH5":"AI/테크 비주얼, 데이터 흐름, 사이버 블루/민트 색상",
+    "CH1": "숫자/그래프 강조, 임팩트 텍스트, 다크 배경, 골드/레드 색상, 귀여운 경제 캐릭터",
+    "CH2": "부동산 건물/지도 비주얼, 손실/이익 대비, 레드/그린 색상, 귀여운 부동산 캐릭터",
+    "CH3": "사람 실루엣/표정, 질문형 텍스트, 퍼플/블루 색상, 귀여운 심리 캐릭터",
+    "CH4": "미스터리/서스펜스 비주얼, 어두운 배경, 그림자 효과, 귀여운 탐정 캐릭터",
+    "CH5": "전쟁/역사 비주얼, 강렬한 색상 대비, 드라마틱한 구도, 귀여운 군인 캐릭터",
+    "CH6": "우주/과학 비주얼, 데이터 흐름, 사이버 블루/민트 색상, 귀여운 과학자 캐릭터",
+    "CH7": "역사 유물/지도 비주얼, 세피아/골드 색상, 고전적 분위기, 귀여운 역사학자 캐릭터",
 }
 THUMBNAIL_MODES = {
     "01":"채널 스타일 강조 + 애니메이션 요소",

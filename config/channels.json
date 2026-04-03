@@ -1,120 +1,141 @@
-﻿{
-  "schema_version": "v2.0",
+{
+  "schema_version": "v3.0",
+  "created_at": "2026-04-01T00:00:00Z",
+  "animation_concept": "cute_character",
+  "image_provider": "sd_xl_lora",
   "channels": [
     {
       "channel_id": "CH1",
-      "niche": "personal finance",
-      "style_profile": "knowledge_dark",
+      "category": "economy",
+      "niche": "경제/재테크 귀여운 애니메이션",
+      "style_profile": "cute_economy",
       "format_id": "explainer",
       "target_duration_sec": 720,
       "sections": 6,
       "upload_per_week": 3,
       "output_root": "data/channels/CH1",
-      "image_provider": "gemini",
-      "image_model_id": "gemini-3.1-flash-image-preview",
       "image_aspect_ratio": "16:9",
-      "image_size": "2K",
-      "thumbnail_text_policy": "skip",
       "thumbnail_text_enabled": true,
       "thumbnail_font_candidates": [
-        "C:/Windows/Fonts/malgun.ttf",
         "C:/Windows/Fonts/malgunbd.ttf",
-        "C:/Windows/Fonts/arial.ttf"
-      ]
+        "C:/Windows/Fonts/malgun.ttf"
+      ],
+      "character_profile": "character_economy",
+      "lora_path": "assets/lora/economy_character.safetensors"
     },
     {
-      "channel_id": "history_01",
-      "niche": "history",
-      "style_profile": "storytelling",
+      "channel_id": "CH2",
+      "category": "realestate",
+      "niche": "부동산 귀여운 애니메이션",
+      "style_profile": "cute_realestate",
+      "format_id": "explainer",
+      "target_duration_sec": 720,
+      "sections": 6,
+      "upload_per_week": 3,
+      "output_root": "data/channels/CH2",
+      "image_aspect_ratio": "16:9",
+      "thumbnail_text_enabled": true,
+      "thumbnail_font_candidates": [
+        "C:/Windows/Fonts/malgunbd.ttf",
+        "C:/Windows/Fonts/malgun.ttf"
+      ],
+      "character_profile": "character_realestate",
+      "lora_path": "assets/lora/realestate_character.safetensors"
+    },
+    {
+      "channel_id": "CH3",
+      "category": "psychology",
+      "niche": "심리/자기개발 귀여운 애니메이션",
+      "style_profile": "cute_psychology",
+      "format_id": "story",
+      "target_duration_sec": 660,
+      "sections": 6,
+      "upload_per_week": 3,
+      "output_root": "data/channels/CH3",
+      "image_aspect_ratio": "16:9",
+      "thumbnail_text_enabled": true,
+      "thumbnail_font_candidates": [
+        "C:/Windows/Fonts/malgunbd.ttf",
+        "C:/Windows/Fonts/malgun.ttf"
+      ],
+      "character_profile": "character_psychology",
+      "lora_path": "assets/lora/psychology_character.safetensors"
+    },
+    {
+      "channel_id": "CH4",
+      "category": "mystery",
+      "niche": "미스터리/괴담 귀여운 애니메이션",
+      "style_profile": "cute_mystery",
+      "format_id": "story",
+      "target_duration_sec": 660,
+      "sections": 6,
+      "upload_per_week": 3,
+      "output_root": "data/channels/CH4",
+      "image_aspect_ratio": "16:9",
+      "thumbnail_text_enabled": true,
+      "thumbnail_font_candidates": [
+        "C:/Windows/Fonts/malgunbd.ttf",
+        "C:/Windows/Fonts/malgun.ttf"
+      ],
+      "character_profile": "character_mystery",
+      "lora_path": "assets/lora/mystery_character.safetensors"
+    },
+    {
+      "channel_id": "CH5",
+      "category": "war_history",
+      "niche": "전쟁사 귀여운 애니메이션",
+      "style_profile": "cute_war_history",
       "format_id": "documentary",
       "target_duration_sec": 720,
       "sections": 6,
-      "upload_per_week": 2,
-      "output_root": "channels/history_01",
-      "image_provider": "gemini",
-      "image_model_id": "gemini-3.1-flash-image-preview",
+      "upload_per_week": 3,
+      "output_root": "data/channels/CH5",
       "image_aspect_ratio": "16:9",
-      "image_size": "2K",
-      "thumbnail_text_policy": "skip",
       "thumbnail_text_enabled": true,
       "thumbnail_font_candidates": [
-        "C:/Windows/Fonts/malgun.ttf",
-        "C:/Windows/Fonts/arial.ttf"
-      ]
+        "C:/Windows/Fonts/malgunbd.ttf",
+        "C:/Windows/Fonts/malgun.ttf"
+      ],
+      "character_profile": "character_war_history",
+      "lora_path": "assets/lora/war_history_character.safetensors"
     },
     {
-      "channel_id": "health_01",
-      "niche": "health",
-      "style_profile": "tech_explainer",
-      "format_id": "list",
-      "target_duration_sec": 720,
+      "channel_id": "CH6",
+      "category": "science",
+      "niche": "과학 귀여운 애니메이션",
+      "style_profile": "cute_science",
+      "format_id": "explainer",
+      "target_duration_sec": 660,
       "sections": 6,
-      "upload_per_week": 2,
-      "output_root": "channels/health_01",
-      "image_provider": "gemini",
-      "image_model_id": "gemini-3.1-flash-image-preview",
+      "upload_per_week": 3,
+      "output_root": "data/channels/CH6",
       "image_aspect_ratio": "16:9",
-      "image_size": "2K",
-      "thumbnail_text_policy": "skip",
       "thumbnail_text_enabled": true,
       "thumbnail_font_candidates": [
-        "C:/Windows/Fonts/malgun.ttf",
-        "C:/Windows/Fonts/arial.ttf"
-      ]
+        "C:/Windows/Fonts/malgunbd.ttf",
+        "C:/Windows/Fonts/malgun.ttf"
+      ],
+      "character_profile": "character_science",
+      "lora_path": "assets/lora/science_character.safetensors"
     },
     {
-      "channel_id": "stickman_01",
-      "niche": "stickman story animation",
-      "style_profile": "stickman_story",
-      "format_id": "story",
+      "channel_id": "CH7",
+      "category": "history",
+      "niche": "역사 귀여운 애니메이션",
+      "style_profile": "cute_history",
+      "format_id": "documentary",
       "target_duration_sec": 720,
       "sections": 6,
       "upload_per_week": 3,
-      "output_root": "channels/stickman_01",
-      "image_provider": "gemini",
-      "image_model_id": "gemini-2.5-flash-preview-image",
-      "text_model_id": "gemini-3-flash",
+      "output_root": "data/channels/CH7",
       "image_aspect_ratio": "16:9",
-      "image_size": "2K",
-      "channel_type": "stickman_story",
-      "character_mode": "fixed_asset_overlay",
-      "background_only": true,
-      "image_cache_enabled": true,
-      "thumbnail_text_policy": "skip",
       "thumbnail_text_enabled": true,
       "thumbnail_font_candidates": [
-        "C:/Windows/Fonts/malgun.ttf",
         "C:/Windows/Fonts/malgunbd.ttf",
-        "C:/Windows/Fonts/arial.ttf"
-      ]
-    },
-    {
-      "channel_id": "simplechar_01",
-      "niche": "simple character story animation",
-      "style_profile": "simple_character_story",
-      "format_id": "story",
-      "target_duration_sec": 720,
-      "sections": 6,
-      "upload_per_week": 3,
-      "output_root": "channels/simplechar_01",
-      "image_provider": "gemini",
-      "image_model_id": "gemini-2.5-flash-preview-image",
-      "text_model_id": "gemini-3-flash",
-      "image_aspect_ratio": "16:9",
-      "image_size": "2K",
-      "channel_type": "simple_character_story",
-      "character_mode": "fixed_asset_overlay",
-      "background_only": true,
-      "image_cache_enabled": true,
-      "thumbnail_text_policy": "skip",
-      "thumbnail_text_enabled": true,
-      "thumbnail_font_candidates": [
-        "C:/Windows/Fonts/malgun.ttf",
-        "C:/Windows/Fonts/malgunbd.ttf",
-        "C:/Windows/Fonts/arial.ttf"
-      ]
+        "C:/Windows/Fonts/malgun.ttf"
+      ],
+      "character_profile": "character_history",
+      "lora_path": "assets/lora/history_character.safetensors"
     }
   ]
 }
-
-

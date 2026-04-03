@@ -1,22 +1,44 @@
 """STEP 12 — KPI 수집 (48시간 후).
 버그 수정(BUG-kpi): 토큰은 authorized_user JSON 파일 경로로 Credentials 로드.
+E-3: impressions / impressionClickThroughRate(CTR) 메트릭 추가.
 """
-import logging
+from loguru import logger
 from pathlib import Path
 from googleapiclient.discovery import build
 from google.oauth2.credentials import Credentials
+from google.auth.transport.requests import Request
 from src.core.ssot import read_json, write_json, json_exists, now_iso, get_run_dir
 from src.core.config import CREDENTIALS_DIR
 from src.quota.youtube_quota import consume
 
-logger = logging.getLogger(__name__)
-ANALYTICS_SCOPES = ["https://www.googleapis.com/auth/yt-analytics.readonly"]
+ANALYTICS_SCOPES = [
+    "https://www.googleapis.com/auth/yt-analytics.readonly",
+    "https://www.googleapis.com/auth/youtube.readonly",
+]
+
+# Analytics API 메트릭 순서 (index로 row 값 매핑)
+_ANALYTICS_METRICS = (
+    "views,estimatedMinutesWatched,averageViewDuration,averageViewPercentage,"
+    "impressions,impressionClickThroughRate"
+)
+_METRIC_IDX = {
+    "views": 0,
+    "estimated_minutes_watched": 1,
+    "avg_view_duration_sec": 2,
+    "avg_view_percentage": 3,
+    "impressions": 4,
+    "ctr": 5,
+}
 
 def _get_analytics_service(channel_id: str):
+    """Analytics API 서비스 빌드. 만료 토큰은 자동 갱신한다."""
     token_path = CREDENTIALS_DIR / f"{channel_id}_token.json"
     if not token_path.exists():
         raise FileNotFoundError(f"token.json 없음: {token_path}")
     creds = Credentials.from_authorized_user_file(str(token_path), ANALYTICS_SCOPES)
+    if creds.expired and creds.refresh_token:
+        creds.refresh(Request())
+        token_path.write_text(creds.to_json(), encoding="utf-8")
     return build("youtubeAnalytics", "v2", credentials=creds)
 
 def collect_kpi_48h(channel_id: str, run_id: str, video_id: str) -> dict:
@@ -41,15 +63,19 @@ def collect_kpi_48h(channel_id: str, run_id: str, video_id: str) -> dict:
         response   = analytics.reports().query(
             ids="channel==MINE",
             startDate=start_date, endDate=end_date,
-            metrics="views,estimatedMinutesWatched,averageViewDuration,averageViewPercentage",
+            metrics=_ANALYTICS_METRICS,
             filters=f"video=={video_id}",
         ).execute()
         if response.get("rows"):
             row = response["rows"][0]
-            kpi["views"]                = int(row[0]) if row[0] else 0
-            kpi["watch_time_hours"]     = round(float(row[1]) / 60, 2) if row[1] else 0
-            kpi["avg_view_duration_sec"]= int(row[2]) if row[2] else 0
-            kpi["avg_view_percentage"]  = round(float(row[3]), 2) if row[3] else 0
+            def _int(v):   return int(v) if v else 0
+            def _float(v): return round(float(v), 4) if v else 0.0
+            kpi["views"]                = _int(row[_METRIC_IDX["views"]])
+            kpi["watch_time_hours"]     = round(_float(row[_METRIC_IDX["estimated_minutes_watched"]]) / 60, 2)
+            kpi["avg_view_duration_sec"]= _int(row[_METRIC_IDX["avg_view_duration_sec"]])
+            kpi["avg_view_percentage"]  = _float(row[_METRIC_IDX["avg_view_percentage"]])
+            kpi["impressions"]          = _int(row[_METRIC_IDX["impressions"]])
+            kpi["ctr"]                  = round(_float(row[_METRIC_IDX["ctr"]]) * 100, 2)  # 소수 → %
         consume(20, "other")
     except Exception as e:
         kpi["missing_reason"] = f"api_error: {str(e)[:100]}"

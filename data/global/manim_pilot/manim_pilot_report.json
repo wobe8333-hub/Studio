@@ -1,51 +1,40 @@
-{
+﻿{
   "schema_version": "1.0",
-  "pilot_date": "2026-03-20",
+  "pilot_date": "2026-03-24",
   "total_tests": 25,
+  "latex_free_mode": true,
+  "gemini_text_model": "gemini-2.5-flash",
   "manim_results": {
-    "success_count": 24,
-    "failure_count": 1,
-    "success_rate": 0.96,
-    "failure_analysis": [
-      {
-        "index": 0,
-        "scene_type": "number_plane",
-        "topic": "금리와 채권 가격의 관계",
-        "error_summary": "Command '['C:\\\\Users\\\\조찬우\\\\Desktop\\\\AI_Animation_Stuidio\\\\.venv\\\\Scripts\\\\python.exe', '-m', 'manim', 'C:\\\\Users\\\\Public\\\\Documents\\\\ESTsoft\\\\CreatorTemp\\\\tmpmxcfgjbe\\\\pilot_scene.py', 'PilotScene', '-ql', '--disable_caching', '--media_dir', 'C:\\\\Users\\\\Public\\\\Documents\\\\ESTsoft\\\\CreatorTemp\\\\tmpmx"
-      }
-    ]
+    "success_count": 25,
+    "failure_count": 0,
+    "success_rate": 1.0,
+    "gemini_code_used": 0,
+    "failure_analysis": []
   },
   "production_speed": {
-    "avg_total_sec": 21.04,
-    "avg_manim_render_sec": 18.24,
-    "videos_per_day_per_scheduler": 4106.95,
-    "monthly_feasible_per_scheduler": 90352.9,
+    "avg_total_sec": 5.0,
+    "avg_manim_render_sec": 4.56,
+    "videos_per_day_per_scheduler": 17264.81,
+    "monthly_feasible_per_scheduler": 379825.8,
     "required_schedulers_for_48": 1,
     "monthly_target_48_feasible": true,
     "bottleneck_step": "manim_render"
   },
   "cost_measurement": {
-    "avg_gemini_requests_per_video": 2.0,
     "avg_cost_per_video_krw": 0.0,
     "monthly_cost_48videos_estimate_krw": 6.0,
-    "operating_cost_per_channel_monthly_krw": 1.0,
     "cost_within_limit": true,
     "cost_source": "measured"
   },
   "quota_measurement": {
     "youtube_units_per_upload": 1700,
-    "youtube_units_per_day_estimated": 5600,
     "youtube_quota_daily_peak_safe": true,
-    "gemini_requests_per_video": 2.0,
-    "gemini_rpm_peak_observed": 0.75,
+    "gemini_requests_per_video": 15,
     "gemini_rpm_safe": true,
     "gemini_cache_hit_rate_observed": 0.0,
-    "ytdlp_requests_per_collection": 20,
     "ytdlp_block_detected": false,
     "quota_policy_values_validated": true
   },
-  "prompt_optimization_applied": false,
-  "prompt_version": "v1.0",
   "pass": true,
   "retry_count": 0
 }

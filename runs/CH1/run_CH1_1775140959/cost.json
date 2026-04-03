@@ -1,0 +1,33 @@
+﻿{
+  "channel_id": "CH1",
+  "run_id": "run_CH1_1775140959",
+  "cost_recorded_at": "2026-04-02T14:42:39Z",
+  "gemini_api": {
+    "script_generation": {
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "cost_krw": 0.0
+    },
+    "image_generation": {
+      "image_count": 0,
+      "cost_krw": 0.0
+    },
+    "manim_code_generation": {
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "cost_krw": 0.0
+    },
+    "title_tag_generation": {
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "cost_krw": 0.0
+    },
+    "total_krw": 0.0
+  },
+  "manim_render": {
+    "method": "local",
+    "compute_cost_krw": 0.0
+  },
+  "other_cost_krw": 0.0,
+  "total_cost_krw": 0.0
+}

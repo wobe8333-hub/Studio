@@ -1,0 +1,31 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash",
+      "Bash(ls:*)",
+      "WebFetch",
+      "WebSearch",
+      "WebBrowse",
+      "Bash(grep -rl \"import pandas\\\\|from pandas\" backend/ --include=*.py)",
+      "Bash(grep -rl urllib backend/ --include=*.py)",
+      "Bash(find backend/ -name \"__init__.py\" -exec wc -l {} +)",
+      "Bash(pip install:*)",
+      "Bash(python:*)",
+      "Bash(pre-commit --version)",
+      "Bash(python -c \":*)",
+      "Bash(python -c \"import inspect; from src.step05.sources.google_trends import fetch_trends_scores; print\\(inspect.signature\\(fetch_trends_scores\\)\\)\")",
+      "Bash(for f:*)",
+      "Read(//c/Users/조찬우/Desktop/ai_stuidio_claude/**)",
+      "Bash(grep:*)",
+      "Bash(python3:*)",
+      "Bash(cmd /c \"cd /d C:\\\\Users\\\\조찬우\\\\Desktop\\\\ai_stuidio_claude && python -m pytest tests\\\\test_step08_sd.py tests\\\\test_step12.py tests\\\\test_e2e.py -q --tb=line 2>&1\")",
+      "Bash(echo \"EXIT_CODE:$?\")",
+      "Bash(echo \"EXIT:$?\")",
+      "Bash(del:*)",
+      "Bash(pip freeze:*)",
+      "Bash(ffmpeg -version)",
+      "mcp__context7__resolve-library-id",
+      "mcp__context7__query-docs"
+    ]
+  }
+}

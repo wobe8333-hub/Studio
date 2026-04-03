@@ -1,5 +1,5 @@
 {
-  "categories": ["history", "mystery", "economy", "myth", "science", "war_history"],
+  "categories": ["economy", "realestate", "psychology", "mystery", "war_history", "science", "history"],
   "per_category_target_keywords": 5,
   "min_keywords_step_e": 30,
   "quota": {

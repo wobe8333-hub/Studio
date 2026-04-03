@@ -1,0 +1,71 @@
+﻿{
+  "schema_version": "2.0",
+  "quarter": "2026-04",
+  "generated_at": "2026-04-02T23:50:56Z",
+  "total_channels": 7,
+  "by_channel": {
+    "CH1": {
+      "category": "economy",
+      "topics_produced": 3,
+      "topics_remaining_estimate": 997,
+      "depletion_risk": "LOW",
+      "refresh_eligible": false
+    },
+    "CH2": {
+      "category": "realestate",
+      "topics_produced": 3,
+      "topics_remaining_estimate": 797,
+      "depletion_risk": "LOW",
+      "refresh_eligible": false
+    },
+    "CH3": {
+      "category": "psychology",
+      "topics_produced": 0,
+      "topics_remaining_estimate": 600,
+      "depletion_risk": "LOW",
+      "refresh_eligible": false
+    },
+    "CH4": {
+      "category": "mystery",
+      "topics_produced": 0,
+      "topics_remaining_estimate": 800,
+      "depletion_risk": "LOW",
+      "refresh_eligible": false
+    },
+    "CH5": {
+      "category": "war_history",
+      "topics_produced": 0,
+      "topics_remaining_estimate": 2000,
+      "depletion_risk": "LOW",
+      "refresh_eligible": false
+    },
+    "CH6": {
+      "category": "science",
+      "topics_produced": 0,
+      "topics_remaining_estimate": 1500,
+      "depletion_risk": "LOW",
+      "refresh_eligible": false
+    },
+    "CH7": {
+      "category": "history",
+      "topics_produced": 0,
+      "topics_remaining_estimate": 2000,
+      "depletion_risk": "LOW",
+      "refresh_eligible": false
+    }
+  },
+  "expansion_candidates": [
+    {
+      "category": "\ubc95\ub960_\uc0dd\ud65c\ubc95\ub960",
+      "rpm_est": 5500
+    },
+    {
+      "category": "\uc138\uae08_\uc808\uc138",
+      "rpm_est": 6000
+    },
+    {
+      "category": "\ud658\uacbd_\uc5d0\ub108\uc9c0",
+      "rpm_est": 3500
+    }
+  ]
+}

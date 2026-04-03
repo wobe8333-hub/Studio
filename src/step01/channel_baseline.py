@@ -1,5 +1,6 @@
 """STEP 01 — 채널 준비도 측정."""
-import logging, sys
+import sys
+from loguru import logger
 from googleapiclient.discovery import build
 from google.oauth2.credentials import Credentials
 from src.core.config import (
@@ -10,18 +11,20 @@ from src.core.config import (
 from src.core.ssot import write_json, now_iso
 from src.quota.youtube_quota import consume
 
-logger = logging.getLogger(__name__)
 SCOPES = ["https://www.googleapis.com/auth/youtube.readonly"]
 
 AFFILIATE_PARAMS = {
-    "CH1": {"product": "증권사 계좌 개설 CPA", "purchase_rate": 0.20},
-    "CH2": {"product": "건강기능식품 CPS",      "purchase_rate": 0.07},
-    "CH3": {"product": "심리학 도서 CPS",       "purchase_rate": 0.10},
-    "CH4": {"product": "부동산 강의 CPS",       "purchase_rate": 0.08},
-    "CH5": {"product": "AI 강의 CPS",           "purchase_rate": 0.08},
+    "CH1": {"product": "증권사 계좌 개설 CPA",        "purchase_rate": 0.20},
+    "CH2": {"product": "부동산 강의 / 청약 앱 CPA",   "purchase_rate": 0.15},
+    "CH3": {"product": "심리학 도서 CPS",              "purchase_rate": 0.10},
+    "CH4": {"product": "미스터리 도서 / 공포 OTT CPA", "purchase_rate": 0.10},
+    "CH5": {"product": "밀리터리 도서 / 전쟁사 게임",  "purchase_rate": 0.12},
+    "CH6": {"product": "과학 키트 / 온라인 강의 CPA",  "purchase_rate": 0.15},
+    "CH7": {"product": "역사 도서 / 역사 여행 CPS",    "purchase_rate": 0.15},
 }
 OPERATING_COST = {
-    "CH1": 80000, "CH2": 100000, "CH3": 100000, "CH4": 100000, "CH5": 100000,
+    "CH1": 80000, "CH2": 100000, "CH3": 100000,
+    "CH4": 100000, "CH5": 100000, "CH6": 100000, "CH7": 100000,
 }
 
 def _get_youtube_service(channel_id: str):
@@ -134,6 +137,5 @@ def run_step01(channel_ids: list) -> dict:
     return results
 
 if __name__ == "__main__":
-    logging.basicConfig(level="INFO")
     channels = sys.argv[1:] if len(sys.argv) > 1 else ["CH1", "CH2"]
     run_step01(channels)

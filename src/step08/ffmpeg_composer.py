@@ -1,8 +1,7 @@
-import subprocess, logging, shutil
+import subprocess, shutil
+from loguru import logger
 from pathlib import Path
 from src.core.config import FFMPEG_PATH
-
-logger = logging.getLogger(__name__)
 
 def image_to_clip(image_path: Path, output_path: Path, duration_sec: float = 5.0) -> bool:
     cmd = [FFMPEG_PATH,"-y","-loop","1","-i",str(image_path),"-t",str(duration_sec),

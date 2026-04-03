@@ -1,0 +1,46 @@
+﻿{
+  "month_id": "2026-04",
+  "revenue_target_per_channel": 2000000,
+  "revenue_target_total": 14000000,
+  "by_channel": {
+    "CH1": {
+      "net_profit": 0,
+      "target_achieved": false,
+      "rpm_stage": "INITIAL"
+    },
+    "CH2": {
+      "net_profit": 0,
+      "target_achieved": false,
+      "rpm_stage": "INITIAL"
+    },
+    "CH3": {
+      "net_profit": 0,
+      "target_achieved": false,
+      "rpm_stage": "INITIAL"
+    },
+    "CH4": {
+      "net_profit": 0,
+      "target_achieved": false,
+      "rpm_stage": "INITIAL"
+    },
+    "CH5": {
+      "net_profit": 0,
+      "target_achieved": false,
+      "rpm_stage": "INITIAL"
+    },
+    "CH6": {
+      "net_profit": 0,
+      "target_achieved": false,
+      "rpm_stage": "INITIAL"
+    },
+    "CH7": {
+      "net_profit": 0,
+      "target_achieved": false,
+      "rpm_stage": "INITIAL"
+    }
+  },
+  "channels_achieved_target": 0,
+  "total_net_profit": 0.0,
+  "gap_to_total_target": 14000000.0,
+  "achievement_rate": 0.0
+}

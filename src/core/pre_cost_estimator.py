@@ -82,7 +82,7 @@ def check_cost_limit(estimated_cost: float, cost_limit: Optional[float] = None) 
 
 def save_cost_projection(projection: Dict[str, Any], repo_root: Path) -> Path:
     """비용 예측 저장"""
-    governance_dir = repo_root / "data" / "knowledge_v1_store" / "governance"
+    governance_dir = repo_root / "data" / "global" / "cost"
     governance_dir.mkdir(parents=True, exist_ok=True)
     
     projection_path = governance_dir / "cost_projection.json"
@@ -94,7 +94,7 @@ def save_cost_projection(projection: Dict[str, Any], repo_root: Path) -> Path:
 
 def load_cost_projection(repo_root: Path) -> Optional[Dict[str, Any]]:
     """비용 예측 로드"""
-    projection_path = repo_root / "data" / "knowledge_v1_store" / "governance" / "cost_projection.json"
+    projection_path = repo_root / "data" / "global" / "cost" / "cost_projection.json"
     if not projection_path.exists():
         return None
     

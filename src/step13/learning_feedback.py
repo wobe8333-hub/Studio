@@ -1,9 +1,8 @@
 """STEP 13 — 변형 학습·정책 환류."""
-import json, logging
+import json
+from loguru import logger
 from src.core.ssot import read_json, write_json, json_exists, now_iso, get_run_dir
-from src.core.config import MEMORY_DIR
-
-logger = logging.getLogger(__name__)
+from src.core.config import MEMORY_DIR, REVENUE_TARGET_PER_CHANNEL
 
 def run_step13(channel_id: str, run_id: str) -> dict:
     run_dir = get_run_dir(channel_id, run_id)
@@ -63,7 +62,7 @@ def run_step13(channel_id: str, run_id: str) -> dict:
         "is_trending_effective":script.get("is_trending",False),
         "affiliate_click_rate_actual":0.0,
         "affiliate_purchase_rate_actual":purchase_actual,
-        "revenue_on_track_for_1_5m":(views or 0) > 50000,
+        "revenue_on_track":(views or 0) > (REVENUE_TARGET_PER_CHANNEL // 40),
         "algorithm_stage_feedback":stage,"rpm_tier_feedback":"CONFIRMED",
         "memory_store_update":{
             "topic_blacklist_add":[],

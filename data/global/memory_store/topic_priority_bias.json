@@ -1,44 +1,23 @@
-﻿{
-  "updated_at": "2026-03-22T16:44:50Z",
+{
+  "updated_at": "2026-04-01T00:00:00Z",
   "title_mode_weights": {
     "authority": 0.35,
     "curiosity": 0.45,
-    "benefit": 0.2
+    "benefit": 0.20
   },
   "channel_performance_index": {
-    "CH1": {
-      "avg_ctr_level": "TARGET",
-      "avg_avp": 0.0,
-      "avg_views": 0
-    },
-    "CH2": {
-      "avg_ctr_level": "TARGET",
-      "avg_avp": 0.0,
-      "avg_views": 0
-    },
-    "CH3": {
-      "avg_ctr_level": "TARGET",
-      "avg_avp": 0.0,
-      "avg_views": 0
-    },
-    "CH4": {
-      "avg_ctr_level": "TARGET",
-      "avg_avp": 0.0,
-      "avg_views": 0
-    },
-    "CH5": {
-      "avg_ctr_level": "TARGET",
-      "avg_avp": 0.0,
-      "avg_views": 0
-    }
+    "CH1": {"avg_ctr_level": "TARGET", "avg_avp": 0.0, "avg_views": 0},
+    "CH2": {"avg_ctr_level": "TARGET", "avg_avp": 0.0, "avg_views": 0},
+    "CH3": {"avg_ctr_level": "TARGET", "avg_avp": 0.0, "avg_views": 0},
+    "CH4": {"avg_ctr_level": "TARGET", "avg_avp": 0.0, "avg_views": 0},
+    "CH5": {"avg_ctr_level": "TARGET", "avg_avp": 0.0, "avg_views": 0},
+    "CH6": {"avg_ctr_level": "TARGET", "avg_avp": 0.0, "avg_views": 0},
+    "CH7": {"avg_ctr_level": "TARGET", "avg_avp": 0.0, "avg_views": 0}
   },
   "trend_response_patterns": [],
   "topic_blacklist_by_channel": {
-    "CH1": [],
-    "CH2": [],
-    "CH3": [],
-    "CH4": [],
-    "CH5": []
+    "CH1": [], "CH2": [], "CH3": [], "CH4": [],
+    "CH5": [], "CH6": [], "CH7": []
   },
   "winning_animation_patterns": []
 }

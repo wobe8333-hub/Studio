@@ -1,48 +1,55 @@
 {
-  "schema_version": "v2.0",
+  "schema_version": "v3.0",
+  "created_at": "2026-04-01T00:00:00Z",
   "profiles": {
-    "knowledge_dark": {
-      "hook_template": "이 영상에서는 {topic}에 대해 사람들이 잘 모르는 진실을 간단하게 보여줍니다.",
-      "promise_template": "{topic}를 이해하는 데 꼭 필요한 3가지 핵심 원리를 끝까지 보면 모두 가져갈 수 있습니다.",
-      "section_heading_template": "섹션 {index}. {topic}의 핵심 포인트 {index}",
-      "section_narration_template": "{topic}의 핵심 개념 {index}를 직관적으로 설명합니다. 시청자가 바로 행동으로 옮길 수 있도록 구체적인 예시를 포함합니다.",
-      "asset_prompt_template": "Topic: {topic}. Section {index}. High quality cinematic still explaining a key concept in personal finance. Clear composition, easy to understand for beginners."
+    "cute_economy": {
+      "hook_template": "오늘은 {topic}에 대해 많은 사람들이 모르는 핵심만 쏙쏙 알려드릴게요!",
+      "promise_template": "끝까지 보시면 {topic}를 완전히 이해하고 바로 활용할 수 있어요.",
+      "section_heading_template": "포인트 {index}. {topic}의 핵심 비밀",
+      "section_narration_template": "{topic}에서 꼭 알아야 할 {index}번째 포인트를 귀엽고 쉽게 설명해드릴게요. 실생활에 바로 써먹을 수 있는 예시도 함께요!",
+      "asset_prompt_template": "cute chibi character explaining {topic}, point {index}, economic concept, pastel colors, 2D kawaii animation style, clean background, no text, high quality"
     },
-    "storytelling": {
-      "hook_template": "이야기는 한 사람의 선택에서 시작됩니다. 오늘은 {topic}을 통해 그 선택이 어떻게 역사를 바꿨는지 따라가 봅니다.",
-      "promise_template": "끝까지 보면 {topic}을 전혀 다른 시각에서 보게 될 것입니다.",
-      "section_heading_template": "장면 {index}. {topic}을 움직인 결정적인 순간",
-      "section_narration_template": "감정선을 따라가며 {topic} 사건의 배경과 인물의 갈등을 천천히 풀어줍니다.",
-      "asset_prompt_template": "Topic: {topic}. Scene {index}. Cinematic historical reenactment style frame, dramatic lighting, emotional storytelling, no text overlay."
+    "cute_realestate": {
+      "hook_template": "부동산 {topic}, 제대로 알고 계신가요? 오늘 딱 핵심만 알려드릴게요!",
+      "promise_template": "영상 끝까지 보시면 {topic}에서 실수 없이 현명한 결정을 내릴 수 있어요.",
+      "section_heading_template": "핵심 {index}. {topic} 완전 정복",
+      "section_narration_template": "{topic}의 {index}번째 핵심 포인트예요. 처음 들어도 이해하기 쉽게 설명해드릴게요!",
+      "asset_prompt_template": "cute chibi character with house or building, explaining {topic}, point {index}, real estate concept, warm colors, 2D kawaii animation style, clean background, no text, high quality"
     },
-    "documentary": {
-      "hook_template": "지금부터 {topic}에 대한 팩트만 차분하게 정리해 보겠습니다.",
-      "promise_template": "숫자와 자료를 기반으로 {topic}의 실제 모습을 알 수 있습니다.",
-      "section_heading_template": "파트 {index}. {topic}의 사실 관계 정리",
-      "section_narration_template": "{topic}과 관련된 데이터를 차분하게 설명하고, 시청자가 스스로 판단할 수 있도록 맥락을 제공합니다.",
-      "asset_prompt_template": "Topic: {topic}. Part {index}. Documentary style photo with natural colors and realistic lighting, showing context around the topic, no text overlay."
+    "cute_psychology": {
+      "hook_template": "혹시 {topic}로 힘드셨나요? 오늘 그 이유와 해결책을 알려드릴게요.",
+      "promise_template": "이 영상이 끝날 때쯤 {topic}에 대해 완전히 새로운 시각을 갖게 되실 거예요.",
+      "section_heading_template": "단계 {index}. {topic}를 이해하는 핵심",
+      "section_narration_template": "{topic}의 {index}번째 핵심을 따뜻하고 쉽게 풀어드릴게요. 여러분의 마음이 조금 더 편해지길 바랍니다.",
+      "asset_prompt_template": "cute chibi character with emotional expression, illustrating {topic}, scene {index}, psychological concept, soft pastel colors, 2D kawaii animation style, warm background, no text, high quality"
     },
-    "tech_explainer": {
-      "hook_template": "{topic}을(를) 완전 기초부터 단계별로 정리해 드립니다.",
-      "promise_template": "영상이 끝날 때쯤이면 {topic}을 직접 설명할 수 있을 정도로 이해하게 됩니다.",
-      "section_heading_template": "단계 {index}. {topic}을 이해하기 위한 필수 개념",
-      "section_narration_template": "복잡해 보이는 {topic}을 최대한 단순한 비유와 단계로 나누어 설명합니다.",
-      "asset_prompt_template": "Topic: {topic}. Step {index}. Clean infographic style thumbnail frame, high contrast, large shapes, no tiny text, optimized for readability in 16:9."
+    "cute_mystery": {
+      "hook_template": "{topic}… 아직도 아무도 모릅니다. 오늘 그 진실에 가까워져 볼게요.",
+      "promise_template": "끝까지 보시면 {topic}의 숨겨진 진실과 놀라운 사실을 알게 되실 거예요.",
+      "section_heading_template": "단서 {index}. {topic}의 충격적 사실",
+      "section_narration_template": "{topic}의 {index}번째 미스터리를 파헤쳐볼게요. 과연 진실은 무엇일까요?",
+      "asset_prompt_template": "cute chibi character with surprised or scared expression, illustrating {topic}, clue {index}, mystery concept, dark pastel colors, 2D kawaii animation style, mysterious background, no text, high quality"
     },
-    "stickman_story": {
-      "hook_template": "오늘은 {topic} 이야기를 스틱맨으로 풀어봅니다.",
-      "promise_template": "끝까지 보면 {topic}을 한 편의 애니메이션으로 기억하게 됩니다.",
-      "section_heading_template": "장면 {index}. {topic}",
-      "section_narration_template": "{topic} 장면 {index}.",
-      "asset_prompt_template": "Simple cartoon background, clean shapes, bold outlines, bright readable composition, 16:9, no text, no watermark."
+    "cute_war_history": {
+      "hook_template": "{topic}의 역사에는 교과서에 나오지 않는 충격적인 사실이 있습니다.",
+      "promise_template": "오늘 {topic}를 통해 역사가 어떻게 바뀌었는지 생생하게 알아봐요.",
+      "section_heading_template": "전황 {index}. {topic}의 결정적 순간",
+      "section_narration_template": "{topic}의 {index}번째 핵심 사건을 귀여운 애니메이션으로 생생하게 전달해드릴게요.",
+      "asset_prompt_template": "cute chibi military character, illustrating {topic}, scene {index}, war history concept, muted military colors, 2D kawaii animation style, historical background, no text, high quality"
     },
-    "simple_character_story": {
-      "hook_template": "오늘은 {topic} 이야기를 심플 캐릭터로 풀어봅니다.",
-      "promise_template": "끝까지 보면 {topic}을 한 편의 애니메이션으로 기억하게 됩니다.",
-      "section_heading_template": "장면 {index}. {topic}",
-      "section_narration_template": "{topic} 장면 {index}.",
-      "asset_prompt_template": "Background scene for {topic}, simple cartoon setting, wide composition, 16:9, no text, no watermark."
+    "cute_science": {
+      "hook_template": "{topic}, 사실 당신이 알던 것과 완전히 다를 수 있어요! 오늘 그 진실을 알려드릴게요.",
+      "promise_template": "끝까지 보시면 {topic}를 친구에게도 설명할 수 있을 정도로 이해하게 돼요.",
+      "section_heading_template": "발견 {index}. {topic}의 놀라운 사실",
+      "section_narration_template": "{topic}의 {index}번째 핵심 원리를 초등학생도 이해할 수 있게 쉽게 설명해드릴게요!",
+      "asset_prompt_template": "cute chibi scientist character with excited expression, illustrating {topic}, discovery {index}, science concept, bright vibrant colors, 2D kawaii animation style, lab or space background, no text, high quality"
+    },
+    "cute_history": {
+      "hook_template": "{topic}, 교과서에는 이렇게 안 나왔죠? 오늘 그 진짜 이야기를 들려드릴게요.",
+      "promise_template": "이 영상이 끝나면 {topic}이 얼마나 흥미롭고 우리 삶과 연결되는지 알게 되실 거예요.",
+      "section_heading_template": "장면 {index}. {topic}의 결정적 순간",
+      "section_narration_template": "{topic}의 {index}번째 핵심 장면을 귀엽고 생생한 애니메이션으로 만나보세요.",
+      "asset_prompt_template": "cute chibi historical character, illustrating {topic}, scene {index}, history concept, aged warm colors, 2D kawaii animation style, historical setting background, no text, high quality"
     }
   }
 }
-

@@ -1,0 +1,36 @@
+﻿{
+  "schema_version": "1.0",
+  "channel_id": "CH7",
+  "base_topic": "\uc5ed\uc0ac \uc2dc\ub9ac\uc988",
+  "episode_count": 3,
+  "episodes": [
+    {
+      "episode": 1,
+      "title": "\uc5ed\uc0ac \uc2dc\ub9ac\uc988 \uae30\ucd08\ud3b8",
+      "channel_id": "CH7",
+      "is_trending": false,
+      "topic_type": "series",
+      "series_ref": "\uc5ed\uc0ac \uc2dc\ub9ac\uc988",
+      "created_at": "2026-04-02T14:40:18Z"
+    },
+    {
+      "episode": 2,
+      "title": "\uc5ed\uc0ac \uc2dc\ub9ac\uc988 \uc2ec\ud654\ud3b8",
+      "channel_id": "CH7",
+      "is_trending": false,
+      "topic_type": "series",
+      "series_ref": "\uc5ed\uc0ac \uc2dc\ub9ac\uc988",
+      "created_at": "2026-04-02T14:40:18Z"
+    },
+    {
+      "episode": 3,
+      "title": "\uc5ed\uc0ac \uc2dc\ub9ac\uc988 \uc2e4\uc804\ud3b8",
+      "channel_id": "CH7",
+      "is_trending": false,
+      "topic_type": "series",
+      "series_ref": "\uc5ed\uc0ac \uc2dc\ub9ac\uc988",
+      "created_at": "2026-04-02T14:40:18Z"
+    }
+  ],
+  "created_at": "2026-04-02T14:40:18Z"
+}

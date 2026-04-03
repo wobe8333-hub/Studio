@@ -1,34 +1,32 @@
 from pathlib import Path
 from src.core.ssot import read_json, write_json, json_exists, now_iso
-from src.core.config import CHANNELS_DIR
+from src.core.config import CHANNELS_DIR, CHANNEL_HOOK_DIRECTION
 
 CHANNEL_AUDIENCE = {
     "CH1": {"primary_age_range": "30~50대", "primary_gender": "남성",
             "peak_viewing_hours_kst": [19, 20, 21]},
-    "CH2": {"primary_age_range": "40~60대", "primary_gender": "전반",
-            "peak_viewing_hours_kst": [10, 11, 12]},
+    "CH2": {"primary_age_range": "30~50대", "primary_gender": "전반",
+            "peak_viewing_hours_kst": [20, 21, 22]},
     "CH3": {"primary_age_range": "20~40대", "primary_gender": "전반",
             "peak_viewing_hours_kst": [14, 15, 16, 17]},
-    "CH4": {"primary_age_range": "30~50대", "primary_gender": "남성",
-            "peak_viewing_hours_kst": [20, 21, 22]},
-    "CH5": {"primary_age_range": "20~40대", "primary_gender": "전반",
+    "CH4": {"primary_age_range": "20~40대", "primary_gender": "전반",
             "peak_viewing_hours_kst": [21, 22, 23]},
+    "CH5": {"primary_age_range": "25~45대", "primary_gender": "남성",
+            "peak_viewing_hours_kst": [14, 15, 16]},
+    "CH6": {"primary_age_range": "20~40대", "primary_gender": "전반",
+            "peak_viewing_hours_kst": [15, 16, 17]},
+    "CH7": {"primary_age_range": "20~50대", "primary_gender": "전반",
+            "peak_viewing_hours_kst": [20, 21, 22]},
 }
 CHANNEL_UPLOAD_DAYS = {
     "CH1": ["화", "목", "토"],
     "CH2": ["월", "수", "금"],
     "CH3": ["토", "일"],
-    "CH4": ["화", "목", "토"],
-    "CH5": ["월", "수", "금"],
+    "CH4": ["금", "토"],
+    "CH5": ["토", "일"],
+    "CH6": ["화", "목", "토"],
+    "CH7": ["수", "토"],
 }
-CHANNEL_HOOK_DIRECTION = {
-    "CH1": "경제적 손실 공포 + 기회 제시",
-    "CH2": "건강 위협 사실 + 해결책 예고",
-    "CH3": "행동 패턴 충격 사실 + 변화 약속",
-    "CH4": "부동산 손실 위험 + 기회 포착 방법",
-    "CH5": "AI 충격 사실 + 활용 방법 약속",
-}
-
 def get_algorithm_policy(channel_id: str) -> dict:
     policy_path = CHANNELS_DIR / channel_id / "algorithm_policy.json"
     if json_exists(policy_path):

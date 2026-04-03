@@ -1,36 +1,13 @@
-﻿{
-  "updated_at": "2026-03-22T16:44:50Z",
+{
+  "updated_at": "2026-04-01T00:00:00Z",
   "by_channel": {
-    "CH1": {
-      "topics_produced": 0,
-      "topics_available_estimate": 200,
-      "depletion_risk": "LOW",
-      "refresh_eligible_topics": []
-    },
-    "CH2": {
-      "topics_produced": 0,
-      "topics_available_estimate": 200,
-      "depletion_risk": "LOW",
-      "refresh_eligible_topics": []
-    },
-    "CH3": {
-      "topics_produced": 0,
-      "topics_available_estimate": 200,
-      "depletion_risk": "LOW",
-      "refresh_eligible_topics": []
-    },
-    "CH4": {
-      "topics_produced": 0,
-      "topics_available_estimate": 200,
-      "depletion_risk": "LOW",
-      "refresh_eligible_topics": []
-    },
-    "CH5": {
-      "topics_produced": 0,
-      "topics_available_estimate": 200,
-      "depletion_risk": "LOW",
-      "refresh_eligible_topics": []
-    }
+    "CH1": {"topics_produced": 0, "topics_available_estimate": 1000, "depletion_risk": "LOW", "refresh_eligible_topics": []},
+    "CH2": {"topics_produced": 0, "topics_available_estimate": 800,  "depletion_risk": "LOW", "refresh_eligible_topics": []},
+    "CH3": {"topics_produced": 0, "topics_available_estimate": 600,  "depletion_risk": "LOW", "refresh_eligible_topics": []},
+    "CH4": {"topics_produced": 0, "topics_available_estimate": 800,  "depletion_risk": "LOW", "refresh_eligible_topics": []},
+    "CH5": {"topics_produced": 0, "topics_available_estimate": 2000, "depletion_risk": "LOW", "refresh_eligible_topics": []},
+    "CH6": {"topics_produced": 0, "topics_available_estimate": 1500, "depletion_risk": "LOW", "refresh_eligible_topics": []},
+    "CH7": {"topics_produced": 0, "topics_available_estimate": 2000, "depletion_risk": "LOW", "refresh_eligible_topics": []}
   },
   "total_topics_produced": 0,
   "sustainability_horizon_months": 24

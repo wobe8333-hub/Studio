@@ -3,24 +3,25 @@
 # 절대 빈 파일로 교체하거나 내용을 삭제하지 않는다.
 # 정리 스크립트(__init__.py 일괄 초기화 등) 적용 대상에서 반드시 제외한다.
 
+from loguru import logger
 import time
-import logging
 import shutil
 from pathlib import Path
 from src.core.ssot import (write_json, read_json, json_exists, sha256_file,
                              sha256_dict, now_iso, get_run_dir)
-from src.core.config import CHANNELS_DIR
+from src.core.config import CHANNELS_DIR, CHANNEL_CATEGORY_KO
 from src.core.decision_trace import append_trace
 from src.step00.channel_registry import get_channel
 from src.step08.script_generator import generate_script
 from src.step08.image_generator import generate_batch as gen_images
+from src.step08.sd_generator import generate_scene_images as gen_sd_images
 from src.step08.manim_generator import generate_and_run as manim_run
 from src.step08.narration_generator import generate_narration
 from src.step08.subtitle_generator import generate_subtitles
 from src.step08.ffmpeg_composer import (image_to_clip, concat_clips,
                                          add_narration, add_subtitles)
-
-logger = logging.getLogger(__name__)
+from src.step08.motion_engine import batch_create_motion_clips, create_motion_clip
+from src.step08.scene_composer import compose_all_scenes
 
 def run_step08(channel_id: str, topic: dict, style_policy: dict,
                revenue_policy: dict, algorithm_policy: dict) -> str:
@@ -79,15 +80,39 @@ def run_step08(channel_id: str, topic: dict, style_policy: dict,
     clip_paths = []
     manim_fallback_count = 0
 
-    logger.info(f"[STEP08] {channel_id}/{run_id} Gemini 이미지 생성 중...")
-    img_results = gen_images(gemini_sections, images_ai)
+    logger.info(f"[STEP08] {channel_id}/{run_id} 이미지 생성 중 (SD XL → Gemini 폴백)...")
+    # SD XL + LoRA 우선 시도, 실패 섹션은 Gemini 폴백
+    sd_paths = gen_sd_images(channel_id, gemini_sections, images_ai)
+    img_results = {
+        sec["id"]: p
+        for sec, p in zip(gemini_sections, sd_paths)
+        if p and p.exists()
+    }
+    missing_sections = [s for s in gemini_sections if s["id"] not in img_results]
+    if missing_sections:
+        fallback_results = gen_images(missing_sections, images_ai)
+        img_results.update(fallback_results)
+    # scene_composer: 캐릭터 이미지 + 텍스트 오버레이 합성
+    composed_dir = step08_dir / "images" / "composed"
+    char_paths_ordered = []
+    sections_for_compose = []
     for sec in gemini_sections:
         img_path = img_results.get(sec["id"])
         if img_path and img_path.exists():
-            clip_path = clips_gemini / f"section_{sec['id']:03d}.mp4"
-            image_to_clip(img_path, clip_path, duration_sec=6.0)
-            if clip_path.exists():
-                clip_paths.append((sec["id"], clip_path))
+            char_paths_ordered.append(img_path)
+            sections_for_compose.append(sec)
+
+    composed_paths = compose_all_scenes(char_paths_ordered, sections_for_compose, composed_dir)
+    # 합성 실패 시 원본 이미지 폴백
+    final_img_paths = composed_paths if composed_paths else char_paths_ordered
+
+    # motion_engine: Ken Burns 팬/줌 효과 적용
+    motion_clips_dir = step08_dir / "clips" / "motion"
+    motion_clips = batch_create_motion_clips(final_img_paths, motion_clips_dir, duration_sec=6.0)
+
+    for sec, clip_path in zip(sections_for_compose, motion_clips):
+        if clip_path and clip_path.exists():
+            clip_paths.append((sec["id"], clip_path))
 
     logger.info(f"[STEP08] {channel_id}/{run_id} Manim 클립 생성 중...")
     stability_log = []
@@ -105,7 +130,7 @@ def run_step08(channel_id: str, topic: dict, style_policy: dict,
             generate_single_image(img_desc, img_path)
             if img_path.exists():
                 clip_path_fb = clips_gemini / f"section_{sec['id']:03d}_fallback.mp4"
-                image_to_clip(img_path, clip_path_fb, duration_sec=6.0)
+                create_motion_clip(img_path, clip_path_fb, duration_sec=6.0)
                 if clip_path_fb.exists():
                     clip_paths.append((sec["id"], clip_path_fb))
 
@@ -137,7 +162,7 @@ def run_step08(channel_id: str, topic: dict, style_policy: dict,
 
     logger.info(f"[STEP08] {channel_id}/{run_id} narration 생성 중...")
     narration_path = step08_dir / "narration.wav"
-    generate_narration(script, narration_path)
+    generate_narration(script, narration_path, channel_id)
 
     with_narr = step08_dir / "video_narr.mp4"
     add_narration(concat_path, narration_path, with_narr)
@@ -198,7 +223,7 @@ def _generate_metadata_files(channel_id: str, run_id: str, script: dict,
 
     throttle_if_needed()
     record_request()
-    tag_prompt = f"YouTube 영상 태그 15개를 한국어와 영어로 섞어 콤마로 구분하여 나열하시오. 주제: {topic.get('title', '')} 카테고리: {CHANNELS_DIR}"
+    tag_prompt = f"YouTube 영상 태그 15개를 한국어와 영어로 섞어 콤마로 구분하여 나열하시오. 주제: {topic.get('title', '')} 카테고리: {CHANNEL_CATEGORY_KO.get(channel_id, channel_id)}"
     tag_response = model.generate_content(tag_prompt,
         generation_config=genai.GenerationConfig(max_output_tokens=200))
     tags = [t.strip() for t in tag_response.text.split(",")][:15]

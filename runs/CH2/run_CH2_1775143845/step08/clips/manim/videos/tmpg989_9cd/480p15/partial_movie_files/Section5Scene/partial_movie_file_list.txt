@@ -1,0 +1,2 @@
+# This file is used internally by FFMPEG.
+file 'file:C:/Users/조찬우/Desktop/ai_stuidio_claude/runs/CH2/run_CH2_1775143845/step08/clips/manim/videos/tmpg989_9cd/480p15/partial_movie_files/Section5Scene/uncached_00000.mp4'

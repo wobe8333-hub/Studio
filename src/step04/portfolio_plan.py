@@ -1,13 +1,11 @@
 """STEP 04 — 월간 포트폴리오 계획.
 버그 수정(BUG-1): 중복 로직 제거. channel_registry.get_active_channels 재사용.
 """
-import logging
 from datetime import datetime
 from src.core.config import GLOBAL_DIR, CHANNEL_MONTHLY_TARGET
 from src.core.ssot import write_json, now_iso
 from src.step00.channel_registry import get_active_channels
 
-logger = logging.getLogger(__name__)
 TRENDING_RATIO  = 0.60
 EVERGREEN_RATIO = 0.25
 SERIES_RATIO    = 0.15
@@ -36,6 +34,6 @@ def create_portfolio_plan(month_number: int) -> dict:
     return plan
 
 if __name__ == "__main__":
-    import sys; logging.basicConfig(level="INFO")
+    import sys
     p = create_portfolio_plan(int(sys.argv[1]) if len(sys.argv) > 1 else 1)
     print(f"[STEP04] total={p['total_video_target']} active={p['active_channels']}")

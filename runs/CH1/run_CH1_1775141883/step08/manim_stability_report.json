@@ -1,0 +1,45 @@
+﻿{
+  "run_id": "run_CH1_1775141883",
+  "manim_sections_attempted": 7,
+  "manim_sections_success": 7,
+  "manim_sections_fallback": 0,
+  "fallback_rate": 0.0,
+  "hitl_required": false,
+  "details": [
+    {
+      "section_id": 0,
+      "success": true,
+      "fallback": false
+    },
+    {
+      "section_id": 1,
+      "success": true,
+      "fallback": false
+    },
+    {
+      "section_id": 2,
+      "success": true,
+      "fallback": false
+    },
+    {
+      "section_id": 3,
+      "success": true,
+      "fallback": false
+    },
+    {
+      "section_id": 4,
+      "success": true,
+      "fallback": false
+    },
+    {
+      "section_id": 5,
+      "success": true,
+      "fallback": false
+    },
+    {
+      "section_id": 6,
+      "success": true,
+      "fallback": false
+    }
+  ]
+}

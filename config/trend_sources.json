@@ -1,0 +1,88 @@
+{
+  "_comment": "카테고리별 트렌드 수집 소스 설정 (Phase 3)",
+  "rss_feeds": {
+    "economy": [
+      "https://news.google.com/rss/search?q=경제+금리+주식&hl=ko&gl=KR&ceid=KR:ko",
+      "https://news.google.com/rss/search?q=재테크+투자+부동산+경제&hl=ko&gl=KR&ceid=KR:ko"
+    ],
+    "realestate": [
+      "https://news.google.com/rss/search?q=아파트+부동산+분양+청약&hl=ko&gl=KR&ceid=KR:ko",
+      "https://news.google.com/rss/search?q=부동산+규제+전세+임대&hl=ko&gl=KR&ceid=KR:ko"
+    ],
+    "psychology": [
+      "https://news.google.com/rss/search?q=심리학+정신건강+자존감+번아웃&hl=ko&gl=KR&ceid=KR:ko",
+      "https://news.google.com/rss/search?q=인간관계+스트레스+심리치료&hl=ko&gl=KR&ceid=KR:ko"
+    ],
+    "mystery": [
+      "https://news.google.com/rss/search?q=미스터리+미해결+사건+음모론&hl=ko&gl=KR&ceid=KR:ko",
+      "https://news.google.com/rss/search?q=UFO+초자연현상+미스터리&hl=ko&gl=KR&ceid=KR:ko"
+    ],
+    "war_history": [
+      "https://news.google.com/rss/search?q=전쟁+군사+역사+무기&hl=ko&gl=KR&ceid=KR:ko",
+      "https://news.google.com/rss/search?q=세계대전+냉전+군사역사&hl=ko&gl=KR&ceid=KR:ko"
+    ],
+    "science": [
+      "https://news.google.com/rss/search?q=과학+우주+AI+연구&hl=ko&gl=KR&ceid=KR:ko",
+      "https://feeds.feedburner.com/sciencedaily/top_news",
+      "https://www.nasa.gov/feeds/iotd-feed"
+    ],
+    "history": [
+      "https://news.google.com/rss/search?q=역사+조선+고려+한국사&hl=ko&gl=KR&ceid=KR:ko",
+      "https://news.google.com/rss/search?q=세계사+문명+역사적+사건&hl=ko&gl=KR&ceid=KR:ko"
+    ]
+  },
+  "subreddits": {
+    "economy": ["Economics", "finance", "personalfinance", "investing", "Korea"],
+    "realestate": ["RealEstate", "realestateinvesting", "Korea"],
+    "psychology": ["psychology", "selfimprovement", "mentalhealth", "productivity"],
+    "mystery": ["UnsolvedMysteries", "mystery", "Unexplained", "creepy", "conspiracy"],
+    "war_history": ["MilitaryHistory", "WarCollege", "history", "ww2"],
+    "science": ["science", "space", "physics", "biology", "askscience"],
+    "history": ["history", "AskHistorians", "worldhistory", "korea"]
+  },
+  "youtube_competitor_search_terms": {
+    "economy": ["경제 설명", "금리 분석", "주식 전망", "재테크 방법"],
+    "realestate": ["아파트 분석", "부동산 투자", "청약 방법", "전세 시세"],
+    "psychology": ["심리학 실험", "번아웃 극복", "자존감 높이기", "인간관계"],
+    "mystery": ["미해결 사건", "음모론 진실", "미스터리 사건", "도시전설"],
+    "war_history": ["2차 세계대전", "전쟁사 설명", "한국전쟁 진실", "나폴레옹"],
+    "science": ["우주 신비", "양자역학 쉽게", "블랙홀 설명", "진화론"],
+    "history": ["조선 역사", "고대 문명", "세계사 설명", "역사 인물"]
+  },
+  "naver_search_keywords": {
+    "economy": ["경제", "금리", "주식", "재테크", "인플레이션", "환율"],
+    "realestate": ["아파트", "부동산", "청약", "전세", "분양", "재개발"],
+    "psychology": ["심리학", "번아웃", "자존감", "인간관계", "스트레스", "MBTI"],
+    "mystery": ["미스터리", "미해결사건", "음모론", "초자연", "UFO"],
+    "war_history": ["전쟁사", "세계대전", "나폴레옹", "한국전쟁", "임진왜란"],
+    "science": ["우주", "양자역학", "AI인공지능", "블랙홀", "진화", "유전자"],
+    "history": ["조선역사", "고려", "삼국시대", "세계사", "고대문명", "한국사"]
+  },
+  "google_trends_keywords": {
+    "economy": ["금리", "인플레이션", "주식", "달러", "재테크"],
+    "realestate": ["아파트 가격", "청약", "전세", "부동산"],
+    "psychology": ["번아웃", "자존감", "MBTI", "공황장애"],
+    "mystery": ["미스터리", "음모론", "UFO", "미해결 사건"],
+    "war_history": ["세계대전", "나폴레옹", "전쟁", "군사"],
+    "science": ["우주", "AI", "양자컴퓨터", "블랙홀", "CRISPR"],
+    "history": ["조선", "역사", "세종대왕", "로마", "고대"]
+  },
+  "collection_intervals": {
+    "layer1_realtime_hours": 6,
+    "layer2_daily_hours": 24,
+    "layer3_weekly_days": 7,
+    "layer4_monthly_days": 30,
+    "layer5_evergreen_days": 90
+  },
+  "scoring_weights": {
+    "interest": 0.40,
+    "fit": 0.25,
+    "revenue": 0.20,
+    "urgency": 0.15
+  },
+  "promotion_thresholds": {
+    "auto_promote": 80,
+    "review_queue": 60,
+    "reject": 0
+  }
+}

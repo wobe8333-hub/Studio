@@ -1,37 +1,92 @@
 ﻿{
-  "schema_version": "1.0",
-  "created_at": "2026-03-22T16:44:50Z",
-  "total_channels": 5,
+  "schema_version": "2.0",
+  "created_at": "2026-04-02T14:42:09Z",
+  "total_channels": 7,
   "channels": [
     {
       "channel_id": "CH1",
-      "category": "\uacbd\uc81c_\uc7ac\ud14c\ud06c",
+      "category": "economy",
+      "category_ko": "\uacbd\uc81c",
       "launch_phase": 1,
-      "youtube_channel_id": ""
+      "youtube_channel_id": "UCenGEV2QPDa1HH5Yp9wwv0w",
+      "status": "PLANNED",
+      "rpm_proxy": 7000,
+      "revenue_target_monthly": 2000000,
+      "monthly_longform_target": 10,
+      "monthly_shorts_target": 30
     },
     {
       "channel_id": "CH2",
-      "category": "\uac74\uac15_\uc758\ud559",
+      "category": "realestate",
+      "category_ko": "\ubd80\ub3d9\uc0b0",
       "launch_phase": 1,
-      "youtube_channel_id": ""
+      "youtube_channel_id": "UC9DnTO-u-6vc-x8WCT85m_g",
+      "status": "PLANNED",
+      "rpm_proxy": 6000,
+      "revenue_target_monthly": 2000000,
+      "monthly_longform_target": 10,
+      "monthly_shorts_target": 30
     },
     {
       "channel_id": "CH3",
-      "category": "\uc2ec\ub9ac_\ud589\ub3d9",
+      "category": "psychology",
+      "category_ko": "\uc2ec\ub9ac",
       "launch_phase": 2,
-      "youtube_channel_id": ""
+      "youtube_channel_id": "UCq6Zqe0h82QdzfaoTXCSb_A",
+      "status": "PLANNED",
+      "rpm_proxy": 4000,
+      "revenue_target_monthly": 2000000,
+      "monthly_longform_target": 10,
+      "monthly_shorts_target": 30
     },
     {
       "channel_id": "CH4",
-      "category": "\ubd80\ub3d9\uc0b0_\uacbd\ub9e4",
+      "category": "mystery",
+      "category_ko": "\ubbf8\uc2a4\ud130\ub9ac",
       "launch_phase": 2,
-      "youtube_channel_id": ""
+      "youtube_channel_id": "UC4xYyRR0pM8NlAAGXh5UnHA",
+      "status": "PLANNED",
+      "rpm_proxy": 3500,
+      "revenue_target_monthly": 2000000,
+      "monthly_longform_target": 12,
+      "monthly_shorts_target": 40
     },
     {
       "channel_id": "CH5",
-      "category": "AI_\ud14c\ud06c",
+      "category": "war_history",
+      "category_ko": "\uc804\uc7c1\uc0ac",
       "launch_phase": 3,
-      "youtube_channel_id": ""
+      "youtube_channel_id": "UCr65bNxC-QP04E2tm0GUh_A",
+      "status": "PLANNED",
+      "rpm_proxy": 3500,
+      "revenue_target_monthly": 2000000,
+      "monthly_longform_target": 12,
+      "monthly_shorts_target": 40
+    },
+    {
+      "channel_id": "CH6",
+      "category": "science",
+      "category_ko": "\uacfc\ud559",
+      "launch_phase": 3,
+      "youtube_channel_id": "UCDOPrhSgKJj8iEpUUyutm5g",
+      "status": "PLANNED",
+      "rpm_proxy": 4000,
+      "revenue_target_monthly": 2000000,
+      "monthly_longform_target": 10,
+      "monthly_shorts_target": 30
+    },
+    {
+      "channel_id": "CH7",
+      "category": "history",
+      "category_ko": "\uc5ed\uc0ac",
+      "launch_phase": 3,
+      "youtube_channel_id": "UCs8Jdi0rbIxpVNSIfy1stUQ",
+      "status": "PLANNED",
+      "rpm_proxy": 4000,
+      "revenue_target_monthly": 2000000,
+      "monthly_longform_target": 10,
+      "monthly_shorts_target": 30
     }
-  ]
+  ],
+  "total_revenue_target_monthly": 14000000
 }

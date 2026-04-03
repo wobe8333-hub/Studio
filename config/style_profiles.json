@@ -1,73 +1,98 @@
 {
-  "schema_version": "v2.0",
+  "schema_version": "v3.0",
+  "created_at": "2026-04-01T00:00:00Z",
+  "animation_concept": "귀여운 캐릭터 애니메이션 — 채널별 고유 캐릭터, SD XL + LoRA",
   "profiles": {
-    "knowledge_dark": {
-      "tone": "authoritative",
-      "subtitle_style": "minimal_bottom",
-      "transition_style": "fade",
-      "music_style": "ambient_dark",
+    "cute_economy": {
+      "tone": "friendly_informative",
+      "subtitle_style": "bold_bottom",
+      "transition_style": "slide",
+      "music_style": "light_jazz",
       "narration_speed": "medium",
-      "image_prompt_prefix": "High quality, cinematic lighting, sharp focus. ",
-      "image_negative_prompt": "blurry, low-res, watermark, illegible text",
+      "sd_prompt_prefix": "cute chibi character, pastel color palette, clean background, 2D animation style, Korean economic news illustration, kawaii, high quality, ",
+      "sd_negative_prompt": "realistic, 3D render, dark, scary, blurry, low quality, watermark, text overlay",
       "title_style": "contrarian_truth",
-      "tags_base": ["finance", "money", "investing"]
+      "tags_base": ["경제", "재테크", "주식", "금융", "애니메이션"],
+      "character_expression_set": ["happy", "surprised", "thinking", "explaining", "worried"],
+      "disclaimer": "본 영상은 투자 권유가 아니며, 모든 투자 결정은 개인의 판단과 책임입니다."
     },
-    "storytelling": {
-      "tone": "emotional",
-      "subtitle_style": "minimal_bottom",
+    "cute_realestate": {
+      "tone": "practical_friendly",
+      "subtitle_style": "bold_bottom",
+      "transition_style": "slide",
+      "music_style": "light_acoustic",
+      "narration_speed": "medium",
+      "sd_prompt_prefix": "cute chibi character, warm color palette, house and building background, 2D animation style, Korean real estate illustration, kawaii, high quality, ",
+      "sd_negative_prompt": "realistic, 3D render, dark, scary, blurry, low quality, watermark, text overlay",
+      "title_style": "practical_guide",
+      "tags_base": ["부동산", "아파트", "청약", "전세", "애니메이션"],
+      "character_expression_set": ["happy", "surprised", "thinking", "explaining", "worried"],
+      "disclaimer": "본 영상은 법적 효력이 없으며, 부동산 투자 결정 전 전문가 상담을 권장합니다."
+    },
+    "cute_psychology": {
+      "tone": "warm_empathetic",
+      "subtitle_style": "soft_bottom",
       "transition_style": "fade",
       "music_style": "piano_soft",
       "narration_speed": "slow",
-      "image_prompt_prefix": "Cinematic scene, dramatic composition, film still. ",
-      "image_negative_prompt": "blurry, low-res, watermark, illegible text",
-      "title_style": "story_hook",
-      "tags_base": ["history", "story", "documentary"]
+      "sd_prompt_prefix": "cute chibi character, soft pastel colors, gentle warm background, 2D animation style, psychological concept illustration, kawaii, emotional, high quality, ",
+      "sd_negative_prompt": "realistic, 3D render, dark, scary, blurry, low quality, watermark, text overlay",
+      "title_style": "emotional_hook",
+      "tags_base": ["심리", "자기개발", "멘탈", "감정", "애니메이션"],
+      "character_expression_set": ["happy", "sad", "surprised", "thinking", "relieved", "worried"],
+      "disclaimer": "본 영상은 전문 심리 상담을 대체하지 않습니다. 필요시 전문가의 도움을 받으세요."
     },
-    "documentary": {
-      "tone": "neutral",
-      "subtitle_style": "minimal_bottom",
-      "transition_style": "fade",
-      "music_style": "ambient_dark",
+    "cute_mystery": {
+      "tone": "suspenseful_playful",
+      "subtitle_style": "bold_bottom",
+      "transition_style": "glitch",
+      "music_style": "suspense_light",
       "narration_speed": "medium",
-      "image_prompt_prefix": "Documentary style photo, natural colors, realistic. ",
-      "image_negative_prompt": "blurry, low-res, watermark, illegible text",
-      "title_style": "fact_investigation",
-      "tags_base": ["documentary", "facts", "analysis"]
+      "sd_prompt_prefix": "cute chibi character, dark pastel color palette, mysterious background, 2D animation style, mystery illustration, kawaii but spooky, high quality, ",
+      "sd_negative_prompt": "realistic, 3D render, gore, disturbing, blurry, low quality, watermark, text overlay",
+      "title_style": "mystery_hook",
+      "tags_base": ["미스터리", "괴담", "음모론", "미해결", "애니메이션"],
+      "character_expression_set": ["surprised", "scared", "curious", "whispering", "shocked"],
+      "disclaimer": "본 영상의 내용은 오락 목적이며, 일부 내용은 미확인 정보를 포함할 수 있습니다."
     },
-    "tech_explainer": {
-      "tone": "clear",
-      "subtitle_style": "minimal_bottom",
-      "transition_style": "fade",
-      "music_style": "ambient_dark",
-      "narration_speed": "fast",
-      "image_prompt_prefix": "Clean infographic style, readable composition, high contrast. ",
-      "image_negative_prompt": "blurry, low-res, watermark, illegible text",
-      "title_style": "step_by_step",
-      "tags_base": ["tech", "howto", "explainer"]
-    },
-    "stickman_story": {
-      "tone": "casual",
-      "subtitle_style": "minimal_bottom",
-      "transition_style": "fade",
-      "music_style": "ambient_dark",
+    "cute_war_history": {
+      "tone": "epic_educational",
+      "subtitle_style": "bold_bottom",
+      "transition_style": "slide",
+      "music_style": "orchestral_light",
       "narration_speed": "medium",
-      "image_prompt_prefix": "Simple cartoon background, clean shapes, bold outlines, 16:9, no text, no watermark. ",
-      "image_negative_prompt": "blurry, low-res, watermark, person, character, stickman",
-      "title_style": "story_hook",
-      "tags_base": ["stickman", "animation", "story"]
+      "sd_prompt_prefix": "cute chibi character, muted military color palette, historical battle background, 2D animation style, war history illustration, kawaii military, high quality, ",
+      "sd_negative_prompt": "realistic gore, graphic violence, dark disturbing, blurry, low quality, watermark, text overlay",
+      "title_style": "epic_fact",
+      "tags_base": ["전쟁사", "역사", "군사", "2차대전", "애니메이션"],
+      "character_expression_set": ["determined", "surprised", "thinking", "explaining", "shocked"],
+      "disclaimer": "본 영상은 교육 목적이며, 전쟁의 참혹함을 미화하거나 특정 정치 이념을 지지하지 않습니다."
     },
-    "simple_character_story": {
-      "tone": "light_storytelling",
-      "subtitle_style": "minimal_bottom",
-      "transition_style": "fade",
-      "music_style": "ambient_dark",
+    "cute_science": {
+      "tone": "enthusiastic_clear",
+      "subtitle_style": "bold_bottom",
+      "transition_style": "zoom",
+      "music_style": "electronic_light",
       "narration_speed": "medium",
-      "image_prompt_prefix": "Simple cartoon background, clean shapes, bold outlines, readable composition, no text, no watermark. ",
-      "image_negative_prompt": "realistic human, complex anatomy, watermark, blurry, low-res, illegible text",
+      "sd_prompt_prefix": "cute chibi scientist character, bright vibrant colors, science lab or space background, 2D animation style, science illustration, kawaii nerd, high quality, ",
+      "sd_negative_prompt": "realistic, 3D render, dark, scary, blurry, low quality, watermark, text overlay",
+      "title_style": "wow_fact",
+      "tags_base": ["과학", "우주", "물리", "생물", "애니메이션"],
+      "character_expression_set": ["excited", "surprised", "thinking", "explaining", "curious"],
+      "disclaimer": "본 영상은 과학적 사실을 쉽게 전달하기 위한 목적이며, 일부 내용은 단순화되었습니다."
+    },
+    "cute_history": {
+      "tone": "storytelling_engaging",
+      "subtitle_style": "soft_bottom",
+      "transition_style": "fade",
+      "music_style": "classical_light",
+      "narration_speed": "medium",
+      "sd_prompt_prefix": "cute chibi historical character, aged warm color palette, historical setting background, 2D animation style, history illustration, kawaii historical, high quality, ",
+      "sd_negative_prompt": "realistic, 3D render, graphic violence, blurry, low quality, watermark, text overlay",
       "title_style": "story_hook",
-      "tags_base": ["animation", "story", "character", "cartoon"],
-      "character_style": "simple_character_v1"
+      "tags_base": ["역사", "한국사", "세계사", "인물", "애니메이션"],
+      "character_expression_set": ["determined", "surprised", "sad", "happy", "thinking", "explaining"],
+      "disclaimer": "본 영상은 교육 목적이며, 역사적 사실의 해석은 학자마다 다를 수 있습니다."
     }
   }
 }
-

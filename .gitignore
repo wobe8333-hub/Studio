@@ -74,6 +74,11 @@ frontend/.env
 # YouTube API Key file
 Youtube_API_key.txt
 
+# OAuth 인증 토큰 및 클라이언트 시크릿
+credentials/
+*_token.json
+client_secrets.json
+
 # Runtime data stores
 data/knowledge_v1_store/
 data/health/

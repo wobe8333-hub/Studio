@@ -1,0 +1,12 @@
+﻿{
+  "events": [
+    {
+      "timestamp": "2026-04-02T23:49:53Z",
+      "event": "MANIM_HITL",
+      "detail": {
+        "fallback_rate": 0.6666666666666666,
+        "action": "\uc778\uac04 \uc810\uac80 \ud544\uc694"
+      }
+    }
+  ]
+}

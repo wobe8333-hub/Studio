@@ -1,9 +1,9 @@
 # 기존 복사 파일(backend\knowledge_v1\keyword_sources\ytdlp_channels.py)의
 # yt-dlp 수집 로직을 유지하면서 아래 상수와 함수를 파일 상단에 추가한다.
 # 이미 존재하면 해당 상수·함수만 추가/덮어쓰고 나머지 로직은 유지한다.
-import time, random, logging
+import time, random
+from loguru import logger
 
-logger = logging.getLogger(__name__)
 _request_count    = 0
 _last_request_time= 0.0
 

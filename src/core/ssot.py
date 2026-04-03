@@ -1,5 +1,7 @@
 import json
 import hashlib
+import os
+import tempfile
 from pathlib import Path
 from datetime import datetime
 from typing import Any, Optional
@@ -16,8 +18,18 @@ def write_json(path: Path, data: dict, indent: int = 2) -> None:
         # ensure_ascii=True: 한국어를 \uXXXX 이스케이프로 저장
         # → PowerShell 5.1 ConvertFrom-Json이 인코딩 무관하게 파싱 성공
         # → Python read_json은 \uXXXX를 자동으로 원문 복원
-        with open(path, "w", encoding="utf-8-sig", newline="\n") as f:
-            json.dump(data, f, ensure_ascii=True, indent=indent)
+        # 원자적 쓰기: 임시 파일에 쓴 뒤 rename → 부분 쓰기로 인한 파일 손상 방지
+        fd, tmp_path = tempfile.mkstemp(dir=path.parent, suffix=".tmp")
+        try:
+            with os.fdopen(fd, "w", encoding="utf-8-sig", newline="\n") as f:
+                json.dump(data, f, ensure_ascii=True, indent=indent)
+            os.replace(tmp_path, path)
+        except Exception:
+            try:
+                os.unlink(tmp_path)
+            except OSError:
+                pass
+            raise
 
 def json_exists(path: Path) -> bool:
     return path.exists() and path.stat().st_size > 0

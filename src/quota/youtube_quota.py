@@ -1,15 +1,12 @@
 # STEP 00 — YouTube Data API v3 쿼터 관리
+from loguru import logger
 from src.core.ssot import read_json, write_json, now_iso, json_exists
 from src.core.config import QUOTA_DIR
-import logging
-
 QUOTA_FILE       = QUOTA_DIR / "youtube_quota_daily.json"
 DAILY_LIMIT      = 10000
 WARNING_THRESHOLD= 8000
 BLOCK_THRESHOLD  = 9500
 UPLOAD_COST      = 1700
-
-logger = logging.getLogger(__name__)
 
 def _init_quota_file() -> dict:
     data = {

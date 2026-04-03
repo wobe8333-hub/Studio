@@ -1,2 +1,0 @@
-"""Knowledge store module"""
-

@@ -5,11 +5,9 @@ STEP 00-P 파일럿 생산 속도 측정 모듈.
 월 48편 생산 가능 여부를 산출한다.
 """
 
+from loguru import logger
 import time
-import logging
 from typing import Callable, Any
-
-logger = logging.getLogger(__name__)
 
 # 월 기준 (일 22일 × 스케줄러 1대 기준)
 WORKING_DAYS_PER_MONTH = 22

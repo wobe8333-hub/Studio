@@ -4,7 +4,8 @@ from src.core.config import (CHANNELS_DIR, CHANNEL_RPM_PROXY, CHANNEL_RPM_INITIA
                                REVENUE_TARGET_PER_CHANNEL)
 
 CHANNEL_RPM_FLOOR = {
-    "CH1": 5000, "CH2": 4000, "CH3": 3000, "CH4": 4500, "CH5": 3500,
+    "CH1": 5000, "CH2": 4000, "CH3": 2800,
+    "CH4": 2500, "CH5": 2500, "CH6": 2800, "CH7": 2800,
 }
 
 def get_revenue_policy(channel_id: str) -> dict:

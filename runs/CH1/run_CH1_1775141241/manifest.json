@@ -1,0 +1,33 @@
+﻿{
+  "run_id": "run_CH1_1775141241",
+  "channel_id": "CH1",
+  "schema_version": "1.0",
+  "run_state": "RUNNING",
+  "goal_ref": "\ucc44\ub110 CH1 \uc601\uc0c1 \uc790\ub3d9 \uc0dd\uc131",
+  "created_at": "2026-04-02T14:47:21Z",
+  "topic": {
+    "original_trend": {
+      "topic": "\uc8fc\uc2dd\uc9c0\ud45c PER \uc644\ubcbd\uc774\ud574 1\ubd84\ucef7",
+      "category": "economy",
+      "score": 52.5,
+      "grade": "reject",
+      "breakdown": {
+        "interest": 0.0,
+        "fit": 70.0,
+        "revenue": 100.0,
+        "urgency": 100.0
+      },
+      "original_topic": "\uc8fc\uc2dd\uc9c0\ud45c PER \uc644\ubcbd\uc774\ud574 1\ubd84\ucef7",
+      "collected_at": "2026-04-02T14:44:56Z"
+    },
+    "reinterpreted_title": "\uc8fc\uc2dd\uc9c0\ud45c PER \uc644\ubcbd\uc774\ud574 1\ubd84\ucef7\uc758 \uc791\ub3d9 \uc6d0\ub9ac\uc640 \ub0b4 \ub3c8\uc5d0 \ubbf8\uce58\ub294 \uc601\ud5a5",
+    "category": "economy",
+    "channel_id": "CH1",
+    "is_trending": true,
+    "score": 52.5,
+    "grade": "reject",
+    "trend_collected_at": "2026-04-02T14:44:56Z",
+    "trend_validity_days": 7,
+    "topic_type": "trending"
+  }
+}

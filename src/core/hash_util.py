@@ -1,21 +1,13 @@
 import hashlib
 from pathlib import Path
 from typing import Dict, Iterable
+from src.core.ssot import sha256_file  # ssot.py의 구현 재사용 (중복 제거)
 
 
 def sha256_bytes(data: bytes) -> str:
     """SHA256 해시(hex) 계산."""
     h = hashlib.sha256()
     h.update(data)
-    return h.hexdigest()
-
-
-def sha256_file(path: Path) -> str:
-    """파일 전체 SHA256 해시(hex) 계산."""
-    h = hashlib.sha256()
-    with path.open("rb") as f:
-        for chunk in iter(lambda: f.read(8192), b""):
-            h.update(chunk)
     return h.hexdigest()
 
 

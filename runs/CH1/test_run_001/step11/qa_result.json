@@ -1,0 +1,33 @@
+﻿{
+  "channel_id": "CH1",
+  "run_id": "test_run_001",
+  "qa_timestamp": "2026-04-02T14:40:18Z",
+  "animation_quality_check": {
+    "pass": false,
+    "vision_qa": {
+      "pass": true,
+      "skipped": true
+    }
+  },
+  "script_accuracy_check": {
+    "pass": false,
+    "disclaimer_key": "financial_disclaimer"
+  },
+  "youtube_policy_check": {
+    "ai_label_placed": false,
+    "disclaimer_placed": false,
+    "disclaimer_key": "financial_disclaimer",
+    "pass": false
+  },
+  "human_review": {
+    "required": true,
+    "completed": true,
+    "reviewer": null,
+    "sla_hours": 24
+  },
+  "affiliate_formula_check": {
+    "purchase_rate_applied": 0,
+    "formula_correct": false
+  },
+  "overall_pass": false
+}
