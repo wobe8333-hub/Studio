@@ -34,3 +34,30 @@ def test_find_failed_runs_empty_when_no_runs(tmp_path):
     from src.agents.dev_maintenance.log_monitor import find_failed_runs
     result = find_failed_runs(tmp_path)
     assert result == []
+
+
+def test_run_tests_returns_passed_on_success(tmp_path, monkeypatch):
+    """pytest가 0으로 종료되면 passed=True를 반환한다."""
+    import subprocess
+
+    monkeypatch.setattr(
+        subprocess, "run",
+        lambda *a, **kw: type("R", (), {"returncode": 0, "stdout": "2 passed", "stderr": ""})()
+    )
+    from src.agents.dev_maintenance.health_checker import run_tests
+    result = run_tests(tmp_path)
+    assert result["passed"] is True
+    assert "passed" in result["output"]
+
+
+def test_run_tests_returns_failed_on_error(tmp_path, monkeypatch):
+    """pytest가 1로 종료되면 passed=False를 반환한다."""
+    import subprocess
+
+    monkeypatch.setattr(
+        subprocess, "run",
+        lambda *a, **kw: type("R", (), {"returncode": 1, "stdout": "", "stderr": "1 failed"})()
+    )
+    from src.agents.dev_maintenance.health_checker import run_tests
+    result = run_tests(tmp_path)
+    assert result["passed"] is False
