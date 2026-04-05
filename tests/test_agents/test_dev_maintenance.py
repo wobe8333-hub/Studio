@@ -89,3 +89,34 @@ def test_find_missing_types_returns_empty_when_in_sync(tmp_path):
 
     from src.agents.dev_maintenance.schema_validator import find_missing_types
     assert find_missing_types(sql, types_ts) == []
+
+
+def test_dev_agent_run_returns_report(tmp_path, monkeypatch):
+    """run()이 실패 수, health 결과, 스키마 불일치 수를 포함한 리포트를 반환한다."""
+    import subprocess
+
+    # FAILED 실행 1개 생성 — DevMaintenanceAgent.runs_dir = root/"runs" 이므로 runs/ 하위에 생성
+    _write_manifest(tmp_path / "runs" / "CH1" / "run_001" / "manifest.json", "FAILED")
+
+    # subprocess.run mock (pytest 성공)
+    monkeypatch.setattr(
+        subprocess, "run",
+        lambda *a, **kw: type("R", (), {"returncode": 0, "stdout": "1 passed", "stderr": ""})()
+    )
+
+    # schema/types 파일 생성 (동기화 상태)
+    sql_path = tmp_path / "scripts" / "supabase_schema.sql"
+    sql_path.parent.mkdir(parents=True)
+    sql_path.write_text("CREATE TABLE channels (id TEXT);", encoding="utf-8")
+    types_path = tmp_path / "web" / "lib" / "types.ts"
+    types_path.parent.mkdir(parents=True)
+    types_path.write_text("channels: { id: string }", encoding="utf-8")
+
+    from src.agents.dev_maintenance import DevMaintenanceAgent
+    agent = DevMaintenanceAgent(root=tmp_path)
+    report = agent.run()
+
+    assert "failed_runs" in report
+    assert len(report["failed_runs"]) == 1
+    assert "health" in report
+    assert "schema_missing" in report
