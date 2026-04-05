@@ -8,6 +8,9 @@ STAGE_ORDER = ["PRE-ENTRY", "SEARCH-ONLY", "BROWSE-ENTRY", "ALGORITHM-ACTIVE"]
 
 def promote_if_eligible(policy_path: Path, new_stage: str) -> bool:
     """현재 단계보다 높은 stage인 경우에만 algorithm_policy.json을 업데이트한다."""
+    if new_stage not in STAGE_ORDER:
+        logger.warning(f"알 수 없는 stage 값 무시: {new_stage!r}")
+        return False
     policy = read_json(policy_path)
     current = policy.get("algorithm_stage", "PRE-ENTRY")
 

@@ -52,6 +52,12 @@ class AnalyticsLearningAgent(BaseAgent):
                 bias_path.parent.mkdir(parents=True, exist_ok=True)
                 update_bias(bias_path, winner, channel_id)
 
+            # 처리 완료된 pending 파일 삭제 (재실행 시 중복 처리 방지)
+            pending_file = Path(item.get("path", ""))
+            if pending_file.exists():
+                pending_file.unlink()
+                logger.debug(f"pending 파일 삭제: {pending_file.name}")
+
         report: dict[str, Any] = {
             "processed": len(pending_kpis),
             "promoted": promoted_count,

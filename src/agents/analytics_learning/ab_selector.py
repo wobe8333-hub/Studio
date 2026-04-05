@@ -8,12 +8,16 @@ _MODES = ["authority", "curiosity", "benefit"]
 
 
 def select_winner(variant_performance: dict) -> str:
-    """3종 제목 변형 중 CTR이 가장 높은 모드를 반환한다."""
+    """3종 제목 변형 중 CTR이 가장 높은 모드를 반환한다. 동점 시 curiosity 우선."""
     ctrs = {m: variant_performance.get(f"{m}_ctr", 0.0) for m in _MODES}
-    best = max(ctrs, key=ctrs.get)
-    if ctrs[best] == 0.0:
+    max_val = max(ctrs.values())
+    if max_val == 0.0:
         return _DEFAULT_WINNER
-    return best
+    # 동점 시 curiosity → authority → benefit 우선순위
+    for mode in ["curiosity", "authority", "benefit"]:
+        if ctrs[mode] == max_val:
+            return mode
+    return _DEFAULT_WINNER
 
 
 def update_bias(bias_path: Path, winner: str, channel_id: str) -> None:

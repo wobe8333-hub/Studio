@@ -22,7 +22,7 @@ def update_winning_patterns(memory_path: Path, run_data: dict) -> None:
         "channel_id": run_data.get("channel_id"),
         "animation_style": run_data.get("animation_style"),
         "ctr": run_data.get("ctr"),
-        "avp": run_data.get("avp"),
+        "avp": run_data.get("avg_view_percentage"),
     })
     memory["winning_animation_patterns"] = patterns[-50:]
     write_json(memory_path, memory)
