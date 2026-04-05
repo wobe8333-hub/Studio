@@ -61,3 +61,31 @@ def test_run_tests_returns_failed_on_error(tmp_path, monkeypatch):
     from src.agents.dev_maintenance.health_checker import run_tests
     result = run_tests(tmp_path)
     assert result["passed"] is False
+
+
+def test_find_missing_types_detects_new_table(tmp_path):
+    """SQL에 추가된 테이블이 types.ts에 없으면 반환한다."""
+    sql = tmp_path / "schema.sql"
+    sql.write_text(
+        "CREATE TABLE channels (id TEXT);\nCREATE TABLE new_table (col INT);",
+        encoding="utf-8"
+    )
+    types_ts = tmp_path / "types.ts"
+    types_ts.write_text("export type Database = { channels: { id: string } }", encoding="utf-8")
+
+    from src.agents.dev_maintenance.schema_validator import find_missing_types
+    missing = find_missing_types(sql, types_ts)
+
+    assert "new_table" in missing
+    assert "channels" not in missing
+
+
+def test_find_missing_types_returns_empty_when_in_sync(tmp_path):
+    """SQL과 types.ts가 일치하면 빈 리스트를 반환한다."""
+    sql = tmp_path / "schema.sql"
+    sql.write_text("CREATE TABLE channels (id TEXT);", encoding="utf-8")
+    types_ts = tmp_path / "types.ts"
+    types_ts.write_text("export type Database = { channels: { id: string } }", encoding="utf-8")
+
+    from src.agents.dev_maintenance.schema_validator import find_missing_types
+    assert find_missing_types(sql, types_ts) == []
