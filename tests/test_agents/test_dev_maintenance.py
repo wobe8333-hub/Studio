@@ -70,8 +70,12 @@ def test_find_missing_types_detects_new_table(tmp_path):
         "CREATE TABLE channels (id TEXT);\nCREATE TABLE new_table (col INT);",
         encoding="utf-8"
     )
+    # Supabase 생성 타입 파일 구조: "tablename: { Row: {...} }" 패턴
     types_ts = tmp_path / "types.ts"
-    types_ts.write_text("export type Database = { channels: { id: string } }", encoding="utf-8")
+    types_ts.write_text(
+        "export type Database = { channels: { Row: { id: string } } }",
+        encoding="utf-8"
+    )
 
     from src.agents.dev_maintenance.schema_validator import find_missing_types
     missing = find_missing_types(sql, types_ts)
@@ -84,8 +88,12 @@ def test_find_missing_types_returns_empty_when_in_sync(tmp_path):
     """SQL과 types.ts가 일치하면 빈 리스트를 반환한다."""
     sql = tmp_path / "schema.sql"
     sql.write_text("CREATE TABLE channels (id TEXT);", encoding="utf-8")
+    # Supabase 생성 타입 파일 구조: "tablename: { Row: {...} }" 패턴
     types_ts = tmp_path / "types.ts"
-    types_ts.write_text("export type Database = { channels: { id: string } }", encoding="utf-8")
+    types_ts.write_text(
+        "export type Database = { channels: { Row: { id: string } } }",
+        encoding="utf-8"
+    )
 
     from src.agents.dev_maintenance.schema_validator import find_missing_types
     assert find_missing_types(sql, types_ts) == []
@@ -110,7 +118,8 @@ def test_dev_agent_run_returns_report(tmp_path, monkeypatch):
     sql_path.write_text("CREATE TABLE channels (id TEXT);", encoding="utf-8")
     types_path = tmp_path / "web" / "lib" / "types.ts"
     types_path.parent.mkdir(parents=True)
-    types_path.write_text("channels: { id: string }", encoding="utf-8")
+    # Supabase 생성 타입 파일 구조 반영 — schema_missing=[] 이 되도록 "tablename: { Row:" 패턴 사용
+    types_path.write_text("channels: { Row: { id: string } }", encoding="utf-8")
 
     from src.agents.dev_maintenance import DevMaintenanceAgent
     agent = DevMaintenanceAgent(root=tmp_path)

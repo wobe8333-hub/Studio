@@ -10,9 +10,13 @@ def extract_table_names_from_sql(sql_path: Path) -> set:
 
 
 def extract_identifiers_from_types(types_path: Path) -> set:
-    """types.ts에서 최상위 키 식별자를 추출한다."""
+    """types.ts에서 Supabase 테이블명을 추출한다.
+
+    Supabase 생성 타입 파일의 구조: `tablename: { Row: {...} }` 패턴으로 테이블만 추출.
+    """
     content = types_path.read_text(encoding="utf-8")
-    return set(re.findall(r"(\w+)\s*:", content))
+    # Supabase types.ts: "tablename: { Row:" 패턴이 테이블 정의를 나타냄
+    return set(re.findall(r"(\w+):\s*\{\s*Row:", content))
 
 
 def find_missing_types(sql_path: Path, types_path: Path) -> list:

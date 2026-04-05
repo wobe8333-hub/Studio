@@ -1,6 +1,6 @@
 """Dev & Maintenance Agent — 파이프라인 실패 자동 진단 및 시스템 건강 점검."""
 from pathlib import Path
-from typing import Any
+from typing import Any, Optional
 from loguru import logger
 from src.agents.base_agent import BaseAgent
 from src.agents.dev_maintenance.log_monitor import find_failed_runs
@@ -11,9 +11,10 @@ from src.agents.dev_maintenance.schema_validator import find_missing_types
 class DevMaintenanceAgent(BaseAgent):
     """파이프라인 실패 감지, 테스트 실행, 스키마 동기화 검증을 담당한다."""
 
-    def __init__(self, root: Path = None):
+    def __init__(self, root: Optional[Path] = None):
         super().__init__("DevMaintenance")
-        if root:
+        # root=None 이면 BaseAgent 기본값(프로젝트 루트)을 사용한다
+        if root is not None:
             self.root = root
             self.runs_dir = root / "runs"
             self.data_dir = root / "data"
