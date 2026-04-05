@@ -11,6 +11,7 @@ _SQL_TO_TS: dict = {
     "BIGINT": "number",
     "REAL": "number",
     "FLOAT": "number",
+    "SERIAL": "number",
     "BOOL": "boolean",
     "BOOLEAN": "boolean",
     "TIMESTAMPTZ": "string",
@@ -51,9 +52,14 @@ def sql_type_to_ts(sql_type: str) -> str:
     return _SQL_TO_TS.get(sql_type.upper(), "unknown")
 
 
+def _to_pascal_case(name: str) -> str:
+    """snake_case 테이블명을 PascalCase로 변환한다. pipeline_runs → PipelineRuns"""
+    return "".join(word.capitalize() for word in name.split("_"))
+
+
 def generate_ts_interface(table_name: str, columns: list) -> str:
     """컬럼 목록으로 TypeScript interface 문자열을 생성한다."""
-    lines = [f"export interface {table_name.capitalize()} {{"]
+    lines = [f"export interface {_to_pascal_case(table_name)} {{"]
     for col in columns:
         ts_type = sql_type_to_ts(col["sql_type"])
         lines.append(f"  {col['name']}: {ts_type};")
