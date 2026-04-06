@@ -65,6 +65,8 @@ export async function GET() {
 
       const runDirs = await fs.readdir(channelDir)
       for (const runId of runDirs) {
+        // 경로 탈출 방지: .. 또는 절대경로 포함 항목 건너뜀
+        if (runId.includes('..') || path.isAbsolute(runId)) continue
         const manifestPath = path.join(channelDir, runId, 'manifest.json')
         const summary = await readManifest(manifestPath)
         if (summary) all.push(summary)
@@ -72,8 +74,13 @@ export async function GET() {
     }
   } catch { /* runs/ 없음 */ }
 
-  // 생성시간 내림차순 정렬
-  all.sort((a, b) => (b.created_at > a.created_at ? 1 : -1))
+  // 생성시간 내림차순 정렬 (created_at 없는 항목은 뒤로)
+  all.sort((a, b) => {
+    if (!a.created_at && !b.created_at) return 0
+    if (!a.created_at) return 1
+    if (!b.created_at) return -1
+    return b.created_at > a.created_at ? 1 : b.created_at < a.created_at ? -1 : 0
+  })
 
   const running = all.filter((r) => r.run_state === 'RUNNING')
   const recent  = all.slice(0, 20)
