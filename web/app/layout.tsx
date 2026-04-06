@@ -10,6 +10,7 @@ import { RealtimePipelineStatus } from '@/components/realtime-pipeline-status'
 import { Separator } from '@/components/ui/separator'
 import { Badge } from '@/components/ui/badge'
 import { createClient } from '@/lib/supabase/server'
+import { HitlBanner } from '@/components/hitl-banner'
 
 const geistSans = Geist({ variable: '--font-geist-sans', subsets: ['latin'] })
 const geistMono = Geist_Mono({ variable: '--font-geist-mono', subsets: ['latin'] })
@@ -85,6 +86,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                     <ThemeToggle />
                   </div>
                 </header>
+                <HitlBanner />
                 <main className="flex-1 overflow-auto p-4 md:p-6">
                   {children}
                 </main>
