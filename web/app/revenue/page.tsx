@@ -1,5 +1,6 @@
 'use client'
 
+import { useEffect, useState } from 'react'
 import { DollarSign, TrendingUp, CheckCircle, XCircle } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -19,29 +20,31 @@ import {
   YAxis,
   CartesianGrid,
 } from 'recharts'
+import { createClient } from '@/lib/supabase/client'
 
-const CHANNELS = ['CH1', 'CH2', 'CH3', 'CH4', 'CH5', 'CH6', 'CH7']
+const CHANNEL_IDS = ['CH1', 'CH2', 'CH3', 'CH4', 'CH5', 'CH6', 'CH7']
 const TARGET = 2_000_000
 const TOTAL_TARGET = 14_000_000
+// 매달 수동 변경 불필요 — 실행 시점 기준 자동 계산
+const CURRENT_MONTH = new Date().toISOString().slice(0, 7)
 
-// Supabase 연동 전 mock 데이터
-const mockRevenue = CHANNELS.map((id) => ({
+interface RevenueRow {
+  channel_id: string
+  month: string
+  adsense_krw: number
+  affiliate_krw: number
+  net_profit: number
+  target_achieved: boolean
+}
+
+const DEFAULT_REVENUE: RevenueRow[] = CHANNEL_IDS.map((id) => ({
   channel_id: id,
-  month: '2026-04',
+  month: CURRENT_MONTH,
   adsense_krw: 0,
   affiliate_krw: 0,
   net_profit: 0,
   target_achieved: false,
 }))
-
-const chartData = CHANNELS.map((id) => {
-  const r = mockRevenue.find((r) => r.channel_id === id)
-  return {
-    channel: id,
-    애드센스: r?.adsense_krw ?? 0,
-    제휴: r?.affiliate_krw ?? 0,
-  }
-})
 
 const chartConfig: ChartConfig = {
   애드센스: { label: 'AdSense', color: 'var(--chart-1)' },
@@ -49,13 +52,52 @@ const chartConfig: ChartConfig = {
 }
 
 function formatKrw(v: number) {
-  return `₩${(v / 10000).toFixed(0)}만`
+  if (v >= 10000) return `₩${(v / 10000).toFixed(0)}만`
+  return `₩${v.toLocaleString()}`
 }
 
 export default function RevenuePage() {
-  const totalRevenue = mockRevenue.reduce((s, r) => s + r.net_profit, 0)
+  const [revenue, setRevenue] = useState<RevenueRow[]>(DEFAULT_REVENUE)
+
+  useEffect(() => {
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+    const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+    if (!supabaseUrl || !supabaseKey || supabaseUrl.includes('xxxxxxxxxxxx')) return
+
+    const supabase = createClient()
+    supabase
+      .from('revenue_monthly')
+      .select('*')
+      .eq('month', CURRENT_MONTH)
+      .then(({ data }) => {
+        if (!data || data.length === 0) return
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const rows = data as any[]
+        setRevenue(
+          CHANNEL_IDS.map((id) => {
+            const row = rows.find((r) => r.channel_id === id)
+            return {
+              channel_id: id,
+              month: CURRENT_MONTH,
+              adsense_krw: row?.adsense_krw ?? 0,
+              affiliate_krw: row?.affiliate_krw ?? 0,
+              net_profit: row?.net_profit ?? 0,
+              target_achieved: row?.target_achieved ?? false,
+            }
+          })
+        )
+      })
+  }, [])
+
+  const totalRevenue = revenue.reduce((s, r) => s + r.net_profit, 0)
   const achieveRate = (totalRevenue / TOTAL_TARGET) * 100
-  const achievedCount = mockRevenue.filter((r) => r.target_achieved).length
+  const achievedCount = revenue.filter((r) => r.target_achieved).length
+
+  const chartData = revenue.map((r) => ({
+    channel: r.channel_id,
+    애드센스: r.adsense_krw,
+    제휴: r.affiliate_krw,
+  }))
 
   return (
     <div className="space-y-6">
@@ -66,7 +108,7 @@ export default function RevenuePage() {
 
       {/* 요약 카드 */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-        <Card>
+        <Card className="dark:bg-green-500/[0.07] dark:border-green-500/20 glow-success">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium">총 순이익</CardTitle>
             <DollarSign className="h-4 w-4 text-muted-foreground" />
@@ -94,7 +136,7 @@ export default function RevenuePage() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium">이번달</CardTitle>
-            <Badge variant="outline">2026-04</Badge>
+            <Badge variant="outline">{CURRENT_MONTH}</Badge>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{achieveRate.toFixed(0)}%</div>
@@ -124,14 +166,14 @@ export default function RevenuePage() {
         </CardContent>
       </Card>
 
-      {/* 채널별 달성률 테이블 */}
+      {/* 채널별 달성률 */}
       <Card>
         <CardHeader>
           <CardTitle>채널별 목표 달성률</CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
-          {mockRevenue.map((r) => {
-            const rate = (r.net_profit / TARGET) * 100
+          {revenue.map((r) => {
+            const rate = Math.min((r.net_profit / TARGET) * 100, 100)
             return (
               <div key={r.channel_id} className="flex items-center gap-3">
                 <span className="w-10 text-sm font-medium">{r.channel_id}</span>
