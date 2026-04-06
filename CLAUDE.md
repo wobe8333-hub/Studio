@@ -11,29 +11,61 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## 주요 명령어
 
 ```bash
+# ── 파이썬 백엔드 ──────────────────────────────────
 # 월간 파이프라인 실행 (month_number: 1~12)
 python -m src.pipeline 1
 
 # 전체 테스트
 pytest tests/ -q
 
-# 단일 테스트 파일
+# 단일 테스트 파일 / 함수
 pytest tests/test_step05_scorer.py -v
-
-# 단일 테스트 함수
 pytest tests/test_step08_sd.py::TestSDGenerator::test_detect_gpu_returns_bool -v
 
-# 대시보드 실행
-streamlit run dashboard/app.py
-
-# 환경 점검 (파일럿 전 필수)
+# 환경 점검 (파일럿 전 필수) — API 키, OAuth 토큰, FFmpeg, Gemini 연결 6가지 체크
 python scripts/preflight_check.py
 
-# 환경 설정
-cp .env.example .env   # API 키 입력 후 사용
+# YouTube OAuth 토큰 최초 발급 (채널당 1회, credentials/{CH}_token.json 생성)
+python scripts/generate_oauth_token.py --channel CH1
+
+# Supabase 동기화 (파이프라인 완료 후 또는 수동)
+python scripts/sync_to_supabase.py           # 전체
+python scripts/sync_to_supabase.py channels  # 채널 레지스트리만
+python scripts/sync_to_supabase.py revenue   # 수익 데이터만
+
+# ── Sub-Agent 수동 실행 ────────────────────────────
+python -c "from src.agents.dev_maintenance import DevMaintenanceAgent; print(DevMaintenanceAgent().run())"
+python -c "from src.agents.analytics_learning import AnalyticsLearningAgent; print(AnalyticsLearningAgent().run())"
+python -c "from src.agents.ui_ux import UiUxAgent; print(UiUxAgent().run())"
+python -c "from src.agents.video_style import VideoStyleAgent; print(VideoStyleAgent().run())"
+
+# Sub-Agent 테스트만 실행
+pytest tests/test_agents/ -q
+
+# GPU 패키지 설치 (GPU 환경 한정 — CPU-only/CI 환경에서는 실행 금지)
+pip install torch diffusers transformers accelerate safetensors
+
+# ── 웹 프론트엔드 (web/) ───────────────────────────
+cd web
+npm run dev          # 개발 서버 (localhost:3000)
+npm run build        # 프로덕션 빌드 (TypeScript 타입 검사 포함)
+
+# ── ngrok 외부 공개 ────────────────────────────────
+# 고정 도메인: https://cwstudio.ngrok.app → localhost:3000
+ngrok start kas-studio
 ```
 
 ## 아키텍처
+
+### 전체 데이터 흐름
+
+```
+파이프라인 실행 → runs/ JSON 파일
+                → scripts/sync_to_supabase.py → Supabase PostgreSQL
+                                                      ↓
+                                              web/ Next.js 대시보드
+                                              (https://cwstudio.ngrok.app)
+```
 
 ### 파이프라인 오케스트레이션 (`src/pipeline.py`)
 
@@ -57,13 +89,20 @@ cp .env.example .env   # API 키 입력 후 사용
 
 `src/step08/__init__.py`의 `run_step08()`이 하나의 영상을 처음부터 끝까지 생성:
 
-1. 스크립트 생성 (`script_generator.py` → Gemini API)
-2. 이미지 생성: `sd_generator.py` (SD XL, GPU 우선) → 실패 시 `image_generator.py` (Gemini 폴백)
-3. 나레이션 (`narration_generator.py`: ElevenLabs → gTTS 폴백)
-4. 자막 (`subtitle_generator.py`: Faster-Whisper → 균등분배 폴백)
-5. FFmpeg 합성 (`ffmpeg_composer.py`)
+1. 스크립트 생성 (`script_generator.py` → Gemini API, KnowledgePackage 연동)
+2. 이미지 생성: `sd_generator.py` (SD XL + LoRA, GPU 우선) → 실패 시 `image_generator.py` (Gemini 폴백)
+3. 장면 합성: `scene_composer.py` (PIL — 캐릭터+배경+자막바 레이어 합성)
+4. 모션 효과: `motion_engine.py` (FFmpeg Ken Burns 팬/줌 → MP4 클립)
+5. Manim 애니메이션: `manim_generator.py` (Gemini → LaTeX-free 코드 생성 → subprocess 실행, 타임아웃 120초)
+6. 나레이션 (`narration_generator.py`: ElevenLabs → gTTS 폴백)
+7. 자막 (`subtitle_generator.py`: Faster-Whisper → 균등분배 폴백, 한 줄 40자 제한)
+8. FFmpeg 합성 (`ffmpeg_composer.py`: 클립 concat → 나레이션 → 자막)
+9. 메타데이터 생성 (`metadata_generator.py`: Gemini → SEO 태그 15개)
+10. SHA-256 무결성 검증 → `artifact_hashes.json`
 
-결과물은 `runs/{channel_id}/{run_id}/step08/` 에 저장.
+캐릭터는 `character_manager.py`에서 채널별 프로파일(base_prompt, seed, LoRA) 관리. 결과물은 `runs/{channel_id}/{run_id}/step08/` 에 저장.
+
+**Step08s** (`src/step08_s/shorts_generator.py`): Long-form 1편에서 60초 Shorts 3편 자동 추출. FFmpeg 중앙 크롭 1920×1080 → 1080×1920 (9:16).
 
 **주의**: `src/step08/__init__.py`는 **KAS-PROTECTED** 파일이다. 248줄의 오케스트레이터이며 일반적인 `__init__.py`가 아니다. 내용을 비우거나 일괄 초기화 스크립트 대상에서 반드시 제외해야 한다.
 
@@ -88,12 +127,64 @@ cp .env.example .env   # API 키 입력 후 사용
 - `read_json()`: `encoding="utf-8-sig"` (BOM 처리)
 
 ```
-data/global/          — 채널 레지스트리, 쿼터 정책, 메모리 스토어
-data/channels/CH*/    — 채널별 algorithm/revenue/style 정책 JSON
-data/knowledge_store/ — KnowledgePackage JSON
-runs/CH*/run_*/       — 실행별 결과물 (manifest.json, step08/, step09/ 등)
-logs/                 — pipeline.log (loguru, 50MB rotation)
+data/global/                        — 채널 레지스트리, 쿼터 정책, 메모리 스토어
+data/global/notifications/          — Sub-Agent 알림 (notifications.json, hitl_signals.json)
+data/channels/CH*/                  — 채널별 algorithm/revenue/style 정책 JSON
+data/knowledge_store/               — KnowledgePackage JSON
+runs/CH*/run_*/                     — 실행별 결과물 (manifest.json, step08/, step09/ 등)
+logs/                               — pipeline.log (loguru, 50MB rotation)
 ```
+
+### Sub-Agent 시스템 (`src/agents/`)
+
+**원칙**: 기존 파이프라인(Step00~17)을 수정하지 않고, 수동 고통점만 자동화. JSON 결과물을 읽어 정책만 업데이트하는 비침습적 설계.
+
+```
+src/agents/
+  base_agent.py                  — BaseAgent: root/runs_dir/data_dir 경로 초기화, _log_start/_log_done
+  dev_maintenance/
+    __init__.py                  — DevMaintenanceAgent: 파이프라인 실패 감지 + 헬스체크 + HITL 신호
+    log_monitor.py               — find_failed_runs(): runs/*/manifest.json FAILED 스캔
+    health_checker.py            — run_tests(): pytest subprocess 실행
+    schema_validator.py          — find_missing_types(): SQL↔types.ts 불일치 감지
+    hitl_signal.py               — emit_hitl_signal(): hitl_signals.json 기록
+  analytics_learning/
+    __init__.py                  — AnalyticsLearningAgent: KPI 분석 + 패턴 추출 + Phase 승격 + A/B
+    kpi_analyzer.py              — compute_algorithm_stage(): 4단계 판정
+    pattern_extractor.py         — is_winning() (CTR≥6.0% AND AVP≥50.0%), update_winning_patterns()
+    phase_promoter.py            — promote_if_eligible(): 단방향 승격만 허용
+    ab_selector.py               — select_winner(): curiosity→authority→benefit 우선순위
+    notifier.py                  — record_phase_promotion(): notifications.json 기록
+  ui_ux/
+    __init__.py                  — UiUxAgent: 스키마 변경 감지 → types.ts 자동 동기화
+    schema_watcher.py            — has_schema_changed(): SHA-256 해시 비교
+    type_syncer.py               — generate_ts_interface(): SQL→TypeScript 변환 (_to_pascal_case)
+  video_style/
+    __init__.py                  — VideoStyleAgent: 캐릭터 드리프트 감지 + Manim fallback 모니터링
+    character_monitor.py         — check_character_drift(): 드리프트 임계값 0.7
+    style_optimizer.py           — check_manim_fallback_rate(): 경고 임계값 0.5
+```
+
+**BaseAgent 패턴** — 모든 Agent가 따라야 하는 규칙:
+```python
+class MyAgent(BaseAgent):
+    def __init__(self, root: Optional[Path] = None):
+        super().__init__("AgentName")
+        if root is not None:   # if root: 금지 — Path는 항상 truthy
+            self.root = root
+            self.data_dir = root / "data"
+
+    def run(self) -> dict[str, Any]:   # 반드시 dict[str, Any] 반환
+        ...
+```
+
+**알림/HITL 신호 파일**:
+- `data/global/notifications/notifications.json` — Phase 승격 알림 (`type: "phase_promotion"`, `read: false`)
+- `data/global/notifications/hitl_signals.json` — 운영자 확인 필요 신호 (`type: "pipeline_failure"|"pytest_failure"`, `resolved: false`)
+
+**HITL 자동/수동 분기**:
+- 자동 처리: 스키마 불일치 → UiUxAgent 위임, Phase 승격 → 알림만 기록
+- 운영자 확인: FAILED 실행 1건 이상, pytest 실패
 
 ### 쿼터/캐시 시스템
 
@@ -104,44 +195,131 @@ logs/                 — pipeline.log (loguru, 50MB rotation)
 
 **주의**: `src/quota/__init__.py`는 23KB 레거시 파일로, yt-dlp 채널 수집 로직이 포함되어 있다. 일반적인 패키지 init이 아님.
 
+### 웹 대시보드 (`web/`)
+
+**스택**: Next.js 16.2.2 + React 19 + **Tailwind CSS v4** + shadcn/ui v4 (base-nova) + Recharts 3 + Supabase + **motion** + **next-themes** + **react-intersection-observer**
+
+#### Tailwind CSS v4 주의사항
+`tailwind.config.ts` 파일이 **없다** — v4의 CSS-first 방식으로 `app/globals.css`에서 모든 설정 관리.
+```css
+/* globals.css 구조 */
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+@custom-variant dark (&:is(.dark *));   /* class 기반 다크모드 */
+@theme inline { /* 디자인 토큰 */ }
+:root { /* 라이트 테마 */ }
+.dark { /* 다크 테마 */ }
+```
+새 Tailwind 유틸리티 추가 시 `@layer utilities {}` 블록 사용. PostCSS는 `@tailwindcss/postcss` 단일 플러그인.
+
+#### 디자인 시스템 — Amber Studio
+
+색상은 oklch 색공간 사용. 7채널 고유 CSS 변수가 `globals.css`에 정의됨:
+```css
+--channel-ch1: oklch(0.65 0.19 55)   /* CH1 경제: 골드 */
+--channel-ch2: oklch(0.60 0.18 175)  /* CH2 부동산: 틸 */
+--channel-ch3: oklch(0.62 0.16 25)   /* CH3 심리: 테라코타 */
+/* ... ch4~ch7 */
+```
+`--font-heading: var(--font-display)` → `card.tsx`의 `CardTitle`이 자동으로 **Sora** 폰트 적용.
+Primary 색상: 라이트 `oklch(0.55 0.16 55)` (앰버 골드), 다크 `oklch(0.72 0.17 65)`.
+
+#### 디렉토리 구조
+
+```
+web/
+├── app/
+│   ├── layout.tsx          — ThemeProvider(next-themes) + Sora 폰트 + 글래스모피즘 헤더
+│   ├── page.tsx            — KPI 대시보드 (서버 컴포넌트, Supabase fetch + mock fallback)
+│   ├── globals.css         — Tailwind v4 설정 + Amber Studio 색상 + @keyframes
+│   ├── channels/[id]/      — 채널 상세 (클라이언트)
+│   ├── trends/             — 트렌드 주제 관리 (클라이언트, 승인/거부/필터)
+│   ├── revenue/            — 수익 추적 (클라이언트, useEffect fetch)
+│   ├── risk/               — 리스크 모니터링 (서버 컴포넌트)
+│   ├── learning/           — 학습 피드백
+│   ├── cost/               — 비용/쿼터 추적
+│   └── settings/           — 설정 (읽기 전용)
+├── components/
+│   ├── animated-sections.tsx — motion 래퍼: StaggerContainer/StaggerItem/ScrollReveal/AnimatedCard/SectionWithInView
+│   ├── home-charts.tsx       — Recharts 클라이언트 컴포넌트: Sparkline/RadialGauge/ChannelDots
+│   ├── sidebar-nav.tsx       — AppSidebar: channels props 수신, 채널 고유 색상 dot
+│   ├── theme-toggle.tsx      — next-themes useTheme (mounted 패턴으로 hydration mismatch 방지)
+│   └── ui/                   — shadcn/ui 컴포넌트 (16개)
+└── lib/
+    ├── supabase/
+    │   ├── client.ts       — 브라우저용 (createBrowserClient)
+    │   └── server.ts       — 서버용 (createServerClient + cookies)
+    └── types.ts            — Supabase DB 전체 타입 (Database, Channel, PipelineRun 등)
+```
+
+#### 애니메이션 패턴 (`animated-sections.tsx`)
+
+`page.tsx`는 서버 컴포넌트라 motion 직접 사용 불가 → 클라이언트 래퍼 import:
+```tsx
+import { StaggerContainer, StaggerItem, AnimatedCard } from '@/components/animated-sections'
+
+// KPI 카드 순차 등장
+<StaggerContainer className="grid grid-cols-4 gap-3">
+  <StaggerItem><Card>...</Card></StaggerItem>
+</StaggerContainer>
+
+// 채널 카드 hover lift + 지연 등장
+<AnimatedCard delay={i * 0.06}>
+  <ChannelCard />
+</AnimatedCard>
+```
+
+#### Supabase 연동 패턴
+
+서버 컴포넌트: `lib/supabase/server.ts`의 `createClient()` (async)
+```typescript
+const supabase = await createClient()
+const { data } = await supabase.from('channels').select('*')
+```
+
+클라이언트 컴포넌트: `lib/supabase/client.ts`의 `createClient()` (sync, useEffect 내부)
+
+**fallback 패턴**: `NEXT_PUBLIC_SUPABASE_URL`에 `xxxxxxxxxxxx` 포함 시 mock 데이터 사용. Supabase 쿼리 결과가 `never` 타입으로 추론되는 경우 `as any[]` 캐스팅 필요 (알려진 타입 추론 한계).
+
+**사이드바 채널 동기화**: `app/layout.tsx`(서버)에서 Supabase `channels` 조회 → `AppSidebar` props → 실제 DB 채널명 표시. 미연동 시 `DEFAULT_CHANNELS` 상수 폴백.
+
+**Supabase 테이블**: `channels`, `pipeline_runs`, `kpi_48h`, `revenue_monthly`, `risk_monthly`, `sustainability`, `learning_feedback`, `quota_daily`, `trend_topics`. 스키마는 `scripts/supabase_schema.sql` 참고.
+
 ## 테스트 핵심 패턴
 
 ### Gemini API 의존성 격리
 
-`src/step08/__init__.py`가 `script_generator.py`를 임포트하고, `script_generator.py`가 `google.generativeai`를 임포트하기 때문에, `from src.step08.xxx import ...` 형태의 import가 테스트에서 실패할 수 있다.
+`src/step08/__init__.py`가 `script_generator.py` → `google.generativeai` 임포트 체인을 형성해 테스트에서 실패할 수 있다.
 
 **`conftest.py` 3단계 방어** (모든 테스트 전에 실행):
 1. `google.generativeai`, `diskcache`, `sentry_sdk` 모듈-레벨 mock 사전 등록
-2. `import src.step08` 선점 — 테스트 파일이 가짜 부모 모듈을 설치하는 것을 방지
+2. `import src.step08` 선점 — 가짜 부모 모듈 설치 방지
 3. `_restore_gemini_cache_after_test` autouse fixture — `importlib.reload()` 후 `_CACHE` 싱글턴 복원
 
-**`google` 네임스페이스 패키지 오염 주의**: 반드시 `import google`로 실제 패키지를 먼저 확보한 뒤 `google.generativeai`만 가짜로 등록해야 한다. `sys.modules["google"]`을 덮어쓰면 `google.api_core` 등 다른 테스트가 실패한다.
-
+**`google` 네임스페이스 패키지 오염 주의**: 반드시 실제 `google` 패키지 먼저 확보 후 `google.generativeai`만 mock 등록.
 ```python
-# 올바른 패턴
-import google as _google_pkg          # 실제 패키지 확보
+import google as _google_pkg
 _genai_mock = types.ModuleType("google.generativeai")
 sys.modules["google.generativeai"] = _genai_mock
 setattr(_google_pkg, "generativeai", _genai_mock)
 ```
 
-**`_load_and_register()` 패턴**: `test_step08_sd.py`, `test_step08_narration.py`에서 사용. `importlib.util.spec_from_file_location()`으로 개별 파일을 직접 로드하여 `__init__.py`를 우회.
+**`_load_and_register()` 패턴**: `test_step08_sd.py`, `test_step08_narration.py`에서 사용. `importlib.util.spec_from_file_location()`으로 `__init__.py`를 우회하여 개별 파일 직접 로드.
 
-### 모듈 바인딩 함정 (테스트에서 가장 흔한 실수)
+### 모듈 바인딩 함정
 
-`from X import Y`는 import 시점에 `Y`를 바인딩한다. `X.Y`를 나중에 patch해도 이미 바인딩된 참조는 변경되지 않는다.
-
+`from X import Y`는 import 시점에 바인딩된다. 타겟 모듈에서 patch해야 한다:
 ```python
-# 잘못된 패턴 — bgm_overlay.py가 이미 overlay_bgm을 바인딩했으므로 무효
+# 잘못됨
 @patch("src.step08.ffmpeg_composer.overlay_bgm")
-
-# 올바른 패턴 — 타겟 모듈에서 patch
+# 올바름 — 실제 사용하는 모듈에서 patch
 @patch("src.step09.bgm_overlay.overlay_bgm")
 ```
 
 ### utf-8-sig 인코딩
 
-`ssot.write_json()`은 `utf-8-sig`(BOM 포함)으로 쓴다. 테스트에서 이 파일을 읽을 때 반드시 `encoding="utf-8-sig"`를 사용해야 한다. `utf-8`로 읽으면 `JSONDecodeError: Unexpected UTF-8 BOM` 발생.
+`ssot.write_json()`은 `utf-8-sig`(BOM 포함)으로 쓴다. 테스트에서 읽을 때 반드시 `encoding="utf-8-sig"` 사용.
 
 ## 핵심 규칙
 
@@ -149,18 +327,34 @@ setattr(_google_pkg, "generativeai", _genai_mock)
 - **JSON I/O**: 직접 `open()` 금지. `ssot.read_json()` / `ssot.write_json()` 사용.
 - **캐싱**: Gemini API 응답은 `src/cache/gemini_cache.py` (diskcache 기반, TTL 24h) 사용.
 - **쿼터 관리**: Gemini/YouTube API 호출 전 `src/quota/` 모듈로 사용량 기록.
-- **채널 설정 SSOT**: 채널 수/카테고리/RPM/목표값은 `src/core/config.py`가 단일 출처. JSON 파일들은 파생 데이터.
+- **채널 설정 SSOT**: 채널 수/카테고리/RPM/목표값은 `src/core/config.py`가 단일 출처.
 - **KPI 수집 지연**: Step12 업로드 후 즉시 수집하지 않고 48시간 pending 메커니즘 사용.
+- **웹 채널 데이터**: 웹에서 채널 정보 하드코딩 금지. 항상 Supabase `channels` 테이블 또는 fallback 상수 사용.
+- **웹 Recharts**: `page.tsx`는 서버 컴포넌트이므로 Recharts 직접 사용 불가. `home-charts.tsx` 또는 별도 `'use client'` 파일에 격리.
+- **웹 다크모드**: `document.documentElement.classList`를 직접 조작하지 말 것. `next-themes`의 `useTheme`/`ThemeProvider` 사용.
+- **Sub-Agent 비침습**: `src/agents/` 코드는 기존 파이프라인(Step00~17) 로직을 변경하지 않는다. JSON 결과물 읽기 + 정책 파일 쓰기만 허용.
+- **Sub-Agent BaseAgent**: `if root:` 대신 `if root is not None:` 사용. Path 객체는 항상 truthy이므로 None 체크를 명시적으로 작성.
+- **type_syncer SQL 타입**: `_SQL_TO_TS` 매핑에 없는 타입은 `"unknown"` 반환. 새 SQL 타입 추가 시 `type_syncer.py`의 `_SQL_TO_TS` dict를 업데이트.
 
 ## 환경 변수
 
-`.env.example` 참고. 최소 필수 키:
+**백엔드 (`.env`)**: `.env.example` 참고.
 - `GEMINI_API_KEY` — 스크립트/이미지/QA 전반
 - `YOUTUBE_API_KEY` — 업로드 및 KPI 수집
 - `CH1_CHANNEL_ID` ~ `CH7_CHANNEL_ID` — 7개 채널 YouTube ID
 - `KAS_ROOT` — 프로젝트 루트 절대 경로. **config.py 기본값이 다른 경로이므로 반드시 `.env`에 명시 필요.**
-
-선택 키 (미설정 시 폴백 동작):
 - `ELEVENLABS_API_KEY` — 미설정 시 gTTS 폴백
-- `SERPAPI_KEY`, `REDDIT_*`, `NAVER_*` — 미설정 시 해당 소스 스킵
+- `CH1_VOICE_ID` ~ `CH7_VOICE_ID` — ElevenLabs 채널별 보이스 ID (미설정 시 gTTS 폴백)
+- `GEMINI_TEXT_MODEL` — 기본값 `gemini-2.5-flash` (오버라이드 가능)
+- `GEMINI_IMAGE_MODEL` — 기본값 `gemini-2.0-flash-preview-image-generation`
+- `MANIM_QUALITY` — 기본값 `l` (low, 빠름). 프로덕션 시 `h` (high) 사용
+- `USD_TO_KRW` — 기본값 `1350` (YouTube 수익 USD → KRW 환산)
+- `SERPAPI_KEY`, `REDDIT_*`, `NAVER_*`, `TAVILY_API_KEY`, `PERPLEXITY_API_KEY` — 미설정 시 해당 소스 스킵
 - `SENTRY_DSN` — 미설정 시 에러 추적 비활성화
+
+**웹 (`web/.env.local`)**: `web/.env.local.example` 참고.
+- `NEXT_PUBLIC_SUPABASE_URL` — Supabase 프로젝트 URL
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY` — Supabase anon 공개 키
+- `DASHBOARD_PASSWORD` — 웹 대시보드 비밀번호. 미설정 시 인증 자동 통과 (개발 환경)
+
+**YouTube OAuth 토큰**: 업로드/KPI 수집은 API 키가 아닌 OAuth2 인증이 필요하다. `credentials/{CH}_token.json`이 채널당 존재해야 한다. 만료 토큰은 자동 갱신 후 파일에 저장된다. 초기 발급: `python scripts/generate_oauth_token.py --channel CH1`.
