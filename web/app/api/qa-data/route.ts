@@ -1,9 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { scanPendingHumanReviews, readVariantManifest } from '@/lib/fs-helpers'
+import { scanPendingHumanReviews, readVariantManifest, getKasRoot } from '@/lib/fs-helpers'
 import fs from 'fs/promises'
 import path from 'path'
-
-const KAS_ROOT = process.env.KAS_ROOT_DIR ?? path.resolve(process.cwd(), '..')
 
 /** GET /api/qa-data?type=pending — QA 검수 대기 목록 */
 /** GET /api/qa-data?type=variants — 배리언트 선택 대기 목록 */
@@ -16,7 +14,7 @@ export async function GET(req: NextRequest) {
   }
 
   if (type === 'variants') {
-    const runsDir = path.join(KAS_ROOT, 'runs')
+    const runsDir = path.join(getKasRoot(), 'runs')
     const results: Array<{ channelId: string; runId: string; manifest: unknown }> = []
     try {
       const channels = await fs.readdir(runsDir)

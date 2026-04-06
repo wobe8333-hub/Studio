@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useTransition } from 'react'
+import { useState, useEffect, useTransition, useCallback } from 'react'
 import {
   ClipboardCheck, CheckCircle2, XCircle, ChevronRight,
   Type, Image as ImageIcon, Loader2,
@@ -215,7 +215,7 @@ export default function QaPage() {
   }>>([])
   const [loading, setLoading] = useState(true)
 
-  async function load() {
+  const load = useCallback(async () => {
     setLoading(true)
     try {
       const [qaRes, varRes] = await Promise.all([
@@ -229,9 +229,9 @@ export default function QaPage() {
     } catch { /* 네트워크 에러 무시 */ } finally {
       setLoading(false)
     }
-  }
+  }, [])
 
-  useEffect(() => { load() }, [])
+  useEffect(() => { load() }, [load])
 
   return (
     <div className="relative space-y-6 ambient-bg overflow-hidden">
