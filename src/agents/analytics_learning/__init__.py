@@ -7,6 +7,8 @@ from src.agents.analytics_learning.kpi_analyzer import load_pending_kpis, comput
 from src.agents.analytics_learning.pattern_extractor import is_winning, update_winning_patterns
 from src.agents.analytics_learning.phase_promoter import promote_if_eligible
 from src.agents.analytics_learning.ab_selector import select_winner, update_bias
+from src.agents.analytics_learning.notifier import record_phase_promotion
+from src.core.ssot import read_json
 
 
 class AnalyticsLearningAgent(BaseAgent):
@@ -28,6 +30,7 @@ class AnalyticsLearningAgent(BaseAgent):
 
         promoted_count = 0
         patterns_added = 0
+        notifications_dir = self.data_dir / "global" / "notifications"
 
         for item in pending_kpis:
             channel_id = item.get("channel_id", "")
@@ -36,8 +39,12 @@ class AnalyticsLearningAgent(BaseAgent):
             stage = compute_algorithm_stage(kpi)
             policy_path = self.data_dir / "channels" / channel_id / "algorithm_policy.json"
             if policy_path.exists():
+                # 승격 전 현재 단계를 읽어 알림에 기록한다
+                current_policy = read_json(policy_path)
+                current_stage = current_policy.get("algorithm_stage", "PRE-ENTRY")
                 if promote_if_eligible(policy_path, stage):
                     promoted_count += 1
+                    record_phase_promotion(notifications_dir, channel_id, current_stage, stage)
 
             if is_winning(kpi):
                 memory_path = self.data_dir / "global" / "memory_store" / f"{channel_id}_memory.json"
@@ -62,6 +69,7 @@ class AnalyticsLearningAgent(BaseAgent):
             "processed": len(pending_kpis),
             "promoted": promoted_count,
             "patterns_added": patterns_added,
+            "notifications_created": promoted_count,
         }
         self._log_done(report)
         return report

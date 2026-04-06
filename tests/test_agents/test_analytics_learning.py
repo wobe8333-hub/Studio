@@ -100,3 +100,52 @@ def test_select_winner_defaults_to_curiosity_when_all_zero():
     from src.agents.analytics_learning.ab_selector import select_winner
     variant = {"authority_ctr": 0.0, "curiosity_ctr": 0.0, "benefit_ctr": 0.0}
     assert select_winner(variant) == "curiosity"
+
+
+def test_record_phase_promotion_creates_notification(tmp_path):
+    """record_phase_promotion이 notifications.json에 알림을 기록한다."""
+    from src.agents.analytics_learning.notifier import record_phase_promotion
+    notifications_dir = tmp_path / "notifications"
+    record_phase_promotion(notifications_dir, "CH1", "PRE-ENTRY", "SEARCH-ONLY")
+
+    from src.core.ssot import read_json
+    notifications = read_json(notifications_dir / "notifications.json")
+    assert len(notifications) == 1
+    entry = notifications[0]
+    assert entry["type"] == "phase_promotion"
+    assert entry["channel_id"] == "CH1"
+    assert entry["from_stage"] == "PRE-ENTRY"
+    assert entry["to_stage"] == "SEARCH-ONLY"
+    assert entry["read"] is False
+    assert "id" in entry
+    assert "timestamp" in entry
+
+
+def test_record_phase_promotion_appends(tmp_path):
+    """record_phase_promotion은 기존 알림을 덮어쓰지 않고 추가한다."""
+    from src.agents.analytics_learning.notifier import record_phase_promotion
+    notifications_dir = tmp_path / "notifications"
+    record_phase_promotion(notifications_dir, "CH1", "PRE-ENTRY", "SEARCH-ONLY")
+    record_phase_promotion(notifications_dir, "CH2", "SEARCH-ONLY", "BROWSE-ENTRY")
+
+    from src.core.ssot import read_json
+    notifications = read_json(notifications_dir / "notifications.json")
+    assert len(notifications) == 2
+
+
+def test_get_unread_notifications_filters_read(tmp_path):
+    """get_unread_notifications는 read=True 항목을 제외한다."""
+    import json
+    from src.agents.analytics_learning.notifier import get_unread_notifications
+    notifications_dir = tmp_path / "notifications"
+    notifications_dir.mkdir()
+    data = [
+        {"id": "a", "type": "phase_promotion", "read": False},
+        {"id": "b", "type": "phase_promotion", "read": True},
+    ]
+    (notifications_dir / "notifications.json").write_text(
+        json.dumps(data, ensure_ascii=True), encoding="utf-8-sig"
+    )
+    unread = get_unread_notifications(notifications_dir)
+    assert len(unread) == 1
+    assert unread[0]["id"] == "a"
