@@ -8,6 +8,7 @@ import {
   DollarSign,
   ShieldAlert,
   Brain,
+  ClipboardCheck,
   CreditCard,
   Settings,
   Zap,
@@ -32,6 +33,7 @@ const navItems = [
   { title: '수익 추적', url: '/revenue', icon: DollarSign },
   { title: '리스크 모니터링', url: '/risk', icon: ShieldAlert },
   { title: '학습 피드백', url: '/learning', icon: Brain },
+  { title: 'QA 검수', url: '/qa', icon: ClipboardCheck },
   { title: '비용/쿼터', url: '/cost', icon: CreditCard },
 ]
 
