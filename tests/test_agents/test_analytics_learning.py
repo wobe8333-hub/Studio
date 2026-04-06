@@ -52,13 +52,14 @@ def test_update_winning_patterns_keeps_last_50(tmp_path):
     from src.agents.analytics_learning.pattern_extractor import update_winning_patterns
     update_winning_patterns(memory_path, {
         "run_id": "run_new", "channel_id": "CH1",
-        "animation_style": "comparison", "ctr": 7.0, "avp": 55.0
+        "animation_style": "comparison", "ctr": 7.0, "avg_view_percentage": 55.0
     })
     from src.core.ssot import read_json
     updated = read_json(memory_path)
     patterns = updated["winning_animation_patterns"]
     assert len(patterns) == 50
     assert patterns[-1]["run_id"] == "run_new"
+    assert patterns[-1]["avp"] == 55.0
 
 
 def test_promote_if_eligible_advances_stage(tmp_path):
