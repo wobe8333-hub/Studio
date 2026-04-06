@@ -135,7 +135,6 @@ export default function CostPage() {
   const geminiQuota = quota.find((q) => q.service === 'gemini') ?? DEFAULT_QUOTA[0]
   const youtubeQuota = quota.find((q) => q.service === 'youtube') ?? DEFAULT_QUOTA[1]
   const geminiImageRate = (geminiQuota.images_generated / GEMINI_DAILY_IMAGE_LIMIT) * 100
-  const youtubeUsedRate = (youtubeQuota.quota_used / YOUTUBE_DAILY_QUOTA) * 100
   const uploadsRemaining = Math.floor(youtubeQuota.quota_remaining / YOUTUBE_UPLOAD_COST)
   const totalCostKrw = quota.reduce((s, q) => s + q.cost_krw, 0)
 
