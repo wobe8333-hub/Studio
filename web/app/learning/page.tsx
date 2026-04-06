@@ -1,5 +1,6 @@
 'use client'
 
+import { useEffect, useState } from 'react'
 import { Brain, TrendingUp, TrendingDown, Minus } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -26,27 +27,32 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import { createClient } from '@/lib/supabase/client'
 
-// mock 데이터 (Supabase 연동 전)
-const mockFeedback = [
-  { run_id: 'run_CH1_001', channel_id: 'CH1', ctr: 0, avp: 0, views: 0, algorithm_stage: 'PRE-ENTRY', preferred_title_mode: 'question', revenue_on_track: false },
-  { run_id: 'run_CH2_001', channel_id: 'CH2', ctr: 0, avp: 0, views: 0, algorithm_stage: 'PRE-ENTRY', preferred_title_mode: 'hook', revenue_on_track: false },
-]
+interface FeedbackRow {
+  run_id: string | null
+  channel_id: string | null
+  ctr: number | null
+  avp: number | null
+  views: number | null
+  algorithm_stage: string | null
+  preferred_title_mode: string | null
+  revenue_on_track: boolean | null
+  recorded_at: string | null
+}
 
-// CTR/AVP 추이 차트 데이터 (mock)
-const trendData = [
-  { week: 'W1', CTR: 0, AVP: 0 },
-  { week: 'W2', CTR: 0, AVP: 0 },
-  { week: 'W3', CTR: 0, AVP: 0 },
-  { week: 'W4', CTR: 0, AVP: 0 },
-]
+interface WeeklyKpi {
+  week: string
+  CTR: number
+  AVP: number
+}
 
 const chartConfig: ChartConfig = {
   CTR: { label: 'CTR (%)', color: 'var(--chart-1)' },
   AVP: { label: '평균 시청률 (%)', color: 'var(--chart-2)' },
 }
 
-// 승리 패턴 (하드코딩 가이드라인)
+// 누적 데이터 기반 가이드라인 (고정)
 const WIN_PATTERNS = [
   { pattern: '제목 형식', value: '질문형 제목 (CTR +2~3%)', trend: 'up' },
   { pattern: '섬네일 색상', value: '고대비 빨강/노랑 배경', trend: 'up' },
@@ -61,20 +67,70 @@ function TrendIcon({ trend }: { trend: string }) {
   return <Minus className="h-4 w-4 text-muted-foreground" />
 }
 
-function AlgorithmBadge({ stage }: { stage: string }) {
+function AlgorithmBadge({ stage }: { stage: string | null }) {
   const map: Record<string, { label: string; variant: 'default' | 'secondary' | 'outline' }> = {
     'ALGORITHM-ACTIVE': { label: '알고리즘 진입', variant: 'default' },
     'BROWSE-ENTRY': { label: '브라우즈 진입', variant: 'secondary' },
     'SEARCH-ONLY': { label: '검색 전용', variant: 'outline' },
     'PRE-ENTRY': { label: '사전 단계', variant: 'outline' },
   }
-  const info = map[stage] ?? { label: stage, variant: 'outline' as const }
+  const key = stage ?? 'PRE-ENTRY'
+  const info = map[key] ?? { label: key, variant: 'outline' as const }
   return <Badge variant={info.variant}>{info.label}</Badge>
 }
 
 export default function LearningPage() {
+  const [feedback, setFeedback] = useState<FeedbackRow[]>([])
+  const [trendData, setTrendData] = useState<WeeklyKpi[]>([
+    { week: 'W1', CTR: 0, AVP: 0 },
+    { week: 'W2', CTR: 0, AVP: 0 },
+    { week: 'W3', CTR: 0, AVP: 0 },
+    { week: 'W4', CTR: 0, AVP: 0 },
+  ])
+
+  useEffect(() => {
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+    const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+    if (!supabaseUrl || !supabaseKey || supabaseUrl.includes('xxxxxxxxxxxx')) return
+
+    const supabase = createClient()
+
+    supabase
+      .from('learning_feedback')
+      .select('*')
+      .order('recorded_at', { ascending: false })
+      .limit(50)
+      .then(({ data }) => {
+        if (!data || data.length === 0) return
+        const rows = data as FeedbackRow[]
+        setFeedback(rows)
+
+        // 주간 집계 (최근 4주, 7일 단위)
+        const now = new Date()
+        const weekly: WeeklyKpi[] = Array.from({ length: 4 }, (_, i) => {
+          const weekEnd = new Date(now)
+          weekEnd.setDate(weekEnd.getDate() - i * 7)
+          const weekStart = new Date(weekEnd)
+          weekStart.setDate(weekStart.getDate() - 6)
+          const weekRows = rows.filter((r) => {
+            if (!r.recorded_at) return false
+            const d = new Date(r.recorded_at)
+            return d >= weekStart && d <= weekEnd
+          })
+          const avgCtr = weekRows.length > 0
+            ? weekRows.reduce((s, r) => s + (r.ctr ?? 0), 0) / weekRows.length * 100
+            : 0
+          const avgAvp = weekRows.length > 0
+            ? weekRows.reduce((s, r) => s + (r.avp ?? 0), 0) / weekRows.length * 100
+            : 0
+          return { week: `W${4 - i}`, CTR: parseFloat(avgCtr.toFixed(1)), AVP: parseFloat(avgAvp.toFixed(1)) }
+        }).reverse()
+        setTrendData(weekly)
+      })
+  }, [])
+
   return (
-    <div className="space-y-6">
+    <div className="relative space-y-6 ambient-bg overflow-hidden">
       <div>
         <h1 className="text-2xl font-bold tracking-tight">학습 피드백</h1>
         <p className="text-muted-foreground text-sm">업로드 48시간 후 KPI 수집 기반 성과 분석</p>
@@ -105,7 +161,7 @@ export default function LearningPage() {
       </Card>
 
       {/* 승리 패턴 */}
-      <Card>
+      <Card className="glow-amber">
         <CardHeader>
           <CardTitle>승리 패턴 분석</CardTitle>
           <CardDescription>누적 데이터 기반 최적 전략 가이드라인</CardDescription>
@@ -131,44 +187,50 @@ export default function LearningPage() {
           <CardTitle>48시간 KPI 피드백 이력</CardTitle>
         </CardHeader>
         <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>채널</TableHead>
-                <TableHead className="text-center">CTR</TableHead>
-                <TableHead className="text-center">AVP</TableHead>
-                <TableHead className="text-center">조회수</TableHead>
-                <TableHead className="text-center">알고리즘 단계</TableHead>
-                <TableHead className="text-center">수익 추적</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {mockFeedback.map((fb) => (
-                <TableRow key={fb.run_id}>
-                  <TableCell>
-                    <Badge variant="secondary">{fb.channel_id}</Badge>
-                  </TableCell>
-                  <TableCell className="text-center text-sm">
-                    {fb.ctr > 0 ? `${(fb.ctr * 100).toFixed(1)}%` : '—'}
-                  </TableCell>
-                  <TableCell className="text-center text-sm">
-                    {fb.avp > 0 ? `${(fb.avp * 100).toFixed(1)}%` : '—'}
-                  </TableCell>
-                  <TableCell className="text-center text-sm">
-                    {fb.views > 0 ? fb.views.toLocaleString() : '—'}
-                  </TableCell>
-                  <TableCell className="text-center">
-                    <AlgorithmBadge stage={fb.algorithm_stage} />
-                  </TableCell>
-                  <TableCell className="text-center">
-                    <Badge variant={fb.revenue_on_track ? 'default' : 'outline'}>
-                      {fb.revenue_on_track ? '정상' : '미달'}
-                    </Badge>
-                  </TableCell>
+          {feedback.length === 0 ? (
+            <p className="text-sm text-muted-foreground text-center py-6">
+              KPI 피드백 데이터가 없습니다. 파이프라인 실행 후 48시간 후 수집됩니다.
+            </p>
+          ) : (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>채널</TableHead>
+                  <TableHead className="text-center">CTR</TableHead>
+                  <TableHead className="text-center">AVP</TableHead>
+                  <TableHead className="text-center">조회수</TableHead>
+                  <TableHead className="text-center">알고리즘 단계</TableHead>
+                  <TableHead className="text-center">수익 추적</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHeader>
+              <TableBody>
+                {feedback.map((fb, i) => (
+                  <TableRow key={fb.run_id ?? i}>
+                    <TableCell>
+                      <Badge variant="secondary">{fb.channel_id ?? '—'}</Badge>
+                    </TableCell>
+                    <TableCell className="text-center text-sm">
+                      {fb.ctr != null && fb.ctr > 0 ? `${(fb.ctr * 100).toFixed(1)}%` : '—'}
+                    </TableCell>
+                    <TableCell className="text-center text-sm">
+                      {fb.avp != null && fb.avp > 0 ? `${(fb.avp * 100).toFixed(1)}%` : '—'}
+                    </TableCell>
+                    <TableCell className="text-center text-sm">
+                      {fb.views != null && fb.views > 0 ? fb.views.toLocaleString() : '—'}
+                    </TableCell>
+                    <TableCell className="text-center">
+                      <AlgorithmBadge stage={fb.algorithm_stage} />
+                    </TableCell>
+                    <TableCell className="text-center">
+                      <Badge variant={fb.revenue_on_track ? 'default' : 'outline'}>
+                        {fb.revenue_on_track ? '정상' : '미달'}
+                      </Badge>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          )}
         </CardContent>
       </Card>
     </div>
