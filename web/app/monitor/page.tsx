@@ -215,7 +215,7 @@ function LogPanel() {
   const [totalLines, setTotalLines] = useState(0)
   const [autoRefresh, setAutoRefresh] = useState(true)
   const [loading, setLoading] = useState(false)
-  const bottomRef = useRef<HTMLDivElement>(null)
+  const containerRef = useRef<HTMLDivElement>(null)
 
   const fetchLogs = useCallback(async () => {
     setLoading(true)
@@ -240,8 +240,8 @@ function LogPanel() {
   }, [autoRefresh, fetchLogs])
 
   useEffect(() => {
-    if (autoRefresh) {
-      bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
+    if (autoRefresh && containerRef.current) {
+      containerRef.current.scrollTop = containerRef.current.scrollHeight
     }
   }, [lines, autoRefresh])
 
@@ -297,13 +297,12 @@ function LogPanel() {
             로그 없음 — 파이프라인을 실행하면 여기에 표시됩니다.
           </p>
         ) : (
-          <div className="rounded-lg bg-black/40 border border-white/[0.06] p-3 font-mono text-xs leading-5 h-80 overflow-y-auto">
+          <div ref={containerRef} className="rounded-lg bg-black/40 border border-white/[0.06] p-3 font-mono text-xs leading-5 h-80 overflow-y-auto">
             {lines.map((line, i) => (
               <div key={i} className={lineColor(line)}>
                 {line}
               </div>
             ))}
-            <div ref={bottomRef} />
           </div>
         )}
       </CardContent>
