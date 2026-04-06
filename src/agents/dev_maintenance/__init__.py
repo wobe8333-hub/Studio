@@ -6,6 +6,7 @@ from src.agents.base_agent import BaseAgent
 from src.agents.dev_maintenance.log_monitor import find_failed_runs
 from src.agents.dev_maintenance.health_checker import run_tests
 from src.agents.dev_maintenance.schema_validator import find_missing_types
+from src.agents.dev_maintenance.hitl_signal import emit_hitl_signal, FAILED_RUNS_THRESHOLD
 
 
 class DevMaintenanceAgent(BaseAgent):
@@ -30,27 +31,43 @@ class DevMaintenanceAgent(BaseAgent):
             }
         """
         self._log_start()
+        signals_dir = self.data_dir / "global" / "notifications"
+        hitl_signals: list[str] = []
 
+        # ── 파이프라인 실패 감지 ──────────────────────────────────────
         failed_runs = find_failed_runs(self.runs_dir)
-        if failed_runs:
+        if len(failed_runs) >= FAILED_RUNS_THRESHOLD:
             logger.warning(f"[{self.name}] FAILED 실행 {len(failed_runs)}건 감지")
+            emit_hitl_signal(signals_dir, "pipeline_failure", {
+                "count": len(failed_runs),
+                "runs": [r.get("run_id", "") for r in failed_runs[:5]],
+            })
+            hitl_signals.append("pipeline_failure")
 
+        # ── 테스트 건강 점검 ─────────────────────────────────────────
         health = run_tests(self.root)
         if not health["passed"]:
             logger.error(f"[{self.name}] pytest 실패 — 출력:\n{health['output'][:500]}")
+            emit_hitl_signal(signals_dir, "pytest_failure", {
+                "output_snippet": health["output"][:300],
+            })
+            hitl_signals.append("pytest_failure")
 
+        # ── 스키마 동기화 검증 (UiUxAgent 위임 알림) ─────────────────
         sql_path = self.root / "scripts" / "supabase_schema.sql"
         types_path = self.root / "web" / "lib" / "types.ts"
         schema_missing: list = []
         if sql_path.exists() and types_path.exists():
             schema_missing = find_missing_types(sql_path, types_path)
             if schema_missing:
-                logger.warning(f"[{self.name}] types.ts 누락 테이블: {schema_missing}")
+                # 스키마 불일치는 UiUxAgent가 자동 처리 — HITL 불필요
+                logger.info(f"[{self.name}] types.ts 누락 테이블 {schema_missing} → UiUxAgent 위임")
 
         report: dict[str, Any] = {
             "failed_runs": failed_runs,
             "health": health,
             "schema_missing": schema_missing,
+            "hitl_signals": hitl_signals,
         }
         self._log_done(report)
         return report

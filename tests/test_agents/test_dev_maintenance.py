@@ -129,3 +129,40 @@ def test_dev_agent_run_returns_report(tmp_path, monkeypatch):
     assert len(report["failed_runs"]) == 1
     assert "health" in report
     assert "schema_missing" in report
+    assert "hitl_signals" in report
+    # FAILED 실행 1건 → pipeline_failure HITL 신호 발생
+    assert "pipeline_failure" in report["hitl_signals"]
+
+
+def test_emit_hitl_signal_creates_file(tmp_path):
+    """emit_hitl_signal이 hitl_signals.json을 생성하고 항목을 추가한다."""
+    from src.agents.dev_maintenance.hitl_signal import emit_hitl_signal
+    signals_dir = tmp_path / "notifications"
+    emit_hitl_signal(signals_dir, "pytest_failure", {"output_snippet": "FAILED test_foo"})
+
+    from src.core.ssot import read_json
+    signals = read_json(signals_dir / "hitl_signals.json")
+    assert len(signals) == 1
+    entry = signals[0]
+    assert entry["type"] == "pytest_failure"
+    assert entry["resolved"] is False
+    assert "id" in entry
+    assert "timestamp" in entry
+
+
+def test_get_unresolved_signals_filters_resolved(tmp_path):
+    """get_unresolved_signals는 resolved=True 항목을 제외한다."""
+    import json
+    from src.agents.dev_maintenance.hitl_signal import get_unresolved_signals
+    signals_dir = tmp_path / "notifications"
+    signals_dir.mkdir()
+    data = [
+        {"id": "a", "type": "pipeline_failure", "resolved": False},
+        {"id": "b", "type": "pytest_failure", "resolved": True},
+    ]
+    (signals_dir / "hitl_signals.json").write_text(
+        json.dumps(data, ensure_ascii=True), encoding="utf-8-sig"
+    )
+    unresolved = get_unresolved_signals(signals_dir)
+    assert len(unresolved) == 1
+    assert unresolved[0]["id"] == "a"
