@@ -1,5 +1,4 @@
 import type { Metadata } from 'next'
-import { Geist, Geist_Mono, Sora } from 'next/font/google'
 import './globals.css'
 import { ThemeProvider } from 'next-themes'
 import { SidebarProvider, SidebarInset, SidebarTrigger } from '@/components/ui/sidebar'
@@ -12,13 +11,7 @@ import { Badge } from '@/components/ui/badge'
 import { createClient } from '@/lib/supabase/server'
 import { HitlBanner } from '@/components/hitl-banner'
 
-const geistSans = Geist({ variable: '--font-geist-sans', subsets: ['latin'] })
-const geistMono = Geist_Mono({ variable: '--font-geist-mono', subsets: ['latin'] })
-const sora = Sora({
-  variable: '--font-display',
-  subsets: ['latin'],
-  weight: ['400', '500', '600', '700'],
-})
+// 폰트는 globals.css Google Fonts import로 처리
 
 export const metadata: Metadata = {
   title: 'KAS Studio — 7채널 AI 자동화 대시보드',
@@ -56,28 +49,36 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
   return (
     <html lang="ko" suppressHydrationWarning>
-      <body className={`${geistSans.variable} ${geistMono.variable} ${sora.variable} antialiased`}>
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+      <body className="antialiased">
+        <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
           <TooltipProvider>
             <SidebarProvider>
               <AppSidebar channels={channels ?? undefined} />
               <SidebarInset>
-                {/* 최상단 2px 멀티 그라데이션 바 */}
+                {/* Red Light 상단 그라디언트 바 */}
                 <div
                   className="h-[2px] w-full shrink-0"
-                  style={{ background: 'var(--gradient-bar)' }}
+                  style={{ background: 'linear-gradient(90deg, #900000 0%, #ee2400 40%, #ffb09c 100%)' }}
                 />
-                <header className="flex h-14 shrink-0 items-center gap-2 border-b border-white/[0.06] px-4 bg-background/70 backdrop-blur-xl sticky top-0 z-10">
-                  <SidebarTrigger className="-ml-1" />
-                  <Separator orientation="vertical" className="mr-2 h-4" />
+                <header
+                  className="flex h-14 shrink-0 items-center gap-2 border-b px-4 sticky top-0 z-10"
+                  style={{
+                    background: 'rgba(255, 239, 234, 0.85)',
+                    backdropFilter: 'blur(12px)',
+                    borderColor: 'rgba(238, 36, 0, 0.12)',
+                  }}
+                >
+                  <SidebarTrigger className="-ml-1 text-[#5c1a1a]" />
+                  <Separator orientation="vertical" className="mr-2 h-4 bg-red-200/50" />
                   <div className="flex flex-1 items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <span className="text-sm font-heading font-semibold text-foreground">
+                      <span className="text-sm font-bold text-[#1a0505]" style={{ fontFamily: "'Libre Baskerville', Georgia, serif" }}>
                         KAS Studio
                       </span>
                       <Badge
                         variant="outline"
-                        className="text-[10px] font-mono border-primary/30 text-primary px-1.5 py-0"
+                        className="text-[10px] border-[rgba(238,36,0,0.3)] text-[#ee2400] px-1.5 py-0"
+                        style={{ fontFamily: "'DM Mono', monospace" }}
                       >
                         LIVE
                       </Badge>

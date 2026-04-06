@@ -77,15 +77,14 @@ export function AppSidebar({ channels = DEFAULT_CHANNELS }: AppSidebarProps) {
 
   return (
     <Sidebar>
-      <SidebarHeader className="border-b border-white/[0.05] px-4 py-3 backdrop-blur-xl">
+      <SidebarHeader className="border-b px-4 py-5" style={{ borderColor: 'rgba(255, 176, 156, 0.2)' }}>
         <div className="flex items-center gap-2.5">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground shrink-0">
-            <Zap className="h-4 w-4" />
-          </div>
+          <div className="h-2 w-2 rounded-full shrink-0" style={{ backgroundColor: '#ffb09c', boxShadow: '0 0 8px rgba(255,176,156,0.6)' }} />
           <div>
-            <span className="font-heading font-bold text-sm tracking-tight">KAS Studio</span>
-            <p className="text-[10px] text-muted-foreground leading-tight">AI 자동화 파이프라인</p>
+            <span className="font-bold text-base tracking-tight" style={{ fontFamily: "'Libre Baskerville', Georgia, serif", color: '#ffefea' }}>KAS</span>
+            <p className="text-[10px] uppercase tracking-widest leading-tight mt-0.5" style={{ color: 'rgba(255,176,156,0.6)' }}>Knowledge Animation Studio</p>
           </div>
+          <Zap className="h-3.5 w-3.5 ml-auto shrink-0" style={{ color: 'rgba(255,176,156,0.5)' }} />
         </div>
       </SidebarHeader>
 
