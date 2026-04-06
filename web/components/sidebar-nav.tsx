@@ -10,8 +10,6 @@ import {
   Brain,
   CreditCard,
   Settings,
-  Tv,
-  Activity,
   Zap,
 } from 'lucide-react'
 import {
@@ -26,6 +24,7 @@ import {
   SidebarMenuItem,
   SidebarFooter,
 } from '@/components/ui/sidebar'
+import { cn } from '@/lib/utils'
 
 const navItems = [
   { title: '전체 KPI', url: '/', icon: LayoutDashboard },
@@ -36,27 +35,52 @@ const navItems = [
   { title: '비용/쿼터', url: '/cost', icon: CreditCard },
 ]
 
-const channelItems = [
-  { title: 'CH1 경제', url: '/channels/CH1' },
-  { title: 'CH2 과학', url: '/channels/CH2' },
-  { title: 'CH3 부동산', url: '/channels/CH3' },
-  { title: 'CH4 심리', url: '/channels/CH4' },
-  { title: 'CH5 미스터리', url: '/channels/CH5' },
-  { title: 'CH6 역사', url: '/channels/CH6' },
-  { title: 'CH7 전쟁사', url: '/channels/CH7' },
+// 채널별 고유 색상 CSS 변수 맵
+const CHANNEL_COLORS: Record<string, string> = {
+  CH1: 'var(--channel-ch1)',
+  CH2: 'var(--channel-ch2)',
+  CH3: 'var(--channel-ch3)',
+  CH4: 'var(--channel-ch4)',
+  CH5: 'var(--channel-ch5)',
+  CH6: 'var(--channel-ch6)',
+  CH7: 'var(--channel-ch7)',
+}
+
+// fallback — Supabase 연동 전 기본값 (config.py CHANNEL_CATEGORY_KO 기준)
+const DEFAULT_CHANNELS = [
+  { id: 'CH1', category_ko: '경제' },
+  { id: 'CH2', category_ko: '부동산' },
+  { id: 'CH3', category_ko: '심리' },
+  { id: 'CH4', category_ko: '미스터리' },
+  { id: 'CH5', category_ko: '전쟁사' },
+  { id: 'CH6', category_ko: '과학' },
+  { id: 'CH7', category_ko: '역사' },
 ]
 
-export function AppSidebar() {
+interface ChannelItem {
+  id: string
+  category_ko: string | null
+}
+
+interface AppSidebarProps {
+  channels?: ChannelItem[]
+}
+
+export function AppSidebar({ channels = DEFAULT_CHANNELS }: AppSidebarProps) {
   const pathname = usePathname()
 
   return (
     <Sidebar>
-      <SidebarHeader className="border-b px-4 py-3">
-        <div className="flex items-center gap-2">
-          <Zap className="h-5 w-5 text-primary" />
-          <span className="font-bold text-base">KAS Studio</span>
+      <SidebarHeader className="border-b border-white/[0.05] px-4 py-3 backdrop-blur-xl">
+        <div className="flex items-center gap-2.5">
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground shrink-0">
+            <Zap className="h-4 w-4" />
+          </div>
+          <div>
+            <span className="font-heading font-bold text-sm tracking-tight">KAS Studio</span>
+            <p className="text-[10px] text-muted-foreground leading-tight">AI 자동화 파이프라인</p>
+          </div>
         </div>
-        <p className="text-xs text-muted-foreground">AI 자동화 파이프라인</p>
       </SidebarHeader>
 
       <SidebarContent>
@@ -83,14 +107,24 @@ export function AppSidebar() {
           <SidebarGroupLabel>채널별 상세</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {channelItems.map((item) => (
-                <SidebarMenuItem key={item.url}>
+              {channels.map((ch) => (
+                <SidebarMenuItem key={ch.id}>
                   <SidebarMenuButton
-                    isActive={pathname.startsWith(item.url)}
-                    render={<Link href={item.url} />}
+                    isActive={pathname.startsWith(`/channels/${ch.id}`)}
+                    render={<Link href={`/channels/${ch.id}`} />}
                   >
-                    <Activity className="h-4 w-4" />
-                    <span>{item.title}</span>
+                    {/* 채널 고유 색상 dot */}
+                    <span
+                      className={cn(
+                        'h-2.5 w-2.5 rounded-full shrink-0',
+                        'ring-1 ring-inset ring-black/10 dark:ring-white/10'
+                      )}
+                      style={{
+                        backgroundColor: CHANNEL_COLORS[ch.id] ?? 'var(--muted-foreground)',
+                        boxShadow: `0 0 6px ${CHANNEL_COLORS[ch.id] ?? 'transparent'}`,
+                      }}
+                    />
+                    <span>{ch.id} {ch.category_ko}</span>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
@@ -99,7 +133,7 @@ export function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
 
-      <SidebarFooter className="border-t">
+      <SidebarFooter className="border-t border-sidebar-border/60">
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton
