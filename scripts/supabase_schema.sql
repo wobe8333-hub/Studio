@@ -100,7 +100,8 @@ CREATE TABLE IF NOT EXISTS learning_feedback (
   algorithm_stage      TEXT,
   preferred_title_mode TEXT,
   revenue_on_track     BOOLEAN,
-  recorded_at          TIMESTAMPTZ
+  recorded_at          TIMESTAMPTZ,
+  UNIQUE(run_id)
 );
 
 -- ── 8. API 쿼터/비용 ────────────────────────────────────────────
@@ -127,7 +128,8 @@ CREATE TABLE IF NOT EXISTS trend_topics (
   grade                TEXT DEFAULT 'review',
   is_trending          BOOLEAN DEFAULT FALSE,
   topic_type           TEXT,
-  collected_at         TIMESTAMPTZ
+  collected_at         TIMESTAMPTZ,
+  UNIQUE(channel_id, reinterpreted_title)
 );
 
 -- ── Realtime 활성화 (파이프라인 완료 시 웹 자동 갱신) ───────────
@@ -135,6 +137,29 @@ ALTER PUBLICATION supabase_realtime ADD TABLE pipeline_runs;
 ALTER PUBLICATION supabase_realtime ADD TABLE kpi_48h;
 ALTER PUBLICATION supabase_realtime ADD TABLE revenue_monthly;
 
--- ── RLS (Row Level Security) 비활성화 — 서비스 롤 키 사용 전제 ─
--- 필요 시 아래 주석 해제 후 정책 추가
--- ALTER TABLE channels ENABLE ROW LEVEL SECURITY;
+-- ── RLS (Row Level Security) ────────────────────────────────────
+-- anon key는 클라이언트에 노출되므로 SELECT만 허용.
+-- INSERT/UPDATE/DELETE는 service_role key(백엔드 sync 스크립트)로만 가능.
+
+ALTER TABLE channels ENABLE ROW LEVEL SECURITY;
+ALTER TABLE pipeline_runs ENABLE ROW LEVEL SECURITY;
+ALTER TABLE kpi_48h ENABLE ROW LEVEL SECURITY;
+ALTER TABLE revenue_monthly ENABLE ROW LEVEL SECURITY;
+ALTER TABLE risk_monthly ENABLE ROW LEVEL SECURITY;
+ALTER TABLE sustainability ENABLE ROW LEVEL SECURITY;
+ALTER TABLE learning_feedback ENABLE ROW LEVEL SECURITY;
+ALTER TABLE quota_daily ENABLE ROW LEVEL SECURITY;
+ALTER TABLE trend_topics ENABLE ROW LEVEL SECURITY;
+
+-- anon: 읽기 전용
+CREATE POLICY "anon_select_channels" ON channels FOR SELECT TO anon USING (true);
+CREATE POLICY "anon_select_pipeline_runs" ON pipeline_runs FOR SELECT TO anon USING (true);
+CREATE POLICY "anon_select_kpi_48h" ON kpi_48h FOR SELECT TO anon USING (true);
+CREATE POLICY "anon_select_revenue_monthly" ON revenue_monthly FOR SELECT TO anon USING (true);
+CREATE POLICY "anon_select_risk_monthly" ON risk_monthly FOR SELECT TO anon USING (true);
+CREATE POLICY "anon_select_sustainability" ON sustainability FOR SELECT TO anon USING (true);
+CREATE POLICY "anon_select_learning_feedback" ON learning_feedback FOR SELECT TO anon USING (true);
+CREATE POLICY "anon_select_quota_daily" ON quota_daily FOR SELECT TO anon USING (true);
+CREATE POLICY "anon_select_trend_topics" ON trend_topics FOR SELECT TO anon USING (true);
+
+-- service_role: 전체 접근 (RLS를 우회하므로 별도 정책 불필요)

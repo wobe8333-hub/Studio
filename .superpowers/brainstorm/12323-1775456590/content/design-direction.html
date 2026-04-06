@@ -1,0 +1,112 @@
+<h2>어떤 디자인 방향이 끌리시나요?</h2>
+<p class="subtitle">KAS 대시보드의 새로운 비주얼 방향을 선택해주세요. 각 옵션을 클릭하면 선택됩니다.</p>
+
+<div class="cards">
+  <div class="card" data-choice="A" onclick="toggleSelect(this)" style="border: 2px solid transparent;">
+    <div class="card-image" style="background: linear-gradient(135deg, #0f0f0f 0%, #1a1a2e 50%, #16213e 100%); padding: 20px; min-height: 160px; display: flex; flex-direction: column; gap: 8px;">
+      <div style="display: flex; gap: 8px; margin-bottom: 4px;">
+        <div style="width: 8px; height: 8px; border-radius: 50%; background: #ff605c;"></div>
+        <div style="width: 8px; height: 8px; border-radius: 50%; background: #ffbd44;"></div>
+        <div style="width: 8px; height: 8px; border-radius: 50%; background: #00ca4e;"></div>
+      </div>
+      <div style="display: flex; gap: 10px;">
+        <div style="width: 48px; background: rgba(255,255,255,0.04); border-radius: 6px; height: 100px;"></div>
+        <div style="flex: 1; display: flex; flex-direction: column; gap: 6px;">
+          <div style="background: rgba(255,255,255,0.06); border-radius: 6px; height: 40px; border: 1px solid rgba(255,255,255,0.08);"></div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px;">
+            <div style="background: rgba(99,102,241,0.15); border: 1px solid rgba(99,102,241,0.3); border-radius: 6px; height: 40px;"></div>
+            <div style="background: rgba(99,102,241,0.15); border: 1px solid rgba(99,102,241,0.3); border-radius: 6px; height: 40px;"></div>
+          </div>
+        </div>
+      </div>
+      <div style="display: flex; gap: 6px; margin-top: 2px;">
+        <div style="flex: 2; background: rgba(99,102,241,0.2); border: 1px solid rgba(99,102,241,0.4); border-radius: 6px; height: 28px;"></div>
+        <div style="flex: 1; background: rgba(255,255,255,0.04); border-radius: 6px; height: 28px;"></div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>A — Dark Pro</h3>
+      <p>딥 다크 배경 + 인디고/바이올렛 액센트. Linear, Vercel 스타일. 개발자·분석가를 위한 집중형 UI.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="B" onclick="toggleSelect(this)" style="border: 2px solid transparent;">
+    <div class="card-image" style="background: linear-gradient(135deg, #0d1117 0%, #161b22 100%); padding: 20px; min-height: 160px; display: flex; flex-direction: column; gap: 8px; position: relative; overflow: hidden;">
+      <div style="position: absolute; top: -30px; right: -30px; width: 100px; height: 100px; background: radial-gradient(circle, rgba(251,191,36,0.15) 0%, transparent 70%); border-radius: 50%;"></div>
+      <div style="position: absolute; bottom: -20px; left: 20px; width: 80px; height: 80px; background: radial-gradient(circle, rgba(34,197,94,0.1) 0%, transparent 70%); border-radius: 50%;"></div>
+      <div style="display: flex; gap: 6px; margin-bottom: 4px;">
+        <div style="height: 20px; width: 60px; background: rgba(255,255,255,0.06); border-radius: 4px;"></div>
+        <div style="height: 20px; flex: 1; background: rgba(251,191,36,0.08); border: 1px solid rgba(251,191,36,0.2); border-radius: 4px;"></div>
+      </div>
+      <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px;">
+        <div style="background: rgba(251,191,36,0.08); border: 1px solid rgba(251,191,36,0.25); border-radius: 8px; height: 50px; display: flex; align-items: center; justify-content: center;">
+          <div style="width: 20px; height: 20px; background: rgba(251,191,36,0.5); border-radius: 50%;"></div>
+        </div>
+        <div style="background: rgba(34,197,94,0.08); border: 1px solid rgba(34,197,94,0.25); border-radius: 8px; height: 50px;"></div>
+        <div style="background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.25); border-radius: 8px; height: 50px;"></div>
+      </div>
+      <div style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; height: 36px; backdrop-filter: blur(8px);"></div>
+    </div>
+    <div class="card-body">
+      <h3>B — Glassmorphism Dark</h3>
+      <p>다크 배경 + 글래스 카드 + 그라데이션 글로우. 현재 Amber Studio를 업그레이드. 2025 SaaS 트렌드.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="C" onclick="toggleSelect(this)" style="border: 2px solid transparent;">
+    <div class="card-image" style="background: linear-gradient(135deg, #fafaf9 0%, #f5f5f4 100%); padding: 20px; min-height: 160px; display: flex; flex-direction: column; gap: 8px;">
+      <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 4px;">
+        <div style="width: 24px; height: 24px; background: #d97706; border-radius: 5px;"></div>
+        <div style="height: 10px; width: 60px; background: #1c1917; border-radius: 3px; opacity: 0.8;"></div>
+        <div style="flex: 1;"></div>
+        <div style="height: 24px; width: 50px; background: #d97706; border-radius: 5px;"></div>
+      </div>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px;">
+        <div style="background: white; border: 1px solid #e7e5e4; border-radius: 8px; height: 50px; padding: 8px;">
+          <div style="height: 8px; width: 40px; background: #a8a29e; border-radius: 3px; margin-bottom: 6px;"></div>
+          <div style="height: 12px; width: 60px; background: #1c1917; border-radius: 3px;"></div>
+        </div>
+        <div style="background: white; border: 1px solid #e7e5e4; border-radius: 8px; height: 50px;"></div>
+      </div>
+      <div style="background: #d97706; border-radius: 8px; height: 36px; display: flex; align-items: center; justify-content: center;">
+        <div style="height: 10px; width: 60px; background: white; border-radius: 3px; opacity: 0.8;"></div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>C — Warm Minimal</h3>
+      <p>라이트 배경 + 앰버 포인트 + 강한 타이포그래피. 현재 디자인과 연속성 유지하되 더 정제된 느낌.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="D" onclick="toggleSelect(this)" style="border: 2px solid transparent;">
+    <div class="card-image" style="background: linear-gradient(135deg, #09090b 0%, #18181b 100%); padding: 20px; min-height: 160px; display: flex; flex-direction: column; gap: 8px; position: relative; overflow: hidden;">
+      <div style="position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, #f59e0b, #ef4444, #8b5cf6, #06b6d4);"></div>
+      <div style="display: flex; gap: 4px; margin-bottom: 4px;">
+        <div style="height: 20px; padding: 0 10px; background: rgba(245,158,11,0.15); border: 1px solid rgba(245,158,11,0.4); border-radius: 4px; font-size: 10px; display: flex; align-items: center; color: #f59e0b;">CH1</div>
+        <div style="height: 20px; padding: 0 10px; background: rgba(6,182,212,0.1); border: 1px solid rgba(6,182,212,0.3); border-radius: 4px;"></div>
+        <div style="height: 20px; padding: 0 10px; background: rgba(139,92,246,0.1); border: 1px solid rgba(139,92,246,0.3); border-radius: 4px;"></div>
+      </div>
+      <div style="flex: 1; display: grid; grid-template-columns: 2fr 1fr; gap: 6px;">
+        <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); border-radius: 8px; height: 80px; padding: 8px;">
+          <div style="display: flex; gap: 4px; height: 50px; align-items: flex-end;">
+            <div style="width: 10px; background: rgba(245,158,11,0.6); border-radius: 2px 2px 0 0; height: 60%;"></div>
+            <div style="width: 10px; background: rgba(245,158,11,0.6); border-radius: 2px 2px 0 0; height: 80%;"></div>
+            <div style="width: 10px; background: rgba(245,158,11,0.8); border-radius: 2px 2px 0 0; height: 100%;"></div>
+            <div style="width: 10px; background: rgba(245,158,11,0.5); border-radius: 2px 2px 0 0; height: 45%;"></div>
+            <div style="width: 10px; background: rgba(245,158,11,0.7); border-radius: 2px 2px 0 0; height: 70%;"></div>
+          </div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 4px;">
+          <div style="background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3); border-radius: 6px; height: 38px;"></div>
+          <div style="background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.3); border-radius: 6px; height: 38px;"></div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>D — Data-Forward Dark</h3>
+      <p>최상단 채널 컬러 바 + 차트 중심 레이아웃 + 데이터 밀도 높은 구성. 7채널 차별화 강조.</p>
+    </div>
+  </div>
+</div>
+
+<p class="subtitle" style="margin-top: 16px; text-align: center;">하나 또는 여러 개를 선택하신 후 터미널에 의견을 알려주세요.</p>

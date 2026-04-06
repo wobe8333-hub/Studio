@@ -1,269 +1,506 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect } from 'react'
 import { useParams } from 'next/navigation'
 import Link from 'next/link'
 import {
   ArrowLeft, FileText, Image as ImageIcon, Mic, Video,
   CheckCircle2, XCircle, AlertTriangle, Loader2, Clapperboard,
+  Music2, Type, Search, DollarSign, BarChart2,
 } from 'lucide-react'
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import type { RunArtifacts } from '@/app/api/runs/[channelId]/[runId]/route'
 
-const STATE_CLASS: Record<string, string> = {
-  RUNNING:   'bg-blue-500/15 border-blue-500/30 text-blue-400',
-  COMPLETED: 'bg-green-500/15 border-green-500/30 text-green-400',
-  FAILED:    'bg-red-500/15 border-red-500/30 text-red-400',
-  PENDING:   'bg-amber-500/15 border-amber-500/30 text-amber-400',
+// ─── 공통 스타일 ──────────────────────────────────────────────────────────────
+
+const G = {
+  card: {
+    background: 'rgba(255,255,255,0.55)',
+    backdropFilter: 'blur(20px)',
+    WebkitBackdropFilter: 'blur(20px)',
+    border: '1px solid rgba(238,36,0,0.12)',
+    borderRadius: '1rem',
+    boxShadow: '0 8px 32px rgba(144,0,0,0.08)',
+  } as React.CSSProperties,
 }
 
-function ArtifactRow({
-  icon: Icon,
-  label,
-  ok,
-  detail,
-}: {
-  icon: React.ElementType
-  label: string
-  ok: boolean | null
-  detail?: string
-}) {
+// ─── 탭 정의 ─────────────────────────────────────────────────────────────────
+
+const TABS = [
+  { id: 'script',    label: '스크립트', icon: FileText },
+  { id: 'images',    label: '이미지',   icon: ImageIcon },
+  { id: 'video',     label: '영상',     icon: Video },
+  { id: 'shorts',    label: 'Shorts',   icon: Clapperboard },
+  { id: 'audio',     label: '음성',     icon: Mic },
+  { id: 'thumbnail', label: '썸네일',   icon: ImageIcon },
+  { id: 'title',     label: '제목',     icon: Type },
+  { id: 'seo',       label: 'SEO',      icon: Search },
+  { id: 'qa',        label: 'QA',       icon: CheckCircle2 },
+  { id: 'cost',      label: '비용',     icon: DollarSign },
+] as const
+
+type TabId = typeof TABS[number]['id']
+
+// ─── 스크립트 탭 ──────────────────────────────────────────────────────────────
+
+function ScriptTab({ artifacts }: { artifacts: RunArtifacts | null }) {
+  const script = artifacts?.script
+  if (!script) return <EmptyState icon={FileText} msg="스크립트 파일을 찾을 수 없습니다" sub="Step06/07 실행 후 생성됩니다" />
+
   return (
-    <div className="flex items-center gap-3 py-2 border-b border-white/[0.04] last:border-0">
-      <Icon className="h-4 w-4 text-muted-foreground shrink-0" />
-      <span className="flex-1 text-sm">{label}</span>
-      {detail && <span className="text-xs text-muted-foreground">{detail}</span>}
-      {ok === null ? (
-        <AlertTriangle className="h-4 w-4 text-muted-foreground" />
-      ) : ok ? (
-        <CheckCircle2 className="h-4 w-4 text-green-400" />
-      ) : (
-        <XCircle className="h-4 w-4 text-red-400" />
+    <div style={G.card} className="p-6">
+      <h3 className="font-bold text-lg mb-4" style={{ fontFamily: "'Libre Baskerville', serif", color: '#1a0505' }}>
+        {script.title ?? '제목 없음'}
+      </h3>
+      {script.hook && (
+        <div className="mb-4 p-4 rounded-xl" style={{ background: 'rgba(238,36,0,0.06)', border: '1px solid rgba(238,36,0,0.12)' }}>
+          <p className="text-xs font-bold mb-2" style={{ color: '#ee2400' }}>🎣 도입부 후킹</p>
+          <p className="text-sm leading-relaxed" style={{ color: '#1a0505' }}>{script.hook}</p>
+        </div>
       )}
+      {script.scenes?.map((scene: { scene_number: number; narration: string; visual_prompt: string }, i: number) => (
+        <div key={i} className="mb-4 pb-4 border-b last:border-0" style={{ borderColor: 'rgba(238,36,0,0.08)' }}>
+          <p className="text-xs font-bold mb-2" style={{ color: '#9b6060' }}>장면 {scene.scene_number}</p>
+          <p className="text-sm mb-2 leading-relaxed" style={{ color: '#1a0505' }}>{scene.narration}</p>
+          <p className="text-xs p-2 rounded-lg" style={{ fontFamily: "'DM Mono', monospace", background: 'rgba(0,0,0,0.04)', color: '#5c1a1a' }}>
+            {scene.visual_prompt}
+          </p>
+        </div>
+      ))}
     </div>
   )
 }
 
-export default function RunDetailPage() {
-  const { channelId, runId } = useParams<{ channelId: string; runId: string }>()
-  const [data, setData] = useState<RunArtifacts | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-  const [selectedImg, setSelectedImg] = useState<string | null>(null)
+// ─── 이미지 탭 ───────────────────────────────────────────────────────────────
 
-  const load = useCallback(async () => {
-    setLoading(true)
-    try {
-      const res = await fetch(`/api/runs/${channelId}/${runId}`)
-      if (!res.ok) throw new Error(`${res.status}`)
-      setData(await res.json())
-    } catch (e) {
-      setError(String(e))
-    } finally {
-      setLoading(false)
-    }
-  }, [channelId, runId])
+function ImagesTab({ artifacts, channelId, runId }: { artifacts: RunArtifacts | null; channelId: string; runId: string }) {
+  const images = artifacts?.images ?? []
 
-  useEffect(() => { load() }, [load])
-
-  // 라이트박스 ESC 닫기
-  useEffect(() => {
-    if (!selectedImg) return
-    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setSelectedImg(null) }
-    window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
-  }, [selectedImg])
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
-      </div>
-    )
-  }
-
-  if (error || !data) {
-    return (
-      <div className="space-y-4">
-        <Link href="/monitor">
-          <Button variant="ghost" size="sm"><ArrowLeft className="h-4 w-4 mr-1" />모니터로</Button>
-        </Link>
-        <p className="text-sm text-red-400">Run을 찾을 수 없습니다: {error}</p>
-      </div>
-    )
-  }
-
-  const { manifest, step08, step11, cost_krw } = data
+  if (!images.length) return <EmptyState icon={ImageIcon} msg="생성된 이미지가 없습니다" sub="Step08 실행 후 생성됩니다" />
 
   return (
-    <div className="relative space-y-6 ambient-bg overflow-hidden">
-      {/* 헤더 */}
-      <div>
-        <Link href="/monitor">
-          <Button variant="ghost" size="sm" className="mb-3 -ml-2">
-            <ArrowLeft className="h-4 w-4 mr-1" />모니터로
-          </Button>
-        </Link>
-        <div className="flex items-start gap-3">
+    <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+      {images.map((img: string, i: number) => (
+        <div key={i} className="aspect-video rounded-xl overflow-hidden" style={G.card}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={`/api/files/${channelId}/${runId}/step08/${img}`}
+            alt={`장면 ${i + 1}`}
+            className="w-full h-full object-cover"
+          />
+        </div>
+      ))}
+    </div>
+  )
+}
+
+// ─── 영상 탭 ─────────────────────────────────────────────────────────────────
+
+function VideoTab({ artifacts, channelId, runId }: { artifacts: RunArtifacts | null; channelId: string; runId: string }) {
+  const videoFile = artifacts?.video_file
+
+  if (!videoFile) return <EmptyState icon={Video} msg="최종 영상이 없습니다" sub="Step08 FFmpeg 합성 완료 후 생성됩니다" />
+
+  return (
+    <div style={G.card} className="p-5">
+      <h3 className="font-bold mb-3" style={{ fontFamily: "'Libre Baskerville', serif", color: '#1a0505' }}>최종 영상</h3>
+      <video
+        controls
+        className="w-full rounded-xl"
+        style={{ maxHeight: '480px', background: '#000' }}
+        src={`/api/files/${channelId}/${runId}/step08/${videoFile}`}
+      >
+        브라우저가 video 태그를 지원하지 않습니다.
+      </video>
+    </div>
+  )
+}
+
+// ─── Shorts 탭 ───────────────────────────────────────────────────────────────
+
+function ShortsTab({ channelId, runId }: { channelId: string; runId: string }) {
+  const [shorts, setShorts] = useState<{ index: number; filename: string; url: string }[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    fetch(`/api/runs/${channelId}/${runId}/shorts`)
+      .then(r => r.ok ? r.json() : { shorts: [] })
+      .then(d => setShorts(d.shorts ?? []))
+      .finally(() => setLoading(false))
+  }, [channelId, runId])
+
+  if (loading) return <div className="flex justify-center py-12"><Loader2 className="h-6 w-6 animate-spin" style={{ color: '#ee2400' }} /></div>
+  if (!shorts.length) return <EmptyState icon={Clapperboard} msg="Shorts 파일이 없습니다" sub="Step08-S (Shorts 자동 추출) 완료 후 생성됩니다" />
+
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      {shorts.map(s => (
+        <div key={s.index} style={G.card} className="p-4">
+          <p className="text-xs font-bold mb-3" style={{ color: '#9b6060' }}>Shorts {s.index}</p>
+          <video
+            controls
+            className="w-full rounded-lg"
+            style={{ background: '#000', aspectRatio: '9/16', objectFit: 'cover' }}
+            src={`/api/files/${channelId}/${runId}/step08_s/${s.filename}`}
+          />
+          <p className="text-xs mt-2 truncate" style={{ fontFamily: "'DM Mono', monospace", color: '#9b6060' }}>{s.filename}</p>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+// ─── 음성(BGM) 탭 ────────────────────────────────────────────────────────────
+
+function AudioTab({ artifacts, channelId, runId }: { artifacts: RunArtifacts | null; channelId: string; runId: string }) {
+  const [bgm, setBgm] = useState<{ tone?: string; file?: string } | null>(null)
+
+  useEffect(() => {
+    fetch(`/api/runs/${channelId}/${runId}/bgm`)
+      .then(r => r.ok ? r.json() : null)
+      .then(d => setBgm(d?.bgm ?? null))
+  }, [channelId, runId])
+
+  const narrationFile = artifacts?.narration_file
+
+  return (
+    <div className="space-y-4">
+      {/* 나레이션 */}
+      <div style={G.card} className="p-5">
+        <div className="flex items-center gap-3 mb-4">
+          <Mic className="h-5 w-5" style={{ color: '#ee2400' }} />
+          <h3 className="font-bold" style={{ fontFamily: "'Libre Baskerville', serif", color: '#1a0505' }}>나레이션</h3>
+        </div>
+        {narrationFile ? (
+          <audio controls className="w-full" src={`/api/files/${channelId}/${runId}/step08/${narrationFile}`} />
+        ) : (
+          <p className="text-sm" style={{ color: '#9b6060' }}>나레이션 파일이 없습니다 (Step08 완료 후 생성)</p>
+        )}
+      </div>
+
+      {/* BGM */}
+      <div style={G.card} className="p-5">
+        <div className="flex items-center gap-3 mb-4">
+          <Music2 className="h-5 w-5" style={{ color: '#ee2400' }} />
+          <h3 className="font-bold" style={{ fontFamily: "'Libre Baskerville', serif", color: '#1a0505' }}>BGM</h3>
+          {bgm?.tone && (
+            <span className="text-xs px-2 py-0.5 rounded-full ml-auto" style={{ background: 'rgba(238,36,0,0.1)', color: '#ee2400' }}>
+              {bgm.tone}
+            </span>
+          )}
+        </div>
+        {bgm?.file ? (
+          <audio controls className="w-full" src={`/api/files/${channelId}/${runId}/step09/${bgm.file}`} />
+        ) : (
+          <p className="text-sm" style={{ color: '#9b6060' }}>BGM 파일이 없습니다 (Step09 완료 후 생성)</p>
+        )}
+      </div>
+    </div>
+  )
+}
+
+// ─── 썸네일 탭 ──────────────────────────────────────────────────────────────
+
+function ThumbnailTab({ artifacts, channelId, runId }: { artifacts: RunArtifacts | null; channelId: string; runId: string }) {
+  const thumbFile = artifacts?.thumbnail_file
+
+  if (!thumbFile) return <EmptyState icon={ImageIcon} msg="썸네일이 없습니다" sub="Step10 완료 후 생성됩니다" />
+
+  return (
+    <div style={G.card} className="p-6">
+      <h3 className="font-bold mb-4" style={{ fontFamily: "'Libre Baskerville', serif", color: '#1a0505' }}>썸네일</h3>
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={`/api/files/${channelId}/${runId}/step10/${thumbFile}`}
+        alt="썸네일"
+        className="w-full max-w-xl rounded-xl shadow-lg mx-auto block"
+        style={{ border: '1px solid rgba(238,36,0,0.12)' }}
+      />
+    </div>
+  )
+}
+
+// ─── 제목 A/B/C 탭 ──────────────────────────────────────────────────────────
+
+function TitleTab({ artifacts }: { artifacts: RunArtifacts | null }) {
+  const titles = artifacts?.title_candidates ?? []
+
+  if (!titles.length) return <EmptyState icon={Type} msg="제목 후보가 없습니다" sub="Step10 완료 후 생성됩니다" />
+
+  const types = ['curiosity', 'authority', 'benefit']
+  const typeLabel: Record<string, string> = { curiosity: '호기심 자극형', authority: '권위 신뢰형', benefit: '이익 제공형' }
+
+  return (
+    <div className="space-y-3">
+      {titles.map((t: { type: string; title: string; reason?: string }, i: number) => (
+        <div key={i} style={G.card} className="p-5">
+          <div className="flex items-center gap-2 mb-2">
+            <span className="text-xs font-bold px-2.5 py-1 rounded-full" style={{ background: 'rgba(238,36,0,0.1)', color: '#ee2400' }}>
+              {String.fromCharCode(65 + i)} — {typeLabel[t.type] ?? t.type}
+            </span>
+          </div>
+          <p className="text-base font-medium leading-snug" style={{ color: '#1a0505' }}>{t.title}</p>
+          {t.reason && <p className="text-xs mt-2" style={{ color: '#9b6060' }}>{t.reason}</p>}
+        </div>
+      ))}
+    </div>
+  )
+}
+
+// ─── SEO 편집 탭 ────────────────────────────────────────────────────────────
+
+function SeoTab({ channelId, runId }: { channelId: string; runId: string }) {
+  const [seo, setSeo] = useState<{ description?: string; tags?: string[] } | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [saving, setSaving] = useState(false)
+  const [desc, setDesc] = useState('')
+  const [tags, setTags] = useState('')
+
+  useEffect(() => {
+    fetch(`/api/runs/${channelId}/${runId}/seo`)
+      .then(r => r.ok ? r.json() : null)
+      .then(d => {
+        if (d?.seo) {
+          setSeo(d.seo)
+          setDesc(d.seo.description ?? '')
+          setTags((d.seo.tags ?? []).join(', '))
+        }
+      })
+      .finally(() => setLoading(false))
+  }, [channelId, runId])
+
+  async function handleSave() {
+    setSaving(true)
+    await fetch(`/api/runs/${channelId}/${runId}/seo`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ description: desc, tags: tags.split(',').map(t => t.trim()).filter(Boolean) }),
+    })
+    setSaving(false)
+  }
+
+  if (loading) return <div className="flex justify-center py-12"><Loader2 className="h-6 w-6 animate-spin" style={{ color: '#ee2400' }} /></div>
+  if (!seo) return <EmptyState icon={Search} msg="SEO 메타데이터가 없습니다" sub="Step10 완료 후 생성됩니다" />
+
+  return (
+    <div style={G.card} className="p-6">
+      <h3 className="font-bold mb-4" style={{ fontFamily: "'Libre Baskerville', serif", color: '#1a0505' }}>SEO 메타데이터 편집</h3>
+      <div className="space-y-4">
+        <div>
+          <label className="text-xs font-semibold mb-1.5 block" style={{ color: '#5c1a1a' }}>설명 (Description)</label>
+          <textarea
+            value={desc}
+            onChange={e => setDesc(e.target.value)}
+            rows={5}
+            className="w-full rounded-xl px-4 py-3 text-sm resize-none outline-none"
+            style={{ background: 'rgba(238,36,0,0.04)', border: '1px solid rgba(238,36,0,0.12)', color: '#1a0505' }}
+          />
+        </div>
+        <div>
+          <label className="text-xs font-semibold mb-1.5 block" style={{ color: '#5c1a1a' }}>태그 (쉼표로 구분)</label>
+          <input
+            type="text"
+            value={tags}
+            onChange={e => setTags(e.target.value)}
+            className="w-full rounded-xl px-4 py-2.5 text-sm outline-none"
+            style={{ background: 'rgba(238,36,0,0.04)', border: '1px solid rgba(238,36,0,0.12)', color: '#1a0505' }}
+          />
+          <p className="text-xs mt-1" style={{ color: '#9b6060' }}>현재 {tags.split(',').filter(Boolean).length}개 태그</p>
+        </div>
+        <button
+          onClick={handleSave}
+          disabled={saving}
+          className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold transition-all disabled:opacity-60"
+          style={{ background: '#900000', color: '#ffefea', boxShadow: '0 4px 16px rgba(144,0,0,0.25)' }}
+        >
+          {saving ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : null}
+          {saving ? '저장 중...' : '저장하기'}
+        </button>
+      </div>
+    </div>
+  )
+}
+
+// ─── QA 탭 ──────────────────────────────────────────────────────────────────
+
+function QaTab({ artifacts }: { artifacts: RunArtifacts | null }) {
+  const qa = artifacts?.qa_result
+
+  if (!qa) return <EmptyState icon={CheckCircle2} msg="QA 결과가 없습니다" sub="Step11 완료 후 생성됩니다" />
+
+  const score = qa.total_score ?? 0
+  const passed = qa.passed ?? false
+
+  return (
+    <div className="space-y-4">
+      {/* 종합 결과 */}
+      <div style={G.card} className="p-6">
+        <div className="flex items-center gap-4 mb-5">
+          <div className="h-16 w-16 rounded-full flex items-center justify-center" style={{ background: passed ? 'rgba(34,197,94,0.1)' : 'rgba(238,36,0,0.1)', border: `2px solid ${passed ? '#22c55e' : '#ee2400'}` }}>
+            {passed
+              ? <CheckCircle2 className="h-8 w-8 text-green-500" />
+              : <XCircle className="h-8 w-8" style={{ color: '#ee2400' }} />
+            }
+          </div>
           <div>
-            <div className="flex items-center gap-2 mb-1">
-              <span className="font-mono text-sm text-amber-400">{manifest.channel_id}</span>
-              <Badge className={cn('border text-xs', STATE_CLASS[manifest.run_state] ?? 'border-white/20 text-white/60')}>
-                {manifest.run_state}
-              </Badge>
-              {cost_krw !== null && cost_krw > 0 && (
-                <span className="text-xs text-muted-foreground">₩{cost_krw.toLocaleString()}</span>
-              )}
-            </div>
-            <h1 className="text-xl font-bold tracking-tight leading-snug">{manifest.topic_title}</h1>
-            <p className="text-xs text-muted-foreground mt-1">
-              {manifest.run_id} · {manifest.created_at?.slice(0, 10)}
-              {manifest.topic_score > 0 && ` · 점수 ${manifest.topic_score}`}
+            <p className="text-2xl font-bold" style={{ fontFamily: "'Libre Baskerville', serif", color: '#1a0505' }}>
+              {score}점
+            </p>
+            <p className="text-sm" style={{ color: passed ? '#22c55e' : '#ee2400' }}>
+              {passed ? 'QA 통과' : 'QA 실패'}
             </p>
           </div>
         </div>
+
+        {qa.checks && (
+          <div className="space-y-2">
+            {Object.entries(qa.checks).map(([key, val]: [string, unknown]) => {
+              const check = val as { passed: boolean; score?: number; detail?: string }
+              return (
+                <div key={key} className="flex items-center gap-3 py-2.5 border-b last:border-0" style={{ borderColor: 'rgba(238,36,0,0.08)' }}>
+                  {check.passed
+                    ? <CheckCircle2 className="h-4 w-4 text-green-500 shrink-0" />
+                    : <XCircle className="h-4 w-4 shrink-0" style={{ color: '#ee2400' }} />
+                  }
+                  <div className="flex-1">
+                    <p className="text-sm" style={{ color: '#1a0505' }}>{key}</p>
+                    {check.detail && <p className="text-xs" style={{ color: '#9b6060' }}>{check.detail}</p>}
+                  </div>
+                  {check.score !== undefined && (
+                    <span className="text-sm font-bold" style={{ color: '#5c1a1a' }}>{check.score}점</span>
+                  )}
+                </div>
+              )
+            })}
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
+// ─── 비용 탭 ────────────────────────────────────────────────────────────────
+
+function CostTab({ artifacts }: { artifacts: RunArtifacts | null }) {
+  const cost = artifacts?.cost_breakdown
+
+  if (!cost) return <EmptyState icon={DollarSign} msg="비용 내역이 없습니다" sub="파이프라인 실행 완료 후 생성됩니다" />
+
+  return (
+    <div style={G.card} className="p-6">
+      <h3 className="font-bold mb-4" style={{ fontFamily: "'Libre Baskerville', serif", color: '#1a0505' }}>이번 Run 비용 내역</h3>
+      <div className="space-y-2">
+        {Object.entries(cost).map(([key, val]: [string, unknown]) => (
+          <div key={key} className="flex items-center justify-between py-2.5 border-b last:border-0" style={{ borderColor: 'rgba(238,36,0,0.08)' }}>
+            <span className="text-sm" style={{ color: '#5c1a1a' }}>{key}</span>
+            <span className="text-sm font-bold" style={{ fontFamily: "'DM Mono', monospace", color: '#1a0505' }}>
+              ${typeof val === 'number' ? val.toFixed(4) : String(val)}
+            </span>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+// ─── 빈 상태 ─────────────────────────────────────────────────────────────────
+
+function EmptyState({ icon: Icon, msg, sub }: { icon: React.ElementType; msg: string; sub?: string }) {
+  return (
+    <div style={G.card} className="p-12 text-center">
+      <Icon className="h-12 w-12 mx-auto mb-4" style={{ color: 'rgba(238,36,0,0.25)' }} />
+      <p className="text-base font-bold" style={{ fontFamily: "'Libre Baskerville', serif", color: '#1a0505' }}>{msg}</p>
+      {sub && <p className="text-sm mt-1" style={{ color: '#9b6060' }}>{sub}</p>}
+    </div>
+  )
+}
+
+// ─── 메인 페이지 ─────────────────────────────────────────────────────────────
+
+export default function RunDetailPage() {
+  const params = useParams<{ channelId: string; runId: string }>()
+  const { channelId, runId } = params
+
+  const [artifacts, setArtifacts] = useState<RunArtifacts | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [tab, setTab] = useState<TabId>('script')
+
+  useEffect(() => {
+    fetch(`/api/runs/${channelId}/${runId}`)
+      .then(r => r.ok ? r.json() : null)
+      .then(d => setArtifacts(d))
+      .finally(() => setLoading(false))
+  }, [channelId, runId])
+
+  return (
+    <div className="space-y-5">
+      {/* 헤더 */}
+      <div>
+        <Link
+          href={`/runs/${channelId}`}
+          className="inline-flex items-center gap-1.5 text-sm mb-3"
+          style={{ color: '#9b6060' }}
+        >
+          <ArrowLeft className="h-3.5 w-3.5" />
+          {channelId} Run 목록
+        </Link>
+        <div className="flex items-center justify-between gap-4">
+          <div>
+            <h1 className="text-xl font-bold" style={{ fontFamily: "'Libre Baskerville', serif", color: '#1a0505' }}>
+              {runId}
+            </h1>
+            <p className="text-sm mt-0.5" style={{ color: '#9b6060' }}>{channelId} · 결과물 검수 허브</p>
+          </div>
+          {artifacts?.run_state && (
+            <span
+              className="text-xs font-bold px-3 py-1 rounded-full"
+              style={{
+                background: artifacts.run_state === 'COMPLETED' ? 'rgba(34,197,94,0.12)' : artifacts.run_state === 'FAILED' ? 'rgba(238,36,0,0.12)' : 'rgba(238,36,0,0.08)',
+                color: artifacts.run_state === 'COMPLETED' ? '#22c55e' : artifacts.run_state === 'FAILED' ? '#ee2400' : '#9b6060',
+              }}
+            >
+              {artifacts.run_state}
+            </span>
+          )}
+        </div>
       </div>
 
-      {/* Step08 아티팩트 */}
-      <Card className="glass-card">
-        <CardHeader className="pb-3">
-          <CardTitle className="text-base flex items-center gap-2">
-            <Clapperboard className="h-4 w-4 text-amber-400" />
-            Step08 — 영상 제작
-          </CardTitle>
-          {step08 ? (
-            <CardDescription>
-              {step08.section_count}개 섹션 ·
-              이미지 {step08.image_paths.length}장 ·
-              {step08.manim ? ` Manim 성공 ${step08.manim.success}/${step08.manim.attempted}` : ''}
-            </CardDescription>
-          ) : (
-            <CardDescription>Step08 아직 미실행</CardDescription>
-          )}
-        </CardHeader>
-        <CardContent className="space-y-4">
-          {step08 ? (
-            <>
-              {/* 아티팩트 체크리스트 */}
-              <div className="rounded-lg border border-white/[0.06] bg-white/[0.02] px-4 py-1">
-                <ArtifactRow icon={FileText} label="스크립트" ok={step08.has_script} detail={`${step08.section_count}섹션`} />
-                <ArtifactRow icon={Mic} label="나레이션" ok={step08.has_narration} />
-                <ArtifactRow icon={Video} label="최종 영상 (video.mp4)" ok={step08.has_video} />
-                <ArtifactRow
-                  icon={ImageIcon}
-                  label="AI 이미지"
-                  ok={step08.image_paths.length > 0}
-                  detail={`${step08.image_paths.length}장`}
-                />
-                {step08.manim && (
-                  <ArtifactRow
-                    icon={Clapperboard}
-                    label="Manim 애니메이션"
-                    ok={step08.manim.fallback_rate < 0.5}
-                    detail={`fallback ${Math.round(step08.manim.fallback_rate * 100)}%`}
-                  />
-                )}
-              </div>
+      {loading ? (
+        <div className="flex justify-center py-12"><Loader2 className="h-6 w-6 animate-spin" style={{ color: '#ee2400' }} /></div>
+      ) : (
+        <>
+          {/* 탭 바 */}
+          <div className="flex gap-1 overflow-x-auto p-1 rounded-xl" style={{ background: 'rgba(255,255,255,0.4)', border: '1px solid rgba(238,36,0,0.1)' }}>
+            {TABS.map(t => (
+              <button
+                key={t.id}
+                onClick={() => setTab(t.id)}
+                className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium transition-all whitespace-nowrap"
+                style={{
+                  background: tab === t.id ? '#900000' : 'transparent',
+                  color: tab === t.id ? '#ffefea' : '#9b6060',
+                }}
+              >
+                <t.icon className="h-3 w-3" />
+                {t.label}
+              </button>
+            ))}
+          </div>
 
-              {/* 제목 후보 */}
-              {step08.title_candidates.length > 0 && (
-                <div>
-                  <p className="text-xs text-muted-foreground mb-2 uppercase tracking-wide font-semibold">제목 후보</p>
-                  <div className="space-y-1">
-                    {step08.title_candidates.map((t, i) => (
-                      <div
-                        key={i}
-                        className={cn(
-                          'rounded-lg px-3 py-2 text-sm border',
-                          step08.selected_title === t
-                            ? 'border-amber-500/30 bg-amber-500/10 text-amber-300'
-                            : 'border-white/[0.06] bg-white/[0.02] text-muted-foreground',
-                        )}
-                      >
-                        {step08.selected_title === t && <span className="text-amber-400 mr-1.5">✓</span>}
-                        {t}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* 이미지 갤러리 */}
-              {step08.image_paths.length > 0 && (
-                <div>
-                  <p className="text-xs text-muted-foreground mb-2 uppercase tracking-wide font-semibold">이미지 갤러리</p>
-                  <div className="grid grid-cols-3 gap-2">
-                    {step08.image_paths
-                      .filter((p) => /^runs\/[^./][^/]*\/[^./][^/]*\//.test(p))
-                      .map((imgPath, i) => (
-                      <button
-                        key={i}
-                        onClick={() => setSelectedImg(imgPath)}
-                        className="rounded-lg overflow-hidden border border-white/[0.06] hover:border-amber-500/30 transition-colors aspect-video bg-white/[0.02]"
-                      >
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img
-                          src={`/api/artifacts/${imgPath}`}
-                          alt={`scene ${i + 1}`}
-                          className="w-full h-full object-cover"
-                          loading="lazy"
-                        />
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </>
-          ) : (
-            <p className="text-sm text-muted-foreground text-center py-4">아직 영상 제작이 시작되지 않았습니다.</p>
-          )}
-        </CardContent>
-      </Card>
-
-      {/* Step11 QA */}
-      <Card className={cn('glass-card', step11 ? (step11.overall_pass ? 'glow-success' : 'glow-danger') : '')}>
-        <CardHeader className="pb-3">
-          <CardTitle className="text-base flex items-center gap-2">
-            <CheckCircle2 className="h-4 w-4 text-blue-400" />
-            Step11 — QA 검수
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          {step11 ? (
-            <div className="rounded-lg border border-white/[0.06] bg-white/[0.02] px-4 py-1">
-              <ArtifactRow icon={CheckCircle2} label="애니메이션 품질" ok={step11.animation_ok} />
-              <ArtifactRow icon={CheckCircle2} label="스크립트 정확도" ok={step11.script_ok} />
-              <ArtifactRow icon={CheckCircle2} label="YouTube 정책" ok={step11.policy_ok} />
-              <ArtifactRow
-                icon={CheckCircle2}
-                label="휴먼 리뷰"
-                ok={!step11.human_review_required || step11.human_review_completed}
-                detail={step11.human_review_required ? (step11.human_review_completed ? '완료' : '대기') : '불필요'}
-              />
-            </div>
-          ) : (
-            <p className="text-sm text-muted-foreground text-center py-4">Step11 QA 미실행</p>
-          )}
-        </CardContent>
-      </Card>
-
-      {/* 이미지 라이트박스 */}
-      {selectedImg && (
-        <div
-          className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4"
-          onClick={() => setSelectedImg(null)}
-        >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={`/api/artifacts/${selectedImg}`}
-            alt="확대 보기"
-            className="max-w-full max-h-full rounded-xl object-contain"
-            onClick={(e) => e.stopPropagation()}
-          />
-        </div>
+          {/* 탭 컨텐츠 */}
+          <div>
+            {tab === 'script'    && <ScriptTab artifacts={artifacts} />}
+            {tab === 'images'    && <ImagesTab artifacts={artifacts} channelId={channelId} runId={runId} />}
+            {tab === 'video'     && <VideoTab artifacts={artifacts} channelId={channelId} runId={runId} />}
+            {tab === 'shorts'    && <ShortsTab channelId={channelId} runId={runId} />}
+            {tab === 'audio'     && <AudioTab artifacts={artifacts} channelId={channelId} runId={runId} />}
+            {tab === 'thumbnail' && <ThumbnailTab artifacts={artifacts} channelId={channelId} runId={runId} />}
+            {tab === 'title'     && <TitleTab artifacts={artifacts} />}
+            {tab === 'seo'       && <SeoTab channelId={channelId} runId={runId} />}
+            {tab === 'qa'        && <QaTab artifacts={artifacts} />}
+            {tab === 'cost'      && <CostTab artifacts={artifacts} />}
+          </div>
+        </>
       )}
     </div>
   )

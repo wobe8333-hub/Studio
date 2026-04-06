@@ -5,12 +5,9 @@ import {
   DollarSign,
   Activity,
   CheckCircle,
-  XCircle,
   TrendingUp,
   AlertTriangle,
-  Clock,
   PlayCircle,
-  Zap,
 } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -19,6 +16,7 @@ import { createClient } from '@/lib/supabase/server'
 import type { Channel, PipelineRun } from '@/lib/types'
 import { Sparkline, RadialGauge, ChannelDots } from '@/components/home-charts'
 import { StaggerContainer, StaggerItem, ScrollReveal, AnimatedCard } from '@/components/animated-sections'
+import { TestRunButton } from '@/components/test-run-button'
 import { cn } from '@/lib/utils'
 
 // Supabase 미연동 시 사용할 fallback mock 데이터
@@ -111,83 +109,92 @@ export default async function HomePage() {
       <div className="pointer-events-none absolute inset-0 -z-10 bg-mesh-warm" />
 
       {/* 페이지 헤더 */}
-      <div>
-        <h1 className="text-3xl font-heading font-bold tracking-tight">
-          전체 KPI 대시보드
-        </h1>
-        <p className="text-muted-foreground text-sm mt-1">
-          7채널 AI 자동화 파이프라인 현황 — 월 목표: 1,400만원
-        </p>
+      <div className="flex items-start justify-between gap-4 flex-wrap">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight" style={{ fontFamily: "'Libre Baskerville', Georgia, serif", color: '#1a0505' }}>
+            파이프라인 대시보드
+          </h1>
+          <p className="text-sm mt-1" style={{ color: '#9b6060' }}>
+            7채널 AI 자동화 파이프라인 현황 · 월 목표: 1,400만원
+          </p>
+        </div>
+        <div className="flex gap-3 items-center">
+          <Link
+            href="/monitor"
+            className="flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition-all"
+            style={{
+              background: 'rgba(255,255,255,0.55)',
+              backdropFilter: 'blur(20px)',
+              border: '1px solid rgba(238,36,0,0.12)',
+              color: '#5c1a1a',
+            }}
+          >
+            📋 런 내역
+          </Link>
+          <TestRunButton />
+        </div>
       </div>
 
-      {/* 총괄 요약 KPI 카드 — stagger 입장 애니메이션 */}
+      {/* 총괄 요약 KPI 카드 */}
       <StaggerContainer className="grid grid-cols-2 gap-3 lg:grid-cols-4">
         {/* 월 총 목표 */}
         <StaggerItem>
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium">월 총 목표</CardTitle>
-              <DollarSign className="h-4 w-4 text-primary" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-heading font-bold tabular-nums">₩14,000,000</div>
-              <p className="text-xs text-muted-foreground mt-1">채널당 ₩2,000,000</p>
-              <Sparkline data={[0, 0, 0, 0, 0, 0, 0]} color="var(--chart-1)" />
-            </CardContent>
-          </Card>
+          <div className="glass-card glass-card-hover p-4">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-xs font-medium" style={{ color: '#9b6060' }}>월 총 목표</span>
+              <DollarSign className="h-4 w-4" style={{ color: '#ee2400' }} />
+            </div>
+            <div className="text-2xl font-bold tabular-nums" style={{ fontFamily: "'Libre Baskerville', Georgia, serif", color: '#1a0505' }}>₩14,000,000</div>
+            <p className="text-xs mt-1" style={{ color: '#9b6060' }}>채널당 ₩2,000,000</p>
+            <Sparkline data={[0, 0, 0, 0, 0, 0, 0]} color="rgba(238,36,0,0.6)" />
+          </div>
         </StaggerItem>
 
         {/* 활성 채널 */}
         <StaggerItem>
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium">활성 채널</CardTitle>
-              <Activity className="h-4 w-4 text-primary" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-heading font-bold tabular-nums">
-                {activeChannels.length} <span className="text-muted-foreground">/ {channels.length}</span>
-              </div>
-              <p className="text-xs text-muted-foreground mt-1">
-                Phase 1 ({activeChannels.map((c) => c.id).join(', ')})
-              </p>
-              <ChannelDots activeIds={activeChannels.map((c) => c.id)} />
-            </CardContent>
-          </Card>
+          <div className="glass-card glass-card-hover p-4">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-xs font-medium" style={{ color: '#9b6060' }}>활성 채널</span>
+              <Activity className="h-4 w-4" style={{ color: '#ee2400' }} />
+            </div>
+            <div className="text-2xl font-bold tabular-nums" style={{ fontFamily: "'Libre Baskerville', Georgia, serif", color: '#1a0505' }}>
+              {activeChannels.length} <span style={{ color: '#9b6060' }}>/ {channels.length}</span>
+            </div>
+            <p className="text-xs mt-1" style={{ color: '#9b6060' }}>
+              Phase 1 ({activeChannels.map((c) => c.id).join(', ')})
+            </p>
+            <ChannelDots activeIds={activeChannels.map((c) => c.id)} />
+          </div>
         </StaggerItem>
 
         {/* 달성률 */}
         <StaggerItem>
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium">이번달 달성률</CardTitle>
-              <TrendingUp className="h-4 w-4 text-primary" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-heading font-bold tabular-nums">0%</div>
-              <RadialGauge value={0} color="var(--chart-1)" />
-            </CardContent>
-          </Card>
+          <div className="glass-card glass-card-hover p-4">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-xs font-medium" style={{ color: '#9b6060' }}>이번달 달성률</span>
+              <TrendingUp className="h-4 w-4" style={{ color: '#ee2400' }} />
+            </div>
+            <div className="text-2xl font-bold tabular-nums" style={{ fontFamily: "'Libre Baskerville', Georgia, serif", color: '#1a0505' }}>0%</div>
+            <RadialGauge value={0} color="rgba(238,36,0,0.6)" />
+          </div>
         </StaggerItem>
 
         {/* 리스크 채널 */}
         <StaggerItem>
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium">리스크 채널</CardTitle>
-              <AlertTriangle className="h-4 w-4 text-destructive" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-heading font-bold tabular-nums">
-                0 <span className="text-muted-foreground">/ {channels.length}</span>
-              </div>
-              <p className="text-xs text-muted-foreground mt-1">HIGH 리스크 없음</p>
-              <div className="flex items-center gap-1 mt-2">
-                <CheckCircle className="h-3.5 w-3.5 text-green-500" />
-                <span className="text-xs text-green-600 dark:text-green-400">모두 안전</span>
-              </div>
-            </CardContent>
-          </Card>
+          <div className="glass-card glass-card-hover p-4">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-xs font-medium" style={{ color: '#9b6060' }}>리스크 채널</span>
+              <AlertTriangle className="h-4 w-4" style={{ color: '#ee2400' }} />
+            </div>
+            <div className="text-2xl font-bold tabular-nums" style={{ fontFamily: "'Libre Baskerville', Georgia, serif", color: '#1a0505' }}>
+              0 <span style={{ color: '#9b6060' }}>/ {channels.length}</span>
+            </div>
+            <p className="text-xs mt-1" style={{ color: '#9b6060' }}>HIGH 리스크 없음</p>
+            <div className="flex items-center gap-1 mt-2">
+              <CheckCircle className="h-3.5 w-3.5 text-green-500" />
+              <span className="text-xs text-green-600">모두 안전</span>
+            </div>
+          </div>
         </StaggerItem>
       </StaggerContainer>
 
@@ -280,78 +287,82 @@ function ChannelCard({ channel }: { channel: Channel }) {
   const channelColorVar = `var(--channel-${channel.id.toLowerCase()})`
 
   return (
-    <Link href={`/channels/${channel.id}`}>
-      <Card
+    <Link href={`/runs/${channel.id}`}>
+      <div
         className={cn(
-          'cursor-pointer border-l-[3px] transition-shadow',
-          !isActive && 'opacity-55 hover:opacity-80'
+          'glass-card glass-card-hover cursor-pointer p-4',
+          !isActive && 'opacity-60 hover:opacity-80'
         )}
-        style={{ borderLeftColor: channelColorVar }}
+        style={{ borderLeft: `3px solid ${channelColorVar}` }}
       >
-        <CardHeader className="pb-2">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              {/* 채널 색상 dot */}
-              <span
-                className="h-2.5 w-2.5 rounded-full shrink-0 ring-1 ring-inset ring-black/10 dark:ring-white/10"
-                style={{
-                  backgroundColor: channelColorVar,
-                  boxShadow: isActive ? `0 0 7px ${channelColorVar}` : 'none',
-                }}
-              />
-              <div>
-                <CardTitle className="text-base">{channel.category_ko}</CardTitle>
-                <p className="text-[10px] text-muted-foreground font-mono">{channel.id}</p>
-              </div>
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center gap-2">
+            <span
+              className="h-2.5 w-2.5 rounded-full shrink-0"
+              style={{
+                backgroundColor: channelColorVar,
+                boxShadow: isActive ? `0 0 7px ${channelColorVar}` : 'none',
+              }}
+            />
+            <div>
+              <p className="text-base font-bold" style={{ fontFamily: "'Libre Baskerville', Georgia, serif", color: '#1a0505' }}>{channel.category_ko}</p>
+              <p className="text-[10px]" style={{ fontFamily: "'DM Mono', monospace", color: '#9b6060' }}>{channel.id}</p>
             </div>
-            <Badge
-              variant={isActive ? 'default' : 'secondary'}
-              className="text-[10px]"
-            >
-              {isActive ? 'LIVE' : `P${channel.launch_phase}`}
-            </Badge>
           </div>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          {/* 월 수익 Progress */}
-          <div>
-            <div className="flex justify-between text-xs mb-1">
-              <span className="text-muted-foreground">월 수익</span>
-              <span className="font-medium font-mono tabular-nums">
-                ₩{formatKrw(revenue)} / ₩{formatKrw(target)}
-              </span>
-            </div>
-            <Progress value={achieveRate} className="h-1.5" />
-          </div>
+          <span
+            className="text-[10px] font-bold px-2 py-0.5 rounded-full"
+            style={{
+              background: isActive ? 'rgba(238,36,0,0.12)' : 'rgba(0,0,0,0.06)',
+              color: isActive ? '#ee2400' : '#9b6060',
+            }}
+          >
+            {isActive ? 'LIVE' : `P${channel.launch_phase}`}
+          </span>
+        </div>
 
-          {/* 3열 KPI 메트릭 */}
-          <div className="grid grid-cols-3 gap-2 text-center">
-            <div>
-              <div className="flex items-center justify-center gap-1 text-muted-foreground">
-                <Eye className="h-3 w-3" />
-                <span className="text-xs">조회수</span>
-              </div>
-              <p className="text-sm font-heading font-semibold mt-0.5">—</p>
-            </div>
-            <div>
-              <div className="flex items-center justify-center gap-1 text-muted-foreground">
-                <MousePointerClick className="h-3 w-3" />
-                <span className="text-xs">CTR</span>
-              </div>
-              <p className="text-sm font-heading font-semibold mt-0.5">—</p>
-            </div>
-            <div>
-              <div className="flex items-center justify-center gap-1 text-muted-foreground">
-                <Activity className="h-3 w-3" />
-                <span className="text-xs">알고리즘</span>
-              </div>
-              <p className="text-xs font-semibold mt-0.5">
-                {(channel.algorithm_trust_level ?? 'PRE-ENTRY').replace('PRE-ENTRY', 'PRE').replace('ENTRY', 'ENT')}
-              </p>
-            </div>
+        {/* 월 수익 Progress */}
+        <div className="mb-3">
+          <div className="flex justify-between text-xs mb-1">
+            <span style={{ color: '#9b6060' }}>월 수익</span>
+            <span className="font-medium tabular-nums" style={{ fontFamily: "'DM Mono', monospace", color: '#5c1a1a' }}>
+              ₩{formatKrw(revenue)} / ₩{formatKrw(target)}
+            </span>
           </div>
-        </CardContent>
-      </Card>
+          <div className="h-1.5 rounded-full overflow-hidden" style={{ background: 'rgba(238,36,0,0.08)' }}>
+            <div
+              className="h-full rounded-full transition-all"
+              style={{ width: `${achieveRate}%`, background: 'linear-gradient(90deg, #ee2400, #ffb09c)' }}
+            />
+          </div>
+        </div>
+
+        {/* 3열 KPI 메트릭 */}
+        <div className="grid grid-cols-3 gap-2 text-center">
+          <div>
+            <div className="flex items-center justify-center gap-1" style={{ color: '#9b6060' }}>
+              <Eye className="h-3 w-3" />
+              <span className="text-xs">조회수</span>
+            </div>
+            <p className="text-sm font-bold mt-0.5" style={{ fontFamily: "'Libre Baskerville', Georgia, serif", color: '#1a0505' }}>—</p>
+          </div>
+          <div>
+            <div className="flex items-center justify-center gap-1" style={{ color: '#9b6060' }}>
+              <MousePointerClick className="h-3 w-3" />
+              <span className="text-xs">CTR</span>
+            </div>
+            <p className="text-sm font-bold mt-0.5" style={{ fontFamily: "'Libre Baskerville', Georgia, serif", color: '#1a0505' }}>—</p>
+          </div>
+          <div>
+            <div className="flex items-center justify-center gap-1" style={{ color: '#9b6060' }}>
+              <Activity className="h-3 w-3" />
+              <span className="text-xs">알고리즘</span>
+            </div>
+            <p className="text-xs font-semibold mt-0.5" style={{ color: '#5c1a1a' }}>
+              {(channel.algorithm_trust_level ?? 'PRE-ENTRY').replace('PRE-ENTRY', 'PRE').replace('ENTRY', 'ENT')}
+            </p>
+          </div>
+        </div>
+      </div>
     </Link>
   )
 }

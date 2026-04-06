@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>누락 검증 항목</title>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Mplus+Rounded+1c:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --c-dark:#900000;--c-red:#ee2400;--c-salmon:#ffb09c;
+    --c-blush:#fbd9d3;--c-cream:#ffefea;
+    --t-primary:#1a0505;--t-secondary:#5c1a1a;--t-muted:#9b6060;
+    --glass-bg:rgba(255,255,255,0.58);--glass-border:rgba(238,36,0,0.13);
+    --font-h:'Libre Baskerville',serif;--font-b:'Mplus Rounded 1c',sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family:var(--font-b);
+    background:linear-gradient(135deg,#fbd9d3 0%,#ffefea 55%,#ffd9cc 100%);
+    min-height:100vh;padding:24px 20px;color:var(--t-primary);
+  }
+  body::before{content:'';position:fixed;inset:0;pointer-events:none;
+    background:radial-gradient(ellipse 55% 45% at 10% 10%,rgba(238,36,0,0.07),transparent 70%);}
+
+  h1{font-family:var(--font-h);font-size:19px;font-weight:700;margin-bottom:3px;}
+  .subtitle{font-size:11px;color:var(--t-muted);margin-bottom:20px;}
+
+  .section{margin-bottom:22px;}
+  .section-header{
+    display:flex;align-items:center;gap:10px;margin-bottom:12px;
+  }
+  .section-tag{
+    font-size:11px;font-weight:700;padding:4px 12px;border-radius:20px;
+    font-family:var(--font-b);
+  }
+  .tag-critical{background:#fee2e2;color:#991b1b;}
+  .tag-useful{background:#fef3c7;color:#92400e;}
+  .tag-longterm{background:#d1fae5;color:#065f46;}
+  .section-title{font-family:var(--font-h);font-size:14px;font-weight:700;color:var(--t-primary);}
+  .section-desc{font-size:11px;color:var(--t-muted);margin-left:auto;}
+
+  .items-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+
+  .item-card{
+    background:var(--glass-bg);
+    backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+    border:1.5px solid var(--glass-border);border-radius:13px;
+    padding:13px 15px;cursor:pointer;
+    transition:all 0.15s ease;position:relative;
+  }
+  .item-card:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(144,0,0,0.1);}
+  .item-card.selected{border-color:var(--c-red);box-shadow:0 0 0 3px rgba(238,36,0,0.13);}
+  .item-card.selected::after{
+    content:'✓';position:absolute;top:8px;right:10px;
+    font-size:12px;font-weight:700;color:var(--c-red);
+  }
+
+  .item-icon{font-size:20px;margin-bottom:7px;}
+  .item-name{font-size:12px;font-weight:700;color:var(--t-primary);margin-bottom:3px;line-height:1.3;}
+  .item-step{font-size:9px;font-weight:700;color:var(--c-red);font-family:monospace;margin-bottom:5px;}
+  .item-desc{font-size:10px;color:var(--t-secondary);line-height:1.6;}
+  .item-where{
+    margin-top:7px;font-size:9px;padding:2px 7px;border-radius:8px;
+    background:rgba(238,36,0,0.07);color:var(--t-muted);
+    display:inline-block;font-family:monospace;
+  }
+
+  /* 현재 포함 섹션 */
+  .existing-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:20px;}
+  .existing-item{
+    background:rgba(22,163,74,0.08);border:1px solid rgba(22,163,74,0.15);
+    border-radius:10px;padding:10px 12px;
+  }
+  .ex-icon{font-size:15px;margin-bottom:4px;}
+  .ex-name{font-size:11px;font-weight:700;color:#065f46;}
+  .ex-page{font-size:9px;color:#059669;font-family:monospace;margin-top:2px;}
+
+  .divider{
+    border:none;border-top:1px solid rgba(238,36,0,0.1);
+    margin:20px 0;
+  }
+
+  .summary-box{
+    background:rgba(255,255,255,0.5);border:1px solid rgba(238,36,0,0.12);
+    border-radius:12px;padding:14px 16px;margin-top:16px;
+    display:flex;gap:16px;align-items:center;flex-wrap:wrap;
+  }
+  .sum-item{text-align:center;}
+  .sum-num{font-family:var(--font-h);font-size:24px;font-weight:700;}
+  .sum-label{font-size:10px;color:var(--t-muted);margin-top:2px;}
+  .select-all-btn{
+    margin-left:auto;
+    background:var(--c-red);color:#fff;
+    border:none;border-radius:10px;padding:8px 16px;
+    font-size:12px;font-weight:700;cursor:pointer;
+    font-family:var(--font-b);
+  }
+  .hint{text-align:center;margin-top:14px;font-size:11px;color:var(--t-muted);}
+</style>
+</head>
+<body>
+
+<h1>누락 검증 항목 검토</h1>
+<p class="subtitle">파이프라인 Step00~17 전체 검토 결과 — 15개 항목이 대시보드에서 빠져 있습니다. 추가할 항목을 선택해주세요!</p>
+
+<!-- 기존 포함 항목 -->
+<div class="section">
+  <div class="section-header">
+    <span class="section-tag tag-longterm">✓ 이미 포함 (8개)</span>
+  </div>
+  <div class="existing-grid">
+    <div class="existing-item"><div class="ex-icon">📚</div><div class="ex-name">지식 수집 내역</div><div class="ex-page">/knowledge</div></div>
+    <div class="existing-item"><div class="ex-icon">📈</div><div class="ex-name">트렌드 수집 리스트</div><div class="ex-page">/trends</div></div>
+    <div class="existing-item"><div class="ex-icon">✍️</div><div class="ex-name">영상 프롬프트+후킹</div><div class="ex-page">/runs/[id]</div></div>
+    <div class="existing-item"><div class="ex-icon">🖼</div><div class="ex-name">프롬프트별 이미지</div><div class="ex-page">/runs/[id]</div></div>
+    <div class="existing-item"><div class="ex-icon">🎬</div><div class="ex-name">영상 제작 결과</div><div class="ex-page">/runs/[id]</div></div>
+    <div class="existing-item"><div class="ex-icon">🖼</div><div class="ex-name">썸네일 3종 비교</div><div class="ex-page">/runs/[id]</div></div>
+    <div class="existing-item"><div class="ex-icon">💰</div><div class="ex-name">채널별 수익 현황</div><div class="ex-page">/revenue</div></div>
+    <div class="existing-item"><div class="ex-icon">📡</div><div class="ex-name">실시간 반영</div><div class="ex-page">/monitor</div></div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- 🔴 검증 필수 -->
+<div class="section">
+  <div class="section-header">
+    <span class="section-tag tag-critical">🔴 테스트 검증 필수 — 즉시 추가 권장</span>
+    <span class="section-desc">빠지면 제대로 된 검증 불가</span>
+  </div>
+  <div class="items-grid">
+
+    <div class="item-card" onclick="toggle(this,'shorts')">
+      <div class="item-icon">📱</div>
+      <div class="item-name">Shorts 결과물 검수</div>
+      <div class="item-step">Step 08-S</div>
+      <div class="item-desc">Long-form 영상에서 자동 추출된 60초 Shorts 3편 (9:16 세로 영상) 미리보기 및 품질 확인</div>
+      <div class="item-where">/runs/[id] → Shorts 탭</div>
+    </div>
+
+    <div class="item-card" onclick="toggle(this,'bgm')">
+      <div class="item-icon">🎵</div>
+      <div class="item-name">BGM 오디오 검수</div>
+      <div class="item-step">Step 09</div>
+      <div class="item-desc">BGM 오버레이 적용 결과 오디오 플레이어, bgm_category_tone, bgm_source 확인</div>
+      <div class="item-where">/runs/[id] → 오디오 탭</div>
+    </div>
+
+    <div class="item-card" onclick="toggle(this,'title-ab')">
+      <div class="item-icon">📝</div>
+      <div class="item-name">제목 배리언트 A/B/C 선택</div>
+      <div class="item-step">Step 10</div>
+      <div class="item-desc">authority / curiosity / benefit 3종 제목 후보를 나란히 비교하고 업로드 전 최종 선택</div>
+      <div class="item-where">/runs/[id] → 제목 선택</div>
+    </div>
+
+    <div class="item-card" onclick="toggle(this,'vision-qa')">
+      <div class="item-icon">👁</div>
+      <div class="item-name">Vision QA 상세 결과</div>
+      <div class="item-step">Step 11</div>
+      <div class="item-desc">캐릭터 일관성, 텍스트 가독성, 부적절 콘텐츠 감지 등 프레임별 Vision QA 결과 시각화</div>
+      <div class="item-where">/runs/[id] → QA 상세</div>
+    </div>
+
+    <div class="item-card" onclick="toggle(this,'manim')">
+      <div class="item-icon">🎞</div>
+      <div class="item-name">Manim 애니메이션 안정성</div>
+      <div class="item-step">Step 08</div>
+      <div class="item-desc">Manim 렌더 성공률, fallback_rate, 실제 적용된 클립 수 — 50% 초과 시 HITL 플래그</div>
+      <div class="item-where">/monitor → Manim 현황</div>
+    </div>
+
+    <div class="item-card" onclick="toggle(this,'cost-compare')">
+      <div class="item-icon">📊</div>
+      <div class="item-name">비용 예측 vs 실제 비교</div>
+      <div class="item-step">Core / pre_cost_estimator</div>
+      <div class="item-desc">pre_cost_estimator.py의 사전 예측값과 실제 소비 비용을 주제별로 비교해서 초과 여부 확인</div>
+      <div class="item-where">/cost → 예측 vs 실제</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- 🟡 운영 유용 -->
+<div class="section">
+  <div class="section-header">
+    <span class="section-tag tag-useful">🟡 운영에 유용 — 추가하면 좋음</span>
+    <span class="section-desc">초기 검증 후 점진적 추가 가능</span>
+  </div>
+  <div class="items-grid">
+
+    <div class="item-card" onclick="toggle(this,'deferred')">
+      <div class="item-icon">⏳</div>
+      <div class="item-name">이연 업로드 대기 목록</div>
+      <div class="item-step">Step 12 / YouTube 쿼터</div>
+      <div class="item-desc">YouTube API 쿼터 부족으로 이연된 deferred_jobs 목록, 잔여 쿼터, 재시도 예정 시각</div>
+      <div class="item-where">/cost → 이연 업로드</div>
+    </div>
+
+    <div class="item-card" onclick="toggle(this,'hitl')">
+      <div class="item-icon">🚨</div>
+      <div class="item-name">HITL 신호 대시보드</div>
+      <div class="item-step">Sub-Agent / notifications</div>
+      <div class="item-desc">hitl_signals.json의 미해결 신호(파이프라인 실패, pytest 실패, 스키마 불일치)를 통합 관리</div>
+      <div class="item-where">/monitor → HITL 탭</div>
+    </div>
+
+    <div class="item-card" onclick="toggle(this,'kpi48')">
+      <div class="item-icon">📉</div>
+      <div class="item-name">KPI 48시간 수집 결과</div>
+      <div class="item-step">Step 12~13</div>
+      <div class="item-desc">업로드 후 48시간 경과한 영상의 실제 YouTube Analytics (impressions, CTR, AVP) 추적</div>
+      <div class="item-where">/learning → KPI 48h</div>
+    </div>
+
+    <div class="item-card" onclick="toggle(this,'algorithm')">
+      <div class="item-icon">🧠</div>
+      <div class="item-name">알고리즘 단계 승격 현황</div>
+      <div class="item-step">Step 13</div>
+      <div class="item-desc">채널별 PRE-ENTRY → SEARCH → BROWSE → ACTIVE 4단계 승격 이력 및 현재 단계</div>
+      <div class="item-where">/learning → 알고리즘 단계</div>
+    </div>
+
+    <div class="item-card" onclick="toggle(this,'seo')">
+      <div class="item-icon">🔍</div>
+      <div class="item-name">SEO 메타데이터 검수</div>
+      <div class="item-step">Step 08 / metadata_generator</div>
+      <div class="item-desc">Gemini가 생성한 설명문, 태그 15개, 카테고리, 해시태그를 검토하고 편집하는 UI</div>
+      <div class="item-where">/runs/[id] → SEO 탭</div>
+    </div>
+
+    <div class="item-card" onclick="toggle(this,'subagent')">
+      <div class="item-icon">🤖</div>
+      <div class="item-name">Sub-Agent 실행 현황</div>
+      <div class="item-step">agents/ (4종)</div>
+      <div class="item-desc">DevMaintenance / AnalyticsLearning / UiUx / VideoStyle 4종 Sub-Agent 마지막 실행 결과 요약</div>
+      <div class="item-where">/monitor → Sub-Agent 탭</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- 🟢 장기 분석 -->
+<div class="section">
+  <div class="section-header">
+    <span class="section-tag tag-longterm">🟢 장기 분석 — 운영 안정화 후 추가</span>
+    <span class="section-desc">Step 14~17 리포트 시각화</span>
+  </div>
+  <div class="items-grid">
+
+    <div class="item-card" onclick="toggle(this,'revenue-trend')">
+      <div class="item-icon">📅</div>
+      <div class="item-name">월별 수익 추세 그래프</div>
+      <div class="item-step">Step 14</div>
+      <div class="item-desc">채널별 revenue_monthly.json 히스토리를 꺾은선 그래프로 시각화, AdSense/Affiliate 구분</div>
+      <div class="item-where">/revenue → 추세</div>
+    </div>
+
+    <div class="item-card" onclick="toggle(this,'sustainability')">
+      <div class="item-icon">♻️</div>
+      <div class="item-name">주제 지속성 분석</div>
+      <div class="item-step">Step 17</div>
+      <div class="item-desc">채널별 topic_capacity, depletion_risk, expansion_candidates — 주제 고갈 위험도 시각화</div>
+      <div class="item-where">/risk → 지속성</div>
+    </div>
+
+    <div class="item-card" onclick="toggle(this,'learning-bias')">
+      <div class="item-icon">🧬</div>
+      <div class="item-name">학습 바이어스 시각화</div>
+      <div class="item-step">Step 13</div>
+      <div class="item-desc">topic_priority_bias.json — 승리한 제목 모드, 애니메이션 패턴, 채널 성과 지수를 레이더 차트로</div>
+      <div class="item-where">/learning → 바이어스</div>
+    </div>
+
+  </div>
+</div>
+
+<div class="summary-box">
+  <div class="sum-item">
+    <div class="sum-num" style="color:#991b1b" id="cnt-critical">0</div>
+    <div class="sum-label">🔴 필수 선택</div>
+  </div>
+  <div class="sum-item">
+    <div class="sum-num" style="color:#92400e" id="cnt-useful">0</div>
+    <div class="sum-label">🟡 유용 선택</div>
+  </div>
+  <div class="sum-item">
+    <div class="sum-num" style="color:#065f46" id="cnt-longterm">0</div>
+    <div class="sum-label">🟢 장기 선택</div>
+  </div>
+  <div class="sum-item">
+    <div class="sum-num" style="color:var(--c-red)" id="cnt-total">0</div>
+    <div class="sum-label">총 선택</div>
+  </div>
+  <button class="select-all-btn" onclick="selectAll()">🔴 필수 6개 모두 선택</button>
+</div>
+
+<p class="hint">카드를 클릭해서 추가할 항목을 선택해주세요 · 여러 개 선택 가능 · 터미널에 번호나 이름을 입력하셔도 됩니다</p>
+
+<script>
+  const criticalKeys = ['shorts','bgm','title-ab','vision-qa','manim','cost-compare'];
+  const usefulKeys = ['deferred','hitl','kpi48','algorithm','seo','subagent'];
+  const longtermKeys = ['revenue-trend','sustainability','learning-bias'];
+  const selected = new Set();
+
+  function toggle(el, key) {
+    if(selected.has(key)) { selected.delete(key); el.classList.remove('selected'); }
+    else { selected.add(key); el.classList.add('selected'); }
+    updateCount();
+    if(window.__sp_select) window.__sp_select([...selected].join(','), `${selected.size}개 선택`);
+  }
+
+  function selectAll() {
+    criticalKeys.forEach(k => {
+      selected.add(k);
+      const card = document.querySelector(`[onclick*="'${k}'"]`);
+      if(card) card.classList.add('selected');
+    });
+    updateCount();
+  }
+
+  function updateCount() {
+    const c = [...selected];
+    document.getElementById('cnt-critical').textContent = c.filter(k=>criticalKeys.includes(k)).length;
+    document.getElementById('cnt-useful').textContent = c.filter(k=>usefulKeys.includes(k)).length;
+    document.getElementById('cnt-longterm').textContent = c.filter(k=>longtermKeys.includes(k)).length;
+    document.getElementById('cnt-total').textContent = selected.size;
+  }
+</script>
+</body>
+</html>

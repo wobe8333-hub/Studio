@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>스윗 폰트 선택</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,600;9..144,700&family=Nunito:wght@300;400;500;600;700;800&family=Lora:wght@400;500;600;700&family=Quicksand:wght@400;500;600;700&family=Cormorant+Garamond:wght@300;400;600;700&family=Poppins:wght@300;400;500;600;700&family=Gowun+Dodum&family=Sunflower:wght@300;500;700&family=Nanum+Myeongjo:wght@400;700;800&family=Jua&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --c-dark: #900000; --c-red: #ee2400; --c-salmon: #ffb09c;
+    --c-blush: #fbd9d3; --c-cream: #ffefea;
+    --t-primary: #1a0505; --t-secondary: #5c1a1a; --t-muted: #9b6060; --t-accent: #900000;
+    --glass-bg: rgba(255,255,255,0.55); --glass-border: rgba(238,36,0,0.12);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: linear-gradient(135deg, #fbd9d3 0%, #ffefea 60%, #ffd9cc 100%);
+    min-height: 100vh; padding: 28px 24px;
+    color: var(--t-primary);
+  }
+  body::before {
+    content:''; position:fixed; inset:0; pointer-events:none;
+    background: radial-gradient(ellipse 60% 50% at 15% 15%, rgba(238,36,0,0.06), transparent 70%);
+  }
+
+  h1 { font-family: 'Nunito', sans-serif; font-size: 18px; font-weight: 700; color: var(--t-primary); margin-bottom: 4px; }
+  .subtitle { font-size: 12px; color: var(--t-muted); margin-bottom: 24px; font-family: 'Nunito', sans-serif; }
+
+  .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+
+  /* 카드 */
+  .font-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+    border: 2px solid var(--glass-border);
+    border-radius: 18px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+  }
+  .font-card:hover { transform: translateY(-3px); box-shadow: 0 12px 40px rgba(144,0,0,0.12); }
+  .font-card.selected { border-color: var(--c-red); box-shadow: 0 0 0 4px rgba(238,36,0,0.15); }
+
+  .card-label {
+    position: absolute; top: 12px; left: 12px;
+    font-size: 10px; font-weight: 800; letter-spacing: 1px;
+    background: var(--c-red); color: white;
+    padding: 3px 10px; border-radius: 20px;
+    font-family: 'Nunito', sans-serif;
+    z-index: 2;
+  }
+
+  .preview-area {
+    padding: 40px 22px 20px;
+    border-bottom: 1px solid rgba(238,36,0,0.08);
+    min-height: 200px;
+  }
+
+  /* ── 폰트별 프리뷰 스타일 ── */
+
+  /* A: Fraunces + Nunito */
+  .preview-a .big-num {
+    font-family: 'Fraunces', serif;
+    font-size: 42px; font-weight: 700; color: var(--t-accent);
+    letter-spacing: -1px; line-height: 1;
+    font-optical-sizing: auto;
+  }
+  .preview-a .heading {
+    font-family: 'Fraunces', serif;
+    font-size: 20px; font-weight: 600; color: var(--t-primary);
+    margin: 8px 0 4px; font-optical-sizing: auto;
+  }
+  .preview-a .body-text {
+    font-family: 'Nunito', sans-serif;
+    font-size: 13px; color: var(--t-secondary); line-height: 1.6;
+    font-weight: 500;
+  }
+  .preview-a .label {
+    font-family: 'Nunito', sans-serif;
+    font-size: 10px; font-weight: 800; letter-spacing: 1px;
+    text-transform: uppercase; color: var(--t-muted);
+  }
+  .preview-a .tag {
+    font-family: 'Nunito', sans-serif;
+    font-size: 11px; font-weight: 700;
+    background: rgba(238,36,0,0.1); color: var(--c-red);
+    padding: 3px 10px; border-radius: 20px; display: inline-block;
+  }
+
+  /* B: Lora + Quicksand */
+  .preview-b .big-num {
+    font-family: 'Lora', serif;
+    font-size: 42px; font-weight: 700; color: var(--t-accent);
+    letter-spacing: -1px; line-height: 1;
+  }
+  .preview-b .heading {
+    font-family: 'Lora', serif;
+    font-size: 20px; font-weight: 600; color: var(--t-primary);
+    margin: 8px 0 4px;
+  }
+  .preview-b .body-text {
+    font-family: 'Quicksand', sans-serif;
+    font-size: 13px; color: var(--t-secondary); line-height: 1.6;
+    font-weight: 500;
+  }
+  .preview-b .label {
+    font-family: 'Quicksand', sans-serif;
+    font-size: 10px; font-weight: 700; letter-spacing: 1px;
+    text-transform: uppercase; color: var(--t-muted);
+  }
+  .preview-b .tag {
+    font-family: 'Quicksand', sans-serif;
+    font-size: 11px; font-weight: 700;
+    background: rgba(238,36,0,0.1); color: var(--c-red);
+    padding: 3px 10px; border-radius: 20px; display: inline-block;
+  }
+
+  /* C: Cormorant + Poppins */
+  .preview-c .big-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 48px; font-weight: 700; color: var(--t-accent);
+    letter-spacing: -1px; line-height: 1;
+  }
+  .preview-c .heading {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px; font-weight: 600; color: var(--t-primary);
+    margin: 8px 0 4px; letter-spacing: 0.2px;
+  }
+  .preview-c .body-text {
+    font-family: 'Poppins', sans-serif;
+    font-size: 12px; color: var(--t-secondary); line-height: 1.7;
+    font-weight: 400;
+  }
+  .preview-c .label {
+    font-family: 'Poppins', sans-serif;
+    font-size: 9px; font-weight: 600; letter-spacing: 1.2px;
+    text-transform: uppercase; color: var(--t-muted);
+  }
+  .preview-c .tag {
+    font-family: 'Poppins', sans-serif;
+    font-size: 10px; font-weight: 600;
+    background: rgba(238,36,0,0.1); color: var(--c-red);
+    padding: 3px 10px; border-radius: 20px; display: inline-block;
+  }
+
+  /* D: Sunflower + Gowun Dodum (한국어 특화) */
+  .preview-d .big-num {
+    font-family: 'Sunflower', sans-serif;
+    font-size: 42px; font-weight: 700; color: var(--t-accent);
+    letter-spacing: -1px; line-height: 1;
+  }
+  .preview-d .heading {
+    font-family: 'Sunflower', sans-serif;
+    font-size: 20px; font-weight: 700; color: var(--t-primary);
+    margin: 8px 0 4px;
+  }
+  .preview-d .body-text {
+    font-family: 'Gowun Dodum', sans-serif;
+    font-size: 13px; color: var(--t-secondary); line-height: 1.8;
+    font-weight: 400;
+  }
+  .preview-d .label {
+    font-family: 'Gowun Dodum', sans-serif;
+    font-size: 10px; font-weight: 400; letter-spacing: 0.8px;
+    text-transform: uppercase; color: var(--t-muted);
+  }
+  .preview-d .tag {
+    font-family: 'Gowun Dodum', sans-serif;
+    font-size: 11px; font-weight: 400;
+    background: rgba(238,36,0,0.1); color: var(--c-red);
+    padding: 3px 10px; border-radius: 20px; display: inline-block;
+  }
+
+  /* 공통 프리뷰 레이아웃 */
+  .preview-row {
+    display: flex; align-items: flex-end; gap: 16px; margin-bottom: 14px;
+  }
+  .kpi-mini {
+    background: rgba(255,255,255,0.5); border: 1px solid rgba(238,36,0,0.1);
+    border-radius: 10px; padding: 12px 14px; flex: 1;
+  }
+  .trend-mini {
+    margin-top: 8px;
+    display: flex; align-items: center; gap: 8px;
+    padding: 7px 0; border-top: 1px solid rgba(238,36,0,0.06);
+    font-size: 12px;
+  }
+  .trend-mini-rank {
+    width: 18px; height: 18px; border-radius: 5px;
+    background: rgba(238,36,0,0.1); color: var(--c-red);
+    font-size: 9px; display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .trend-mini-score { margin-left: auto; font-size: 14px; font-weight: 700; }
+
+  /* 카드 하단 정보 */
+  .card-info { padding: 14px 18px; }
+  .card-info h3 { font-size: 14px; font-weight: 700; color: var(--t-primary); margin-bottom: 4px; font-family: 'Nunito', sans-serif; }
+  .font-names {
+    font-size: 11px; color: var(--t-muted); font-family: 'DM Mono', monospace;
+    margin-bottom: 8px;
+  }
+  .card-mood { font-size: 12px; color: var(--t-secondary); font-family: 'Nunito', sans-serif; }
+  .mood-tags { display: flex; gap: 5px; margin-top: 6px; flex-wrap: wrap; }
+  .mood-tag {
+    font-size: 10px; padding: 2px 8px; border-radius: 10px;
+    background: rgba(144,0,0,0.07); color: var(--t-secondary);
+    font-family: 'Nunito', sans-serif;
+  }
+  .recommend-badge {
+    position: absolute; top: 12px; right: 12px;
+    font-size: 10px; font-weight: 700;
+    background: rgba(22,163,74,0.12); color: #15803d;
+    padding: 3px 10px; border-radius: 20px;
+    font-family: 'Nunito', sans-serif;
+    z-index: 2;
+  }
+
+  .hint { text-align: center; margin-top: 18px; font-size: 11px; color: var(--t-muted); font-family: 'Nunito', sans-serif; }
+</style>
+</head>
+<body>
+
+<h1>스윗한 폰트 조합 선택</h1>
+<p class="subtitle">카드를 클릭해서 원하는 폰트 스타일을 선택해주세요</p>
+
+<div class="grid">
+
+  <!-- A: Fraunces + Nunito -->
+  <div class="font-card" onclick="pick(this,'A','Fraunces + Nunito')">
+    <div class="card-label">A</div>
+    <div class="recommend-badge">✦ 추천</div>
+    <div class="preview-area preview-a">
+      <div class="preview-row">
+        <div class="kpi-mini">
+          <div class="label">월 수익</div>
+          <div class="big-num">₩8.3M</div>
+          <div class="body-text" style="font-size:11px;margin-top:4px">목표 대비 59%</div>
+        </div>
+        <div class="kpi-mini">
+          <div class="label">QA 통과율</div>
+          <div class="big-num">94%</div>
+          <div class="body-text" style="font-size:11px;margin-top:4px">+3% 전월比</div>
+        </div>
+      </div>
+      <div class="heading">파이프라인 대시보드</div>
+      <div class="body-text">2026년 4월 · 7채널 자동화 현황입니다.</div>
+      <div class="trend-mini">
+        <div class="trend-mini-rank preview-a" style="font-family:'Nunito',sans-serif;font-weight:800">1</div>
+        <div class="body-text">한국은행 금리 동결 파장</div>
+        <div class="trend-mini-score preview-a" style="font-family:'Fraunces',serif;color:#900000">94</div>
+      </div>
+      <div class="trend-mini">
+        <div class="trend-mini-rank preview-a" style="font-family:'Nunito',sans-serif;font-weight:800">2</div>
+        <div class="body-text">달러 환율 1,380원 돌파</div>
+        <div class="trend-mini-score preview-a" style="font-family:'Fraunces',serif;color:#900000">88</div>
+      </div>
+      <div style="margin-top:10px"><span class="tag">● RUNNING</span></div>
+    </div>
+    <div class="card-info">
+      <h3>Fraunces + Nunito</h3>
+      <div class="font-names">헤딩: Fraunces · 본문: Nunito · 숫자: Fraunces</div>
+      <div class="card-mood">부드럽고 위트 있는 광학 세리프 + 둥글고 친근한 산세리프. 스윗하면서도 고급스러운 균형.</div>
+      <div class="mood-tags">
+        <span class="mood-tag">✦ 위트있는</span>
+        <span class="mood-tag">둥글둥글</span>
+        <span class="mood-tag">고급스러운</span>
+        <span class="mood-tag">친근한</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- B: Lora + Quicksand -->
+  <div class="font-card" onclick="pick(this,'B','Lora + Quicksand')">
+    <div class="card-label">B</div>
+    <div class="preview-area preview-b">
+      <div class="preview-row">
+        <div class="kpi-mini">
+          <div class="label">월 수익</div>
+          <div class="big-num">₩8.3M</div>
+          <div class="body-text" style="font-size:11px;margin-top:4px">목표 대비 59%</div>
+        </div>
+        <div class="kpi-mini">
+          <div class="label">QA 통과율</div>
+          <div class="big-num">94%</div>
+          <div class="body-text" style="font-size:11px;margin-top:4px">+3% 전월比</div>
+        </div>
+      </div>
+      <div class="heading">파이프라인 대시보드</div>
+      <div class="body-text">2026년 4월 · 7채널 자동화 현황입니다.</div>
+      <div class="trend-mini">
+        <div class="trend-mini-rank preview-b" style="font-family:'Quicksand',sans-serif;font-weight:700">1</div>
+        <div class="body-text">한국은행 금리 동결 파장</div>
+        <div class="trend-mini-score preview-b" style="font-family:'Lora',serif;color:#900000">94</div>
+      </div>
+      <div class="trend-mini">
+        <div class="trend-mini-rank preview-b" style="font-family:'Quicksand',sans-serif;font-weight:700">2</div>
+        <div class="body-text">달러 환율 1,380원 돌파</div>
+        <div class="trend-mini-score preview-b" style="font-family:'Lora',serif;color:#900000">88</div>
+      </div>
+      <div style="margin-top:10px"><span class="tag">● RUNNING</span></div>
+    </div>
+    <div class="card-info">
+      <h3>Lora + Quicksand</h3>
+      <div class="font-names">헤딩: Lora · 본문: Quicksand · 숫자: Lora</div>
+      <div class="card-mood">캘리그래피 느낌의 따뜻한 세리프 + 기하학적이고 공기처럼 가벼운 산세리프. 로맨틱한 감성.</div>
+      <div class="mood-tags">
+        <span class="mood-tag">🌸 로맨틱</span>
+        <span class="mood-tag">따뜻한</span>
+        <span class="mood-tag">가벼운</span>
+        <span class="mood-tag">아기자기</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- C: Cormorant Garamond + Poppins -->
+  <div class="font-card" onclick="pick(this,'C','Cormorant Garamond + Poppins')">
+    <div class="card-label">C</div>
+    <div class="preview-area preview-c">
+      <div class="preview-row">
+        <div class="kpi-mini">
+          <div class="label">월 수익</div>
+          <div class="big-num">₩8.3M</div>
+          <div class="body-text" style="font-size:11px;margin-top:4px">목표 대비 59%</div>
+        </div>
+        <div class="kpi-mini">
+          <div class="label">QA 통과율</div>
+          <div class="big-num">94%</div>
+          <div class="body-text" style="font-size:11px;margin-top:4px">+3% 전월比</div>
+        </div>
+      </div>
+      <div class="heading">파이프라인 대시보드</div>
+      <div class="body-text">2026년 4월 · 7채널 자동화 현황입니다.</div>
+      <div class="trend-mini">
+        <div class="trend-mini-rank preview-c" style="font-family:'Poppins',sans-serif;font-weight:600;font-size:9px">1</div>
+        <div class="body-text">한국은행 금리 동결 파장</div>
+        <div class="trend-mini-score preview-c" style="font-family:'Cormorant Garamond',serif;color:#900000;font-size:17px">94</div>
+      </div>
+      <div class="trend-mini">
+        <div class="trend-mini-rank preview-c" style="font-family:'Poppins',sans-serif;font-weight:600;font-size:9px">2</div>
+        <div class="body-text">달러 환율 1,380원 돌파</div>
+        <div class="trend-mini-score preview-c" style="font-family:'Cormorant Garamond',serif;color:#900000;font-size:17px">88</div>
+      </div>
+      <div style="margin-top:10px"><span class="tag">● RUNNING</span></div>
+    </div>
+    <div class="card-info">
+      <h3>Cormorant Garamond + Poppins</h3>
+      <div class="font-names">헤딩: Cormorant Garamond · 본문: Poppins</div>
+      <div class="card-mood">얇고 우아한 르네상스 세리프 + 깔끔한 기하 산세리프. 럭셔리하고 섬세한 느낌.</div>
+      <div class="mood-tags">
+        <span class="mood-tag">💎 럭셔리</span>
+        <span class="mood-tag">우아한</span>
+        <span class="mood-tag">섬세한</span>
+        <span class="mood-tag">클래식</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- D: Sunflower + Gowun Dodum (한국어 특화) -->
+  <div class="font-card" onclick="pick(this,'D','Sunflower + Gowun Dodum')">
+    <div class="card-label">D</div>
+    <div class="preview-area preview-d">
+      <div class="preview-row">
+        <div class="kpi-mini">
+          <div class="label">월 수익</div>
+          <div class="big-num">₩8.3M</div>
+          <div class="body-text" style="font-size:11px;margin-top:4px">목표 대비 59%</div>
+        </div>
+        <div class="kpi-mini">
+          <div class="label">QA 통과율</div>
+          <div class="big-num">94%</div>
+          <div class="body-text" style="font-size:11px;margin-top:4px">+3% 전월比</div>
+        </div>
+      </div>
+      <div class="heading">파이프라인 대시보드</div>
+      <div class="body-text">2026년 4월 · 7채널 자동화 현황입니다.</div>
+      <div class="trend-mini">
+        <div class="trend-mini-rank preview-d" style="font-family:'Sunflower',sans-serif;font-weight:700">1</div>
+        <div class="body-text">한국은행 금리 동결 파장</div>
+        <div class="trend-mini-score preview-d" style="font-family:'Sunflower',sans-serif;font-weight:700;color:#900000">94</div>
+      </div>
+      <div class="trend-mini">
+        <div class="trend-mini-rank preview-d" style="font-family:'Sunflower',sans-serif;font-weight:700">2</div>
+        <div class="body-text">달러 환율 1,380원 돌파</div>
+        <div class="trend-mini-score preview-d" style="font-family:'Sunflower',sans-serif;font-weight:700;color:#900000">88</div>
+      </div>
+      <div style="margin-top:10px"><span class="tag">● RUNNING</span></div>
+    </div>
+    <div class="card-info">
+      <h3>Sunflower + Gowun Dodum</h3>
+      <div class="font-names">헤딩: Sunflower · 본문: Gowun Dodum (한국어 최적화)</div>
+      <div class="card-mood">가볍고 햇살 같은 한국어 폰트 조합. 한글이 특히 예쁘고 부드럽게 보이는 구성.</div>
+      <div class="mood-tags">
+        <span class="mood-tag">🌻 한국어 최적</span>
+        <span class="mood-tag">햇살 같은</span>
+        <span class="mood-tag">부드러운</span>
+        <span class="mood-tag">귀여운</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<p class="hint">카드를 클릭해서 선택하거나, 터미널에 A / B / C / D로 답변해 주세요</p>
+
+<script>
+function pick(el, choice, name) {
+  document.querySelectorAll('.font-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  if (window.__sp_select) window.__sp_select(choice, name);
+}
+</script>
+</body>
+</html>

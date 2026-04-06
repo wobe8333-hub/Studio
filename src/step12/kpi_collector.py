@@ -8,18 +8,20 @@ from googleapiclient.discovery import build
 from google.oauth2.credentials import Credentials
 from google.auth.transport.requests import Request
 from src.core.ssot import read_json, write_json, json_exists, now_iso, get_run_dir
-from src.core.config import CREDENTIALS_DIR
+from src.core.config import CREDENTIALS_DIR, USD_TO_KRW
 from src.quota.youtube_quota import consume
 
 ANALYTICS_SCOPES = [
     "https://www.googleapis.com/auth/yt-analytics.readonly",
+    "https://www.googleapis.com/auth/yt-analytics-monetary.readonly",  # 수익 데이터
     "https://www.googleapis.com/auth/youtube.readonly",
 ]
 
 # Analytics API 메트릭 순서 (index로 row 값 매핑)
 _ANALYTICS_METRICS = (
     "views,estimatedMinutesWatched,averageViewDuration,averageViewPercentage,"
-    "impressions,impressionClickThroughRate"
+    "impressions,impressionClickThroughRate,"
+    "estimatedRevenue,estimatedRevenuePer1000Views"
 )
 _METRIC_IDX = {
     "views": 0,
@@ -28,6 +30,8 @@ _METRIC_IDX = {
     "avg_view_percentage": 3,
     "impressions": 4,
     "ctr": 5,
+    "estimated_revenue_usd": 6,
+    "rpm_actual_usd": 7,
 }
 
 def _get_analytics_service(channel_id: str):
@@ -53,6 +57,9 @@ def collect_kpi_48h(channel_id: str, run_id: str, video_id: str) -> dict:
         "traffic_source_browse_pct": None,
         "traffic_source_suggested_pct": None,
         "traffic_source_search_pct": None,
+        "estimated_revenue_usd": None,  # YouTube 보고 통화(USD)
+        "rpm_actual_usd": None,         # RPM (USD/1,000회)
+        "rpm_actual_krw": None,         # RPM (KRW 환산, USD_TO_KRW 기준)
         "missing_reason": None,
     }
     try:
@@ -76,6 +83,12 @@ def collect_kpi_48h(channel_id: str, run_id: str, video_id: str) -> dict:
             kpi["avg_view_percentage"]  = _float(row[_METRIC_IDX["avg_view_percentage"]])
             kpi["impressions"]          = _int(row[_METRIC_IDX["impressions"]])
             kpi["ctr"]                  = round(_float(row[_METRIC_IDX["ctr"]]) * 100, 2)  # 소수 → %
+            # RPM 실측값: YouTube는 USD로 보고, KRW 환산 저장
+            rpm_usd = _float(row[_METRIC_IDX["rpm_actual_usd"]])
+            if rpm_usd > 0:
+                kpi["estimated_revenue_usd"] = round(_float(row[_METRIC_IDX["estimated_revenue_usd"]]), 4)
+                kpi["rpm_actual_usd"]        = round(rpm_usd, 4)
+                kpi["rpm_actual_krw"]        = int(rpm_usd * USD_TO_KRW)
         consume(20, "other")
     except Exception as e:
         kpi["missing_reason"] = f"api_error: {str(e)[:100]}"

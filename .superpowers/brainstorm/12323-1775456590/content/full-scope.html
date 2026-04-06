@@ -1,0 +1,151 @@
+<h2>전체 리디자인 범위 확정</h2>
+<p class="subtitle">Glassmorphism Dark — 8페이지 + 공통 레이어 전체 적용</p>
+
+<div class="section">
+  <h3>변경 파일 맵</h3>
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px;">
+
+    <!-- 디자인 시스템 -->
+    <div style="background: rgba(245,158,11,0.06); border: 1px solid rgba(245,158,11,0.2); border-radius: 10px; padding: 14px;">
+      <div style="font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #f59e0b; margin-bottom: 10px;">디자인 시스템</div>
+      <div style="display: flex; flex-direction: column; gap: 6px;">
+        <div style="display: flex; align-items: center; gap: 8px; padding: 6px 8px; background: rgba(255,255,255,0.04); border-radius: 6px;">
+          <div style="width: 6px; height: 6px; background: #f59e0b; border-radius: 50%;"></div>
+          <code style="font-size: 11px; color: rgba(255,255,255,0.8);">globals.css</code>
+          <span style="font-size: 10px; color: rgba(255,255,255,0.35); margin-left: auto;">딥 다크·글래스 토큰·글로우</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px; padding: 6px 8px; background: rgba(255,255,255,0.04); border-radius: 6px;">
+          <div style="width: 6px; height: 6px; background: #f59e0b; border-radius: 50%;"></div>
+          <code style="font-size: 11px; color: rgba(255,255,255,0.8);">layout.tsx</code>
+          <span style="font-size: 10px; color: rgba(255,255,255,0.35); margin-left: auto;">그라데이션 바·글래스 헤더</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 공통 컴포넌트 -->
+    <div style="background: rgba(99,102,241,0.06); border: 1px solid rgba(99,102,241,0.2); border-radius: 10px; padding: 14px;">
+      <div style="font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #818cf8; margin-bottom: 10px;">공통 컴포넌트</div>
+      <div style="display: flex; flex-direction: column; gap: 6px;">
+        <div style="display: flex; align-items: center; gap: 8px; padding: 6px 8px; background: rgba(255,255,255,0.04); border-radius: 6px;">
+          <div style="width: 6px; height: 6px; background: #818cf8; border-radius: 50%;"></div>
+          <code style="font-size: 11px; color: rgba(255,255,255,0.8);">ui/card.tsx</code>
+          <span style="font-size: 10px; color: rgba(255,255,255,0.35); margin-left: auto;">글래스 카드</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px; padding: 6px 8px; background: rgba(255,255,255,0.04); border-radius: 6px;">
+          <div style="width: 6px; height: 6px; background: #818cf8; border-radius: 50%;"></div>
+          <code style="font-size: 11px; color: rgba(255,255,255,0.8);">sidebar-nav.tsx</code>
+          <span style="font-size: 10px; color: rgba(255,255,255,0.35); margin-left: auto;">글래스 사이드바</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px; padding: 6px 8px; background: rgba(255,255,255,0.04); border-radius: 6px;">
+          <div style="width: 6px; height: 6px; background: #818cf8; border-radius: 50%;"></div>
+          <code style="font-size: 11px; color: rgba(255,255,255,0.8);">home-charts.tsx</code>
+          <span style="font-size: 10px; color: rgba(255,255,255,0.35); margin-left: auto;">차트 색상·글로우</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px; padding: 6px 8px; background: rgba(255,255,255,0.04); border-radius: 6px;">
+          <div style="width: 6px; height: 6px; background: #818cf8; border-radius: 50%;"></div>
+          <code style="font-size: 11px; color: rgba(255,255,255,0.8);">animated-sections.tsx</code>
+          <span style="font-size: 10px; color: rgba(255,255,255,0.35); margin-left: auto;">진입 애니메이션 강화</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 페이지 (홈+채널) -->
+    <div style="background: rgba(34,197,94,0.05); border: 1px solid rgba(34,197,94,0.2); border-radius: 10px; padding: 14px;">
+      <div style="font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #4ade80; margin-bottom: 10px;">홈 + 채널 페이지</div>
+      <div style="display: flex; flex-direction: column; gap: 6px;">
+        <div style="display: flex; align-items: center; gap: 8px; padding: 6px 8px; background: rgba(255,255,255,0.04); border-radius: 6px;">
+          <div style="width: 6px; height: 6px; background: #4ade80; border-radius: 50%;"></div>
+          <code style="font-size: 11px; color: rgba(255,255,255,0.8);">page.tsx</code>
+          <span style="font-size: 10px; color: rgba(255,255,255,0.35); margin-left: auto;">KPI 카드·채널 그리드 글래스</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px; padding: 6px 8px; background: rgba(255,255,255,0.04); border-radius: 6px;">
+          <div style="width: 6px; height: 6px; background: #4ade80; border-radius: 50%;"></div>
+          <code style="font-size: 11px; color: rgba(255,255,255,0.8);">channels/[id]/page.tsx</code>
+          <span style="font-size: 10px; color: rgba(255,255,255,0.35); margin-left: auto;">채널 상세 글래스</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 페이지 (운영) -->
+    <div style="background: rgba(239,68,68,0.05); border: 1px solid rgba(239,68,68,0.2); border-radius: 10px; padding: 14px;">
+      <div style="font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #f87171; margin-bottom: 10px;">운영 페이지 (5개)</div>
+      <div style="display: flex; flex-direction: column; gap: 6px;">
+        <div style="display: flex; align-items: center; gap: 8px; padding: 6px 8px; background: rgba(255,255,255,0.04); border-radius: 6px;">
+          <div style="width: 6px; height: 6px; background: #f87171; border-radius: 50%;"></div>
+          <code style="font-size: 11px; color: rgba(255,255,255,0.8);">trends/page.tsx</code>
+          <span style="font-size: 10px; color: rgba(255,255,255,0.35); margin-left: auto;">필터·카드 글래스</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px; padding: 6px 8px; background: rgba(255,255,255,0.04); border-radius: 6px;">
+          <div style="width: 6px; height: 6px; background: #f87171; border-radius: 50%;"></div>
+          <code style="font-size: 11px; color: rgba(255,255,255,0.8);">revenue/page.tsx</code>
+          <span style="font-size: 10px; color: rgba(255,255,255,0.35); margin-left: auto;">수익 차트 글래스</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px; padding: 6px 8px; background: rgba(255,255,255,0.04); border-radius: 6px;">
+          <div style="width: 6px; height: 6px; background: #f87171; border-radius: 50%;"></div>
+          <code style="font-size: 11px; color: rgba(255,255,255,0.8);">risk/page.tsx</code>
+          <span style="font-size: 10px; color: rgba(255,255,255,0.35); margin-left: auto;">리스크 배지 업그레이드</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px; padding: 6px 8px; background: rgba(255,255,255,0.04); border-radius: 6px;">
+          <div style="width: 6px; height: 6px; background: #f87171; border-radius: 50%;"></div>
+          <code style="font-size: 11px; color: rgba(255,255,255,0.8);">learning/page.tsx</code>
+          <span style="font-size: 10px; color: rgba(255,255,255,0.35); margin-left: auto;">패턴 카드 글래스</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px; padding: 6px 8px; background: rgba(255,255,255,0.04); border-radius: 6px;">
+          <div style="width: 6px; height: 6px; background: #f87171; border-radius: 50%;"></div>
+          <code style="font-size: 11px; color: rgba(255,255,255,0.8);">cost/page.tsx</code>
+          <span style="font-size: 10px; color: rgba(255,255,255,0.35); margin-left: auto;">쿼터 프로그레스 글래스</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="section">
+  <h3>페이지별 핵심 변경 포인트</h3>
+  <div style="overflow-x: auto; margin-top: 10px;">
+    <table style="width: 100%; border-collapse: collapse; font-size: 12px;">
+      <thead>
+        <tr style="border-bottom: 1px solid rgba(255,255,255,0.08);">
+          <th style="text-align: left; padding: 8px; color: rgba(255,255,255,0.5); font-weight: 600;">페이지</th>
+          <th style="text-align: left; padding: 8px; color: rgba(255,255,255,0.5); font-weight: 600;">글래스 적용</th>
+          <th style="text-align: left; padding: 8px; color: rgba(255,255,255,0.5); font-weight: 600;">추가 효과</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="border-bottom: 1px solid rgba(255,255,255,0.04);">
+          <td style="padding: 8px; color: #f59e0b; font-weight: 600;">홈 KPI</td>
+          <td style="padding: 8px; color: rgba(255,255,255,0.7);">KPI 카드 4개, 채널 카드 7개</td>
+          <td style="padding: 8px; color: rgba(255,255,255,0.5);">채널 좌측 컬러 바, 배경 앰비언트 글로우</td>
+        </tr>
+        <tr style="border-bottom: 1px solid rgba(255,255,255,0.04);">
+          <td style="padding: 8px; color: #818cf8; font-weight: 600;">트렌드</td>
+          <td style="padding: 8px; color: rgba(255,255,255,0.7);">주제 카드, 필터 탭</td>
+          <td style="padding: 8px; color: rgba(255,255,255,0.5);">승인/거부 버튼 글로우 호버</td>
+        </tr>
+        <tr style="border-bottom: 1px solid rgba(255,255,255,0.04);">
+          <td style="padding: 8px; color: #4ade80; font-weight: 600;">수익</td>
+          <td style="padding: 8px; color: rgba(255,255,255,0.7);">차트 컨테이너, 월별 카드</td>
+          <td style="padding: 8px; color: rgba(255,255,255,0.5);">Recharts 색상 → 채널 oklch 색상</td>
+        </tr>
+        <tr style="border-bottom: 1px solid rgba(255,255,255,0.04);">
+          <td style="padding: 8px; color: #f87171; font-weight: 600;">리스크</td>
+          <td style="padding: 8px; color: rgba(255,255,255,0.7);">리스크 카드</td>
+          <td style="padding: 8px; color: rgba(255,255,255,0.5);">HIGH = 빨간 글로우, LOW = 초록 글로우</td>
+        </tr>
+        <tr style="border-bottom: 1px solid rgba(255,255,255,0.04);">
+          <td style="padding: 8px; color: #38bdf8; font-weight: 600;">학습</td>
+          <td style="padding: 8px; color: rgba(255,255,255,0.7);">패턴 카드, KPI 뱃지</td>
+          <td style="padding: 8px; color: rgba(255,255,255,0.5);">승리 패턴 → 앰버 글로우 강조</td>
+        </tr>
+        <tr>
+          <td style="padding: 8px; color: #a78bfa; font-weight: 600;">비용</td>
+          <td style="padding: 8px; color: rgba(255,255,255,0.7);">쿼터 카드, 프로그레스</td>
+          <td style="padding: 8px; color: rgba(255,255,255,0.5);">진행바 그라데이션, 임계값 경고 글로우</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<p class="subtitle" style="text-align: center; margin-top: 8px;">총 <strong style="color: rgba(255,255,255,0.9);">14개 파일</strong> 변경. 이 범위로 진행할까요?</p>

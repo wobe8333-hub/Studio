@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>대시보드 디자인 스타일 선택</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', -apple-system, sans-serif; background: #0f0f0f; color: #fff; padding: 24px; min-height: 100vh; }
+
+  h1 { font-size: 20px; font-weight: 700; margin-bottom: 6px; }
+  .subtitle { font-size: 13px; color: #888; margin-bottom: 28px; }
+
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+
+  .style-card {
+    border-radius: 14px;
+    overflow: hidden;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: all 0.2s ease;
+    position: relative;
+  }
+  .style-card:hover { transform: translateY(-2px); }
+  .style-card.selected { border-color: #6366f1 !important; box-shadow: 0 0 0 4px rgba(99,102,241,0.25); }
+
+  .style-card .label-badge {
+    position: absolute;
+    top: 10px; left: 10px;
+    font-size: 11px; font-weight: 700;
+    padding: 3px 10px; border-radius: 20px;
+    z-index: 10; letter-spacing: 0.5px;
+  }
+
+  .style-card .preview {
+    height: 280px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .style-card .info {
+    padding: 14px 16px;
+  }
+  .style-card .info h3 { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+  .style-card .info p { font-size: 12px; line-height: 1.6; }
+  .style-card .tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
+  .style-card .tag {
+    font-size: 11px; padding: 2px 8px; border-radius: 20px;
+    font-weight: 500;
+  }
+
+  /* ── STYLE A: Amber Studio ── */
+  .amber-card { background: #1a1510; border-color: #3d2e10; }
+  .amber-card .info { color: #f5d89a; }
+  .amber-card .info p { color: #a89060; }
+  .amber-card .tag { background: rgba(245,183,67,0.15); color: #f5b743; }
+  .amber-card .label-badge { background: #f5b743; color: #1a1510; }
+
+  .amber-preview {
+    background: linear-gradient(135deg, #1a1510 0%, #12100d 100%);
+    padding: 14px;
+    height: 100%;
+  }
+  .amber-topbar {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 12px;
+  }
+  .amber-logo { font-size: 12px; font-weight: 800; color: #f5b743; letter-spacing: 1px; }
+  .amber-kpi-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 8px; margin-bottom: 10px; }
+  .amber-kpi {
+    background: rgba(245,183,67,0.08);
+    border: 1px solid rgba(245,183,67,0.2);
+    border-radius: 8px; padding: 10px;
+    backdrop-filter: blur(10px);
+  }
+  .amber-kpi-label { font-size: 9px; color: #a89060; text-transform: uppercase; letter-spacing: 0.5px; }
+  .amber-kpi-value { font-size: 18px; font-weight: 800; color: #f5b743; margin-top: 2px; }
+  .amber-kpi-sub { font-size: 9px; color: #6b5a3a; margin-top: 1px; }
+  .amber-bar-bg { height: 3px; background: rgba(245,183,67,0.15); border-radius: 2px; margin-top: 5px; }
+  .amber-bar { height: 3px; background: linear-gradient(90deg, #f5b743, #f59e0b); border-radius: 2px; }
+
+  .amber-channels { display: grid; grid-template-columns: repeat(3,1fr); gap: 6px; }
+  .amber-ch {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(245,183,67,0.12);
+    border-radius: 6px; padding: 8px;
+  }
+  .amber-ch-name { font-size: 9px; color: #a89060; }
+  .amber-ch-val { font-size: 13px; font-weight: 700; color: #f5d89a; }
+  .amber-dot { width: 6px; height: 6px; border-radius: 50%; display: inline-block; margin-right: 4px; }
+
+  /* ── STYLE B: Dark Dev ── */
+  .dev-card { background: #0a0a0a; border-color: #1e1e1e; }
+  .dev-card .info { color: #e1e1e1; }
+  .dev-card .info p { color: #666; }
+  .dev-card .tag { background: rgba(255,255,255,0.07); color: #888; }
+  .dev-card .label-badge { background: #e1e1e1; color: #0a0a0a; }
+
+  .dev-preview {
+    background: #0a0a0a;
+    padding: 14px;
+    height: 100%;
+    font-family: 'Consolas', monospace;
+  }
+  .dev-topbar {
+    display: flex; align-items: center; gap: 8px; margin-bottom: 12px;
+    border-bottom: 1px solid #1e1e1e; padding-bottom: 10px;
+  }
+  .dev-dot { width: 8px; height: 8px; border-radius: 50%; }
+  .dev-title { font-size: 11px; font-weight: 600; color: #888; letter-spacing: 2px; text-transform: uppercase; }
+  .dev-status { font-size: 10px; color: #10b981; margin-left: auto; }
+  .dev-status::before { content: "● "; }
+
+  .dev-step-list { margin-bottom: 10px; }
+  .dev-step { display: flex; align-items: center; gap: 8px; padding: 5px 0; border-bottom: 1px solid #111; }
+  .dev-step-num { font-size: 9px; color: #333; width: 28px; }
+  .dev-step-name { font-size: 11px; color: #ccc; flex: 1; }
+  .dev-step-badge {
+    font-size: 9px; padding: 2px 6px; border-radius: 3px; font-weight: 600;
+  }
+  .badge-done { background: rgba(16,185,129,0.15); color: #10b981; }
+  .badge-run { background: rgba(99,102,241,0.2); color: #818cf8; }
+  .badge-pend { background: rgba(255,255,255,0.05); color: #444; }
+
+  .dev-log {
+    background: #050505; border: 1px solid #1a1a1a; border-radius: 6px;
+    padding: 8px; font-size: 9px; line-height: 1.8; color: #444;
+  }
+  .dev-log .ok { color: #10b981; }
+  .dev-log .info { color: #6366f1; }
+  .dev-log .warn { color: #f59e0b; }
+
+  /* ── STYLE C: Clean Light ── */
+  .clean-card { background: #fafafa; border-color: #e5e7eb; }
+  .clean-card .info { color: #111; }
+  .clean-card .info p { color: #6b7280; }
+  .clean-card .tag { background: #f3f4f6; color: #374151; }
+  .clean-card .label-badge { background: #111; color: #fff; }
+
+  .clean-preview {
+    background: #f9fafb;
+    padding: 14px;
+    height: 100%;
+  }
+  .clean-topbar {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 14px;
+  }
+  .clean-logo { font-size: 13px; font-weight: 800; color: #111; }
+  .clean-nav { display: flex; gap: 10px; }
+  .clean-nav span { font-size: 10px; color: #9ca3af; }
+  .clean-nav span.active { color: #111; font-weight: 600; }
+
+  .clean-kpi-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin-bottom: 12px; }
+  .clean-kpi {
+    background: #fff; border: 1px solid #e5e7eb;
+    border-radius: 10px; padding: 10px;
+  }
+  .clean-kpi-label { font-size: 9px; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.5px; }
+  .clean-kpi-value { font-size: 17px; font-weight: 800; color: #111; margin-top: 2px; }
+  .clean-kpi-change { font-size: 9px; color: #10b981; margin-top: 2px; }
+
+  .clean-table { background: #fff; border: 1px solid #e5e7eb; border-radius: 10px; overflow: hidden; }
+  .clean-table-header {
+    display: grid; grid-template-columns: 1fr 1fr 1fr 60px;
+    padding: 7px 10px; background: #f9fafb; border-bottom: 1px solid #e5e7eb;
+  }
+  .clean-table-header span { font-size: 9px; font-weight: 600; color: #9ca3af; text-transform: uppercase; }
+  .clean-table-row {
+    display: grid; grid-template-columns: 1fr 1fr 1fr 60px;
+    padding: 7px 10px; border-bottom: 1px solid #f3f4f6; align-items: center;
+  }
+  .clean-table-row span { font-size: 11px; color: #374151; }
+  .clean-badge {
+    font-size: 9px; padding: 2px 7px; border-radius: 20px; font-weight: 600;
+    display: inline-block;
+  }
+  .cb-done { background: #dcfce7; color: #16a34a; }
+  .cb-run { background: #ede9fe; color: #7c3aed; }
+
+  /* Selected overlay */
+  .selected-overlay {
+    position: absolute; inset: 0;
+    background: rgba(99,102,241,0.1);
+    border-radius: 12px;
+    display: none;
+    align-items: center; justify-content: center;
+    font-size: 28px;
+  }
+  .style-card.selected .selected-overlay { display: flex; }
+
+  .bottom-hint {
+    text-align: center; margin-top: 24px;
+    font-size: 12px; color: #444;
+  }
+</style>
+</head>
+<body>
+<h1>대시보드 디자인 스타일 선택</h1>
+<p class="subtitle">세 가지 스타일 중 가장 마음에 드는 방향을 골라주세요 (클릭)</p>
+
+<div class="grid">
+
+  <!-- ── A: Amber Studio ── -->
+  <div class="style-card amber-card" onclick="select(this,'A')">
+    <div class="label-badge">A</div>
+    <div class="preview">
+      <div class="selected-overlay">✓</div>
+      <div class="amber-preview">
+        <div class="amber-topbar">
+          <span class="amber-logo">✦ KAS STUDIO</span>
+          <span style="font-size:9px;color:#6b5a3a">7채널 · 다크 골드</span>
+        </div>
+        <div class="amber-kpi-grid">
+          <div class="amber-kpi">
+            <div class="amber-kpi-label">월 수익</div>
+            <div class="amber-kpi-value">₩8.3M</div>
+            <div class="amber-kpi-sub">목표 대비 59%</div>
+            <div class="amber-bar-bg"><div class="amber-bar" style="width:59%"></div></div>
+          </div>
+          <div class="amber-kpi">
+            <div class="amber-kpi-label">활성 채널</div>
+            <div class="amber-kpi-value">4/7</div>
+            <div class="amber-kpi-sub">CH1~CH4 운영 중</div>
+            <div class="amber-bar-bg"><div class="amber-bar" style="width:57%"></div></div>
+          </div>
+        </div>
+        <div class="amber-channels">
+          <div class="amber-ch">
+            <div class="amber-ch-name"><span class="amber-dot" style="background:#f5b743"></span>CH1 경제</div>
+            <div class="amber-ch-val">₩1.9M</div>
+          </div>
+          <div class="amber-ch">
+            <div class="amber-ch-name"><span class="amber-dot" style="background:#2dd4bf"></span>CH2 부동산</div>
+            <div class="amber-ch-val">₩1.4M</div>
+          </div>
+          <div class="amber-ch">
+            <div class="amber-ch-name"><span class="amber-dot" style="background:#f87171"></span>CH3 심리</div>
+            <div class="amber-ch-val">₩1.1M</div>
+          </div>
+        </div>
+        <!-- glassmorphism glow -->
+        <div style="position:absolute;bottom:20px;right:20px;width:80px;height:80px;background:radial-gradient(circle,rgba(245,183,67,0.15),transparent);border-radius:50%;pointer-events:none"></div>
+      </div>
+    </div>
+    <div class="info">
+      <h3>Amber Studio (기존 유지·발전)</h3>
+      <p>다크 골드 팔레트 + 글래스모피즘. 7채널 컬러 코딩 유지. 기존 사용자 학습 비용 없음.</p>
+      <div class="tags">
+        <span class="tag">다크 골드</span>
+        <span class="tag">글래스모피즘</span>
+        <span class="tag">채널 컬러</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── B: Dark Dev ── -->
+  <div class="style-card dev-card" onclick="select(this,'B')">
+    <div class="label-badge">B</div>
+    <div class="preview">
+      <div class="selected-overlay">✓</div>
+      <div class="dev-preview">
+        <div class="dev-topbar">
+          <div class="dev-dot" style="background:#ef4444"></div>
+          <div class="dev-dot" style="background:#f59e0b"></div>
+          <div class="dev-dot" style="background:#10b981"></div>
+          <span class="dev-title">KAS PIPELINE</span>
+          <span class="dev-status">RUNNING</span>
+        </div>
+        <div class="dev-step-list">
+          <div class="dev-step">
+            <span class="dev-step-num">Step05</span>
+            <span class="dev-step-name">트렌드 수집</span>
+            <span class="dev-step-badge badge-done">DONE</span>
+          </div>
+          <div class="dev-step">
+            <span class="dev-step-num">Step06</span>
+            <span class="dev-step-name">지식 수집</span>
+            <span class="dev-step-badge badge-done">DONE</span>
+          </div>
+          <div class="dev-step">
+            <span class="dev-step-num">Step08</span>
+            <span class="dev-step-name">영상 생성</span>
+            <span class="dev-step-badge badge-run">● RUN</span>
+          </div>
+          <div class="dev-step">
+            <span class="dev-step-num">Step11</span>
+            <span class="dev-step-name">QA 검수</span>
+            <span class="dev-step-badge badge-pend">WAIT</span>
+          </div>
+        </div>
+        <div class="dev-log">
+          <div class="ok">✓ 트렌드 15건 수집 완료 (0.8s)</div>
+          <div class="info">→ Gemini 스크립트 생성 중...</div>
+          <div class="warn">⚠ SD XL 폴백: Gemini 이미지로 전환</div>
+          <div style="color:#333">████████░░░░ 62%</div>
+        </div>
+      </div>
+    </div>
+    <div class="info">
+      <h3>Dark Dev Console</h3>
+      <p>터미널 감성 + 고밀도 정보. Vercel·Linear 영감. 실행 로그와 Step 진행이 핵심. 개발자 친화적.</p>
+      <div class="tags">
+        <span class="tag">모노스페이스</span>
+        <span class="tag">고밀도</span>
+        <span class="tag">터미널 UI</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── C: Clean Light ── -->
+  <div class="style-card clean-card" onclick="select(this,'C')">
+    <div class="label-badge">C</div>
+    <div class="preview">
+      <div class="selected-overlay">✓</div>
+      <div class="clean-preview">
+        <div class="clean-topbar">
+          <span class="clean-logo">KAS</span>
+          <div class="clean-nav">
+            <span class="active">홈</span>
+            <span>채널</span>
+            <span>수익</span>
+            <span>설정</span>
+          </div>
+        </div>
+        <div class="clean-kpi-row">
+          <div class="clean-kpi">
+            <div class="clean-kpi-label">월 수익</div>
+            <div class="clean-kpi-value">₩8.3M</div>
+            <div class="clean-kpi-change">+12% vs 전월</div>
+          </div>
+          <div class="clean-kpi">
+            <div class="clean-kpi-label">활성 채널</div>
+            <div class="clean-kpi-value">4/7</div>
+            <div class="clean-kpi-change">CH1~CH4</div>
+          </div>
+          <div class="clean-kpi">
+            <div class="clean-kpi-label">이번 달 런</div>
+            <div class="clean-kpi-value">28</div>
+            <div class="clean-kpi-change">3 대기 중</div>
+          </div>
+        </div>
+        <div class="clean-table">
+          <div class="clean-table-header">
+            <span>채널</span><span>상태</span><span>수익</span><span>QA</span>
+          </div>
+          <div class="clean-table-row">
+            <span>CH1 경제</span>
+            <span><span class="clean-badge cb-run">실행중</span></span>
+            <span>₩1.9M</span>
+            <span><span class="clean-badge cb-done">통과</span></span>
+          </div>
+          <div class="clean-table-row">
+            <span>CH2 부동산</span>
+            <span><span class="clean-badge cb-done">완료</span></span>
+            <span>₩1.4M</span>
+            <span><span class="clean-badge cb-done">통과</span></span>
+          </div>
+          <div class="clean-table-row">
+            <span>CH3 심리</span>
+            <span><span class="clean-badge cb-done">완료</span></span>
+            <span>₩1.1M</span>
+            <span><span class="clean-badge cb-done">통과</span></span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="info" style="color:#111">
+      <h3>Clean Light</h3>
+      <p style="color:#6b7280">넓은 여백 + 테이블 중심. Notion·Retool 영감. 데이터 가독성 최우선. 라이트 모드 주사용.</p>
+      <div class="tags">
+        <span class="tag">라이트 모드</span>
+        <span class="tag">테이블</span>
+        <span class="tag">Notion 감성</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<p class="bottom-hint">카드를 클릭해서 선택하거나, 터미널에 답변해 주세요</p>
+
+<script>
+  function select(el, choice) {
+    document.querySelectorAll('.style-card').forEach(c => c.classList.remove('selected'));
+    el.classList.add('selected');
+    if (window.__sp_select) window.__sp_select(choice, el.querySelector('h3').textContent);
+  }
+</script>
+</body>
+</html>

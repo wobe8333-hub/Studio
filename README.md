@@ -1,334 +1,216 @@
-# AI Animation Studio
+# KAS Studio — Knowledge Animation Studio
 
-**스스로 학습하는 AI 지식 애니메이션 스튜디오**
+**AI 기반 YouTube 7채널 영상 자동화 파이프라인**
 
-## 프로젝트 소개
+채널당 월 200만원(총 1,400만원/월) 수익을 목표로 하는 AI 콘텐츠 자동화 시스템.  
+트렌드 발굴 → 스크립트/이미지/나레이션 생성 → YouTube 업로드까지 완전 자동화.
 
-이 프로젝트는 사용자가 주제나 키워드를 입력하면, AI가 자동으로 학습하고 애니메이션 제작에 필요한 스크립트, 씬 구성, 이미지 프롬프트를 생성하는 개인용 웹 기반 AI 스튜디오입니다.
+---
 
-### 주요 기능
+## 채널 구성
 
-- **지식 학습**: 위키피디아 및 웹 소스에서 자동으로 지식 습득
-- **주제 분석**: 입력된 주제/키워드를 분석하여 애니메이션 제작에 필요한 메타데이터 추출
-- **스크립트 생성**: 교육용 애니메이션 스크립트 자동 생성
-- **씬 구성**: 각 장면의 시각적 구성 및 이미지 프롬프트 생성
-- **자가 학습**: 사용자 피드백을 통한 지속적인 품질 개선
+| 채널 | 카테고리 | 론칭 단계 |
+|------|----------|-----------|
+| CH1  | 경제      | Phase 1   |
+| CH2  | 부동산    | Phase 1   |
+| CH3  | 심리      | Phase 2   |
+| CH4  | 미스터리  | Phase 2   |
+| CH5  | 전쟁사    | Phase 3   |
+| CH6  | 과학      | Phase 3   |
+| CH7  | 역사      | Phase 3   |
+
+---
 
 ## 프로젝트 구조
 
 ```
-ai-animation-studio/
-├── backend/                 # FastAPI 백엔드
-│   ├── main.py             # FastAPI 엔트리포인트
-│   ├── ai_engine/          # AI 엔진 모듈들
-│   │   ├── topic_analyzer.py      # 주제 분석
-│   │   ├── script_generator.py    # 스크립트 생성
-│   │   ├── scene_designer.py      # 씬 구성 설계
-│   │   └── learning_engine.py     # 자가 학습 엔진
-│   ├── db/                 # 데이터베이스 모델
-│   │   └── models.py
-│   └── crawler/            # 웹 크롤러
-│       ├── wiki_crawler.py
-│       └── keyword_crawler.py
+ai_stuidio_claude/
+├── src/                      # Python 파이프라인 (핵심)
+│   ├── pipeline.py           # 월간 파이프라인 진입점
+│   ├── core/
+│   │   ├── config.py         # 채널/API/경로 SSOT 설정
+│   │   ├── ssot.py           # JSON I/O (filelock + atomic write)
+│   │   └── pre_cost_estimator.py
+│   ├── step00/               # 채널 레지스트리 초기화
+│   ├── step01~04/            # 베이스라인·수익·알고리즘·포트폴리오 정책
+│   ├── step05/               # 트렌드+지식 수집 (5계층 소스)
+│   ├── step06~07/            # 스타일·수익 정책
+│   ├── step08/               # 영상 생성 오케스트레이터 [KAS-PROTECTED]
+│   │   ├── __init__.py       # run_step08() 메인 오케스트레이터
+│   │   ├── script_generator.py
+│   │   ├── image_generator.py
+│   │   ├── sd_generator.py   # SD XL + LoRA (GPU)
+│   │   ├── narration_generator.py
+│   │   ├── subtitle_generator.py
+│   │   ├── ffmpeg_composer.py
+│   │   ├── motion_engine.py
+│   │   ├── scene_composer.py
+│   │   └── metadata_generator.py  # 제목/설명/태그 생성
+│   ├── step09/               # BGM 오버레이
+│   ├── step10/               # 제목/썸네일 배리언트
+│   ├── step11/               # QA 게이트
+│   ├── step12/               # YouTube 업로드 + 48h KPI 수집
+│   ├── step13/               # 학습 피드백 + Phase 승격 판정
+│   ├── step14/               # 수익 추적
+│   ├── step16/               # 리스크 제어
+│   └── step17/               # 지속성 분석
 │
-├── frontend/               # Next.js 프론트엔드
-│   ├── app/                # Next.js App Router
-│   │   ├── page.tsx        # 메인 페이지
-│   │   ├── create-video/   # 애니메이션 제작 페이지
-│   │   └── learning-center/ # 학습 관리 페이지
-│   └── components/         # 재사용 가능한 컴포넌트 (추가 예정)
+├── web/                      # Next.js 웹 대시보드
+│   ├── app/
+│   │   ├── page.tsx          # KPI 홈 (서버 컴포넌트)
+│   │   ├── trends/           # 트렌드 주제 관리 (승인/거부)
+│   │   ├── revenue/          # 수익 추적
+│   │   ├── risk/             # 리스크 모니터링
+│   │   ├── learning/         # 학습 피드백
+│   │   ├── cost/             # API 비용/쿼터
+│   │   ├── channels/[id]/    # 채널 상세 + KPI 히스토리
+│   │   └── login/            # 패스워드 보호 로그인
+│   ├── components/
+│   │   ├── sidebar-nav.tsx
+│   │   ├── realtime-pipeline-status.tsx  # Supabase Realtime
+│   │   └── ui/               # shadcn/ui 컴포넌트
+│   ├── Dockerfile            # Docker standalone 빌드
+│   └── proxy.ts              # 패스워드 미들웨어 (Next.js 16)
 │
-└── README.md
+├── scripts/
+│   ├── sync_to_supabase.py   # JSON → Supabase DB 동기화
+│   ├── supabase_schema.sql   # DB 스키마 (RLS 포함)
+│   └── preflight_check.py   # 환경 점검
+│
+├── tests/                    # pytest 테스트 (140개+)
+├── .github/workflows/ci.yml  # GitHub Actions CI
+└── requirements.txt          # Python 의존성
 ```
 
-## 현재 단계
+---
 
-### 완료된 작업
+## 빠른 시작
 
-✅ **프로젝트 뼈대 구조 생성**
-- Backend: FastAPI 기반 서버 구조 및 모듈 뼈대
-- Frontend: Next.js 기반 최소 실행 구조
-- 각 모듈별 함수 시그니처 및 주석 정의
-
-✅ **Backend 모듈 구조**
-- `main.py`: FastAPI 서버 엔트리포인트 (실행 가능)
-- `ai_engine/`: AI 엔진 모듈들 (함수 뼈대 및 역할 정의)
-- `db/models.py`: 데이터 모델 정의 (Pydantic 기반)
-- `crawler/`: 크롤러 모듈 구조
-
-✅ **Frontend 구조**
-- Next.js App Router 기반
-- 메인 페이지, Create Video, Learning Center 페이지 뼈대
-
-### 아직 구현되지 않은 기능
-
-❌ 실제 AI 로직 (LLM 연동, 프롬프트 엔지니어링)
-❌ 웹 크롤링 구현
-❌ 데이터베이스 연동 (SQLAlchemy 등)
-❌ API 엔드포인트 구현
-❌ 프론트엔드 UI/UX 디자인
-❌ 영상 생성 파이프라인
-
-## 다음 단계
-
-### 1. Backend 기능 구현
-- [ ] LLM API 연동 (OpenAI, Claude 등)
-- [ ] 위키피디아 크롤링 구현
-- [ ] 데이터베이스 설정 (SQLite 또는 PostgreSQL)
-- [ ] API 엔드포인트 구현
-- [ ] 에러 핸들링 및 로깅
-
-### 2. Frontend 기능 구현
-- [ ] 주제 입력 폼 및 UI
-- [ ] 스크립트 생성 및 미리보기
-- [ ] 씬 구성 시각화
-- [ ] 학습 상태 대시보드
-- [ ] API 연동
-
-### 3. 통합 및 최적화
-- [ ] 백엔드-프론트엔드 통합 테스트
-- [ ] 성능 최적화
-- [ ] 사용자 피드백 시스템
-- [ ] 배포 설정
-
-## 시작하기
-
-### Backend 실행 (개발 서버)
+### 환경 설정
 
 ```bash
-cd backend
+# 1. 의존성 설치 (GPU 패키지 제외)
 pip install -r requirements.txt
-python main.py
+
+# 2. 환경 변수 설정
+cp .env.example .env
+# .env 파일에 API 키 입력:
+# GEMINI_API_KEY, YOUTUBE_API_KEY, CH1_CHANNEL_ID ~ CH7_CHANNEL_ID
+# KAS_ROOT (프로젝트 절대 경로)
 ```
 
-서버는 `http://localhost:8000`에서 실행됩니다.
-
-### Step2 / Step3 / verify_runs 실행 (정답 명령)
-
-아래 명령들은 프로젝트 루트(`AI Animation Studio`)에서 실행합니다.
+### 파이프라인 실행
 
 ```bash
-# Step2: 롱폼 스크립트 구조화
-python -m backend.cli step2
+# 월간 파이프라인 (month_number: 1~12)
+python -m src.pipeline 1
 
-# Step3: Scene JSON 고정 스펙 변환
-python -m backend.cli step3 --run-id <run_id>
+# 환경 점검
+python scripts/preflight_check.py
 
-# runs 상태 점검 (READY_FOR_STEP4 여부 포함)
-python -m backend.scripts.verify_runs
-
-# Step4 준비 상태 확인
-python -m backend.cli step4-check --run-id <run_id>
-
-# Step4 실행 (렌더링)
-python -m backend.cli step4 --run-id <run_id> [--resume] [--force]
-
-# import 규칙 검증 (backend.* 통일 확인)
-python -m backend.scripts.import_sanity
+# Supabase 동기화
+python scripts/sync_to_supabase.py          # 전체
+python scripts/sync_to_supabase.py channels # 채널만
 ```
 
-### Frontend 실행
+### 웹 대시보드
 
 ```bash
-cd frontend
-npm install
-npm run dev
+cd web
+
+# 개발 서버
+npm run dev       # http://localhost:3000
+
+# 프로덕션 빌드
+npm run build
+
+# Docker 빌드 & 실행
+docker build \
+  --build-arg NEXT_PUBLIC_SUPABASE_URL=your-url \
+  --build-arg NEXT_PUBLIC_SUPABASE_ANON_KEY=your-key \
+  -t kas-studio .
+
+docker run -p 3000:3000 \
+  -e DASHBOARD_PASSWORD=your-password \
+  -e NEXT_PUBLIC_SUPABASE_URL=your-url \
+  -e NEXT_PUBLIC_SUPABASE_ANON_KEY=your-key \
+  kas-studio
 ```
 
-프론트엔드는 `http://localhost:3000`에서 실행됩니다.
+---
+
+## 주요 명령
+
+```bash
+# 테스트
+pytest tests/ -q            # 전체
+pytest tests/ -q --tb=short # 실패 시 상세
+
+# ngrok 외부 공개 (고정 도메인)
+ngrok start kas-studio      # https://cwstudio.ngrok.app → localhost:3000
+```
+
+---
+
+## 환경 변수
+
+### 백엔드 (`.env`)
+
+| 변수 | 설명 |
+|------|------|
+| `KAS_ROOT` | 프로젝트 절대 경로 |
+| `GEMINI_API_KEY` | Gemini API (스크립트/이미지) |
+| `YOUTUBE_API_KEY` | YouTube Data API v3 |
+| `CH1_CHANNEL_ID` ~ `CH7_CHANNEL_ID` | 채널별 YouTube ID |
+| `SUPABASE_URL` | Supabase 프로젝트 URL |
+| `SUPABASE_KEY` | Supabase service_role 키 (백엔드 쓰기용) |
+| `ELEVENLABS_API_KEY` | 나레이션 (미설정 시 gTTS 폴백) |
+| `SENTRY_DSN` | 에러 추적 (선택) |
+
+### 웹 (`web/.env.local`)
+
+| 변수 | 설명 |
+|------|------|
+| `NEXT_PUBLIC_SUPABASE_URL` | Supabase 프로젝트 URL |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase anon 키 (읽기 전용) |
+| `DASHBOARD_PASSWORD` | 대시보드 접근 패스워드 (미설정 시 공개) |
+
+---
+
+## 아키텍처
+
+```
+파이프라인 실행
+    │
+    ├── runs/ JSON 파일 (SSOT)
+    │
+    └── scripts/sync_to_supabase.py
+              │
+              ▼
+        Supabase PostgreSQL (9개 테이블, RLS 적용)
+              │
+              ▼
+        web/ Next.js 대시보드
+        (Supabase Realtime 구독으로 자동 갱신)
+```
+
+### 데이터 흐름 규칙
+
+- **모든 JSON I/O**: `ssot.read_json()` / `ssot.write_json()` 사용 (filelock + atomic write)
+- **로깅**: `from loguru import logger` (표준 `logging` 금지)
+- **채널 설정 SSOT**: `src/core/config.py`가 단일 출처
+- **KPI 수집 지연**: 업로드 후 즉시 수집 금지, 48시간 pending 메커니즘 사용
+
+---
 
 ## 기술 스택
 
-- **Backend**: Python, FastAPI, Pydantic
-- **Frontend**: Next.js, React, TypeScript
-- **Database**: (추후 결정)
-- **AI**: (추후 결정 - OpenAI, Claude 등)
-
-## 라이선스
-
-(추후 결정)
-
-## Release (v2-Step11)
-
-Create release:
-scripts\release.ps1 -Version "v2.11.0"
-
-Verify release (run inside release folder):
-scripts\verify_release.ps1
-
-Canonical verification:
-python -m backend.scripts.import_sanity
-python -m backend.scripts.verify_runs
-
-## 지식 플로우 (Knowledge v1)
-
-지식 자동 적재→메타→분류→사용 게이트→감사/롤백 플로우
-
-### 정답 실행 명령
-
-```bash
-# 지식 적재 (dry-run 모드)
-python -m backend.cli.run knowledge ingest --category economy --keywords "gdp,inflation" --mode dry-run
-
-# 지식 조회
-python -m backend.cli.run knowledge query --category economy --topic "gdp" --limit 5 --mode reference_only
-
-# 지식 플로우 검증
-python -m backend.scripts.verify_knowledge_flow
-```
-
-### 사용 예시
-
-```bash
-# 1. 지식 적재 (기존 카테고리)
-python -m backend.cli.run knowledge ingest --category economy --keywords "gdp,inflation" --mode dry-run
-
-# 2. 지식 조회
-python -m backend.cli.run knowledge query --category economy --topic "gdp" --limit 5 --mode reference_only
-
-# 3. 과학(Science) 카테고리 적재
-python -m backend.cli.run knowledge ingest --category science --keywords "gravity" --mode dry-run
-
-# 4. 상식(Common Sense) 카테고리 적재
-python -m backend.cli.run knowledge ingest --category common_sense --keywords "why_sky_blue" --mode dry-run
-
-# 5. 매일 오후 5시 자동 적재 스케줄러 시작
-python -m backend.cli.run knowledge schedule-daily --category science --keywords "gravity" --mode dry-run
-
-# 6. Discovery Layer 전량 적재
-python -m backend.cli.run knowledge discovery-ingest --category science --keywords "gravity,cell division,photosynthesis" --ttl-days 14
-
-# 7. Discovery TTL 적용
-python -m backend.cli.run knowledge discovery-ttl --ttl-days 14
-
-# 8. Discovery → Approved 승격
-python -m backend.cli.run knowledge promote --category science --limit 12
-
-# 9. Discovery 통합 사이클 (권장)
-python -m backend.cli.run knowledge discovery-cycle
-
-# 10. 전체 검증
-python -m backend.scripts.verify_knowledge_flow
-```
-
-### 지원 카테고리
-
-- `history` - 역사
-- `geo` - 지리
-- `mystery` - 미스터리
-- `economy` - 경제
-- `war` - 전쟁
-- `animation` - 애니메이션
-- `science` - 과학 (검증 가능한 과학적 사실/정의/연구 근거)
-- `common_sense` - 상식 (일반적·비전문적·비논문 기반 사실)
-- `papers` - 논문 (v7.1 복구)
-
-### Fallback 1건 보장 정책
-
-지식 적재 시 수집 결과가 0건인 경우에도 **반드시 1개의 fallback asset이 자동 생성**됩니다.
-
-**Fallback Asset 특성:**
-- `trust_level`: LOW
-- `impact_scope`: LOW
-- `source_id`: "fallback_synthetic"
-- `license_status`: UNKNOWN
-- `usage_rights`: ALLOWED (내부 생성 텍스트)
-
-**주의사항:**
-- Fallback asset은 실제 소스에서 검증 및 보강이 필요합니다.
-- 고위험 사용 전 반드시 실제 소스로 대체해야 합니다.
-- 모든 ingest 실행은 audit 로그에 기록됩니다 (0건이어도 INGEST_RUN_START/END 기록).
-
-### 저장 위치
-
-**Approved Layer (기존):**
-- `backend/output/knowledge_v1/raw/assets.jsonl` - 원본 자산
-- `backend/output/knowledge_v1/derived/chunks.jsonl` - 정규화된 청크
-- `backend/output/knowledge_v1/used/used_assets.jsonl` - 사용 가능한 자산
-- `backend/output/knowledge_v1/blocked/blocked_assets.jsonl` - 차단된 자산
-- `backend/output/knowledge_v1/audit/audit.jsonl` - 감사 로그
-- `backend/output/knowledge_v1/index/index.json` - 키워드 인덱스
-- `backend/output/knowledge_v1/scheduler/state.json` - 스케줄러 상태
-
-**Discovery Layer (신규):**
-- `backend/output/knowledge_v1_discovery/raw/assets.jsonl` - 발견 자산 (임시)
-- `backend/output/knowledge_v1_discovery/audit/audit.jsonl` - 감사 로그
-- `backend/output/knowledge_v1_discovery/state/state.json` - 상태 파일
-- `backend/output/knowledge_v1_discovery/state/quota.json` - 쿼터 상태
-
-**주의:** Discovery Layer에는 `derived/`, `index/` 폴더가 없습니다.
-
-### 자동 승격 대상 카테고리
-
-다음 5개 카테고리는 Discovery Layer에서 Approved Layer로 자동 승격됩니다:
-
-- `science` - 과학
-- `history` - 역사
-- `common_sense` - 상식
-- `economy` - 경제
-- `geo` - 지리 (geography)
-
-**제외 카테고리:**
-- `papers` - 논문 (완전 제외)
-- `mystery` - 미스터리 (완전 제외, 아이디어 트리거로만 사용)
-
-자동 승격은 `discovery-cycle` 실행 시 자동으로 수행됩니다.
-
-### 자동 적재 스케줄러
-
-매일 오후 5시(로컬 시간 기준)에 자동으로 지식 적재가 실행됩니다.
-
-**주의사항:**
-- 화면 꺼짐: 가능
-- 절전 모드: 불가 (스케줄러 중단됨)
-- 전원 OFF: 불가 (스케줄러 중단됨)
-- 하루 1회만 실행 (중복 방지)
-
-**실행 방법:**
-```bash
-# 스케줄러 시작 (백그라운드 실행 권장)
-python -m backend.cli.run knowledge schedule-daily --category science --keywords "gravity" --mode dry-run
-
-# 강제 실행 테스트 (환경변수 사용)
-FORCE_RUN_TODAY=1 python -m backend.cli.run knowledge schedule-daily --category science --keywords "gravity" --mode dry-run
-```
-
-**중지 방법:**
-- Ctrl+C로 정상 종료
-- 종료 시 audit 로그에 SCHEDULER_STOP 이벤트 기록
-
-### Preflight 검증 (안정화)
-
-운영 전 필수 검증 스크립트로, 런타임 에러를 사전에 검출합니다.
-
-**실행 방법:**
-```bash
-python -m backend.scripts.preflight
-```
-
-**검증 항목:**
-- Import 검증 (주요 모듈 import 성공)
-- 컴파일 검증 (문법/이름 오류 검출)
-- Schema 자기검증 (KnowledgeAsset 인스턴스 생성 테스트)
-- import_sanity 실행
-- verify_runs 실행 (선택적)
-- Knowledge ingest 스모크 테스트 (science, papers)
-
-**PASS 조건:**
-- 모든 체크가 PASS
-- Science ingest: assets >= 1, chunks >= 1, LICENSE_BLOCK 없음
-- Papers ingest: assets >= 1, chunks >= 1, LICENSE_BLOCK 없음
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+| 영역 | 기술 |
+|------|------|
+| 백엔드 파이프라인 | Python 3.11, Google Gemini, YouTube Data API |
+| 영상 생성 | Manim, FFmpeg, SD XL + LoRA, ElevenLabs |
+| 웹 대시보드 | Next.js 16, React 19, Tailwind CSS v4, shadcn/ui |
+| 데이터베이스 | Supabase PostgreSQL (RLS, Realtime) |
+| 모니터링 | Loguru, Sentry SDK |
+| CI/CD | GitHub Actions (pytest + npm build) |
+| 배포 | Docker standalone, ngrok, Vercel |

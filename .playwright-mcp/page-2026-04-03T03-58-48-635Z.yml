@@ -1,0 +1,261 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e5]:
+      - generic [ref=e6]:
+        - generic [ref=e7]:
+          - img [ref=e8]
+          - generic [ref=e10]: KAS Studio
+        - paragraph [ref=e11]: AI 자동화 파이프라인
+      - generic [ref=e12]:
+        - generic [ref=e13]:
+          - generic [ref=e14]: 대시보드
+          - list [ref=e16]:
+            - listitem [ref=e17]:
+              - link "전체 KPI" [ref=e18] [cursor=pointer]:
+                - /url: /
+                - img [ref=e19]
+                - generic [ref=e24]: 전체 KPI
+            - listitem [ref=e25]:
+              - link "트렌드 관리" [ref=e26] [cursor=pointer]:
+                - /url: /trends
+                - img [ref=e27]
+                - generic [ref=e30]: 트렌드 관리
+            - listitem [ref=e31]:
+              - link "수익 추적" [ref=e32] [cursor=pointer]:
+                - /url: /revenue
+                - img [ref=e33]
+                - generic [ref=e35]: 수익 추적
+            - listitem [ref=e36]:
+              - link "리스크 모니터링" [ref=e37] [cursor=pointer]:
+                - /url: /risk
+                - img [ref=e38]
+                - generic [ref=e40]: 리스크 모니터링
+            - listitem [ref=e41]:
+              - link "학습 피드백" [ref=e42] [cursor=pointer]:
+                - /url: /learning
+                - img [ref=e43]
+                - generic [ref=e51]: 학습 피드백
+            - listitem [ref=e52]:
+              - link "비용/쿼터" [ref=e53] [cursor=pointer]:
+                - /url: /cost
+                - img [ref=e54]
+                - generic [ref=e56]: 비용/쿼터
+        - generic [ref=e57]:
+          - generic [ref=e58]: 채널별 상세
+          - list [ref=e60]:
+            - listitem [ref=e61]:
+              - link "CH1 경제" [ref=e62] [cursor=pointer]:
+                - /url: /channels/CH1
+                - img [ref=e63]
+                - generic [ref=e65]: CH1 경제
+            - listitem [ref=e66]:
+              - link "CH2 과학" [ref=e67] [cursor=pointer]:
+                - /url: /channels/CH2
+                - img [ref=e68]
+                - generic [ref=e70]: CH2 과학
+            - listitem [ref=e71]:
+              - link "CH3 부동산" [ref=e72] [cursor=pointer]:
+                - /url: /channels/CH3
+                - img [ref=e73]
+                - generic [ref=e75]: CH3 부동산
+            - listitem [ref=e76]:
+              - link "CH4 심리" [ref=e77] [cursor=pointer]:
+                - /url: /channels/CH4
+                - img [ref=e78]
+                - generic [ref=e80]: CH4 심리
+            - listitem [ref=e81]:
+              - link "CH5 미스터리" [ref=e82] [cursor=pointer]:
+                - /url: /channels/CH5
+                - img [ref=e83]
+                - generic [ref=e85]: CH5 미스터리
+            - listitem [ref=e86]:
+              - link "CH6 역사" [ref=e87] [cursor=pointer]:
+                - /url: /channels/CH6
+                - img [ref=e88]
+                - generic [ref=e90]: CH6 역사
+            - listitem [ref=e91]:
+              - link "CH7 전쟁사" [ref=e92] [cursor=pointer]:
+                - /url: /channels/CH7
+                - img [ref=e93]
+                - generic [ref=e95]: CH7 전쟁사
+      - list [ref=e97]:
+        - listitem [ref=e98]:
+          - link "설정" [ref=e99] [cursor=pointer]:
+            - /url: /settings
+            - img [ref=e100]
+            - generic [ref=e103]: 설정
+    - main [ref=e104]:
+      - generic [ref=e105]:
+        - button "Toggle Sidebar" [ref=e106]:
+          - img
+          - generic [ref=e107]: Toggle Sidebar
+        - separator [ref=e108]
+        - generic [ref=e109]:
+          - generic [ref=e110]: KAS Studio
+          - button "테마 전환" [ref=e111]:
+            - img
+      - main [ref=e112]:
+        - generic [ref=e113]:
+          - generic [ref=e114]:
+            - heading "리스크 모니터링" [level=1] [ref=e115]
+            - paragraph [ref=e116]: 채널별 월간 수익 리스크 평가
+          - alert [ref=e117]:
+            - img [ref=e118]
+            - generic [ref=e120]: HIGH 리스크 채널 7개
+            - generic [ref=e121]: CH1, CH2, CH3, CH4, CH5, CH6, CH7 채널이 월 목표 수익 미달 상태입니다.
+          - generic [ref=e122]:
+            - generic [ref=e123]:
+              - generic [ref=e124]:
+                - generic [ref=e125]: HIGH 리스크
+                - img [ref=e126]
+              - generic [ref=e128]:
+                - generic [ref=e129]: "7"
+                - paragraph [ref=e130]: 즉각 조치 필요
+            - generic [ref=e131]:
+              - generic [ref=e132]:
+                - generic [ref=e133]: LOW 리스크
+                - img [ref=e134]
+              - generic [ref=e137]:
+                - generic [ref=e138]: "0"
+                - paragraph [ref=e139]: 정상 범위
+            - generic [ref=e140]:
+              - generic [ref=e141]:
+                - generic [ref=e142]: 전체 달성률
+                - img [ref=e143]
+              - generic [ref=e145]:
+                - generic [ref=e146]: 0%
+                - paragraph [ref=e147]: 총 순이익 0원 / 목표 1,400만원
+          - generic [ref=e148]:
+            - generic [ref=e149]:
+              - generic [ref=e150]: 7채널 리스크 현황
+              - generic [ref=e151]: 2026-04 기준 — HIGH(빨강) / LOW(초록)
+            - generic [ref=e153]:
+              - generic [ref=e154]:
+                - paragraph [ref=e155]: CH1
+                - paragraph [ref=e156]: 경제
+                - paragraph [ref=e157]: HIGH
+              - generic [ref=e158]:
+                - paragraph [ref=e159]: CH2
+                - paragraph [ref=e160]: 과학
+                - paragraph [ref=e161]: HIGH
+              - generic [ref=e162]:
+                - paragraph [ref=e163]: CH3
+                - paragraph [ref=e164]: 부동산
+                - paragraph [ref=e165]: HIGH
+              - generic [ref=e166]:
+                - paragraph [ref=e167]: CH4
+                - paragraph [ref=e168]: 심리
+                - paragraph [ref=e169]: HIGH
+              - generic [ref=e170]:
+                - paragraph [ref=e171]: CH5
+                - paragraph [ref=e172]: 미스터리
+                - paragraph [ref=e173]: HIGH
+              - generic [ref=e174]:
+                - paragraph [ref=e175]: CH6
+                - paragraph [ref=e176]: 역사
+                - paragraph [ref=e177]: HIGH
+              - generic [ref=e178]:
+                - paragraph [ref=e179]: CH7
+                - paragraph [ref=e180]: 전쟁사
+                - paragraph [ref=e181]: HIGH
+          - generic [ref=e182]:
+            - generic [ref=e183]:
+              - generic [ref=e185]:
+                - generic [ref=e186]: CH1 경제
+                - generic [ref=e187]: HIGH
+              - generic [ref=e188]:
+                - generic [ref=e189]:
+                  - generic [ref=e190]: 순이익
+                  - generic [ref=e191]: ₩0
+                - generic [ref=e192]:
+                  - generic [ref=e193]: 목표
+                  - generic [ref=e194]: ₩2,000,000
+                - paragraph [ref=e196]:
+                  - img [ref=e197]
+                  - text: "순이익 미달: 0원 < 2,000,000원"
+            - generic [ref=e199]:
+              - generic [ref=e201]:
+                - generic [ref=e202]: CH2 과학
+                - generic [ref=e203]: HIGH
+              - generic [ref=e204]:
+                - generic [ref=e205]:
+                  - generic [ref=e206]: 순이익
+                  - generic [ref=e207]: ₩0
+                - generic [ref=e208]:
+                  - generic [ref=e209]: 목표
+                  - generic [ref=e210]: ₩2,000,000
+                - paragraph [ref=e212]:
+                  - img [ref=e213]
+                  - text: "순이익 미달: 0원 < 2,000,000원"
+            - generic [ref=e215]:
+              - generic [ref=e217]:
+                - generic [ref=e218]: CH3 부동산
+                - generic [ref=e219]: HIGH
+              - generic [ref=e220]:
+                - generic [ref=e221]:
+                  - generic [ref=e222]: 순이익
+                  - generic [ref=e223]: ₩0
+                - generic [ref=e224]:
+                  - generic [ref=e225]: 목표
+                  - generic [ref=e226]: ₩2,000,000
+                - paragraph [ref=e228]:
+                  - img [ref=e229]
+                  - text: "순이익 미달: 0원 < 2,000,000원"
+            - generic [ref=e231]:
+              - generic [ref=e233]:
+                - generic [ref=e234]: CH4 심리
+                - generic [ref=e235]: HIGH
+              - generic [ref=e236]:
+                - generic [ref=e237]:
+                  - generic [ref=e238]: 순이익
+                  - generic [ref=e239]: ₩0
+                - generic [ref=e240]:
+                  - generic [ref=e241]: 목표
+                  - generic [ref=e242]: ₩2,000,000
+                - paragraph [ref=e244]:
+                  - img [ref=e245]
+                  - text: "순이익 미달: 0원 < 2,000,000원"
+            - generic [ref=e247]:
+              - generic [ref=e249]:
+                - generic [ref=e250]: CH5 미스터리
+                - generic [ref=e251]: HIGH
+              - generic [ref=e252]:
+                - generic [ref=e253]:
+                  - generic [ref=e254]: 순이익
+                  - generic [ref=e255]: ₩0
+                - generic [ref=e256]:
+                  - generic [ref=e257]: 목표
+                  - generic [ref=e258]: ₩2,000,000
+                - paragraph [ref=e260]:
+                  - img [ref=e261]
+                  - text: "순이익 미달: 0원 < 2,000,000원"
+            - generic [ref=e263]:
+              - generic [ref=e265]:
+                - generic [ref=e266]: CH6 역사
+                - generic [ref=e267]: HIGH
+              - generic [ref=e268]:
+                - generic [ref=e269]:
+                  - generic [ref=e270]: 순이익
+                  - generic [ref=e271]: ₩0
+                - generic [ref=e272]:
+                  - generic [ref=e273]: 목표
+                  - generic [ref=e274]: ₩2,000,000
+                - paragraph [ref=e276]:
+                  - img [ref=e277]
+                  - text: "순이익 미달: 0원 < 2,000,000원"
+            - generic [ref=e279]:
+              - generic [ref=e281]:
+                - generic [ref=e282]: CH7 전쟁사
+                - generic [ref=e283]: HIGH
+              - generic [ref=e284]:
+                - generic [ref=e285]:
+                  - generic [ref=e286]: 순이익
+                  - generic [ref=e287]: ₩0
+                - generic [ref=e288]:
+                  - generic [ref=e289]: 목표
+                  - generic [ref=e290]: ₩2,000,000
+                - paragraph [ref=e292]:
+                  - img [ref=e293]
+                  - text: "순이익 미달: 0원 < 2,000,000원"
+  - button "Open Next.js Dev Tools" [ref=e300] [cursor=pointer]:
+    - img [ref=e301]

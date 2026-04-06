@@ -1,34 +1,34 @@
 'use client'
 
-import { Moon, Sun } from 'lucide-react'
+import { useTheme } from 'next-themes'
 import { useEffect, useState } from 'react'
+import { Moon, Sun } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
 export function ThemeToggle() {
-  const [dark, setDark] = useState(false)
+  const { resolvedTheme, setTheme } = useTheme()
+  const [mounted, setMounted] = useState(false)
 
-  useEffect(() => {
-    const stored = localStorage.getItem('theme')
-    if (stored === 'dark') {
-      document.documentElement.classList.add('dark')
-      setDark(true)
-    }
-  }, [])
+  // hydration mismatch 방지 — 마운트 후에만 렌더링
+  useEffect(() => setMounted(true), [])
 
-  const toggle = () => {
-    if (dark) {
-      document.documentElement.classList.remove('dark')
-      localStorage.setItem('theme', 'light')
-    } else {
-      document.documentElement.classList.add('dark')
-      localStorage.setItem('theme', 'dark')
-    }
-    setDark(!dark)
+  if (!mounted) {
+    return <Button variant="ghost" size="icon" className="h-8 w-8" />
   }
 
   return (
-    <Button variant="ghost" size="icon" onClick={toggle} aria-label="테마 전환">
-      {dark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+    <Button
+      variant="ghost"
+      size="icon"
+      className="h-8 w-8"
+      onClick={() => setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')}
+    >
+      {resolvedTheme === 'dark' ? (
+        <Sun className="h-4 w-4" />
+      ) : (
+        <Moon className="h-4 w-4" />
+      )}
+      <span className="sr-only">테마 전환</span>
     </Button>
   )
 }

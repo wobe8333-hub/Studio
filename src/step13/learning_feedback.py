@@ -1,8 +1,39 @@
-"""STEP 13 — 변형 학습·정책 환류."""
+"""STEP 13 — 변형 학습·정책 환류 + Phase 승격 판정."""
 import json
 from loguru import logger
 from src.core.ssot import read_json, write_json, json_exists, now_iso, get_run_dir
-from src.core.config import MEMORY_DIR, REVENUE_TARGET_PER_CHANNEL
+from src.core.config import MEMORY_DIR, REVENUE_TARGET_PER_CHANNEL, CHANNELS_DIR
+
+# 알고리즘 단계 승격 순서 (낮은 인덱스 → 높은 인덱스로만 승격)
+_STAGE_ORDER = ["PRE-ENTRY", "SEARCH-ONLY", "BROWSE-ENTRY", "ALGORITHM-ACTIVE"]
+
+
+def _check_phase_promotion(channel_id: str, new_stage: str) -> bool:
+    """KPI 기반 알고리즘 단계 승격 판정.
+    Returns True if promotion occurred.
+    """
+    policy_path = CHANNELS_DIR / channel_id / "algorithm_policy.json"
+    if not json_exists(policy_path):
+        return False
+
+    policy = read_json(policy_path)
+    current_stage = policy.get("algorithm_trust_level", "PRE-ENTRY")
+
+    try:
+        current_idx = _STAGE_ORDER.index(current_stage)
+        new_idx     = _STAGE_ORDER.index(new_stage)
+    except ValueError:
+        return False
+
+    if new_idx <= current_idx:
+        return False  # 강등 없음 — 승격만 허용
+
+    policy["algorithm_trust_level"] = new_stage
+    policy["last_promoted_at"]      = now_iso()
+    policy["promoted_from"]         = current_stage
+    write_json(policy_path, policy)
+    logger.info(f"[STEP13] {channel_id} Phase 승격: {current_stage} → {new_stage}")
+    return True
 
 def run_step13(channel_id: str, run_id: str) -> dict:
     run_dir = get_run_dir(channel_id, run_id)
@@ -71,5 +102,9 @@ def run_step13(channel_id: str, run_id: str) -> dict:
             "trend_pattern_update":{"was_trending":script.get("is_trending",False),"trend_boost_ratio":0.0},
         },
     })
+    # Phase 승격 판정 — KPI가 충분한 경우에만 적용
+    if stage and (ctr is not None or avp is not None):
+        _check_phase_promotion(channel_id, stage)
+
     logger.info(f"[STEP13] {channel_id}/{run_id} 완료 stage={stage}")
     return read_json(s13/"variant_performance.json")

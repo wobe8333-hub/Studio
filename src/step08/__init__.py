@@ -22,6 +22,7 @@ from src.step08.ffmpeg_composer import (image_to_clip, concat_clips,
                                          add_narration, add_subtitles)
 from src.step08.motion_engine import batch_create_motion_clips, create_motion_clip
 from src.step08.scene_composer import compose_all_scenes
+from src.step08.metadata_generator import generate_metadata
 
 def run_step08(channel_id: str, topic: dict, style_policy: dict,
                revenue_policy: dict, algorithm_policy: dict) -> str:
@@ -176,7 +177,7 @@ def run_step08(channel_id: str, topic: dict, style_policy: dict,
     final_video = step08_dir / "video.mp4"
     shutil.copy2(with_subs, final_video)
 
-    _generate_metadata_files(channel_id, run_id, script, step08_dir, topic)
+    generate_metadata(channel_id, run_id, script, step08_dir, topic)
 
     needed = ["script.json", "narration.wav", "subtitles.srt", "video.mp4",
               "render_report.json"]
@@ -194,54 +195,3 @@ def run_step08(channel_id: str, topic: dict, style_policy: dict,
     logger.info(f"[STEP08] {channel_id}/{run_id} 완료 ✅")
     return run_id
 
-def _generate_metadata_files(channel_id: str, run_id: str, script: dict,
-                               step08_dir: Path, topic: dict) -> None:
-    import google.generativeai as genai
-    from src.core.config import GEMINI_API_KEY
-    from src.quota.gemini_quota import throttle_if_needed, record_request
-
-    genai.configure(api_key=GEMINI_API_KEY)
-    model = genai.GenerativeModel("gemini-2.0-flash")
-
-    title_candidates = script.get("title_candidates", [topic.get("title", "제목 없음")])
-    write_json(step08_dir / "title.json", {
-        "title_candidates": title_candidates,
-        "selected": title_candidates[0] if title_candidates else "",
-    })
-
-    seo = script.get("seo", {})
-    desc_first = seo.get("description_first_2lines", "")
-    description = (
-        f"{desc_first}\n\n"
-        f"▼ 관련 링크\n"
-        f"─────────────────────────────\n"
-        f"🔗 {script.get('affiliate_insert', {}).get('text', '')}\n\n"
-        f"⚠️ {script.get('financial_disclaimer', '') or script.get('medical_disclaimer', '') or ''}\n\n"
-        f"{script.get('ai_label', '이 영상은 AI가 제작에 참여했습니다.')}"
-    )
-    (step08_dir / "description.txt").write_text(description, encoding="utf-8")
-
-    throttle_if_needed()
-    record_request()
-    tag_prompt = f"YouTube 영상 태그 15개를 한국어와 영어로 섞어 콤마로 구분하여 나열하시오. 주제: {topic.get('title', '')} 카테고리: {CHANNEL_CATEGORY_KO.get(channel_id, channel_id)}"
-    tag_response = model.generate_content(tag_prompt,
-        generation_config=genai.GenerationConfig(max_output_tokens=200))
-    tags = [t.strip() for t in tag_response.text.split(",")][:15]
-    write_json(step08_dir / "tags.json", {"tags": tags})
-
-    render_report = {
-        "run_id": run_id,
-        "channel_id": channel_id,
-        "render_completed_at": now_iso(),
-        "bgm_used": False,
-        "bgm_category_tone": "",
-        "video_spec": script.get("video_spec", {}),
-        "target_duration_sec": script.get("target_duration_sec", 720),
-        "sections_count": len(script.get("sections", [])),
-        "manim_sections": len([s for s in script.get("sections", []) if s.get("render_tool") == "manim"]),
-    }
-    write_json(step08_dir / "render_report.json", render_report)
-
-    style_src = CHANNELS_DIR / channel_id / "style_policy_master.json"
-    if style_src.exists():
-        shutil.copy2(style_src, step08_dir / "style_policy.json")

@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>추가 폰트 10종</title>
+<link href="https://fonts.googleapis.com/css2?
+family=DM+Serif+Display&
+family=Josefin+Sans:wght@300;400;600;700&
+family=Italiana&
+family=Crimson+Pro:wght@400;500;600;700&
+family=Spectral:wght@400;500;600;700&
+family=Libre+Baskerville:wght@400;700&
+family=Abril+Fatface&
+family=Josefin+Slab:wght@300;400;600;700&
+family=Pacifico&
+family=Mulish:wght@300;400;500;600;700&
+family=Mplus+Rounded+1c:wght@300;400;500;700&
+family=Jua&
+family=Gowun+Dodum&
+family=Gowun+Batang:wght@400;700&
+family=Hahmlet:wght@300;400;500;700&
+family=Nanum+Myeongjo:wght@400;700&
+family=Nunito:wght@300;400;500;600;700;800&
+family=Quicksand:wght@400;500;600;700&
+family=Poppins:wght@300;400;500;600&
+&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --c-dark:#900000;--c-red:#ee2400;--c-salmon:#ffb09c;
+    --c-blush:#fbd9d3;--c-cream:#ffefea;
+    --t-primary:#1a0505;--t-secondary:#5c1a1a;--t-muted:#9b6060;--t-accent:#900000;
+    --glass-bg:rgba(255,255,255,0.55);--glass-border:rgba(238,36,0,0.12);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family:'Nunito',sans-serif;
+    background:linear-gradient(135deg,#fbd9d3 0%,#ffefea 60%,#ffd9cc 100%);
+    min-height:100vh;padding:24px 20px;color:var(--t-primary);
+  }
+  body::before{content:'';position:fixed;inset:0;pointer-events:none;
+    background:radial-gradient(ellipse 60% 50% at 15% 15%,rgba(238,36,0,0.06),transparent 70%);}
+
+  h1{font-size:17px;font-weight:700;color:var(--t-primary);margin-bottom:3px;}
+  .subtitle{font-size:11px;color:var(--t-muted);margin-bottom:20px;}
+
+  .prev-link{
+    display:inline-flex;align-items:center;gap:6px;
+    font-size:11px;color:var(--c-red);font-weight:700;
+    margin-bottom:18px;cursor:pointer;
+    background:rgba(238,36,0,0.08);padding:5px 12px;border-radius:20px;
+  }
+
+  .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;}
+
+  .font-card{
+    background:var(--glass-bg);
+    backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+    border:2px solid var(--glass-border);border-radius:16px;
+    overflow:hidden;cursor:pointer;transition:all 0.2s ease;position:relative;
+  }
+  .font-card:hover{transform:translateY(-2px);box-shadow:0 10px 36px rgba(144,0,0,0.11);}
+  .font-card.selected{border-color:var(--c-red);box-shadow:0 0 0 4px rgba(238,36,0,0.14);}
+
+  .card-label{
+    position:absolute;top:10px;left:10px;z-index:2;
+    font-size:10px;font-weight:800;letter-spacing:1px;
+    background:var(--c-red);color:#fff;
+    padding:2px 9px;border-radius:20px;font-family:'Nunito',sans-serif;
+  }
+  .hot-badge{
+    position:absolute;top:10px;right:10px;z-index:2;
+    font-size:9px;font-weight:800;
+    background:rgba(22,163,74,0.12);color:#15803d;
+    padding:2px 9px;border-radius:20px;font-family:'Nunito',sans-serif;
+  }
+
+  .preview{
+    padding:36px 18px 16px;min-height:180px;
+    border-bottom:1px solid rgba(238,36,0,0.07);
+  }
+  .kpi-row{display:flex;gap:10px;margin-bottom:12px;}
+  .kpi-box{
+    background:rgba(255,255,255,0.5);border:1px solid rgba(238,36,0,0.1);
+    border-radius:9px;padding:10px 12px;flex:1;
+  }
+  .trend-row{
+    display:flex;align-items:center;gap:8px;
+    padding:6px 0;border-top:1px solid rgba(238,36,0,0.06);
+  }
+  .rank-dot{
+    width:18px;height:18px;border-radius:5px;
+    background:rgba(238,36,0,0.1);color:var(--c-red);
+    font-size:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  }
+
+  .info{padding:12px 16px;}
+  .info h3{font-size:13px;font-weight:700;color:var(--t-primary);margin-bottom:3px;}
+  .font-code{font-size:10px;color:var(--t-muted);font-family:'DM Mono',monospace;margin-bottom:6px;}
+  .mood-tags{display:flex;gap:4px;flex-wrap:wrap;}
+  .mtag{font-size:10px;padding:2px 7px;border-radius:10px;
+    background:rgba(144,0,0,0.07);color:var(--t-secondary);font-family:'Nunito',sans-serif;}
+
+  .hint{text-align:center;margin-top:16px;font-size:11px;color:var(--t-muted);}
+</style>
+</head>
+<body>
+
+<h1>추가 폰트 10종 — E ~ N</h1>
+<p class="subtitle">앞의 A~D에 이어서 10가지를 더 비교해보세요. 클릭해서 선택!</p>
+
+<div class="grid">
+
+  <!-- E: DM Serif Display + Nunito -->
+  <div class="font-card" onclick="pick(this,'E','DM Serif Display + Nunito')">
+    <div class="card-label">E</div>
+    <div class="hot-badge">✦ 인기</div>
+    <div class="preview">
+      <div class="kpi-row">
+        <div class="kpi-box">
+          <div style="font-family:'Nunito',sans-serif;font-size:9px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;color:#9b6060">월 수익</div>
+          <div style="font-family:'DM Serif Display',serif;font-size:34px;color:#900000;line-height:1">₩8.3M</div>
+        </div>
+        <div class="kpi-box">
+          <div style="font-family:'Nunito',sans-serif;font-size:9px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;color:#9b6060">QA 통과</div>
+          <div style="font-family:'DM Serif Display',serif;font-size:34px;color:#900000;line-height:1">94%</div>
+        </div>
+      </div>
+      <div style="font-family:'DM Serif Display',serif;font-size:17px;color:#1a0505;margin-bottom:5px">파이프라인 대시보드</div>
+      <div class="trend-row">
+        <div class="rank-dot" style="font-family:'Nunito',sans-serif;font-weight:800">1</div>
+        <div style="font-family:'Nunito',sans-serif;font-size:12px;color:#5c1a1a;flex:1">한국은행 금리 동결 파장</div>
+        <div style="font-family:'DM Serif Display',serif;font-size:16px;color:#900000;font-weight:700">94</div>
+      </div>
+      <div class="trend-row">
+        <div class="rank-dot" style="font-family:'Nunito',sans-serif;font-weight:800">2</div>
+        <div style="font-family:'Nunito',sans-serif;font-size:12px;color:#5c1a1a;flex:1">달러 환율 1,380원 돌파</div>
+        <div style="font-family:'DM Serif Display',serif;font-size:16px;color:#900000;font-weight:700">88</div>
+      </div>
+    </div>
+    <div class="info">
+      <h3>DM Serif Display + Nunito</h3>
+      <div class="font-code">헤딩: DM Serif Display · 본문: Nunito</div>
+      <div class="mood-tags"><span class="mtag">✨ 에디토리얼</span><span class="mtag">따뜻한 세리프</span><span class="mtag">둥글둥글</span></div>
+    </div>
+  </div>
+
+  <!-- F: Josefin Sans + Quicksand -->
+  <div class="font-card" onclick="pick(this,'F','Josefin Sans + Quicksand')">
+    <div class="card-label">F</div>
+    <div class="preview">
+      <div class="kpi-row">
+        <div class="kpi-box">
+          <div style="font-family:'Josefin Sans',sans-serif;font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#9b6060">월 수익</div>
+          <div style="font-family:'Josefin Sans',sans-serif;font-size:32px;font-weight:700;color:#900000;line-height:1">₩8.3M</div>
+        </div>
+        <div class="kpi-box">
+          <div style="font-family:'Josefin Sans',sans-serif;font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#9b6060">QA 통과</div>
+          <div style="font-family:'Josefin Sans',sans-serif;font-size:32px;font-weight:700;color:#900000;line-height:1">94%</div>
+        </div>
+      </div>
+      <div style="font-family:'Josefin Sans',sans-serif;font-size:16px;font-weight:600;letter-spacing:.5px;color:#1a0505;margin-bottom:5px">파이프라인 대시보드</div>
+      <div class="trend-row">
+        <div class="rank-dot" style="font-family:'Josefin Sans',sans-serif;font-weight:700">1</div>
+        <div style="font-family:'Quicksand',sans-serif;font-size:12px;color:#5c1a1a;flex:1;font-weight:500">한국은행 금리 동결 파장</div>
+        <div style="font-family:'Josefin Sans',sans-serif;font-size:15px;color:#900000;font-weight:700">94</div>
+      </div>
+      <div class="trend-row">
+        <div class="rank-dot" style="font-family:'Josefin Sans',sans-serif;font-weight:700">2</div>
+        <div style="font-family:'Quicksand',sans-serif;font-size:12px;color:#5c1a1a;flex:1;font-weight:500">달러 환율 1,380원 돌파</div>
+        <div style="font-family:'Josefin Sans',sans-serif;font-size:15px;color:#900000;font-weight:700">88</div>
+      </div>
+    </div>
+    <div class="info">
+      <h3>Josefin Sans + Quicksand</h3>
+      <div class="font-code">헤딩: Josefin Sans · 본문: Quicksand</div>
+      <div class="mood-tags"><span class="mtag">🍃 미니멀 스윗</span><span class="mtag">기하학적</span><span class="mtag">공기같은</span></div>
+    </div>
+  </div>
+
+  <!-- G: Italiana + Nunito -->
+  <div class="font-card" onclick="pick(this,'G','Italiana + Nunito')">
+    <div class="card-label">G</div>
+    <div class="preview">
+      <div class="kpi-row">
+        <div class="kpi-box">
+          <div style="font-family:'Nunito',sans-serif;font-size:9px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;color:#9b6060">월 수익</div>
+          <div style="font-family:'Italiana',serif;font-size:38px;color:#900000;line-height:1">₩8.3M</div>
+        </div>
+        <div class="kpi-box">
+          <div style="font-family:'Nunito',sans-serif;font-size:9px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;color:#9b6060">QA 통과</div>
+          <div style="font-family:'Italiana',serif;font-size:38px;color:#900000;line-height:1">94%</div>
+        </div>
+      </div>
+      <div style="font-family:'Italiana',serif;font-size:20px;color:#1a0505;margin-bottom:5px">파이프라인 대시보드</div>
+      <div class="trend-row">
+        <div class="rank-dot" style="font-family:'Nunito',sans-serif;font-weight:800">1</div>
+        <div style="font-family:'Nunito',sans-serif;font-size:12px;color:#5c1a1a;flex:1">한국은행 금리 동결 파장</div>
+        <div style="font-family:'Italiana',serif;font-size:18px;color:#900000">94</div>
+      </div>
+      <div class="trend-row">
+        <div class="rank-dot" style="font-family:'Nunito',sans-serif;font-weight:800">2</div>
+        <div style="font-family:'Nunito',sans-serif;font-size:12px;color:#5c1a1a;flex:1">달러 환율 1,380원 돌파</div>
+        <div style="font-family:'Italiana',serif;font-size:18px;color:#900000">88</div>
+      </div>
+    </div>
+    <div class="info">
+      <h3>Italiana + Nunito</h3>
+      <div class="font-code">헤딩: Italiana · 본문: Nunito</div>
+      <div class="mood-tags"><span class="mtag">🌹 이탈리안 로맨스</span><span class="mtag">우아한</span><span class="mtag">키가 큰</span></div>
+    </div>
+  </div>
+
+  <!-- H: Crimson Pro + Mulish -->
+  <div class="font-card" onclick="pick(this,'H','Crimson Pro + Mulish')">
+    <div class="card-label">H</div>
+    <div class="preview">
+      <div class="kpi-row">
+        <div class="kpi-box">
+          <div style="font-family:'Mulish',sans-serif;font-size:9px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;color:#9b6060">월 수익</div>
+          <div style="font-family:'Crimson Pro',serif;font-size:36px;font-weight:700;color:#900000;line-height:1">₩8.3M</div>
+        </div>
+        <div class="kpi-box">
+          <div style="font-family:'Mulish',sans-serif;font-size:9px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;color:#9b6060">QA 통과</div>
+          <div style="font-family:'Crimson Pro',serif;font-size:36px;font-weight:700;color:#900000;line-height:1">94%</div>
+        </div>
+      </div>
+      <div style="font-family:'Crimson Pro',serif;font-size:19px;font-weight:600;color:#1a0505;margin-bottom:5px">파이프라인 대시보드</div>
+      <div class="trend-row">
+        <div class="rank-dot" style="font-family:'Mulish',sans-serif;font-weight:800">1</div>
+        <div style="font-family:'Mulish',sans-serif;font-size:12px;color:#5c1a1a;flex:1;font-weight:500">한국은행 금리 동결 파장</div>
+        <div style="font-family:'Crimson Pro',serif;font-size:17px;font-weight:700;color:#900000">94</div>
+      </div>
+      <div class="trend-row">
+        <div class="rank-dot" style="font-family:'Mulish',sans-serif;font-weight:800">2</div>
+        <div style="font-family:'Mulish',sans-serif;font-size:12px;color:#5c1a1a;flex:1;font-weight:500">달러 환율 1,380원 돌파</div>
+        <div style="font-family:'Crimson Pro',serif;font-size:17px;font-weight:700;color:#900000">88</div>
+      </div>
+    </div>
+    <div class="info">
+      <h3>Crimson Pro + Mulish</h3>
+      <div class="font-code">헤딩: Crimson Pro · 본문: Mulish</div>
+      <div class="mood-tags"><span class="mtag">📖 문학적</span><span class="mtag">따뜻한</span><span class="mtag">지성미</span></div>
+    </div>
+  </div>
+
+  <!-- I: Jua + Gowun Dodum (한국어 큐트) -->
+  <div class="font-card" onclick="pick(this,'I','Jua + Gowun Dodum')">
+    <div class="card-label">I</div>
+    <div class="hot-badge">🍒 가장 귀여운</div>
+    <div class="preview">
+      <div class="kpi-row">
+        <div class="kpi-box">
+          <div style="font-family:'Gowun Dodum',sans-serif;font-size:9px;letter-spacing:.8px;text-transform:uppercase;color:#9b6060">월 수익</div>
+          <div style="font-family:'Jua',sans-serif;font-size:32px;color:#900000;line-height:1">₩8.3M</div>
+        </div>
+        <div class="kpi-box">
+          <div style="font-family:'Gowun Dodum',sans-serif;font-size:9px;letter-spacing:.8px;text-transform:uppercase;color:#9b6060">QA 통과</div>
+          <div style="font-family:'Jua',sans-serif;font-size:32px;color:#900000;line-height:1">94%</div>
+        </div>
+      </div>
+      <div style="font-family:'Jua',sans-serif;font-size:17px;color:#1a0505;margin-bottom:5px">파이프라인 대시보드</div>
+      <div class="trend-row">
+        <div class="rank-dot" style="font-family:'Jua',sans-serif">1</div>
+        <div style="font-family:'Gowun Dodum',sans-serif;font-size:12px;color:#5c1a1a;flex:1">한국은행 금리 동결 파장</div>
+        <div style="font-family:'Jua',sans-serif;font-size:16px;color:#900000">94</div>
+      </div>
+      <div class="trend-row">
+        <div class="rank-dot" style="font-family:'Jua',sans-serif">2</div>
+        <div style="font-family:'Gowun Dodum',sans-serif;font-size:12px;color:#5c1a1a;flex:1">달러 환율 1,380원 돌파</div>
+        <div style="font-family:'Jua',sans-serif;font-size:16px;color:#900000">88</div>
+      </div>
+    </div>
+    <div class="info">
+      <h3>Jua + Gowun Dodum</h3>
+      <div class="font-code">헤딩: Jua · 본문: Gowun Dodum (한국어 특화)</div>
+      <div class="mood-tags"><span class="mtag">🍒 귀여운</span><span class="mtag">동글동글</span><span class="mtag">한국어 최적</span></div>
+    </div>
+  </div>
+
+  <!-- J: Spectral + Nunito -->
+  <div class="font-card" onclick="pick(this,'J','Spectral + Nunito')">
+    <div class="card-label">J</div>
+    <div class="preview">
+      <div class="kpi-row">
+        <div class="kpi-box">
+          <div style="font-family:'Nunito',sans-serif;font-size:9px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;color:#9b6060">월 수익</div>
+          <div style="font-family:'Spectral',serif;font-size:34px;font-weight:700;color:#900000;line-height:1">₩8.3M</div>
+        </div>
+        <div class="kpi-box">
+          <div style="font-family:'Nunito',sans-serif;font-size:9px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;color:#9b6060">QA 통과</div>
+          <div style="font-family:'Spectral',serif;font-size:34px;font-weight:700;color:#900000;line-height:1">94%</div>
+        </div>
+      </div>
+      <div style="font-family:'Spectral',serif;font-size:18px;font-weight:600;color:#1a0505;margin-bottom:5px">파이프라인 대시보드</div>
+      <div class="trend-row">
+        <div class="rank-dot" style="font-family:'Nunito',sans-serif;font-weight:800">1</div>
+        <div style="font-family:'Nunito',sans-serif;font-size:12px;color:#5c1a1a;flex:1">한국은행 금리 동결 파장</div>
+        <div style="font-family:'Spectral',serif;font-size:17px;font-weight:700;color:#900000">94</div>
+      </div>
+      <div class="trend-row">
+        <div class="rank-dot" style="font-family:'Nunito',sans-serif;font-weight:800">2</div>
+        <div style="font-family:'Nunito',sans-serif;font-size:12px;color:#5c1a1a;flex:1">달러 환율 1,380원 돌파</div>
+        <div style="font-family:'Spectral',serif;font-size:17px;font-weight:700;color:#900000">88</div>
+      </div>
+    </div>
+    <div class="info">
+      <h3>Spectral + Nunito</h3>
+      <div class="font-code">헤딩: Spectral · 본문: Nunito</div>
+      <div class="mood-tags"><span class="mtag">📚 디지털 세리프</span><span class="mtag">세련된</span><span class="mtag">고급스러운</span></div>
+    </div>
+  </div>
+
+  <!-- K: Libre Baskerville + M PLUS Rounded -->
+  <div class="font-card" onclick="pick(this,'K','Libre Baskerville + M PLUS Rounded 1c')">
+    <div class="card-label">K</div>
+    <div class="preview">
+      <div class="kpi-row">
+        <div class="kpi-box">
+          <div style="font-family:'Mplus Rounded 1c',sans-serif;font-size:9px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#9b6060">월 수익</div>
+          <div style="font-family:'Libre Baskerville',serif;font-size:30px;font-weight:700;color:#900000;line-height:1.1">₩8.3M</div>
+        </div>
+        <div class="kpi-box">
+          <div style="font-family:'Mplus Rounded 1c',sans-serif;font-size:9px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#9b6060">QA 통과</div>
+          <div style="font-family:'Libre Baskerville',serif;font-size:30px;font-weight:700;color:#900000;line-height:1.1">94%</div>
+        </div>
+      </div>
+      <div style="font-family:'Libre Baskerville',serif;font-size:17px;font-weight:700;color:#1a0505;margin-bottom:5px">파이프라인 대시보드</div>
+      <div class="trend-row">
+        <div class="rank-dot" style="font-family:'Mplus Rounded 1c',sans-serif;font-weight:700">1</div>
+        <div style="font-family:'Mplus Rounded 1c',sans-serif;font-size:12px;color:#5c1a1a;flex:1;font-weight:500">한국은행 금리 동결 파장</div>
+        <div style="font-family:'Libre Baskerville',serif;font-size:15px;font-weight:700;color:#900000">94</div>
+      </div>
+      <div class="trend-row">
+        <div class="rank-dot" style="font-family:'Mplus Rounded 1c',sans-serif;font-weight:700">2</div>
+        <div style="font-family:'Mplus Rounded 1c',sans-serif;font-size:12px;color:#5c1a1a;flex:1;font-weight:500">달러 환율 1,380원 돌파</div>
+        <div style="font-family:'Libre Baskerville',serif;font-size:15px;font-weight:700;color:#900000">88</div>
+      </div>
+    </div>
+    <div class="info">
+      <h3>Libre Baskerville + M PLUS Rounded</h3>
+      <div class="font-code">헤딩: Libre Baskerville · 본문: M PLUS Rounded 1c</div>
+      <div class="mood-tags"><span class="mtag">📰 서적 느낌</span><span class="mtag">포근한</span><span class="mtag">가장 둥글둥글</span></div>
+    </div>
+  </div>
+
+  <!-- L: Abril Fatface + Quicksand -->
+  <div class="font-card" onclick="pick(this,'L','Abril Fatface + Quicksand')">
+    <div class="card-label">L</div>
+    <div class="preview">
+      <div class="kpi-row">
+        <div class="kpi-box">
+          <div style="font-family:'Quicksand',sans-serif;font-size:9px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#9b6060">월 수익</div>
+          <div style="font-family:'Abril Fatface',serif;font-size:32px;color:#900000;line-height:1">₩8.3M</div>
+        </div>
+        <div class="kpi-box">
+          <div style="font-family:'Quicksand',sans-serif;font-size:9px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#9b6060">QA 통과</div>
+          <div style="font-family:'Abril Fatface',serif;font-size:32px;color:#900000;line-height:1">94%</div>
+        </div>
+      </div>
+      <div style="font-family:'Abril Fatface',serif;font-size:17px;color:#1a0505;margin-bottom:5px">파이프라인 대시보드</div>
+      <div class="trend-row">
+        <div class="rank-dot" style="font-family:'Quicksand',sans-serif;font-weight:700">1</div>
+        <div style="font-family:'Quicksand',sans-serif;font-size:12px;color:#5c1a1a;flex:1;font-weight:500">한국은행 금리 동결 파장</div>
+        <div style="font-family:'Abril Fatface',serif;font-size:16px;color:#900000">94</div>
+      </div>
+      <div class="trend-row">
+        <div class="rank-dot" style="font-family:'Quicksand',sans-serif;font-weight:700">2</div>
+        <div style="font-family:'Quicksand',sans-serif;font-size:12px;color:#5c1a1a;flex:1;font-weight:500">달러 환율 1,380원 돌파</div>
+        <div style="font-family:'Abril Fatface',serif;font-size:16px;color:#900000">88</div>
+      </div>
+    </div>
+    <div class="info">
+      <h3>Abril Fatface + Quicksand</h3>
+      <div class="font-code">헤딩: Abril Fatface · 본문: Quicksand</div>
+      <div class="mood-tags"><span class="mtag">🎀 볼드 스윗</span><span class="mtag">강렬한</span><span class="mtag">포스터 느낌</span></div>
+    </div>
+  </div>
+
+  <!-- M: Josefin Slab + Nunito -->
+  <div class="font-card" onclick="pick(this,'M','Josefin Slab + Nunito')">
+    <div class="card-label">M</div>
+    <div class="preview">
+      <div class="kpi-row">
+        <div class="kpi-box">
+          <div style="font-family:'Nunito',sans-serif;font-size:9px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;color:#9b6060">월 수익</div>
+          <div style="font-family:'Josefin Slab',serif;font-size:32px;font-weight:700;color:#900000;line-height:1;letter-spacing:-0.5px">₩8.3M</div>
+        </div>
+        <div class="kpi-box">
+          <div style="font-family:'Nunito',sans-serif;font-size:9px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;color:#9b6060">QA 통과</div>
+          <div style="font-family:'Josefin Slab',serif;font-size:32px;font-weight:700;color:#900000;line-height:1;letter-spacing:-0.5px">94%</div>
+        </div>
+      </div>
+      <div style="font-family:'Josefin Slab',serif;font-size:17px;font-weight:600;letter-spacing:.3px;color:#1a0505;margin-bottom:5px">파이프라인 대시보드</div>
+      <div class="trend-row">
+        <div class="rank-dot" style="font-family:'Nunito',sans-serif;font-weight:800">1</div>
+        <div style="font-family:'Nunito',sans-serif;font-size:12px;color:#5c1a1a;flex:1">한국은행 금리 동결 파장</div>
+        <div style="font-family:'Josefin Slab',serif;font-size:15px;font-weight:700;color:#900000">94</div>
+      </div>
+      <div class="trend-row">
+        <div class="rank-dot" style="font-family:'Nunito',sans-serif;font-weight:800">2</div>
+        <div style="font-family:'Nunito',sans-serif;font-size:12px;color:#5c1a1a;flex:1">달러 환율 1,380원 돌파</div>
+        <div style="font-family:'Josefin Slab',serif;font-size:15px;font-weight:700;color:#900000">88</div>
+      </div>
+    </div>
+    <div class="info">
+      <h3>Josefin Slab + Nunito</h3>
+      <div class="font-code">헤딩: Josefin Slab · 본문: Nunito</div>
+      <div class="mood-tags"><span class="mtag">🌸 기하학 슬랩</span><span class="mtag">모던 빈티지</span><span class="mtag">친근한</span></div>
+    </div>
+  </div>
+
+  <!-- N: Hahmlet + Gowun Dodum (한국어 우아함) -->
+  <div class="font-card" onclick="pick(this,'N','Hahmlet + Gowun Dodum')">
+    <div class="card-label">N</div>
+    <div class="hot-badge">🌺 우아한 한국어</div>
+    <div class="preview">
+      <div class="kpi-row">
+        <div class="kpi-box">
+          <div style="font-family:'Gowun Dodum',sans-serif;font-size:9px;letter-spacing:.8px;text-transform:uppercase;color:#9b6060">월 수익</div>
+          <div style="font-family:'Hahmlet',serif;font-size:33px;font-weight:700;color:#900000;line-height:1">₩8.3M</div>
+        </div>
+        <div class="kpi-box">
+          <div style="font-family:'Gowun Dodum',sans-serif;font-size:9px;letter-spacing:.8px;text-transform:uppercase;color:#9b6060">QA 통과</div>
+          <div style="font-family:'Hahmlet',serif;font-size:33px;font-weight:700;color:#900000;line-height:1">94%</div>
+        </div>
+      </div>
+      <div style="font-family:'Hahmlet',serif;font-size:18px;font-weight:700;color:#1a0505;margin-bottom:5px">파이프라인 대시보드</div>
+      <div class="trend-row">
+        <div class="rank-dot" style="font-family:'Gowun Dodum',sans-serif">1</div>
+        <div style="font-family:'Gowun Dodum',sans-serif;font-size:12px;color:#5c1a1a;flex:1">한국은행 금리 동결 파장</div>
+        <div style="font-family:'Hahmlet',serif;font-size:17px;font-weight:700;color:#900000">94</div>
+      </div>
+      <div class="trend-row">
+        <div class="rank-dot" style="font-family:'Gowun Dodum',sans-serif">2</div>
+        <div style="font-family:'Gowun Dodum',sans-serif;font-size:12px;color:#5c1a1a;flex:1">달러 환율 1,380원 돌파</div>
+        <div style="font-family:'Hahmlet',serif;font-size:17px;font-weight:700;color:#900000">88</div>
+      </div>
+    </div>
+    <div class="info">
+      <h3>Hahmlet + Gowun Dodum</h3>
+      <div class="font-code">헤딩: Hahmlet (한국 세리프) · 본문: Gowun Dodum</div>
+      <div class="mood-tags"><span class="mtag">🌺 한국 우아함</span><span class="mtag">서체 일관성</span><span class="mtag">고급 한글</span></div>
+    </div>
+  </div>
+
+</div>
+
+<p class="hint">E~N 중 클릭하거나 터미널에 알파벳으로 답변해 주세요 · 앞의 A~D와 비교하려면 이전 페이지를 참고해 주세요</p>
+
+<script>
+function pick(el, choice, name) {
+  document.querySelectorAll('.font-card').forEach(c=>c.classList.remove('selected'));
+  el.classList.add('selected');
+  if(window.__sp_select) window.__sp_select(choice, name);
+}
+</script>
+</body>
+</html>

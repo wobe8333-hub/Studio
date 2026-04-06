@@ -1,0 +1,43 @@
+<h2>테스트 검증 시, 가장 중요한 사용 흐름은?</h2>
+<p class="subtitle">파이프라인을 실행할 때 어떤 방식으로 검증하고 싶으신가요?</p>
+
+<div class="options">
+  <div class="option" data-choice="a" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>실시간 관찰 중심</h3>
+      <p>파이프라인 실행 → 각 Step 진행상황을 실시간으로 보면서 → 스크립트·이미지·영상이 생성되는 과정을 단계별로 확인</p>
+      <ul style="margin-top:8px;font-size:13px;color:#888">
+        <li>Step별 진행바 / 현재 작업 표시</li>
+        <li>생성 즉시 이미지·스크립트 미리보기</li>
+        <li>실시간 로그 스트리밍</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="option" data-choice="b" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>결과물 리뷰 중심</h3>
+      <p>파이프라인 실행 → 완료 후 → 모든 결과물(스크립트, 이미지, 영상, 썸네일)을 한 페이지에서 종합 검수</p>
+      <ul style="margin-top:8px;font-size:13px;color:#888">
+        <li>채널별 / Run별 결과물 카드</li>
+        <li>이미지·썸네일 갤러리 비교</li>
+        <li>QA 점수 & 승인/거부 버튼</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="option" data-choice="c" onclick="toggleSelect(this)">
+    <div class="letter">C</div>
+    <div class="content">
+      <h3>단계별 수동 제어</h3>
+      <p>각 Step을 개별적으로 트리거 → 결과 확인 → 다음 Step 진행 여부 결정 (단계 건너뛰기 / 재실행 가능)</p>
+      <ul style="margin-top:8px;font-size:13px;color:#888">
+        <li>Step00~17 개별 실행 버튼</li>
+        <li>각 Step 입력/출력 JSON 뷰어</li>
+        <li>실패 Step 재시도 UI</li>
+      </ul>
+    </div>
+  </div>
+</div>

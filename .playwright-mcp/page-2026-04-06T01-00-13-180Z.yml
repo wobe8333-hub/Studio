@@ -1,0 +1,162 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e5]:
+      - generic [ref=e7]:
+        - img [ref=e9]
+        - generic [ref=e11]:
+          - text: KAS Studio
+          - paragraph [ref=e12]: AI 자동화 파이프라인
+      - generic [ref=e13]:
+        - generic [ref=e14]:
+          - generic [ref=e15]: 대시보드
+          - list [ref=e17]:
+            - listitem [ref=e18]:
+              - link "전체 KPI" [ref=e19] [cursor=pointer]:
+                - /url: /
+                - img [ref=e20]
+                - generic [ref=e25]: 전체 KPI
+            - listitem [ref=e26]:
+              - link "트렌드 관리" [ref=e27] [cursor=pointer]:
+                - /url: /trends
+                - img [ref=e28]
+                - generic [ref=e31]: 트렌드 관리
+            - listitem [ref=e32]:
+              - link "수익 추적" [ref=e33] [cursor=pointer]:
+                - /url: /revenue
+                - img [ref=e34]
+                - generic [ref=e36]: 수익 추적
+            - listitem [ref=e37]:
+              - link "리스크 모니터링" [ref=e38] [cursor=pointer]:
+                - /url: /risk
+                - img [ref=e39]
+                - generic [ref=e41]: 리스크 모니터링
+            - listitem [ref=e42]:
+              - link "학습 피드백" [ref=e43] [cursor=pointer]:
+                - /url: /learning
+                - img [ref=e44]
+                - generic [ref=e52]: 학습 피드백
+            - listitem [ref=e53]:
+              - link "비용/쿼터" [ref=e54] [cursor=pointer]:
+                - /url: /cost
+                - img [ref=e55]
+                - generic [ref=e57]: 비용/쿼터
+        - generic [ref=e58]:
+          - generic [ref=e59]: 채널별 상세
+          - list [ref=e61]:
+            - listitem [ref=e62]:
+              - link "CH1 경제" [ref=e63] [cursor=pointer]:
+                - /url: /channels/CH1
+                - generic [ref=e65]: CH1 경제
+            - listitem [ref=e66]:
+              - link "CH2 부동산" [ref=e67] [cursor=pointer]:
+                - /url: /channels/CH2
+                - generic [ref=e69]: CH2 부동산
+            - listitem [ref=e70]:
+              - link "CH3 심리" [ref=e71] [cursor=pointer]:
+                - /url: /channels/CH3
+                - generic [ref=e73]: CH3 심리
+            - listitem [ref=e74]:
+              - link "CH4 미스터리" [ref=e75] [cursor=pointer]:
+                - /url: /channels/CH4
+                - generic [ref=e77]: CH4 미스터리
+            - listitem [ref=e78]:
+              - link "CH5 전쟁사" [ref=e79] [cursor=pointer]:
+                - /url: /channels/CH5
+                - generic [ref=e81]: CH5 전쟁사
+            - listitem [ref=e82]:
+              - link "CH6 과학" [ref=e83] [cursor=pointer]:
+                - /url: /channels/CH6
+                - generic [ref=e85]: CH6 과학
+            - listitem [ref=e86]:
+              - link "CH7 역사" [ref=e87] [cursor=pointer]:
+                - /url: /channels/CH7
+                - generic [ref=e89]: CH7 역사
+      - list [ref=e91]:
+        - listitem [ref=e92]:
+          - link "설정" [ref=e93] [cursor=pointer]:
+            - /url: /settings
+            - img [ref=e94]
+            - generic [ref=e97]: 설정
+    - main [ref=e98]:
+      - generic [ref=e99]:
+        - button "Toggle Sidebar" [ref=e100]:
+          - img
+          - generic [ref=e101]: Toggle Sidebar
+        - separator [ref=e102]
+        - generic [ref=e103]:
+          - generic [ref=e104]:
+            - generic [ref=e105]: KAS Studio
+            - generic [ref=e106]: LIVE
+          - button [ref=e107]
+      - main [ref=e108]:
+        - generic [ref=e109]:
+          - generic [ref=e110]:
+            - heading "수익 추적" [level=1] [ref=e111]
+            - paragraph [ref=e112]: "월 목표: 채널당 200만원 / 전체 1,400만원"
+          - generic [ref=e113]:
+            - generic [ref=e114]:
+              - generic [ref=e115]:
+                - generic [ref=e116]: 총 순이익
+                - img [ref=e117]
+              - generic [ref=e119]:
+                - generic [ref=e120]: ₩0
+                - generic [ref=e121]:
+                  - progressbar [ref=e122]: x
+                  - paragraph [ref=e124]: 0.0% / 목표 ₩14,000,000
+            - generic [ref=e125]:
+              - generic [ref=e126]:
+                - generic [ref=e127]: 목표 달성 채널
+                - img [ref=e128]
+              - generic [ref=e131]:
+                - generic [ref=e132]: 0 / 7
+                - paragraph [ref=e133]: 이번달 목표 달성 채널 수
+            - generic [ref=e134]:
+              - generic [ref=e135]:
+                - generic [ref=e136]: 이번달
+                - generic [ref=e137]: 2026-04
+              - generic [ref=e138]:
+                - generic [ref=e139]: 0%
+                - paragraph [ref=e140]: 전체 달성률
+          - generic [ref=e142]:
+            - generic [ref=e143]: 채널별 수익 구성
+            - generic [ref=e144]: AdSense + 제휴마케팅 수익 분포
+          - generic [ref=e149]:
+            - generic [ref=e151]: 채널별 목표 달성률
+            - generic [ref=e152]:
+              - generic [ref=e153]:
+                - generic [ref=e154]: CH1
+                - progressbar [ref=e155]: x
+                - generic [ref=e157]: ₩0
+                - img [ref=e158]
+              - generic [ref=e162]:
+                - generic [ref=e163]: CH2
+                - progressbar [ref=e164]: x
+                - generic [ref=e166]: ₩0
+                - img [ref=e167]
+              - generic [ref=e171]:
+                - generic [ref=e172]: CH3
+                - progressbar [ref=e173]: x
+                - generic [ref=e175]: ₩0
+                - img [ref=e176]
+              - generic [ref=e180]:
+                - generic [ref=e181]: CH4
+                - progressbar [ref=e182]: x
+                - generic [ref=e184]: ₩0
+                - img [ref=e185]
+              - generic [ref=e189]:
+                - generic [ref=e190]: CH5
+                - progressbar [ref=e191]: x
+                - generic [ref=e193]: ₩0
+                - img [ref=e194]
+              - generic [ref=e198]:
+                - generic [ref=e199]: CH6
+                - progressbar [ref=e200]: x
+                - generic [ref=e202]: ₩0
+                - img [ref=e203]
+              - generic [ref=e207]:
+                - generic [ref=e208]: CH7
+                - progressbar [ref=e209]: x
+                - generic [ref=e211]: ₩0
+                - img [ref=e212]
+  - button "Open Next.js Dev Tools" [ref=e221] [cursor=pointer]:
+    - img [ref=e222]

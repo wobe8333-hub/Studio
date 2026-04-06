@@ -1,0 +1,169 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e5]:
+      - generic [ref=e7]:
+        - img [ref=e9]
+        - generic [ref=e11]:
+          - text: KAS Studio
+          - paragraph [ref=e12]: AI 자동화 파이프라인
+      - generic [ref=e13]:
+        - generic [ref=e14]:
+          - generic [ref=e15]: 대시보드
+          - list [ref=e17]:
+            - listitem [ref=e18]:
+              - link "전체 KPI" [ref=e19] [cursor=pointer]:
+                - /url: /
+                - img [ref=e20]
+                - generic [ref=e25]: 전체 KPI
+            - listitem [ref=e26]:
+              - link "트렌드 관리" [ref=e27] [cursor=pointer]:
+                - /url: /trends
+                - img [ref=e28]
+                - generic [ref=e31]: 트렌드 관리
+            - listitem [ref=e32]:
+              - link "수익 추적" [ref=e33] [cursor=pointer]:
+                - /url: /revenue
+                - img [ref=e34]
+                - generic [ref=e36]: 수익 추적
+            - listitem [ref=e37]:
+              - link "리스크 모니터링" [ref=e38] [cursor=pointer]:
+                - /url: /risk
+                - img [ref=e39]
+                - generic [ref=e41]: 리스크 모니터링
+            - listitem [ref=e42]:
+              - link "학습 피드백" [ref=e43] [cursor=pointer]:
+                - /url: /learning
+                - img [ref=e44]
+                - generic [ref=e52]: 학습 피드백
+            - listitem [ref=e53]:
+              - link "QA 검수" [ref=e54] [cursor=pointer]:
+                - /url: /qa
+                - img [ref=e55]
+                - generic [ref=e59]: QA 검수
+            - listitem [ref=e60]:
+              - link "비용/쿼터" [ref=e61] [cursor=pointer]:
+                - /url: /cost
+                - img [ref=e62]
+                - generic [ref=e64]: 비용/쿼터
+        - generic [ref=e65]:
+          - generic [ref=e66]: 채널별 상세
+          - list [ref=e68]:
+            - listitem [ref=e69]:
+              - link "CH1 경제" [ref=e70] [cursor=pointer]:
+                - /url: /channels/CH1
+                - generic [ref=e72]: CH1 경제
+            - listitem [ref=e73]:
+              - link "CH2 부동산" [ref=e74] [cursor=pointer]:
+                - /url: /channels/CH2
+                - generic [ref=e76]: CH2 부동산
+            - listitem [ref=e77]:
+              - link "CH3 심리" [ref=e78] [cursor=pointer]:
+                - /url: /channels/CH3
+                - generic [ref=e80]: CH3 심리
+            - listitem [ref=e81]:
+              - link "CH4 미스터리" [ref=e82] [cursor=pointer]:
+                - /url: /channels/CH4
+                - generic [ref=e84]: CH4 미스터리
+            - listitem [ref=e85]:
+              - link "CH5 전쟁사" [ref=e86] [cursor=pointer]:
+                - /url: /channels/CH5
+                - generic [ref=e88]: CH5 전쟁사
+            - listitem [ref=e89]:
+              - link "CH6 과학" [ref=e90] [cursor=pointer]:
+                - /url: /channels/CH6
+                - generic [ref=e92]: CH6 과학
+            - listitem [ref=e93]:
+              - link "CH7 역사" [ref=e94] [cursor=pointer]:
+                - /url: /channels/CH7
+                - generic [ref=e96]: CH7 역사
+      - list [ref=e98]:
+        - listitem [ref=e99]:
+          - link "설정" [ref=e100] [cursor=pointer]:
+            - /url: /settings
+            - img [ref=e101]
+            - generic [ref=e104]: 설정
+    - main [ref=e105]:
+      - generic [ref=e107]:
+        - button "Toggle Sidebar" [ref=e108]:
+          - img
+          - generic [ref=e109]: Toggle Sidebar
+        - separator [ref=e110]
+        - generic [ref=e111]:
+          - generic [ref=e112]:
+            - generic [ref=e113]: KAS Studio
+            - generic [ref=e114]: LIVE
+          - button [ref=e115]
+      - main [ref=e116]:
+        - generic [ref=e117]:
+          - generic [ref=e118]:
+            - generic [ref=e119]:
+              - generic [ref=e120]:
+                - img [ref=e121]
+                - heading "CH1 — 경제" [level=1] [ref=e124]
+              - paragraph [ref=e125]: 채널 상세 현황 및 KPI 이력
+            - generic [ref=e126]: 활성
+          - generic [ref=e127]:
+            - generic [ref=e128]:
+              - generic [ref=e129]:
+                - generic [ref=e130]: 월 수익 달성률
+                - img [ref=e131]
+              - generic [ref=e133]:
+                - generic [ref=e134]:
+                  - generic [ref=e135]: ₩0
+                  - generic [ref=e136]: / ₩2.0M
+                - progressbar [ref=e137]: x
+                - paragraph [ref=e139]: 0% 달성
+            - generic [ref=e140]:
+              - generic [ref=e141]:
+                - generic [ref=e142]: 평균 CTR
+                - img [ref=e143]
+              - generic [ref=e149]:
+                - generic [ref=e150]: —
+                - paragraph [ref=e151]: "목표: 4% 이상"
+            - generic [ref=e152]:
+              - generic [ref=e153]:
+                - generic [ref=e154]: 평균 시청률
+                - img [ref=e155]
+              - generic [ref=e158]:
+                - generic [ref=e159]: —
+                - paragraph [ref=e160]: AVP (시청 완료율)
+          - generic [ref=e161]:
+            - generic [ref=e162]:
+              - generic [ref=e164]: 알고리즘 단계
+              - generic [ref=e166]:
+                - img [ref=e167]
+                - generic [ref=e169]: PRE-ENTRY
+            - generic [ref=e170]:
+              - generic [ref=e172]: 구독자
+              - generic [ref=e174]:
+                - img [ref=e175]
+                - generic [ref=e180]: —
+            - generic [ref=e181]:
+              - generic [ref=e183]: 업로드 영상
+              - generic [ref=e185]:
+                - img [ref=e186]
+                - generic [ref=e189]: "0"
+            - generic [ref=e190]:
+              - generic [ref=e192]: 런치 단계
+              - generic [ref=e194]: Phase 1
+          - generic [ref=e196]:
+            - generic [ref=e197]: KPI 히스토리
+            - generic [ref=e198]: 일별 CTR · AVP 추이 (업로드 후 48h 수집)
+          - generic [ref=e203]:
+            - generic [ref=e205]: 파이프라인 실행 이력
+            - paragraph [ref=e207]: 실행 이력이 없습니다.
+          - generic [ref=e208]:
+            - generic [ref=e209]:
+              - generic [ref=e210]:
+                - img [ref=e211]
+                - text: 파이프라인 실행
+              - generic [ref=e213]: 월간 파이프라인을 백그라운드로 시작합니다. 완료까지 수분~수시간 소요될 수 있습니다.
+            - generic [ref=e215]:
+              - generic [ref=e216]:
+                - generic [ref=e217]: 월 번호
+                - spinbutton "월 번호" [ref=e218]: "1"
+              - button "실행" [ref=e219]:
+                - img
+                - text: 실행
+  - button "Open Next.js Dev Tools" [ref=e225] [cursor=pointer]:
+    - img [ref=e226]

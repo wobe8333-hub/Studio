@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>구현 접근 방식</title>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Mplus+Rounded+1c:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --c-dark:#900000;--c-red:#ee2400;--c-salmon:#ffb09c;
+    --c-blush:#fbd9d3;--c-cream:#ffefea;
+    --t-primary:#1a0505;--t-secondary:#5c1a1a;--t-muted:#9b6060;--t-accent:#900000;
+    --glass-bg:rgba(255,255,255,0.58);--glass-border:rgba(238,36,0,0.13);
+    --font-h:'Libre Baskerville',Georgia,serif;
+    --font-b:'Mplus Rounded 1c',-apple-system,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family:var(--font-b);
+    background:linear-gradient(135deg,#fbd9d3 0%,#ffefea 55%,#ffd9cc 100%);
+    min-height:100vh;padding:28px 24px;color:var(--t-primary);
+  }
+  body::before{content:'';position:fixed;inset:0;pointer-events:none;
+    background:radial-gradient(ellipse 55% 45% at 10% 10%,rgba(238,36,0,0.07),transparent 70%);}
+
+  h1{font-family:var(--font-h);font-size:20px;font-weight:700;margin-bottom:4px;color:var(--t-primary);}
+  .subtitle{font-size:12px;color:var(--t-muted);margin-bottom:24px;font-family:var(--font-b);}
+
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+
+  .card{
+    background:var(--glass-bg);
+    backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+    border:2px solid var(--glass-border);border-radius:18px;
+    overflow:hidden;cursor:pointer;
+    transition:all 0.2s ease;position:relative;
+  }
+  .card:hover{transform:translateY(-3px);box-shadow:0 14px 40px rgba(144,0,0,0.12);}
+  .card.selected{border-color:var(--c-red);box-shadow:0 0 0 4px rgba(238,36,0,0.15);}
+
+  .card-top{
+    padding:20px 20px 16px;
+    border-bottom:1px solid rgba(238,36,0,0.08);
+  }
+  .badge{
+    display:inline-block;font-size:10px;font-weight:700;letter-spacing:.8px;
+    padding:3px 10px;border-radius:20px;margin-bottom:12px;
+    font-family:var(--font-b);
+  }
+  .badge-a{background:rgba(238,36,0,0.12);color:var(--c-red);}
+  .badge-b{background:rgba(22,163,74,0.12);color:#15803d;}
+  .badge-rec{background:var(--c-red);color:#fff;}
+
+  .card-title{
+    font-family:var(--font-h);font-size:16px;font-weight:700;
+    color:var(--t-primary);margin-bottom:6px;line-height:1.3;
+  }
+  .card-desc{font-size:12px;color:var(--t-secondary);line-height:1.7;margin-bottom:14px;}
+
+  /* 다이어그램 */
+  .diagram{
+    background:rgba(255,255,255,0.4);
+    border:1px solid rgba(238,36,0,0.1);
+    border-radius:10px;padding:12px;
+    font-size:10px;font-family:var(--font-b);
+  }
+  .flow{display:flex;flex-direction:column;gap:4px;}
+  .flow-step{
+    display:flex;align-items:center;gap:8px;
+    padding:5px 8px;border-radius:7px;
+  }
+  .fs-new{background:rgba(238,36,0,0.1);}
+  .fs-exist{background:rgba(0,0,0,0.04);}
+  .fs-icon{font-size:12px;width:20px;text-align:center;flex-shrink:0;}
+  .fs-text{color:var(--t-secondary);flex:1;}
+  .fs-tag{
+    font-size:9px;font-weight:700;padding:1px 6px;border-radius:8px;
+  }
+  .tag-new{background:rgba(238,36,0,0.15);color:var(--c-red);}
+  .tag-exist{background:rgba(0,0,0,0.07);color:#666;}
+  .flow-arrow{text-align:center;color:var(--c-salmon);font-size:11px;}
+
+  .card-bottom{padding:14px 18px;}
+  .pros-cons{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;}
+  .pros,.cons{font-size:11px;line-height:1.6;}
+  .pros-title{font-weight:700;color:#15803d;margin-bottom:3px;font-size:10px;}
+  .cons-title{font-weight:700;color:var(--c-red);margin-bottom:3px;font-size:10px;}
+  .pros li,.cons li{color:var(--t-secondary);margin-left:12px;}
+
+  .effort{
+    display:flex;align-items:center;gap:8px;
+    font-size:11px;color:var(--t-muted);padding-top:10px;
+    border-top:1px solid rgba(238,36,0,0.07);
+  }
+  .effort-label{font-weight:700;font-size:10px;}
+  .dots{display:flex;gap:3px;}
+  .dot{width:7px;height:7px;border-radius:50%;}
+  .dot-on{background:var(--c-red);}
+  .dot-off{background:rgba(238,36,0,0.15);}
+
+  .hint{text-align:center;margin-top:20px;font-size:11px;color:var(--t-muted);font-family:var(--font-b);}
+</style>
+</head>
+<body>
+
+<h1>구현 접근 방식 선택</h1>
+<p class="subtitle">대시보드 재설계 + 테스트 검증 기능을 어떤 구조로 만들까요?</p>
+
+<div class="grid">
+
+  <!-- A: 전용 Test Studio 페이지 -->
+  <div class="card" onclick="pick(this,'A')">
+    <div class="card-top">
+      <div class="badge badge-a">방식 A</div>
+      <div class="card-title">전용 "Test Studio" 페이지 신설</div>
+      <div class="card-desc">기존 페이지는 그대로 두고, <strong>/test-studio</strong> 전용 페이지 하나에 트리거 → 실시간 관찰 → 결과 검수를 모두 담는다.</div>
+      <div class="diagram">
+        <div class="flow">
+          <div class="flow-step fs-new"><div class="fs-icon">🆕</div><div class="fs-text">/test-studio (신규)</div><div class="fs-tag tag-new">NEW</div></div>
+          <div class="flow-arrow">↳ 탭 구조</div>
+          <div class="flow-step fs-new"><div class="fs-icon">▶</div><div class="fs-text">① 트리거 패널</div><div class="fs-tag tag-new">NEW</div></div>
+          <div class="flow-step fs-new"><div class="fs-icon">📡</div><div class="fs-text">② 실시간 Step 뷰</div><div class="fs-tag tag-new">NEW</div></div>
+          <div class="flow-step fs-new"><div class="fs-icon">🔍</div><div class="fs-text">③ 결과물 검수</div><div class="fs-tag tag-new">NEW</div></div>
+          <div class="flow-step fs-exist"><div class="fs-icon">📊</div><div class="fs-text">기존 페이지 유지</div><div class="fs-tag tag-exist">유지</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="card-bottom">
+      <div class="pros-cons">
+        <div class="pros">
+          <div class="pros-title">✓ 장점</div>
+          <ul>
+            <li>기존 코드 영향 없음</li>
+            <li>검증 전용 UX</li>
+            <li>빠른 개발 가능</li>
+          </ul>
+        </div>
+        <div class="cons">
+          <div class="cons-title">✗ 단점</div>
+          <ul>
+            <li>기존 대시보드는 구식 유지</li>
+            <li>중복 UI 존재</li>
+            <li>일관성 깨짐</li>
+          </ul>
+        </div>
+      </div>
+      <div class="effort">
+        <span class="effort-label">개발 공수</span>
+        <div class="dots">
+          <div class="dot dot-on"></div><div class="dot dot-on"></div>
+          <div class="dot dot-off"></div><div class="dot dot-off"></div><div class="dot dot-off"></div>
+        </div>
+        <span>낮음 (2/5)</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- B: 기존 페이지 강화 -->
+  <div class="card" onclick="pick(this,'B')">
+    <div class="card-top">
+      <div class="badge badge-a">방식 B</div>
+      <div class="card-title">기존 Monitor + Run 페이지 강화</div>
+      <div class="card-desc">기존 <strong>/monitor</strong>에 Step 진행 시각화 추가, <strong>/runs</strong>에 결과 검수 강화 — 새 페이지 없이 기존 구조 개선.</div>
+      <div class="diagram">
+        <div class="flow">
+          <div class="flow-step fs-exist"><div class="fs-icon">📊</div><div class="fs-text">/monitor (기존)</div><div class="fs-tag tag-exist">강화</div></div>
+          <div class="flow-arrow">+ 추가</div>
+          <div class="flow-step fs-new"><div class="fs-icon">📡</div><div class="fs-text">Step 진행 시각화</div><div class="fs-tag tag-new">NEW</div></div>
+          <div class="flow-step fs-new"><div class="fs-icon">🖼</div><div class="fs-text">이미지 실시간 미리보기</div><div class="fs-tag tag-new">NEW</div></div>
+          <div class="flow-step fs-exist"><div class="fs-icon">📁</div><div class="fs-text">/runs/[id] (기존)</div><div class="fs-tag tag-exist">강화</div></div>
+          <div class="flow-step fs-new"><div class="fs-icon">🔍</div><div class="fs-text">종합 검수 UI 추가</div><div class="fs-tag tag-new">NEW</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="card-bottom">
+      <div class="pros-cons">
+        <div class="pros">
+          <div class="pros-title">✓ 장점</div>
+          <ul>
+            <li>기존 구조 활용</li>
+            <li>URL 일관성 유지</li>
+            <li>점진적 개선</li>
+          </ul>
+        </div>
+        <div class="cons">
+          <div class="cons-title">✗ 단점</div>
+          <ul>
+            <li>기존 스타일 그대로</li>
+            <li>대시보드 전면 개편 불가</li>
+            <li>디자인 통일 어려움</li>
+          </ul>
+        </div>
+      </div>
+      <div class="effort">
+        <span class="effort-label">개발 공수</span>
+        <div class="dots">
+          <div class="dot dot-on"></div><div class="dot dot-on"></div><div class="dot dot-on"></div>
+          <div class="dot dot-off"></div><div class="dot dot-off"></div>
+        </div>
+        <span>중간 (3/5)</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- C: 전면 재설계 (추천) -->
+  <div class="card" onclick="pick(this,'C')">
+    <div class="card-top">
+      <div class="badge badge-rec">✦ 추천 — 방식 C</div>
+      <div class="card-title">전체 대시보드 Red Light 재설계 + 검증 기능 통합</div>
+      <div class="card-desc">모든 페이지를 Red Light Glassmorphism + K 폰트로 재설계하면서, 각 페이지에 검증 기능을 자연스럽게 통합한다.</div>
+      <div class="diagram">
+        <div class="flow">
+          <div class="flow-step fs-new"><div class="fs-icon">🎨</div><div class="fs-text">전체 스타일 재설계</div><div class="fs-tag tag-new">전면 적용</div></div>
+          <div class="flow-arrow">↓ 페이지별</div>
+          <div class="flow-step fs-new"><div class="fs-icon">📡</div><div class="fs-text">/monitor → 실시간 Step 뷰</div><div class="fs-tag tag-new">강화</div></div>
+          <div class="flow-step fs-new"><div class="fs-icon">📚</div><div class="fs-text">/knowledge → 수집 내역 뷰어</div><div class="fs-tag tag-new">강화</div></div>
+          <div class="flow-step fs-new"><div class="fs-icon">🔍</div><div class="fs-text">/runs → 종합 검수 허브</div><div class="fs-tag tag-new">강화</div></div>
+          <div class="flow-step fs-new"><div class="fs-icon">🏠</div><div class="fs-text">홈 → 채널별 수익 대시보드</div><div class="fs-tag tag-new">강화</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="card-bottom">
+      <div class="pros-cons">
+        <div class="pros">
+          <div class="pros-title">✓ 장점</div>
+          <ul>
+            <li>디자인 완전 통일</li>
+            <li>모든 검증 항목 커버</li>
+            <li>실제 운영에도 사용 가능</li>
+            <li>확장성 최고</li>
+          </ul>
+        </div>
+        <div class="cons">
+          <div class="cons-title">✗ 단점</div>
+          <ul>
+            <li>개발 공수 가장 큼</li>
+            <li>기존 코드 대규모 수정</li>
+          </ul>
+        </div>
+      </div>
+      <div class="effort">
+        <span class="effort-label">개발 공수</span>
+        <div class="dots">
+          <div class="dot dot-on"></div><div class="dot dot-on"></div><div class="dot dot-on"></div>
+          <div class="dot dot-on"></div><div class="dot dot-on"></div>
+        </div>
+        <span>높음 (5/5) — 그러나 가치도 최고</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<p class="hint">A / B / C 중 선택하거나 클릭해주세요 · 폰트: Libre Baskerville + M PLUS Rounded 1c 적용됨</p>
+
+<script>
+function pick(el, c) {
+  document.querySelectorAll('.card').forEach(x=>x.classList.remove('selected'));
+  el.classList.add('selected');
+  if(window.__sp_select) window.__sp_select(c, el.querySelector('.card-title').textContent);
+}
+</script>
+</body>
+</html>

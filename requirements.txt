@@ -20,37 +20,37 @@ schedule>=1.2.0
 psutil>=5.9.0
 filelock>=3.13.0
 
-# ─── Phase 1: 로깅 / 캐시 / 모니터링 ────────────────────────────
+# ─── 로깅 / 캐시 / 모니터링 ──────────────────────────────────────
 loguru>=0.7.0
 sentry-sdk>=2.0.0
 diskcache>=5.6.0
 
-# ─── Phase 3: 트렌드 수집 ────────────────────────────────────────
+# ─── 트렌드 / 지식 수집 ──────────────────────────────────────────
 praw>=7.7.0
 pytrends>=4.9.0
 tavily-python>=0.3.0
 feedparser>=6.0.0
 beautifulsoup4>=4.12.0
-
-# ─── Phase 4: 지식 수집 ──────────────────────────────────────────
 httpx>=0.27.0
 
-# ─── Phase 5: SD XL + LoRA 애니메이션 (GPU 선택) ─────────────────
-# GPU 있을 때: pip install torch diffusers transformers accelerate safetensors controlnet-aux
+# ─── Supabase DB 동기화 ──────────────────────────────────────────
+supabase>=2.0.0
+
+# ─── 이미지 처리 ─────────────────────────────────────────────────
 Pillow>=10.0.0
+
+# ─── GPU 선택 패키지 (SD XL + LoRA) ─────────────────────────────
+# GPU 환경에서만 설치: pip install torch diffusers transformers accelerate safetensors
+# CI/CD 및 CPU-only 환경에서는 아래 줄 주석 처리
 diffusers>=0.30.0
 transformers>=4.40.0
 accelerate>=0.30.0
 safetensors>=0.4.0
 
-# ─── Phase 6: 음성/자막 ──────────────────────────────────────────
+# ─── 음성 / 자막 ─────────────────────────────────────────────────
 elevenlabs>=1.0.0
 faster-whisper>=1.0.0
 
-# ─── Phase 9: 대시보드 ────────────────────────────────────────────
-streamlit>=1.35.0
-plotly>=5.22.0
-
-# ─── Phase 10: 테스트 ────────────────────────────────────────────
+# ─── 테스트 ──────────────────────────────────────────────────────
 pytest>=8.0.0
 pytest-mock>=3.12.0

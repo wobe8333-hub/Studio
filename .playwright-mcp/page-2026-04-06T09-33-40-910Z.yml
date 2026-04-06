@@ -1,0 +1,159 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e5]:
+      - generic [ref=e7]:
+        - img [ref=e9]
+        - generic [ref=e11]:
+          - text: KAS Studio
+          - paragraph [ref=e12]: AI 자동화 파이프라인
+      - generic [ref=e13]:
+        - generic [ref=e14]:
+          - generic [ref=e15]: 대시보드
+          - list [ref=e17]:
+            - listitem [ref=e18]:
+              - link "전체 KPI" [ref=e19] [cursor=pointer]:
+                - /url: /
+                - img [ref=e20]
+                - generic [ref=e25]: 전체 KPI
+            - listitem [ref=e26]:
+              - link "트렌드 관리" [ref=e27] [cursor=pointer]:
+                - /url: /trends
+                - img [ref=e28]
+                - generic [ref=e31]: 트렌드 관리
+            - listitem [ref=e32]:
+              - link "수익 추적" [ref=e33] [cursor=pointer]:
+                - /url: /revenue
+                - img [ref=e34]
+                - generic [ref=e36]: 수익 추적
+            - listitem [ref=e37]:
+              - link "리스크 모니터링" [ref=e38] [cursor=pointer]:
+                - /url: /risk
+                - img [ref=e39]
+                - generic [ref=e41]: 리스크 모니터링
+            - listitem [ref=e42]:
+              - link "학습 피드백" [ref=e43] [cursor=pointer]:
+                - /url: /learning
+                - img [ref=e44]
+                - generic [ref=e52]: 학습 피드백
+            - listitem [ref=e53]:
+              - link "비용/쿼터" [ref=e54] [cursor=pointer]:
+                - /url: /cost
+                - img [ref=e55]
+                - generic [ref=e57]: 비용/쿼터
+        - generic [ref=e58]:
+          - generic [ref=e59]: 채널별 상세
+          - list [ref=e61]:
+            - listitem [ref=e62]:
+              - link "CH1 경제" [ref=e63] [cursor=pointer]:
+                - /url: /channels/CH1
+                - generic [ref=e65]: CH1 경제
+            - listitem [ref=e66]:
+              - link "CH2 부동산" [ref=e67] [cursor=pointer]:
+                - /url: /channels/CH2
+                - generic [ref=e69]: CH2 부동산
+            - listitem [ref=e70]:
+              - link "CH3 심리" [ref=e71] [cursor=pointer]:
+                - /url: /channels/CH3
+                - generic [ref=e73]: CH3 심리
+            - listitem [ref=e74]:
+              - link "CH4 미스터리" [ref=e75] [cursor=pointer]:
+                - /url: /channels/CH4
+                - generic [ref=e77]: CH4 미스터리
+            - listitem [ref=e78]:
+              - link "CH5 전쟁사" [ref=e79] [cursor=pointer]:
+                - /url: /channels/CH5
+                - generic [ref=e81]: CH5 전쟁사
+            - listitem [ref=e82]:
+              - link "CH6 과학" [ref=e83] [cursor=pointer]:
+                - /url: /channels/CH6
+                - generic [ref=e85]: CH6 과학
+            - listitem [ref=e86]:
+              - link "CH7 역사" [ref=e87] [cursor=pointer]:
+                - /url: /channels/CH7
+                - generic [ref=e89]: CH7 역사
+      - list [ref=e91]:
+        - listitem [ref=e92]:
+          - link "설정" [ref=e93] [cursor=pointer]:
+            - /url: /settings
+            - img [ref=e94]
+            - generic [ref=e97]: 설정
+    - main [ref=e98]:
+      - generic [ref=e100]:
+        - button "Toggle Sidebar" [ref=e101]:
+          - img
+          - generic [ref=e102]: Toggle Sidebar
+        - separator [ref=e103]
+        - generic [ref=e104]:
+          - generic [ref=e105]:
+            - generic [ref=e106]: KAS Studio
+            - generic [ref=e107]: LIVE
+          - button [ref=e108]
+      - main [ref=e109]:
+        - generic [ref=e110]:
+          - generic [ref=e111]:
+            - heading "비용 / 쿼터 추적" [level=1] [ref=e112]
+            - paragraph [ref=e113]: Gemini & YouTube API 일간 사용량 및 비용
+          - generic [ref=e114]:
+            - generic [ref=e115]:
+              - generic [ref=e116]:
+                - generic [ref=e117]: 오늘 총 비용
+                - img [ref=e118]
+              - generic [ref=e120]:
+                - generic [ref=e121]: ₩0
+                - paragraph [ref=e122]: 2026-04-06 기준
+            - generic [ref=e123]:
+              - generic [ref=e124]:
+                - generic [ref=e125]: Gemini 이미지
+                - img [ref=e126]
+              - generic [ref=e128]:
+                - generic [ref=e129]: 0 / 500
+                - paragraph [ref=e131]: 0.0% 사용 · 캐시 히트율 0%
+            - generic [ref=e132]:
+              - generic [ref=e133]:
+                - generic [ref=e134]: YouTube API
+                - img [ref=e135]
+              - generic [ref=e138]:
+                - generic [ref=e139]: "0"
+                - paragraph [ref=e140]: / 10,000 단위
+          - generic [ref=e143]:
+            - generic [ref=e144]: 주간 API 요청 추이
+            - generic [ref=e145]: Gemini + YouTube API 일별 요청 수
+          - generic [ref=e150]:
+            - generic [ref=e151]:
+              - generic [ref=e153]:
+                - img [ref=e154]
+                - generic [ref=e156]: Gemini API 상세
+                - generic [ref=e157]: 일 500장
+              - generic [ref=e158]:
+                - generic [ref=e159]:
+                  - generic [ref=e160]: 총 요청
+                  - generic [ref=e161]: 0건
+                - generic [ref=e162]:
+                  - generic [ref=e163]: 이미지 생성
+                  - generic [ref=e164]: 0장
+                - generic [ref=e165]:
+                  - generic [ref=e166]: 캐시 히트율
+                  - generic [ref=e167]: 0.0%
+                - generic [ref=e168]:
+                  - generic [ref=e169]: 오늘 비용
+                  - generic [ref=e170]: ₩0
+            - generic [ref=e171]:
+              - generic [ref=e173]:
+                - img [ref=e174]
+                - generic [ref=e177]: YouTube API 상세
+                - generic [ref=e178]: 일 10,000단위
+              - generic [ref=e179]:
+                - generic [ref=e180]:
+                  - generic [ref=e181]: 사용 쿼터
+                  - generic [ref=e182]: 0단위
+                - generic [ref=e183]:
+                  - generic [ref=e184]: 잔여 쿼터
+                  - generic [ref=e185]: 10,000단위
+                - generic [ref=e186]:
+                  - generic [ref=e187]: 업로드 가능
+                  - generic [ref=e188]: 5건
+                - generic [ref=e189]:
+                  - generic [ref=e190]: 오늘 비용
+                  - generic [ref=e191]: ₩0
+  - button "Open Next.js Dev Tools" [ref=e197] [cursor=pointer]:
+    - img [ref=e198]

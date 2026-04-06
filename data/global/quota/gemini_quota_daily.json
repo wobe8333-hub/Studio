@@ -1,16 +1,14 @@
 ﻿{
-  "date": "2026-04-02",
-  "total_requests": 120,
-  "rpm_peak": 18,
-  "rpm_timestamps": [
-    1775173854.1914713
-  ],
-  "images_generated": 10,
+  "date": "2026-04-05",
+  "total_requests": 0,
+  "rpm_peak": 0.0,
+  "rpm_timestamps": [],
+  "images_generated": 0,
   "scoring_calls": 0,
-  "cache_hits": 51,
-  "cache_misses": 9,
-  "cache_hit_rate": 0.85,
+  "cache_hits": 0,
+  "cache_misses": 7,
+  "cache_hit_rate": 0.0,
   "retry_count": 0,
   "sequential_mode_activations": 0,
-  "cost_saved_by_cache_krw": 255.0
+  "cost_saved_by_cache_krw": 0.0
 }

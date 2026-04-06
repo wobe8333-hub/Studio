@@ -1,0 +1,133 @@
+<h2>섹션 1 — 디자인 시스템 (globals.css)</h2>
+<p class="subtitle">새로운 CSS 변수 토큰과 유틸리티 클래스 설계</p>
+
+<div class="section">
+  <h3>배경 레이어 — Before vs After</h3>
+  <div class="split" style="margin-top: 12px; gap: 16px;">
+
+    <div class="mockup" style="background: oklch(0.14 0.01 55); border: 1px solid rgba(255,255,255,0.08);">
+      <div class="mockup-header" style="background: rgba(255,255,255,0.04); font-size: 11px;">BEFORE — 현재 배경</div>
+      <div class="mockup-body" style="padding: 16px; display: flex; flex-direction: column; gap: 8px;">
+        <div style="background: oklch(0.17 0.01 55); border: 1px solid rgba(255,255,255,0.06); border-radius: 8px; height: 50px; display: flex; align-items: center; padding: 0 12px;">
+          <span style="font-size: 11px; color: rgba(255,255,255,0.5);">카드 배경: oklch(0.17) — 단색</span>
+        </div>
+        <div style="background: oklch(0.17 0.01 55); border: 1px solid rgba(255,255,255,0.06); border-radius: 8px; height: 50px;"></div>
+        <div style="background: oklch(0.17 0.01 55); border: 1px solid rgba(255,255,255,0.06); border-radius: 8px; height: 50px;"></div>
+        <div style="font-size: 10px; color: rgba(255,255,255,0.25); text-align: center; margin-top: 4px;">평면적, 깊이감 없음</div>
+      </div>
+    </div>
+
+    <div class="mockup" style="background: linear-gradient(135deg, oklch(0.08 0.015 260) 0%, oklch(0.07 0.01 240) 50%, oklch(0.09 0.02 290) 100%); border: 1px solid rgba(255,255,255,0.08); position: relative; overflow: hidden;">
+      <div style="position: absolute; top: -40px; right: -20px; width: 120px; height: 120px; background: radial-gradient(circle, rgba(245,158,11,0.12) 0%, transparent 70%); border-radius: 50%;"></div>
+      <div style="position: absolute; bottom: -20px; left: 30px; width: 90px; height: 90px; background: radial-gradient(circle, rgba(139,92,246,0.08) 0%, transparent 70%); border-radius: 50%;"></div>
+      <div class="mockup-header" style="background: rgba(255,255,255,0.03); font-size: 11px; position: relative; z-index: 1;">AFTER — 새 배경</div>
+      <div class="mockup-body" style="padding: 16px; display: flex; flex-direction: column; gap: 8px; position: relative; z-index: 1;">
+        <div style="background: rgba(255,255,255,0.05); backdrop-filter: blur(16px) saturate(180%); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; height: 50px; display: flex; align-items: center; padding: 0 12px;">
+          <span style="font-size: 11px; color: rgba(255,255,255,0.6);">카드: rgba(255,255,255,0.05) + blur(16px)</span>
+        </div>
+        <div style="background: rgba(255,255,255,0.04); backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; height: 50px;"></div>
+        <div style="background: rgba(255,255,255,0.03); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.07); border-radius: 8px; height: 50px;"></div>
+        <div style="font-size: 10px; color: rgba(255,255,255,0.35); text-align: center; margin-top: 4px;">레이어 깊이감, 글로우 배경</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="section">
+  <h3>새로운 CSS 변수 토큰</h3>
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px;">
+
+    <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); border-radius: 10px; padding: 12px;">
+      <div style="font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: rgba(255,255,255,0.4); margin-bottom: 10px;">배경 토큰</div>
+      <div style="display: flex; flex-direction: column; gap: 6px;">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <div style="width: 24px; height: 16px; border-radius: 3px; background: oklch(0.08 0.015 260); border: 1px solid rgba(255,255,255,0.1); flex-shrink: 0;"></div>
+          <code style="font-size: 10px; color: rgba(255,255,255,0.6);">--background</code>
+          <span style="font-size: 10px; color: rgba(255,255,255,0.3); margin-left: auto;">딥 블루-블랙</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <div style="width: 24px; height: 16px; border-radius: 3px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); flex-shrink: 0;"></div>
+          <code style="font-size: 10px; color: rgba(255,255,255,0.6);">--glass-bg</code>
+          <span style="font-size: 10px; color: rgba(255,255,255,0.3); margin-left: auto;">카드 글래스</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <div style="width: 24px; height: 16px; border-radius: 3px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.15); flex-shrink: 0;"></div>
+          <code style="font-size: 10px; color: rgba(255,255,255,0.6);">--glass-border</code>
+          <span style="font-size: 10px; color: rgba(255,255,255,0.3); margin-left: auto;">테두리</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <div style="width: 24px; height: 16px; border-radius: 3px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); flex-shrink: 0;"></div>
+          <code style="font-size: 10px; color: rgba(255,255,255,0.6);">--glass-hover</code>
+          <span style="font-size: 10px; color: rgba(255,255,255,0.3); margin-left: auto;">호버 상태</span>
+        </div>
+      </div>
+    </div>
+
+    <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); border-radius: 10px; padding: 12px;">
+      <div style="font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: rgba(255,255,255,0.4); margin-bottom: 10px;">글로우 토큰</div>
+      <div style="display: flex; flex-direction: column; gap: 6px;">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <div style="width: 24px; height: 16px; border-radius: 3px; background: rgba(245,158,11,0.25); border: 1px solid rgba(245,158,11,0.4); flex-shrink: 0;"></div>
+          <code style="font-size: 10px; color: rgba(255,255,255,0.6);">--glow-primary</code>
+          <span style="font-size: 10px; color: rgba(255,255,255,0.3); margin-left: auto;">앰버 글로우</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <div style="width: 24px; height: 16px; border-radius: 3px; background: rgba(34,197,94,0.2); border: 1px solid rgba(34,197,94,0.4); flex-shrink: 0;"></div>
+          <code style="font-size: 10px; color: rgba(255,255,255,0.6);">--glow-success</code>
+          <span style="font-size: 10px; color: rgba(255,255,255,0.3); margin-left: auto;">성공 글로우</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <div style="width: 24px; height: 16px; border-radius: 3px; background: rgba(239,68,68,0.2); border: 1px solid rgba(239,68,68,0.4); flex-shrink: 0;"></div>
+          <code style="font-size: 10px; color: rgba(255,255,255,0.6);">--glow-danger</code>
+          <span style="font-size: 10px; color: rgba(255,255,255,0.3); margin-left: auto;">위험 글로우</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <div style="width: 24px; height: 16px; border-radius: 3px; background: linear-gradient(90deg, rgba(245,158,11,0.5), rgba(139,92,246,0.5)); flex-shrink: 0;"></div>
+          <code style="font-size: 10px; color: rgba(255,255,255,0.6);">--gradient-bar</code>
+          <span style="font-size: 10px; color: rgba(255,255,255,0.3); margin-left: auto;">헤더 바</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>헤더 그라데이션 바 + 글래스 헤더</h3>
+  <div style="background: linear-gradient(135deg, oklch(0.08 0.015 260), oklch(0.07 0.01 240)); border: 1px solid rgba(255,255,255,0.07); border-radius: 10px; overflow: hidden; margin-top: 10px;">
+    <!-- 1px 그라데이션 바 -->
+    <div style="height: 2px; background: linear-gradient(90deg, #f59e0b 0%, #ef4444 25%, #8b5cf6 60%, #06b6d4 100%);"></div>
+    <!-- 헤더 -->
+    <div style="display: flex; align-items: center; gap: 10px; padding: 10px 16px; background: rgba(255,255,255,0.02); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,0.05);">
+      <div style="width: 22px; height: 22px; background: linear-gradient(135deg, #f59e0b, #d97706); border-radius: 5px; flex-shrink: 0;"></div>
+      <span style="font-size: 13px; font-weight: 700; color: rgba(255,255,255,0.95); letter-spacing: -0.01em;">KAS Studio</span>
+      <div style="height: 14px; width: 1px; background: rgba(255,255,255,0.1); margin: 0 2px;"></div>
+      <div style="height: 18px; padding: 0 8px; background: rgba(34,197,94,0.12); border: 1px solid rgba(34,197,94,0.35); border-radius: 20px; display: flex; align-items: center; gap: 4px;">
+        <div style="width: 5px; height: 5px; background: #4ade80; border-radius: 50%; box-shadow: 0 0 4px rgba(74,222,128,0.8);"></div>
+        <span style="font-size: 10px; color: #4ade80; font-weight: 600;">LIVE</span>
+      </div>
+      <div style="flex: 1;"></div>
+      <div style="height: 24px; padding: 0 10px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.09); border-radius: 6px; display: flex; align-items: center;">
+        <span style="font-size: 10px; color: rgba(255,255,255,0.5);">파이프라인 0개 실행중</span>
+      </div>
+      <div style="width: 26px; height: 26px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.09); border-radius: 6px;"></div>
+    </div>
+    <div style="padding: 10px 16px;">
+      <span style="font-size: 10px; color: rgba(255,255,255,0.25);">↑ 헤더: 상단 2px 멀티 그라데이션 바 + glass blur 처리</span>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>새 유틸리티 클래스</h3>
+  <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px;">
+    <div style="padding: 6px 10px; background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.25); border-radius: 6px; font-size: 11px;"><code>.glass-card</code> — 기본 글래스</div>
+    <div style="padding: 6px 10px; background: rgba(99,102,241,0.1); border: 1px solid rgba(99,102,241,0.25); border-radius: 6px; font-size: 11px;"><code>.glass-card-hover</code> — 호버 강화</div>
+    <div style="padding: 6px 10px; background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.25); border-radius: 6px; font-size: 11px;"><code>.glow-amber</code> — 앰버 글로우</div>
+    <div style="padding: 6px 10px; background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.25); border-radius: 6px; font-size: 11px;"><code>.glow-danger</code> — 위험 글로우</div>
+    <div style="padding: 6px 10px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; font-size: 11px;"><code>.channel-bar-left</code> — 채널 좌측 바</div>
+    <div style="padding: 6px 10px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; font-size: 11px;"><code>.ambient-bg</code> — 앰비언트 글로우 배경</div>
+  </div>
+</div>
+
+<p class="subtitle" style="text-align: center; margin-top: 12px;">섹션 1 디자인 시스템 — 이 방향으로 맞나요? 터미널에서 확인해주세요.</p>

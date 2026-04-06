@@ -1,0 +1,176 @@
+<h2>섹션 3 — 페이지별 변경 포인트</h2>
+<p class="subtitle">6개 운영 페이지 핵심 UI 요소 글래스 적용 스펙</p>
+
+<!-- 트렌드 -->
+<div class="section">
+  <h3>트렌드 관리 — 주제 카드 + 승인/거부 버튼</h3>
+  <div style="background: linear-gradient(135deg, oklch(0.08 0.015 260), oklch(0.07 0.01 240)); border-radius: 10px; padding: 14px; margin-top: 10px; position: relative; overflow: hidden;">
+    <div style="position: absolute; top: -30px; right: 20px; width: 120px; height: 120px; background: radial-gradient(circle, rgba(139,92,246,0.08) 0%, transparent 70%); border-radius: 50%;"></div>
+
+    <!-- 필터 탭 -->
+    <div style="display: flex; gap: 4px; margin-bottom: 10px; position: relative; z-index: 1;">
+      <div style="height: 26px; padding: 0 12px; background: rgba(245,158,11,0.12); border: 1px solid rgba(245,158,11,0.3); border-radius: 6px; display: flex; align-items: center; font-size: 10px; color: #f59e0b; font-weight: 600;">전체</div>
+      <div style="height: 26px; padding: 0 12px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07); border-radius: 6px; display: flex; align-items: center; font-size: 10px; color: rgba(255,255,255,0.4);">검토 대기</div>
+      <div style="height: 26px; padding: 0 12px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07); border-radius: 6px; display: flex; align-items: center; font-size: 10px; color: rgba(255,255,255,0.4);">자동 승인</div>
+    </div>
+
+    <!-- 주제 카드 -->
+    <div style="display: flex; flex-direction: column; gap: 6px; position: relative; z-index: 1;">
+      <div style="background: rgba(255,255,255,0.05); backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.09); border-radius: 10px; padding: 12px; display: flex; align-items: center; gap: 10px; box-shadow: 0 2px 12px rgba(0,0,0,0.2);">
+        <div style="flex: 1;">
+          <div style="font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.9); margin-bottom: 3px;">금리 인하 후 주식시장 전망</div>
+          <div style="display: flex; gap: 6px; align-items: center;">
+            <div style="height: 16px; padding: 0 6px; background: rgba(245,158,11,0.12); border: 1px solid rgba(245,158,11,0.25); border-radius: 4px; font-size: 9px; color: #f59e0b;">CH1 경제</div>
+            <span style="font-size: 10px; color: rgba(255,255,255,0.3);">점수 94</span>
+          </div>
+        </div>
+        <!-- 승인/거부 버튼 -->
+        <div style="display: flex; gap: 6px;">
+          <div style="height: 28px; padding: 0 12px; background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.25); border-radius: 7px; display: flex; align-items: center; font-size: 10px; color: #f87171; cursor: pointer; transition: all 0.15s;">거부</div>
+          <div style="height: 28px; padding: 0 12px; background: rgba(34,197,94,0.12); border: 1px solid rgba(34,197,94,0.3); border-radius: 7px; display: flex; align-items: center; font-size: 10px; color: #4ade80; cursor: pointer; box-shadow: 0 0 10px rgba(34,197,94,0.15);">승인</div>
+        </div>
+      </div>
+      <div style="background: rgba(255,255,255,0.03); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.06); border-radius: 10px; padding: 12px; display: flex; align-items: center; gap: 10px;">
+        <div style="flex: 1;">
+          <div style="font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.7); margin-bottom: 3px;">서울 아파트 매매 동향 2026</div>
+          <div style="display: flex; gap: 6px; align-items: center;">
+            <div style="height: 16px; padding: 0 6px; background: rgba(6,182,212,0.1); border: 1px solid rgba(6,182,212,0.2); border-radius: 4px; font-size: 9px; color: #06b6d4;">CH2 부동산</div>
+            <span style="font-size: 10px; color: rgba(255,255,255,0.25);">점수 87</span>
+          </div>
+        </div>
+        <div style="display: flex; gap: 6px;">
+          <div style="height: 28px; padding: 0 12px; background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.18); border-radius: 7px; display: flex; align-items: center; font-size: 10px; color: rgba(248,113,113,0.7);">거부</div>
+          <div style="height: 28px; padding: 0 12px; background: rgba(34,197,94,0.08); border: 1px solid rgba(34,197,94,0.2); border-radius: 7px; display: flex; align-items: center; font-size: 10px; color: rgba(74,222,128,0.7);">승인</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 수익 -->
+<div class="section">
+  <h3>수익 추적 — 차트 컨테이너 + 월별 달성 카드</h3>
+  <div style="background: linear-gradient(135deg, oklch(0.08 0.015 260), oklch(0.07 0.01 240)); border-radius: 10px; padding: 14px; margin-top: 10px; position: relative; overflow: hidden;">
+    <div style="position: absolute; top: -20px; left: -20px; width: 100px; height: 100px; background: radial-gradient(circle, rgba(34,197,94,0.07) 0%, transparent 70%); border-radius: 50%;"></div>
+
+    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 8px; position: relative; z-index: 1;">
+      <!-- 바 차트 -->
+      <div style="background: rgba(255,255,255,0.04); backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 12px;">
+        <div style="font-size: 10px; color: rgba(255,255,255,0.4); margin-bottom: 10px;">월별 채널 수익 (Recharts BarChart)</div>
+        <div style="display: flex; gap: 4px; align-items: flex-end; height: 60px;">
+          <div style="display: flex; flex-direction: column; gap: 1px; align-items: center; flex: 1;">
+            <div style="width: 100%; background: linear-gradient(to top, #f59e0b, #fbbf24); border-radius: 2px 2px 0 0; height: 30%; box-shadow: 0 0 6px rgba(245,158,11,0.4);"></div>
+            <div style="width: 100%; background: linear-gradient(to top, #06b6d4, #22d3ee); border-radius: 0; height: 15%; box-shadow: 0 0 4px rgba(6,182,212,0.3);"></div>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 1px; align-items: center; flex: 1;">
+            <div style="width: 100%; background: linear-gradient(to top, #f59e0b, #fbbf24); border-radius: 2px 2px 0 0; height: 50%; box-shadow: 0 0 6px rgba(245,158,11,0.4);"></div>
+            <div style="width: 100%; background: linear-gradient(to top, #06b6d4, #22d3ee); border-radius: 0; height: 25%; box-shadow: 0 0 4px rgba(6,182,212,0.3);"></div>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 1px; align-items: center; flex: 1;">
+            <div style="width: 100%; background: linear-gradient(to top, #f59e0b, #fbbf24); border-radius: 2px 2px 0 0; height: 80%; box-shadow: 0 0 8px rgba(245,158,11,0.5);"></div>
+            <div style="width: 100%; background: linear-gradient(to top, #06b6d4, #22d3ee); border-radius: 0; height: 40%; box-shadow: 0 0 5px rgba(6,182,212,0.4);"></div>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 1px; align-items: center; flex: 1;">
+            <div style="width: 100%; background: linear-gradient(to top, #f59e0b, #fbbf24); border-radius: 2px 2px 0 0; height: 65%; box-shadow: 0 0 7px rgba(245,158,11,0.45);"></div>
+            <div style="width: 100%; background: linear-gradient(to top, #06b6d4, #22d3ee); border-radius: 0; height: 30%; box-shadow: 0 0 4px rgba(6,182,212,0.35);"></div>
+          </div>
+        </div>
+        <div style="font-size: 9px; color: rgba(255,255,255,0.2); margin-top: 6px;">채널 색상 그라데이션 + 글로우 그림자</div>
+      </div>
+
+      <!-- 총계 카드 -->
+      <div style="display: flex; flex-direction: column; gap: 6px;">
+        <div style="background: rgba(34,197,94,0.07); backdrop-filter: blur(16px); border: 1px solid rgba(34,197,94,0.2); border-radius: 10px; padding: 10px; box-shadow: 0 0 20px rgba(34,197,94,0.05);">
+          <div style="font-size: 9px; color: rgba(255,255,255,0.4); margin-bottom: 3px;">이달 총 수익</div>
+          <div style="font-size: 16px; font-weight: 700; color: #4ade80; text-shadow: 0 0 15px rgba(74,222,128,0.3);">₩3.2M</div>
+          <div style="font-size: 9px; color: rgba(74,222,128,0.6); margin-top: 2px;">▲ 목표 23%</div>
+        </div>
+        <div style="background: rgba(255,255,255,0.04); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.07); border-radius: 10px; padding: 10px;">
+          <div style="font-size: 9px; color: rgba(255,255,255,0.4); margin-bottom: 3px;">AdSense</div>
+          <div style="font-size: 14px; font-weight: 600; color: rgba(255,255,255,0.8);">₩2.1M</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 리스크 + 학습 + 비용 -->
+<div class="section">
+  <h3>리스크 · 학습 · 비용 — 핵심 UI 요소</h3>
+  <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 10px;">
+
+    <!-- 리스크 -->
+    <div style="background: linear-gradient(135deg, oklch(0.08 0.015 260), oklch(0.07 0.01 240)); border-radius: 10px; padding: 12px; position: relative; overflow: hidden;">
+      <div style="position: absolute; top: -20px; right: -10px; width: 60px; height: 60px; background: radial-gradient(circle, rgba(239,68,68,0.12) 0%, transparent 70%); border-radius: 50%;"></div>
+      <div style="font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.4); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.07em;">리스크 모니터링</div>
+      <div style="display: flex; flex-direction: column; gap: 5px; position: relative; z-index: 1;">
+        <div style="background: rgba(239,68,68,0.1); backdrop-filter: blur(12px); border: 1px solid rgba(239,68,68,0.25); border-radius: 8px; padding: 8px; box-shadow: 0 0 15px rgba(239,68,68,0.08);">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-size: 10px; color: rgba(255,255,255,0.7);">CH2 부동산</span>
+            <div style="height: 16px; padding: 0 6px; background: rgba(239,68,68,0.2); border: 1px solid rgba(239,68,68,0.4); border-radius: 4px; font-size: 9px; color: #f87171; font-weight: 700;">HIGH</div>
+          </div>
+          <div style="font-size: 9px; color: rgba(239,68,68,0.6); margin-top: 3px;">목표 대비 12% 달성</div>
+        </div>
+        <div style="background: rgba(34,197,94,0.06); backdrop-filter: blur(12px); border: 1px solid rgba(34,197,94,0.18); border-radius: 8px; padding: 8px;">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-size: 10px; color: rgba(255,255,255,0.6);">CH1 경제</span>
+            <div style="height: 16px; padding: 0 6px; background: rgba(34,197,94,0.12); border: 1px solid rgba(34,197,94,0.3); border-radius: 4px; font-size: 9px; color: #4ade80; font-weight: 700;">LOW</div>
+          </div>
+          <div style="font-size: 9px; color: rgba(74,222,128,0.5); margin-top: 3px;">안전 구간</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 학습 -->
+    <div style="background: linear-gradient(135deg, oklch(0.08 0.015 260), oklch(0.07 0.01 240)); border-radius: 10px; padding: 12px; position: relative; overflow: hidden;">
+      <div style="position: absolute; bottom: -20px; left: -10px; width: 70px; height: 70px; background: radial-gradient(circle, rgba(245,158,11,0.08) 0%, transparent 70%); border-radius: 50%;"></div>
+      <div style="font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.4); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.07em;">학습 피드백</div>
+      <div style="display: flex; flex-direction: column; gap: 5px; position: relative; z-index: 1;">
+        <!-- 승리 패턴 -->
+        <div style="background: rgba(245,158,11,0.08); backdrop-filter: blur(12px); border: 1px solid rgba(245,158,11,0.22); border-radius: 8px; padding: 8px; box-shadow: 0 0 12px rgba(245,158,11,0.07);">
+          <div style="font-size: 9px; font-weight: 700; color: #f59e0b; margin-bottom: 4px;">★ 승리 패턴</div>
+          <div style="font-size: 10px; color: rgba(255,255,255,0.7);">호기심 유발 제목</div>
+          <div style="display: flex; gap: 4px; margin-top: 4px;">
+            <div style="height: 14px; padding: 0 5px; background: rgba(245,158,11,0.12); border: 1px solid rgba(245,158,11,0.25); border-radius: 3px; font-size: 8px; color: #f59e0b;">CTR 7.2%</div>
+            <div style="height: 14px; padding: 0 5px; background: rgba(245,158,11,0.12); border: 1px solid rgba(245,158,11,0.25); border-radius: 3px; font-size: 8px; color: #f59e0b;">AVP 62%</div>
+          </div>
+        </div>
+        <div style="background: rgba(255,255,255,0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.06); border-radius: 8px; padding: 8px;">
+          <div style="font-size: 10px; color: rgba(255,255,255,0.5);">권위 강조 제목</div>
+          <div style="display: flex; gap: 4px; margin-top: 4px;">
+            <div style="height: 14px; padding: 0 5px; background: rgba(255,255,255,0.05); border-radius: 3px; font-size: 8px; color: rgba(255,255,255,0.3);">CTR 5.1%</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 비용 -->
+    <div style="background: linear-gradient(135deg, oklch(0.08 0.015 260), oklch(0.07 0.01 240)); border-radius: 10px; padding: 12px; position: relative; overflow: hidden;">
+      <div style="position: absolute; top: -15px; right: 20px; width: 60px; height: 60px; background: radial-gradient(circle, rgba(139,92,246,0.08) 0%, transparent 70%); border-radius: 50%;"></div>
+      <div style="font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.4); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.07em;">비용 / 쿼터</div>
+      <div style="display: flex; flex-direction: column; gap: 5px; position: relative; z-index: 1;">
+        <div style="background: rgba(255,255,255,0.04); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 8px;">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+            <span style="font-size: 10px; color: rgba(255,255,255,0.6);">Gemini</span>
+            <span style="font-size: 9px; color: rgba(255,255,255,0.35);">340 / 500</span>
+          </div>
+          <div style="height: 4px; background: rgba(255,255,255,0.06); border-radius: 2px;">
+            <div style="height: 4px; width: 68%; background: linear-gradient(90deg, #818cf8, #a78bfa); border-radius: 2px; box-shadow: 0 0 6px rgba(139,92,246,0.4);"></div>
+          </div>
+        </div>
+        <div style="background: rgba(239,68,68,0.08); backdrop-filter: blur(12px); border: 1px solid rgba(239,68,68,0.22); border-radius: 8px; padding: 8px; box-shadow: 0 0 10px rgba(239,68,68,0.06);">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+            <span style="font-size: 10px; color: rgba(248,113,113,0.8);">YouTube</span>
+            <span style="font-size: 9px; color: rgba(248,113,113,0.5);">9,200 / 10,000</span>
+          </div>
+          <div style="height: 4px; background: rgba(239,68,68,0.1); border-radius: 2px;">
+            <div style="height: 4px; width: 92%; background: linear-gradient(90deg, #ef4444, #f87171); border-radius: 2px; box-shadow: 0 0 8px rgba(239,68,68,0.5);"></div>
+          </div>
+          <div style="font-size: 8px; color: rgba(248,113,113,0.6); margin-top: 3px;">⚠ 임계값 근접 — 경고 글로우</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<p class="subtitle" style="text-align: center; margin-top: 12px;">섹션 3 완료 — 전체 디자인이 마음에 드시나요? 터미널에서 확인해주세요.</p>

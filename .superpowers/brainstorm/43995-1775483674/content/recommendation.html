@@ -1,0 +1,71 @@
+<h2>추천: A + B 하이브리드</h2>
+<p class="subtitle">검증 효율을 극대화하는 "실행 중 관찰 → 완료 후 검수" 이중 구조</p>
+
+<div class="section">
+  <div class="mockup">
+    <div class="mockup-header">▶ 테스트 런 전체 흐름</div>
+    <div class="mockup-body" style="display:flex;flex-direction:column;gap:16px;padding:16px">
+
+      <div style="display:flex;align-items:center;gap:12px;padding:12px;background:rgba(99,102,241,0.1);border-radius:8px;border:1px solid rgba(99,102,241,0.3)">
+        <span style="font-size:20px">🚀</span>
+        <div>
+          <div style="font-weight:600;font-size:14px">① 파이프라인 트리거</div>
+          <div style="font-size:12px;color:#888;margin-top:2px">채널 선택 → "테스트 런" 버튼 → 실제 업로드 없이 Step00~Step12 실행</div>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:8px;align-items:center;justify-content:center;color:#666;font-size:12px">↓ 실행 중</div>
+
+      <div style="display:flex;align-items:flex-start;gap:12px;padding:12px;background:rgba(16,185,129,0.1);border-radius:8px;border:1px solid rgba(16,185,129,0.3)">
+        <span style="font-size:20px">📡</span>
+        <div>
+          <div style="font-weight:600;font-size:14px">② 실시간 관찰 패널 (A 방식)</div>
+          <div style="font-size:12px;color:#888;margin-top:4px">
+            Step 진행바 · 현재 작업 표시 · 로그 스트림<br>
+            <strong>이미지 생성 즉시 썸네일 미리보기 표시</strong>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:8px;align-items:center;justify-content:center;color:#666;font-size:12px">↓ 완료 후</div>
+
+      <div style="display:flex;align-items:flex-start;gap:12px;padding:12px;background:rgba(245,158,11,0.1);border-radius:8px;border:1px solid rgba(245,158,11,0.3)">
+        <span style="font-size:20px">🔍</span>
+        <div>
+          <div style="font-weight:600;font-size:14px">③ 결과물 종합 검수 (B 방식)</div>
+          <div style="font-size:12px;color:#888;margin-top:4px">
+            스크립트 전문 · 이미지 갤러리 · 영상 플레이어 · 썸네일 비교<br>
+            QA 점수 · 비용 요약 · 승인 여부 결정
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>왜 이 방식이 가장 효과적인가?</h3>
+  <div class="pros-cons">
+    <div class="pros">
+      <h4>A 방식이 검증에 필수인 이유</h4>
+      <ul>
+        <li>실패 시 어떤 Step에서 멈췄는지 즉시 파악</li>
+        <li>이미지 생성 품질을 기다리며 실시간 확인</li>
+        <li>전체 소요시간 측정 (성능 검증)</li>
+      </ul>
+    </div>
+    <div class="cons">
+      <h4>B 방식도 반드시 필요한 이유</h4>
+      <ul>
+        <li>스크립트 후킹 강도, 이미지 품질을 차분히 비교</li>
+        <li>썸네일 3개 배리언트 나란히 비교</li>
+        <li>최종 "이 수준으로 업로드 가능한가?" 판단</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div style="text-align:center;padding:12px;background:rgba(99,102,241,0.08);border-radius:8px;font-size:13px;color:#888">
+  C 방식(단계별 수동제어)은 개발 디버깅용으로 유용하지만, 현재 목표인 <strong>"시스템이 작동하는가?"</strong> 검증에는 오버스펙
+</div>

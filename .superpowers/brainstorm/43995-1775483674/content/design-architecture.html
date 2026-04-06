@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>전체 설계 구조</title>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Mplus+Rounded+1c:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --c-dark:#900000;--c-red:#ee2400;--c-salmon:#ffb09c;
+    --c-blush:#fbd9d3;--c-cream:#ffefea;
+    --t-primary:#1a0505;--t-secondary:#5c1a1a;--t-muted:#9b6060;
+    --glass-bg:rgba(255,255,255,0.58);--glass-border:rgba(238,36,0,0.13);
+    --font-h:'Libre Baskerville',serif;--font-b:'Mplus Rounded 1c',sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family:var(--font-b);
+    background:linear-gradient(135deg,#fbd9d3 0%,#ffefea 55%,#ffd9cc 100%);
+    min-height:100vh;padding:28px 24px;color:var(--t-primary);
+  }
+  body::before{content:'';position:fixed;inset:0;pointer-events:none;
+    background:radial-gradient(ellipse 55% 45% at 10% 10%,rgba(238,36,0,0.07),transparent 70%);}
+
+  h1{font-family:var(--font-h);font-size:20px;font-weight:700;margin-bottom:4px;}
+  .subtitle{font-size:12px;color:var(--t-muted);margin-bottom:24px;}
+
+  .glass{
+    background:var(--glass-bg);
+    backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+    border:1px solid var(--glass-border);border-radius:16px;
+  }
+
+  /* 검증 매핑 */
+  .verify-grid{
+    display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:24px;
+  }
+  .verify-item{
+    padding:12px 14px;border-radius:12px;
+    background:rgba(255,255,255,0.5);
+    border:1px solid rgba(238,36,0,0.1);
+  }
+  .verify-icon{font-size:18px;margin-bottom:6px;}
+  .verify-label{font-size:11px;font-weight:700;color:var(--t-primary);margin-bottom:2px;}
+  .verify-page{font-size:10px;color:var(--c-red);font-weight:700;font-family:monospace;}
+
+  /* 페이지 구조 */
+  .page-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+
+  .page-card{
+    border-radius:14px;overflow:hidden;
+    border:1.5px solid var(--glass-border);
+    background:var(--glass-bg);
+    backdrop-filter:blur(20px);
+  }
+  .page-header{
+    padding:12px 16px 10px;
+    border-bottom:1px solid rgba(238,36,0,0.08);
+    display:flex;align-items:center;gap:8px;
+  }
+  .page-icon{font-size:16px;}
+  .page-name{font-family:var(--font-h);font-size:13px;font-weight:700;color:var(--t-primary);}
+  .page-url{font-size:10px;color:var(--t-muted);font-family:monospace;display:block;margin-top:1px;}
+
+  .change-badge{
+    margin-left:auto;font-size:9px;font-weight:700;padding:2px 8px;border-radius:10px;
+    font-family:var(--font-b);flex-shrink:0;
+  }
+  .badge-new{background:rgba(238,36,0,0.15);color:var(--c-red);}
+  .badge-enhance{background:rgba(99,102,241,0.12);color:#4f46e5;}
+  .badge-style{background:rgba(22,163,74,0.1);color:#15803d;}
+
+  .page-body{padding:12px 16px;}
+  .feature-list{list-style:none;}
+  .feature-list li{
+    font-size:11px;color:var(--t-secondary);
+    padding:4px 0;border-bottom:1px solid rgba(238,36,0,0.05);
+    display:flex;align-items:flex-start;gap:6px;line-height:1.4;
+  }
+  .feature-list li:last-child{border-bottom:none;}
+  .fi-dot{
+    width:5px;height:5px;border-radius:50%;flex-shrink:0;margin-top:4px;
+  }
+  .fi-new{background:var(--c-red);}
+  .fi-exist{background:rgba(144,0,0,0.25);}
+
+  .verify-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:8px;}
+  .vtag{
+    font-size:9px;padding:2px 7px;border-radius:8px;
+    background:rgba(238,36,0,0.08);color:var(--t-secondary);
+    font-family:var(--font-b);
+  }
+
+  /* 범례 */
+  .legend{display:flex;gap:14px;align-items:center;margin-bottom:16px;font-size:11px;color:var(--t-muted);}
+  .leg{display:flex;align-items:center;gap:5px;}
+  .leg-dot{width:9px;height:9px;border-radius:3px;}
+
+  /* 실시간 반영 박스 */
+  .realtime-box{
+    margin-top:20px;padding:16px 18px;border-radius:14px;
+    background:rgba(144,0,0,0.05);
+    border:1px solid rgba(238,36,0,0.15);
+  }
+  .rt-title{font-family:var(--font-h);font-size:13px;font-weight:700;color:var(--t-primary);margin-bottom:10px;}
+  .rt-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+  .rt-item{
+    background:rgba(255,255,255,0.5);border-radius:10px;padding:10px 12px;
+    border:1px solid rgba(238,36,0,0.08);
+  }
+  .rt-method{font-size:11px;font-weight:700;color:var(--c-dark);margin-bottom:3px;}
+  .rt-desc{font-size:10px;color:var(--t-muted);line-height:1.5;}
+  .rt-pages{font-size:9px;color:var(--c-red);font-weight:700;margin-top:4px;font-family:monospace;}
+
+  .section-title{
+    font-family:var(--font-h);font-size:15px;font-weight:700;
+    color:var(--t-primary);margin-bottom:12px;
+    display:flex;align-items:center;gap:8px;
+  }
+  .section-num{
+    width:22px;height:22px;border-radius:7px;
+    background:var(--c-red);color:#fff;
+    font-size:11px;font-weight:700;
+    display:flex;align-items:center;justify-content:center;
+    flex-shrink:0;
+  }
+</style>
+</head>
+<body>
+
+<h1>전체 설계 구조 — 방식 C</h1>
+<p class="subtitle">Red Light Glassmorphism + Libre Baskerville + M PLUS Rounded 1c · 검증 항목 전체 커버</p>
+
+<!-- 섹션 1: 검증 항목 매핑 -->
+<div class="section-title"><div class="section-num">1</div>8대 검증 항목 → 페이지 매핑</div>
+<div class="verify-grid" style="margin-bottom:24px;">
+  <div class="verify-item">
+    <div class="verify-icon">📚</div>
+    <div class="verify-label">지식 수집 내역</div>
+    <div class="verify-page">/knowledge ↗</div>
+  </div>
+  <div class="verify-item">
+    <div class="verify-icon">📈</div>
+    <div class="verify-label">트렌드 수집 리스트</div>
+    <div class="verify-page">/trends ↗</div>
+  </div>
+  <div class="verify-item">
+    <div class="verify-icon">✍️</div>
+    <div class="verify-label">영상 프롬프트 + 후킹</div>
+    <div class="verify-page">/runs/[id] ↗</div>
+  </div>
+  <div class="verify-item">
+    <div class="verify-icon">🖼</div>
+    <div class="verify-label">프롬프트별 이미지</div>
+    <div class="verify-page">/runs/[id] ↗</div>
+  </div>
+  <div class="verify-item">
+    <div class="verify-icon">🎬</div>
+    <div class="verify-label">영상 제작 결과</div>
+    <div class="verify-page">/runs/[id] ↗</div>
+  </div>
+  <div class="verify-item">
+    <div class="verify-icon">🖼</div>
+    <div class="verify-label">썸네일 3종 비교</div>
+    <div class="verify-page">/runs/[id] ↗</div>
+  </div>
+  <div class="verify-item">
+    <div class="verify-icon">💰</div>
+    <div class="verify-label">채널별 수익 현황</div>
+    <div class="verify-page">/ + /revenue ↗</div>
+  </div>
+  <div class="verify-item">
+    <div class="verify-icon">📡</div>
+    <div class="verify-label">코드 실행 시 실시간 반영</div>
+    <div class="verify-page">/monitor ↗</div>
+  </div>
+</div>
+
+<!-- 섹션 2: 페이지별 변경 계획 -->
+<div class="section-title"><div class="section-num">2</div>페이지별 재설계 계획</div>
+<div class="legend">
+  <div class="leg"><div class="leg-dot" style="background:var(--c-red)"></div>빨강 점 = 신규 기능</div>
+  <div class="leg"><div class="leg-dot" style="background:rgba(144,0,0,0.3)"></div>회색 점 = 기존 유지</div>
+  <div><span class="change-badge badge-new">NEW</span> 신규 기능 추가</div>
+  <div><span class="change-badge badge-enhance">강화</span> 기존 기능 개선</div>
+  <div><span class="change-badge badge-style">스타일</span> 디자인만 변경</div>
+</div>
+
+<div class="page-grid">
+
+  <!-- 홈 -->
+  <div class="page-card">
+    <div class="page-header">
+      <div class="page-icon">🏠</div>
+      <div><div class="page-name">홈 대시보드</div><span class="page-url">/</span></div>
+      <div class="change-badge badge-enhance">강화</div>
+    </div>
+    <div class="page-body">
+      <ul class="feature-list">
+        <li><div class="fi-dot fi-exist"></div>KPI 4개 카드 (수익·채널·Run·QA)</li>
+        <li><div class="fi-dot fi-new"></div>채널별 수익 현황 — 탭 전환</li>
+        <li><div class="fi-dot fi-new"></div>현재 실행 중인 Run 실시간 표시</li>
+        <li><div class="fi-dot fi-exist"></div>파이프라인 타임라인</li>
+        <li><div class="fi-dot fi-new"></div>▶ 테스트 런 실행 버튼</li>
+      </ul>
+      <div class="verify-tags"><span class="vtag">💰 채널별 수익</span><span class="vtag">📡 실시간</span></div>
+    </div>
+  </div>
+
+  <!-- 파이프라인 모니터 -->
+  <div class="page-card">
+    <div class="page-header">
+      <div class="page-icon">📡</div>
+      <div><div class="page-name">파이프라인 모니터</div><span class="page-url">/monitor</span></div>
+      <div class="change-badge badge-enhance">핵심 강화</div>
+    </div>
+    <div class="page-body">
+      <ul class="feature-list">
+        <li><div class="fi-dot fi-exist"></div>Preflight 체크 패널</li>
+        <li><div class="fi-dot fi-new"></div>Step00~17 시각적 진행 트래커</li>
+        <li><div class="fi-dot fi-new"></div>현재 Step 생성 이미지 실시간 미리보기</li>
+        <li><div class="fi-dot fi-new"></div>현재 Step 스크립트 스트리밍 뷰</li>
+        <li><div class="fi-dot fi-exist"></div>실시간 로그 (3초 폴링)</li>
+        <li><div class="fi-dot fi-new"></div>Step 소요시간 + API 비용 실시간</li>
+      </ul>
+      <div class="verify-tags"><span class="vtag">📡 실시간 반영</span><span class="vtag">🖼 이미지 미리보기</span></div>
+    </div>
+  </div>
+
+  <!-- Run 상세 -->
+  <div class="page-card">
+    <div class="page-header">
+      <div class="page-icon">🔍</div>
+      <div><div class="page-name">Run 상세 — 검수 허브</div><span class="page-url">/runs/[ch]/[id]</span></div>
+      <div class="change-badge badge-enhance">핵심 강화</div>
+    </div>
+    <div class="page-body">
+      <ul class="feature-list">
+        <li><div class="fi-dot fi-new"></div>스크립트 전문 + 후킹 도입부 하이라이트</li>
+        <li><div class="fi-dot fi-new"></div>장면별 이미지 갤러리 (프롬프트 매핑)</li>
+        <li><div class="fi-dot fi-new"></div>영상 인라인 플레이어</li>
+        <li><div class="fi-dot fi-new"></div>썸네일 3종 나란히 비교</li>
+        <li><div class="fi-dot fi-exist"></div>QA 점수 (애니메이션·스크립트·정책)</li>
+        <li><div class="fi-dot fi-new"></div>나레이션 오디오 플레이어</li>
+        <li><div class="fi-dot fi-new"></div>비용 상세 분석</li>
+      </ul>
+      <div class="verify-tags"><span class="vtag">✍️ 프롬프트</span><span class="vtag">🎬 영상</span><span class="vtag">🖼 썸네일</span></div>
+    </div>
+  </div>
+
+  <!-- 지식 수집 -->
+  <div class="page-card">
+    <div class="page-header">
+      <div class="page-icon">📚</div>
+      <div><div class="page-name">지식 수집 뷰어</div><span class="page-url">/knowledge</span></div>
+      <div class="change-badge badge-enhance">강화</div>
+    </div>
+    <div class="page-body">
+      <ul class="feature-list">
+        <li><div class="fi-dot fi-exist"></div>채널별 탭 전환</li>
+        <li><div class="fi-dot fi-new"></div>수집 단계별 표시 (Tavily·Wikipedia·Gemini)</li>
+        <li><div class="fi-dot fi-new"></div>KnowledgePackage 구조 트리 뷰</li>
+        <li><div class="fi-dot fi-exist"></div>시리즈 에피소드 목록</li>
+        <li><div class="fi-dot fi-new"></div>팩트체크 결과 배지</li>
+      </ul>
+      <div class="verify-tags"><span class="vtag">📚 지식 수집 내역</span></div>
+    </div>
+  </div>
+
+  <!-- 트렌드 -->
+  <div class="page-card">
+    <div class="page-header">
+      <div class="page-icon">📈</div>
+      <div><div class="page-name">트렌드 관리</div><span class="page-url">/trends</span></div>
+      <div class="change-badge badge-enhance">강화</div>
+    </div>
+    <div class="page-body">
+      <ul class="feature-list">
+        <li><div class="fi-dot fi-new"></div>채널별 탭 — 자동 데이터 조회</li>
+        <li><div class="fi-dot fi-new"></div>점수 구성 시각화 (관심도·적합도·수익성·긴급도)</li>
+        <li><div class="fi-dot fi-exist"></div>자동/수동 승인 상태 필터</li>
+        <li><div class="fi-dot fi-new"></div>소스별 수집 현황 (구글·네이버·YouTube)</li>
+      </ul>
+      <div class="verify-tags"><span class="vtag">📈 트렌드 수집</span></div>
+    </div>
+  </div>
+
+  <!-- 나머지 페이지 -->
+  <div class="page-card">
+    <div class="page-header">
+      <div class="page-icon">🎨</div>
+      <div><div class="page-name">나머지 6개 페이지</div><span class="page-url">/revenue /risk /learning ...</span></div>
+      <div class="change-badge badge-style">스타일</div>
+    </div>
+    <div class="page-body">
+      <ul class="feature-list">
+        <li><div class="fi-dot fi-exist"></div>/revenue — 수익 추적 (스타일 변경)</li>
+        <li><div class="fi-dot fi-exist"></div>/risk — 리스크 모니터링</li>
+        <li><div class="fi-dot fi-exist"></div>/learning — 학습 피드백</li>
+        <li><div class="fi-dot fi-exist"></div>/cost — 비용/쿼터 추적</li>
+        <li><div class="fi-dot fi-exist"></div>/qa — QA 검수 목록</li>
+        <li><div class="fi-dot fi-exist"></div>/settings — 설정</li>
+      </ul>
+      <div class="verify-tags"><span class="vtag">모두 Red Light 스타일 적용</span></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- 실시간 반영 전략 -->
+<div class="realtime-box">
+  <div class="rt-title">📡 실시간 반영 전략 — 3가지 레이어</div>
+  <div class="rt-grid">
+    <div class="rt-item">
+      <div class="rt-method">Supabase Realtime</div>
+      <div class="rt-desc">pipeline_runs 테이블 변경 구독 → 홈 KPI 즉시 반영</div>
+      <div class="rt-pages">/ (홈)</div>
+    </div>
+    <div class="rt-item">
+      <div class="rt-method">3초 폴링</div>
+      <div class="rt-desc">Step 진행상황, 로그, 이미지 생성 현황 주기적 갱신</div>
+      <div class="rt-pages">/monitor</div>
+    </div>
+    <div class="rt-item">
+      <div class="rt-method">On-demand fetch</div>
+      <div class="rt-desc">탭 전환·채널 선택 시 해당 데이터 즉시 fetch</div>
+      <div class="rt-pages">/knowledge /trends /runs</div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

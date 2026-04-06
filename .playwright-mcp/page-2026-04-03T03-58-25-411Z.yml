@@ -1,0 +1,176 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e5]:
+      - generic [ref=e6]:
+        - generic [ref=e7]:
+          - img [ref=e8]
+          - generic [ref=e10]: KAS Studio
+        - paragraph [ref=e11]: AI 자동화 파이프라인
+      - generic [ref=e12]:
+        - generic [ref=e13]:
+          - generic [ref=e14]: 대시보드
+          - list [ref=e16]:
+            - listitem [ref=e17]:
+              - link "전체 KPI" [ref=e18] [cursor=pointer]:
+                - /url: /
+                - img [ref=e19]
+                - generic [ref=e24]: 전체 KPI
+            - listitem [ref=e25]:
+              - link "트렌드 관리" [ref=e26] [cursor=pointer]:
+                - /url: /trends
+                - img [ref=e27]
+                - generic [ref=e30]: 트렌드 관리
+            - listitem [ref=e31]:
+              - link "수익 추적" [ref=e32] [cursor=pointer]:
+                - /url: /revenue
+                - img [ref=e33]
+                - generic [ref=e35]: 수익 추적
+            - listitem [ref=e36]:
+              - link "리스크 모니터링" [ref=e37] [cursor=pointer]:
+                - /url: /risk
+                - img [ref=e38]
+                - generic [ref=e40]: 리스크 모니터링
+            - listitem [ref=e41]:
+              - link "학습 피드백" [ref=e42] [cursor=pointer]:
+                - /url: /learning
+                - img [ref=e43]
+                - generic [ref=e51]: 학습 피드백
+            - listitem [ref=e52]:
+              - link "비용/쿼터" [ref=e53] [cursor=pointer]:
+                - /url: /cost
+                - img [ref=e54]
+                - generic [ref=e56]: 비용/쿼터
+        - generic [ref=e57]:
+          - generic [ref=e58]: 채널별 상세
+          - list [ref=e60]:
+            - listitem [ref=e61]:
+              - link "CH1 경제" [ref=e62] [cursor=pointer]:
+                - /url: /channels/CH1
+                - img [ref=e63]
+                - generic [ref=e65]: CH1 경제
+            - listitem [ref=e66]:
+              - link "CH2 과학" [ref=e67] [cursor=pointer]:
+                - /url: /channels/CH2
+                - img [ref=e68]
+                - generic [ref=e70]: CH2 과학
+            - listitem [ref=e71]:
+              - link "CH3 부동산" [ref=e72] [cursor=pointer]:
+                - /url: /channels/CH3
+                - img [ref=e73]
+                - generic [ref=e75]: CH3 부동산
+            - listitem [ref=e76]:
+              - link "CH4 심리" [ref=e77] [cursor=pointer]:
+                - /url: /channels/CH4
+                - img [ref=e78]
+                - generic [ref=e80]: CH4 심리
+            - listitem [ref=e81]:
+              - link "CH5 미스터리" [ref=e82] [cursor=pointer]:
+                - /url: /channels/CH5
+                - img [ref=e83]
+                - generic [ref=e85]: CH5 미스터리
+            - listitem [ref=e86]:
+              - link "CH6 역사" [ref=e87] [cursor=pointer]:
+                - /url: /channels/CH6
+                - img [ref=e88]
+                - generic [ref=e90]: CH6 역사
+            - listitem [ref=e91]:
+              - link "CH7 전쟁사" [ref=e92] [cursor=pointer]:
+                - /url: /channels/CH7
+                - img [ref=e93]
+                - generic [ref=e95]: CH7 전쟁사
+      - list [ref=e97]:
+        - listitem [ref=e98]:
+          - link "설정" [ref=e99] [cursor=pointer]:
+            - /url: /settings
+            - img [ref=e100]
+            - generic [ref=e103]: 설정
+    - main [ref=e104]:
+      - generic [ref=e105]:
+        - button "Toggle Sidebar" [ref=e106]:
+          - img
+          - generic [ref=e107]: Toggle Sidebar
+        - separator [ref=e108]
+        - generic [ref=e109]:
+          - generic [ref=e110]: KAS Studio
+          - button "테마 전환" [ref=e111]:
+            - img
+      - main [ref=e112]:
+        - generic [ref=e113]:
+          - generic [ref=e114]:
+            - heading "트렌드 주제 관리" [level=1] [ref=e115]
+            - paragraph [ref=e116]: 수집된 트렌드 주제 검토 및 승인/거부
+          - generic [ref=e117]:
+            - generic [ref=e118]:
+              - generic [ref=e119]:
+                - generic [ref=e120]: 자동 승인
+                - img [ref=e121]
+              - generic [ref=e124]:
+                - generic [ref=e125]: "2"
+                - paragraph [ref=e126]: 점수 80+ 자동 통과
+            - generic [ref=e127]:
+              - generic [ref=e128]:
+                - generic [ref=e129]: 검토 대기
+                - img [ref=e130]
+              - generic [ref=e133]:
+                - generic [ref=e134]: "2"
+                - paragraph [ref=e135]: 수동 검토 필요
+            - generic [ref=e136]:
+              - generic [ref=e137]:
+                - generic [ref=e138]: 거부됨
+                - img [ref=e139]
+              - generic [ref=e143]:
+                - generic [ref=e144]: "0"
+                - paragraph [ref=e145]: 블랙리스트 주제
+          - generic [ref=e146]:
+            - generic [ref=e148]:
+              - img [ref=e149]
+              - generic [ref=e152]: 수집된 주제 목록
+            - table [ref=e155]:
+              - rowgroup [ref=e156]:
+                - row "채널 주제 점수 트렌딩 상태" [ref=e157]:
+                  - columnheader "채널" [ref=e158]
+                  - columnheader "주제" [ref=e159]
+                  - columnheader "점수" [ref=e160]
+                  - columnheader "트렌딩" [ref=e161]
+                  - columnheader "상태" [ref=e162]
+              - rowgroup [ref=e163]:
+                - row "CH1 금리 인상이 내 지갑을 얇게 만드는 5가지 방법 85 자동 승인" [ref=e164]:
+                  - cell "CH1" [ref=e165]:
+                    - generic [ref=e166]: CH1
+                  - cell "금리 인상이 내 지갑을 얇게 만드는 5가지 방법" [ref=e167]:
+                    - paragraph [ref=e168]: 금리 인상이 내 지갑을 얇게 만드는 5가지 방법
+                  - cell "85" [ref=e169]
+                  - cell [ref=e170]:
+                    - img [ref=e171]
+                  - cell "자동 승인" [ref=e174]:
+                    - generic [ref=e175]: 자동 승인
+                - row "CH1 부동산 하락장에서 살아남는 투자 전략 72 — 검토 필요" [ref=e176]:
+                  - cell "CH1" [ref=e177]:
+                    - generic [ref=e178]: CH1
+                  - cell "부동산 하락장에서 살아남는 투자 전략" [ref=e179]:
+                    - paragraph [ref=e180]: 부동산 하락장에서 살아남는 투자 전략
+                  - cell "72" [ref=e181]
+                  - cell "—" [ref=e182]
+                  - cell "검토 필요" [ref=e183]:
+                    - generic [ref=e184]: 검토 필요
+                - row "CH2 양자컴퓨터가 현실이 된다면 우리 생활은? 91 자동 승인" [ref=e185]:
+                  - cell "CH2" [ref=e186]:
+                    - generic [ref=e187]: CH2
+                  - cell "양자컴퓨터가 현실이 된다면 우리 생활은?" [ref=e188]:
+                    - paragraph [ref=e189]: 양자컴퓨터가 현실이 된다면 우리 생활은?
+                  - cell "91" [ref=e190]
+                  - cell [ref=e191]:
+                    - img [ref=e192]
+                  - cell "자동 승인" [ref=e195]:
+                    - generic [ref=e196]: 자동 승인
+                - row "CH2 블랙홀 사건지평선의 비밀 68 — 검토 필요" [ref=e197]:
+                  - cell "CH2" [ref=e198]:
+                    - generic [ref=e199]: CH2
+                  - cell "블랙홀 사건지평선의 비밀" [ref=e200]:
+                    - paragraph [ref=e201]: 블랙홀 사건지평선의 비밀
+                  - cell "68" [ref=e202]
+                  - cell "—" [ref=e203]
+                  - cell "검토 필요" [ref=e204]:
+                    - generic [ref=e205]: 검토 필요
+  - button "Open Next.js Dev Tools" [ref=e211] [cursor=pointer]:
+    - img [ref=e212]

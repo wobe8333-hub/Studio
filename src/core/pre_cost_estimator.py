@@ -5,9 +5,9 @@ PRE-RUN COST ESTIMATOR - 사전 비용 차단
 
 from __future__ import annotations
 
-import json
 from pathlib import Path
 from typing import Dict, Any, Optional, Tuple
+from src.core.ssot import write_json, read_json, json_exists
 
 
 # 비용 상수 (USD)
@@ -81,23 +81,16 @@ def check_cost_limit(estimated_cost: float, cost_limit: Optional[float] = None) 
 
 
 def save_cost_projection(projection: Dict[str, Any], repo_root: Path) -> Path:
-    """비용 예측 저장"""
-    governance_dir = repo_root / "data" / "global" / "cost"
-    governance_dir.mkdir(parents=True, exist_ok=True)
-    
-    projection_path = governance_dir / "cost_projection.json"
-    with open(projection_path, "w", encoding="utf-8") as f:
-        json.dump(projection, f, ensure_ascii=False, indent=2)
-    
+    """비용 예측 저장 — ssot.write_json으로 atomic write 보장"""
+    projection_path = repo_root / "data" / "global" / "cost" / "cost_projection.json"
+    write_json(projection_path, projection)
     return projection_path
 
 
 def load_cost_projection(repo_root: Path) -> Optional[Dict[str, Any]]:
-    """비용 예측 로드"""
+    """비용 예측 로드 — ssot.read_json으로 utf-8-sig BOM 처리"""
     projection_path = repo_root / "data" / "global" / "cost" / "cost_projection.json"
-    if not projection_path.exists():
+    if not json_exists(projection_path):
         return None
-    
-    with open(projection_path, "r", encoding="utf-8") as f:
-        return json.load(f)
+    return read_json(projection_path)
 

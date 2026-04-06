@@ -1,0 +1,419 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e5]:
+      - generic [ref=e6]:
+        - generic [ref=e7]:
+          - img [ref=e8]
+          - generic [ref=e10]: KAS Studio
+        - paragraph [ref=e11]: AI 자동화 파이프라인
+      - generic [ref=e12]:
+        - generic [ref=e13]:
+          - generic [ref=e14]: 대시보드
+          - list [ref=e16]:
+            - listitem [ref=e17]:
+              - link "전체 KPI" [ref=e18] [cursor=pointer]:
+                - /url: /
+                - img [ref=e19]
+                - generic [ref=e24]: 전체 KPI
+            - listitem [ref=e25]:
+              - link "트렌드 관리" [ref=e26] [cursor=pointer]:
+                - /url: /trends
+                - img [ref=e27]
+                - generic [ref=e30]: 트렌드 관리
+            - listitem [ref=e31]:
+              - link "수익 추적" [ref=e32] [cursor=pointer]:
+                - /url: /revenue
+                - img [ref=e33]
+                - generic [ref=e35]: 수익 추적
+            - listitem [ref=e36]:
+              - link "리스크 모니터링" [ref=e37] [cursor=pointer]:
+                - /url: /risk
+                - img [ref=e38]
+                - generic [ref=e40]: 리스크 모니터링
+            - listitem [ref=e41]:
+              - link "학습 피드백" [ref=e42] [cursor=pointer]:
+                - /url: /learning
+                - img [ref=e43]
+                - generic [ref=e51]: 학습 피드백
+            - listitem [ref=e52]:
+              - link "비용/쿼터" [ref=e53] [cursor=pointer]:
+                - /url: /cost
+                - img [ref=e54]
+                - generic [ref=e56]: 비용/쿼터
+        - generic [ref=e57]:
+          - generic [ref=e58]: 채널별 상세
+          - list [ref=e60]:
+            - listitem [ref=e61]:
+              - link "CH1 경제" [ref=e62] [cursor=pointer]:
+                - /url: /channels/CH1
+                - img [ref=e63]
+                - generic [ref=e65]: CH1 경제
+            - listitem [ref=e66]:
+              - link "CH2 과학" [ref=e67] [cursor=pointer]:
+                - /url: /channels/CH2
+                - img [ref=e68]
+                - generic [ref=e70]: CH2 과학
+            - listitem [ref=e71]:
+              - link "CH3 부동산" [ref=e72] [cursor=pointer]:
+                - /url: /channels/CH3
+                - img [ref=e73]
+                - generic [ref=e75]: CH3 부동산
+            - listitem [ref=e76]:
+              - link "CH4 심리" [ref=e77] [cursor=pointer]:
+                - /url: /channels/CH4
+                - img [ref=e78]
+                - generic [ref=e80]: CH4 심리
+            - listitem [ref=e81]:
+              - link "CH5 미스터리" [ref=e82] [cursor=pointer]:
+                - /url: /channels/CH5
+                - img [ref=e83]
+                - generic [ref=e85]: CH5 미스터리
+            - listitem [ref=e86]:
+              - link "CH6 역사" [ref=e87] [cursor=pointer]:
+                - /url: /channels/CH6
+                - img [ref=e88]
+                - generic [ref=e90]: CH6 역사
+            - listitem [ref=e91]:
+              - link "CH7 전쟁사" [ref=e92] [cursor=pointer]:
+                - /url: /channels/CH7
+                - img [ref=e93]
+                - generic [ref=e95]: CH7 전쟁사
+      - list [ref=e97]:
+        - listitem [ref=e98]:
+          - link "설정" [ref=e99] [cursor=pointer]:
+            - /url: /settings
+            - img [ref=e100]
+            - generic [ref=e103]: 설정
+    - main [ref=e104]:
+      - generic [ref=e105]:
+        - button "Toggle Sidebar" [ref=e106]:
+          - img
+          - generic [ref=e107]: Toggle Sidebar
+        - separator [ref=e108]
+        - generic [ref=e109]:
+          - generic [ref=e110]: KAS Studio
+          - button "테마 전환" [ref=e111]:
+            - img
+      - main [ref=e112]:
+        - generic [ref=e113]:
+          - generic [ref=e114]:
+            - heading "전체 KPI 대시보드" [level=1] [ref=e115]
+            - paragraph [ref=e116]: "7채널 AI 자동화 파이프라인 현황 — 월 목표: 1,400만원"
+          - generic [ref=e117]:
+            - generic [ref=e118]:
+              - generic [ref=e119]:
+                - generic [ref=e120]: 월 총 목표
+                - img [ref=e121]
+              - generic [ref=e123]:
+                - generic [ref=e124]: ₩14,000,000
+                - paragraph [ref=e125]: 채널당 ₩2,000,000
+            - generic [ref=e126]:
+              - generic [ref=e127]:
+                - generic [ref=e128]: 활성 채널
+                - img [ref=e129]
+              - generic [ref=e131]:
+                - generic [ref=e132]: 2 / 7
+                - paragraph [ref=e133]: Phase 1 (CH1, CH2)
+            - generic [ref=e134]:
+              - generic [ref=e135]:
+                - generic [ref=e136]: 이번달 달성률
+                - img [ref=e137]
+              - generic [ref=e140]:
+                - generic [ref=e141]: 0%
+                - progressbar [ref=e142]: x
+            - generic [ref=e144]:
+              - generic [ref=e145]:
+                - generic [ref=e146]: 리스크 채널
+                - img [ref=e147]
+              - generic [ref=e149]:
+                - generic [ref=e150]: 0 / 7
+                - paragraph [ref=e151]: HIGH 리스크 없음
+          - generic [ref=e152]:
+            - generic [ref=e153]:
+              - generic [ref=e155]:
+                - generic [ref=e156]:
+                  - img [ref=e157]
+                  - generic [ref=e160]: 파이프라인 현황
+                - generic [ref=e162]: 5 실행중
+              - generic [ref=e164]:
+                - generic [ref=e165]:
+                  - img [ref=e166]
+                  - generic [ref=e168]:
+                    - generic [ref=e169]:
+                      - link "CH2" [ref=e170] [cursor=pointer]:
+                        - /url: /channels/CH2
+                      - generic [ref=e171]: 실행중
+                    - paragraph [ref=e172]: 이런 집들은 피하세요가 부동산 시장에 미치는 영향
+                    - paragraph [ref=e173]: 4월 3일 오전 08:45
+                - generic [ref=e174]:
+                  - img [ref=e175]
+                  - generic [ref=e177]:
+                    - generic [ref=e178]:
+                      - link "CH2" [ref=e179] [cursor=pointer]:
+                        - /url: /channels/CH2
+                      - generic [ref=e180]: 실행중
+                    - paragraph [ref=e181]: 사고 5년뒤 후회할아파트가 부동산 시장에 미치는 영향
+                    - paragraph [ref=e182]: 4월 3일 오전 08:43
+                - generic [ref=e183]:
+                  - img [ref=e184]
+                  - generic [ref=e186]:
+                    - generic [ref=e187]:
+                      - link "CH2" [ref=e188] [cursor=pointer]:
+                        - /url: /channels/CH2
+                      - generic [ref=e189]: 실행중
+                    - paragraph [ref=e190]: "부동산 형이 알려준다 #shorts #서울가 부동산 시장에 미치는 영향"
+                    - paragraph [ref=e191]: 4월 3일 오전 12:30
+                - generic [ref=e192]:
+                  - img [ref=e193]
+                  - generic [ref=e195]:
+                    - generic [ref=e196]:
+                      - link "CH1" [ref=e197] [cursor=pointer]:
+                        - /url: /channels/CH1
+                      - generic [ref=e198]: 실행중
+                    - paragraph [ref=e199]: 주식지표 PER 완벽이해 1분컷의 작동 원리와 내 돈에 미치는 영향
+                    - paragraph [ref=e200]: 4월 3일 오전 12:25
+                - generic [ref=e201]:
+                  - img [ref=e202]
+                  - generic [ref=e204]:
+                    - generic [ref=e205]:
+                      - link "CH1" [ref=e206] [cursor=pointer]:
+                        - /url: /channels/CH1
+                      - generic [ref=e207]: 실행중
+                    - paragraph [ref=e208]: "[라이브] 대한민국 대표 재테크 채널 매일경제TV의 작동 원리와 내 돈에 미치는 영향"
+                    - paragraph [ref=e209]: 4월 3일 오전 12:22
+            - generic [ref=e210]:
+              - heading "채널별 현황" [level=2] [ref=e211]
+              - generic [ref=e212]:
+                - link "CH1 경제 활성 월 수익 ₩0 / ₩2.0M 0% 조회수 — CTR — 알고리즘 PRE 미달성 (0%)" [ref=e213] [cursor=pointer]:
+                  - /url: /channels/CH1
+                  - generic [ref=e214]:
+                    - generic [ref=e216]:
+                      - generic [ref=e217]:
+                        - generic [ref=e218]: CH1
+                        - paragraph [ref=e219]: 경제
+                      - generic [ref=e220]: 활성
+                    - generic [ref=e221]:
+                      - generic [ref=e222]:
+                        - generic [ref=e223]:
+                          - generic [ref=e224]: 월 수익
+                          - generic [ref=e225]: ₩0 / ₩2.0M
+                        - progressbar [ref=e226]: x
+                      - generic [ref=e228]:
+                        - generic [ref=e229]:
+                          - generic [ref=e230]:
+                            - img [ref=e231]
+                            - generic [ref=e234]: 조회수
+                          - paragraph [ref=e235]: —
+                        - generic [ref=e236]:
+                          - generic [ref=e237]:
+                            - img [ref=e238]
+                            - generic [ref=e244]: CTR
+                          - paragraph [ref=e245]: —
+                        - generic [ref=e246]:
+                          - generic [ref=e247]:
+                            - img [ref=e248]
+                            - generic [ref=e250]: 알고리즘
+                          - paragraph [ref=e251]: PRE
+                      - generic [ref=e252]:
+                        - img [ref=e253]
+                        - generic [ref=e257]: 미달성 (0%)
+                - link "CH2 부동산 활성 월 수익 ₩0 / ₩2.0M 0% 조회수 — CTR — 알고리즘 PRE 미달성 (0%)" [ref=e258] [cursor=pointer]:
+                  - /url: /channels/CH2
+                  - generic [ref=e259]:
+                    - generic [ref=e261]:
+                      - generic [ref=e262]:
+                        - generic [ref=e263]: CH2
+                        - paragraph [ref=e264]: 부동산
+                      - generic [ref=e265]: 활성
+                    - generic [ref=e266]:
+                      - generic [ref=e267]:
+                        - generic [ref=e268]:
+                          - generic [ref=e269]: 월 수익
+                          - generic [ref=e270]: ₩0 / ₩2.0M
+                        - progressbar [ref=e271]: x
+                      - generic [ref=e273]:
+                        - generic [ref=e274]:
+                          - generic [ref=e275]:
+                            - img [ref=e276]
+                            - generic [ref=e279]: 조회수
+                          - paragraph [ref=e280]: —
+                        - generic [ref=e281]:
+                          - generic [ref=e282]:
+                            - img [ref=e283]
+                            - generic [ref=e289]: CTR
+                          - paragraph [ref=e290]: —
+                        - generic [ref=e291]:
+                          - generic [ref=e292]:
+                            - img [ref=e293]
+                            - generic [ref=e295]: 알고리즘
+                          - paragraph [ref=e296]: PRE
+                      - generic [ref=e297]:
+                        - img [ref=e298]
+                        - generic [ref=e302]: 미달성 (0%)
+                - link "CH3 심리 대기 월 수익 ₩0 / ₩2.0M 0% 조회수 — CTR — 알고리즘 PRE 미달성 (0%)" [ref=e303] [cursor=pointer]:
+                  - /url: /channels/CH3
+                  - generic [ref=e304]:
+                    - generic [ref=e306]:
+                      - generic [ref=e307]:
+                        - generic [ref=e308]: CH3
+                        - paragraph [ref=e309]: 심리
+                      - generic [ref=e310]: 대기
+                    - generic [ref=e311]:
+                      - generic [ref=e312]:
+                        - generic [ref=e313]:
+                          - generic [ref=e314]: 월 수익
+                          - generic [ref=e315]: ₩0 / ₩2.0M
+                        - progressbar [ref=e316]: x
+                      - generic [ref=e318]:
+                        - generic [ref=e319]:
+                          - generic [ref=e320]:
+                            - img [ref=e321]
+                            - generic [ref=e324]: 조회수
+                          - paragraph [ref=e325]: —
+                        - generic [ref=e326]:
+                          - generic [ref=e327]:
+                            - img [ref=e328]
+                            - generic [ref=e334]: CTR
+                          - paragraph [ref=e335]: —
+                        - generic [ref=e336]:
+                          - generic [ref=e337]:
+                            - img [ref=e338]
+                            - generic [ref=e340]: 알고리즘
+                          - paragraph [ref=e341]: PRE
+                      - generic [ref=e342]:
+                        - img [ref=e343]
+                        - generic [ref=e347]: 미달성 (0%)
+                - link "CH4 미스터리 대기 월 수익 ₩0 / ₩2.0M 0% 조회수 — CTR — 알고리즘 PRE 미달성 (0%)" [ref=e348] [cursor=pointer]:
+                  - /url: /channels/CH4
+                  - generic [ref=e349]:
+                    - generic [ref=e351]:
+                      - generic [ref=e352]:
+                        - generic [ref=e353]: CH4
+                        - paragraph [ref=e354]: 미스터리
+                      - generic [ref=e355]: 대기
+                    - generic [ref=e356]:
+                      - generic [ref=e357]:
+                        - generic [ref=e358]:
+                          - generic [ref=e359]: 월 수익
+                          - generic [ref=e360]: ₩0 / ₩2.0M
+                        - progressbar [ref=e361]: x
+                      - generic [ref=e363]:
+                        - generic [ref=e364]:
+                          - generic [ref=e365]:
+                            - img [ref=e366]
+                            - generic [ref=e369]: 조회수
+                          - paragraph [ref=e370]: —
+                        - generic [ref=e371]:
+                          - generic [ref=e372]:
+                            - img [ref=e373]
+                            - generic [ref=e379]: CTR
+                          - paragraph [ref=e380]: —
+                        - generic [ref=e381]:
+                          - generic [ref=e382]:
+                            - img [ref=e383]
+                            - generic [ref=e385]: 알고리즘
+                          - paragraph [ref=e386]: PRE
+                      - generic [ref=e387]:
+                        - img [ref=e388]
+                        - generic [ref=e392]: 미달성 (0%)
+                - link "CH5 전쟁사 대기 월 수익 ₩0 / ₩2.0M 0% 조회수 — CTR — 알고리즘 PRE 미달성 (0%)" [ref=e393] [cursor=pointer]:
+                  - /url: /channels/CH5
+                  - generic [ref=e394]:
+                    - generic [ref=e396]:
+                      - generic [ref=e397]:
+                        - generic [ref=e398]: CH5
+                        - paragraph [ref=e399]: 전쟁사
+                      - generic [ref=e400]: 대기
+                    - generic [ref=e401]:
+                      - generic [ref=e402]:
+                        - generic [ref=e403]:
+                          - generic [ref=e404]: 월 수익
+                          - generic [ref=e405]: ₩0 / ₩2.0M
+                        - progressbar [ref=e406]: x
+                      - generic [ref=e408]:
+                        - generic [ref=e409]:
+                          - generic [ref=e410]:
+                            - img [ref=e411]
+                            - generic [ref=e414]: 조회수
+                          - paragraph [ref=e415]: —
+                        - generic [ref=e416]:
+                          - generic [ref=e417]:
+                            - img [ref=e418]
+                            - generic [ref=e424]: CTR
+                          - paragraph [ref=e425]: —
+                        - generic [ref=e426]:
+                          - generic [ref=e427]:
+                            - img [ref=e428]
+                            - generic [ref=e430]: 알고리즘
+                          - paragraph [ref=e431]: PRE
+                      - generic [ref=e432]:
+                        - img [ref=e433]
+                        - generic [ref=e437]: 미달성 (0%)
+                - link "CH6 과학 대기 월 수익 ₩0 / ₩2.0M 0% 조회수 — CTR — 알고리즘 PRE 미달성 (0%)" [ref=e438] [cursor=pointer]:
+                  - /url: /channels/CH6
+                  - generic [ref=e439]:
+                    - generic [ref=e441]:
+                      - generic [ref=e442]:
+                        - generic [ref=e443]: CH6
+                        - paragraph [ref=e444]: 과학
+                      - generic [ref=e445]: 대기
+                    - generic [ref=e446]:
+                      - generic [ref=e447]:
+                        - generic [ref=e448]:
+                          - generic [ref=e449]: 월 수익
+                          - generic [ref=e450]: ₩0 / ₩2.0M
+                        - progressbar [ref=e451]: x
+                      - generic [ref=e453]:
+                        - generic [ref=e454]:
+                          - generic [ref=e455]:
+                            - img [ref=e456]
+                            - generic [ref=e459]: 조회수
+                          - paragraph [ref=e460]: —
+                        - generic [ref=e461]:
+                          - generic [ref=e462]:
+                            - img [ref=e463]
+                            - generic [ref=e469]: CTR
+                          - paragraph [ref=e470]: —
+                        - generic [ref=e471]:
+                          - generic [ref=e472]:
+                            - img [ref=e473]
+                            - generic [ref=e475]: 알고리즘
+                          - paragraph [ref=e476]: PRE
+                      - generic [ref=e477]:
+                        - img [ref=e478]
+                        - generic [ref=e482]: 미달성 (0%)
+                - link "CH7 역사 대기 월 수익 ₩0 / ₩2.0M 0% 조회수 — CTR — 알고리즘 PRE 미달성 (0%)" [ref=e483] [cursor=pointer]:
+                  - /url: /channels/CH7
+                  - generic [ref=e484]:
+                    - generic [ref=e486]:
+                      - generic [ref=e487]:
+                        - generic [ref=e488]: CH7
+                        - paragraph [ref=e489]: 역사
+                      - generic [ref=e490]: 대기
+                    - generic [ref=e491]:
+                      - generic [ref=e492]:
+                        - generic [ref=e493]:
+                          - generic [ref=e494]: 월 수익
+                          - generic [ref=e495]: ₩0 / ₩2.0M
+                        - progressbar [ref=e496]: x
+                      - generic [ref=e498]:
+                        - generic [ref=e499]:
+                          - generic [ref=e500]:
+                            - img [ref=e501]
+                            - generic [ref=e504]: 조회수
+                          - paragraph [ref=e505]: —
+                        - generic [ref=e506]:
+                          - generic [ref=e507]:
+                            - img [ref=e508]
+                            - generic [ref=e514]: CTR
+                          - paragraph [ref=e515]: —
+                        - generic [ref=e516]:
+                          - generic [ref=e517]:
+                            - img [ref=e518]
+                            - generic [ref=e520]: 알고리즘
+                          - paragraph [ref=e521]: PRE
+                      - generic [ref=e522]:
+                        - img [ref=e523]
+                        - generic [ref=e527]: 미달성 (0%)
+  - button "Open Next.js Dev Tools" [ref=e533] [cursor=pointer]:
+    - img [ref=e534]

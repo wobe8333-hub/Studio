@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>트렌드 섹션 — 채널 탭 방식</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --c-dark: #900000; --c-red: #ee2400; --c-salmon: #ffb09c;
+    --c-blush: #fbd9d3; --c-cream: #ffefea;
+    --t-primary: #1a0505; --t-secondary: #5c1a1a; --t-muted: #9b6060;
+    --t-accent: #900000;
+    --glass-bg: rgba(255,255,255,0.55);
+    --glass-border: rgba(238,36,0,0.12);
+    --font-heading: 'Playfair Display', serif;
+    --font-body: 'DM Sans', sans-serif;
+    --font-mono: 'DM Mono', monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: var(--font-body);
+    background: linear-gradient(135deg, #fbd9d3 0%, #ffefea 60%, #ffd9cc 100%);
+    min-height: 100vh; padding: 32px;
+    color: var(--t-primary);
+  }
+  body::before {
+    content:''; position:fixed; inset:0; pointer-events:none;
+    background: radial-gradient(ellipse 60% 50% at 20% 20%, rgba(238,36,0,0.07), transparent 70%);
+  }
+  h2 { font-family: var(--font-heading); font-size: 22px; color: var(--t-primary); margin-bottom: 6px; }
+  .subtitle { font-size: 13px; color: var(--t-muted); margin-bottom: 28px; }
+  .glass-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(144,0,0,0.08);
+  }
+
+  /* 채널 탭 */
+  .ch-tabs {
+    display: flex; gap: 0;
+    border-bottom: 1px solid rgba(238,36,0,0.1);
+    padding: 0 16px;
+    overflow-x: auto;
+  }
+  .ch-tab {
+    display: flex; align-items: center; gap: 6px;
+    padding: 12px 14px;
+    font-size: 12px; font-weight: 600;
+    color: var(--t-muted);
+    cursor: pointer; border-bottom: 2px solid transparent;
+    margin-bottom: -1px; white-space: nowrap;
+    transition: all 0.15s;
+    user-select: none;
+  }
+  .ch-tab:hover { color: var(--t-secondary); }
+  .ch-tab.active { color: var(--c-red); border-bottom-color: var(--c-red); }
+  .ch-dot { width: 6px; height: 6px; border-radius: 50%; }
+
+  /* 트렌드 콘텐츠 */
+  .trend-content { padding: 16px 0; }
+  .channel-panel { display: none; }
+  .channel-panel.active { display: block; }
+
+  .trend-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 20px 12px;
+  }
+  .trend-meta { font-size: 11px; color: var(--t-muted); font-family: var(--font-mono); }
+  .trend-refresh {
+    font-size: 11px; color: var(--c-red); font-weight: 600;
+    cursor: pointer; display: flex; align-items: center; gap: 4px;
+  }
+
+  .trend-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 11px 20px;
+    border-top: 1px solid rgba(238,36,0,0.05);
+    transition: background 0.1s;
+    cursor: pointer;
+  }
+  .trend-item:hover { background: rgba(238,36,0,0.03); }
+
+  .trend-rank {
+    width: 22px; height: 22px; border-radius: 7px;
+    background: rgba(238,36,0,0.1); color: var(--c-red);
+    font-size: 10px; font-weight: 800;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; font-family: var(--font-mono);
+  }
+  .trend-rank.top3 { background: rgba(144,0,0,0.12); color: var(--c-dark); }
+
+  .trend-info { flex: 1; }
+  .trend-title { font-size: 13px; font-weight: 600; color: var(--t-primary); }
+  .trend-tags { display: flex; gap: 5px; margin-top: 3px; flex-wrap: wrap; }
+  .trend-tag {
+    font-size: 9px; padding: 1px 7px; border-radius: 10px;
+    background: rgba(238,36,0,0.08); color: var(--t-secondary);
+    font-weight: 500;
+  }
+
+  .trend-score {
+    font-family: var(--font-heading);
+    font-size: 18px; font-weight: 700; color: var(--t-accent);
+    min-width: 36px; text-align: right;
+  }
+  .trend-score.top { color: var(--c-red); }
+
+  /* 빈 상태 */
+  .empty-state {
+    padding: 32px 20px; text-align: center;
+    color: var(--t-muted); font-size: 13px;
+  }
+  .empty-state .icon { font-size: 28px; margin-bottom: 8px; }
+
+  /* 범례 */
+  .score-legend {
+    display: flex; gap: 16px; align-items: center;
+    padding: 12px 20px;
+    border-top: 1px solid rgba(238,36,0,0.06);
+    font-size: 10px; color: var(--t-muted);
+  }
+  .legend-item { display: flex; align-items: center; gap: 5px; }
+  .legend-dot { width: 8px; height: 8px; border-radius: 2px; }
+
+  /* 자동갱신 배지 */
+  .auto-badge {
+    font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 20px;
+    background: rgba(22,163,74,0.1); color: #15803d;
+    display: inline-flex; align-items: center; gap: 4px;
+  }
+  .auto-dot { width: 5px; height: 5px; border-radius: 50%; background: #16a34a; animation: blink 1.5s infinite; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+  .section-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 20px 0;
+    margin-bottom: 4px;
+  }
+  .section-title { font-family: var(--font-heading); font-size: 16px; font-weight: 700; color: var(--t-primary); }
+
+  /* 데이터 흐름 설명 */
+  .flow-box {
+    background: rgba(255,255,255,0.4); border: 1px solid rgba(238,36,0,0.1);
+    border-radius: 12px; padding: 16px 20px; margin-top: 20px;
+    font-size: 12px;
+  }
+  .flow-title { font-weight: 700; color: var(--t-secondary); margin-bottom: 10px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .flow-step { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 8px; }
+  .flow-num {
+    width: 20px; height: 20px; border-radius: 6px;
+    background: var(--c-red); color: #fff;
+    font-size: 10px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; margin-top: 1px;
+  }
+  .flow-text { color: var(--t-secondary); line-height: 1.5; }
+  .flow-code { font-family: var(--font-mono); font-size: 10px; color: var(--c-dark); background: rgba(144,0,0,0.06); padding: 1px 6px; border-radius: 4px; }
+</style>
+</head>
+<body>
+
+<h2>오늘의 트렌드 — 채널별 자동 표시</h2>
+<p class="subtitle">Step05 실행 후 각 채널 데이터가 자동으로 탭에 반영됩니다. 직접 탭을 클릭해보세요!</p>
+
+<div class="glass-card" style="max-width:680px; margin: 0 auto;">
+  <div class="section-header">
+    <div class="section-title">📈 오늘의 트렌드</div>
+    <div style="display:flex;gap:8px;align-items:center">
+      <span class="auto-badge"><span class="auto-dot"></span>채널별 자동 갱신</span>
+    </div>
+  </div>
+
+  <!-- 채널 탭 -->
+  <div class="ch-tabs">
+    <div class="ch-tab active" onclick="switchTab(this,'ch1')">
+      <div class="ch-dot" style="background:#ee2400"></div>CH1 경제
+    </div>
+    <div class="ch-tab" onclick="switchTab(this,'ch2')">
+      <div class="ch-dot" style="background:#ffb09c"></div>CH2 부동산
+    </div>
+    <div class="ch-tab" onclick="switchTab(this,'ch3')">
+      <div class="ch-dot" style="background:#fbd9d3;border:1px solid #ddd"></div>CH3 심리
+    </div>
+    <div class="ch-tab" onclick="switchTab(this,'ch4')">
+      <div class="ch-dot" style="background:#900000"></div>CH4 미스터리
+    </div>
+    <div class="ch-tab" style="opacity:.4;cursor:not-allowed">
+      <div class="ch-dot" style="background:#ccc"></div>CH5 준비중
+    </div>
+  </div>
+
+  <div class="trend-content">
+
+    <!-- CH1 -->
+    <div class="channel-panel active" id="ch1">
+      <div class="trend-header">
+        <span class="trend-meta">Step05 수집 · 2026-04-06 09:12 · 15건 중 상위 5</span>
+        <span class="trend-refresh">↻ 새로고침</span>
+      </div>
+      <div class="trend-item">
+        <div class="trend-rank top3">1</div>
+        <div class="trend-info">
+          <div class="trend-title">한국은행 금리 동결 파장</div>
+          <div class="trend-tags"><span class="trend-tag">금리</span><span class="trend-tag">통화정책</span><span class="trend-tag">긴급도↑</span></div>
+        </div>
+        <div class="trend-score top">94</div>
+      </div>
+      <div class="trend-item">
+        <div class="trend-rank top3">2</div>
+        <div class="trend-info">
+          <div class="trend-title">달러 환율 1,380원 돌파</div>
+          <div class="trend-tags"><span class="trend-tag">환율</span><span class="trend-tag">달러</span></div>
+        </div>
+        <div class="trend-score top">88</div>
+      </div>
+      <div class="trend-item">
+        <div class="trend-rank top3">3</div>
+        <div class="trend-info">
+          <div class="trend-title">코스피 외인 순매수 전환</div>
+          <div class="trend-tags"><span class="trend-tag">코스피</span><span class="trend-tag">외국인</span></div>
+        </div>
+        <div class="trend-score">81</div>
+      </div>
+      <div class="trend-item">
+        <div class="trend-rank">4</div>
+        <div class="trend-info">
+          <div class="trend-title">삼성전자 배당락 효과</div>
+          <div class="trend-tags"><span class="trend-tag">삼성</span><span class="trend-tag">배당</span></div>
+        </div>
+        <div class="trend-score">76</div>
+      </div>
+      <div class="trend-item">
+        <div class="trend-rank">5</div>
+        <div class="trend-info">
+          <div class="trend-title">부동산 PF 대출 연장 압박</div>
+          <div class="trend-tags"><span class="trend-tag">PF</span><span class="trend-tag">부동산금융</span></div>
+        </div>
+        <div class="trend-score">71</div>
+      </div>
+    </div>
+
+    <!-- CH2 -->
+    <div class="channel-panel" id="ch2">
+      <div class="trend-header">
+        <span class="trend-meta">Step05 수집 · 2026-04-06 09:18 · 12건 중 상위 5</span>
+        <span class="trend-refresh">↻ 새로고침</span>
+      </div>
+      <div class="trend-item">
+        <div class="trend-rank top3">1</div>
+        <div class="trend-info">
+          <div class="trend-title">서울 아파트 실거래가 반등 신호</div>
+          <div class="trend-tags"><span class="trend-tag">아파트</span><span class="trend-tag">실거래가</span><span class="trend-tag">긴급도↑</span></div>
+        </div>
+        <div class="trend-score top">91</div>
+      </div>
+      <div class="trend-item">
+        <div class="trend-rank top3">2</div>
+        <div class="trend-info">
+          <div class="trend-title">재건축 규제 완화 추진</div>
+          <div class="trend-tags"><span class="trend-tag">재건축</span><span class="trend-tag">규제완화</span></div>
+        </div>
+        <div class="trend-score top">85</div>
+      </div>
+      <div class="trend-item">
+        <div class="trend-rank top3">3</div>
+        <div class="trend-info">
+          <div class="trend-title">DSR 규제 3단계 영향 분석</div>
+          <div class="trend-tags"><span class="trend-tag">DSR</span><span class="trend-tag">대출규제</span></div>
+        </div>
+        <div class="trend-score">79</div>
+      </div>
+      <div class="trend-item">
+        <div class="trend-rank">4</div>
+        <div class="trend-info">
+          <div class="trend-title">신축 입주물량 폭탄 2026</div>
+          <div class="trend-tags"><span class="trend-tag">입주물량</span><span class="trend-tag">공급과잉</span></div>
+        </div>
+        <div class="trend-score">73</div>
+      </div>
+      <div class="trend-item">
+        <div class="trend-rank">5</div>
+        <div class="trend-info">
+          <div class="trend-title">전세 보증보험 가입 의무화</div>
+          <div class="trend-tags"><span class="trend-tag">전세</span><span class="trend-tag">보증보험</span></div>
+        </div>
+        <div class="trend-score">68</div>
+      </div>
+    </div>
+
+    <!-- CH3 -->
+    <div class="channel-panel" id="ch3">
+      <div class="trend-header">
+        <span class="trend-meta">Step05 수집 · 2026-04-06 09:24 · 11건 중 상위 5</span>
+        <span class="trend-refresh">↻ 새로고침</span>
+      </div>
+      <div class="trend-item">
+        <div class="trend-rank top3">1</div>
+        <div class="trend-info">
+          <div class="trend-title">도파민 중독과 SNS 설계의 비밀</div>
+          <div class="trend-tags"><span class="trend-tag">도파민</span><span class="trend-tag">중독</span><span class="trend-tag">SNS</span></div>
+        </div>
+        <div class="trend-score top">89</div>
+      </div>
+      <div class="trend-item">
+        <div class="trend-rank top3">2</div>
+        <div class="trend-info">
+          <div class="trend-title">확증편향이 투자 실패를 만드는 방식</div>
+          <div class="trend-tags"><span class="trend-tag">확증편향</span><span class="trend-tag">행동경제학</span></div>
+        </div>
+        <div class="trend-score top">83</div>
+      </div>
+      <div class="trend-item">
+        <div class="trend-rank top3">3</div>
+        <div class="trend-info">
+          <div class="trend-title">손실회피 심리와 주식 패닉셀</div>
+          <div class="trend-tags"><span class="trend-tag">손실회피</span><span class="trend-tag">프로스펙트이론</span></div>
+        </div>
+        <div class="trend-score">77</div>
+      </div>
+      <div class="trend-item">
+        <div class="trend-rank">4</div>
+        <div class="trend-info">
+          <div class="trend-title">밴드왜건 효과와 집단 의사결정</div>
+          <div class="trend-tags"><span class="trend-tag">밴드왜건</span><span class="trend-tag">군중심리</span></div>
+        </div>
+        <div class="trend-score">70</div>
+      </div>
+      <div class="trend-item">
+        <div class="trend-rank">5</div>
+        <div class="trend-info">
+          <div class="trend-title">인지부조화를 이용하는 마케팅</div>
+          <div class="trend-tags"><span class="trend-tag">인지부조화</span><span class="trend-tag">설득심리</span></div>
+        </div>
+        <div class="trend-score">65</div>
+      </div>
+    </div>
+
+    <!-- CH4 -->
+    <div class="channel-panel" id="ch4">
+      <div class="trend-header">
+        <span class="trend-meta">Step05 수집 · 2026-04-06 09:30 · 10건 중 상위 5</span>
+        <span class="trend-refresh">↻ 새로고침</span>
+      </div>
+      <div class="trend-item">
+        <div class="trend-rank top3">1</div>
+        <div class="trend-info">
+          <div class="trend-title">NASA가 숨기는 화성 사진의 진실</div>
+          <div class="trend-tags"><span class="trend-tag">NASA</span><span class="trend-tag">화성</span><span class="trend-tag">음모론</span></div>
+        </div>
+        <div class="trend-score top">92</div>
+      </div>
+      <div class="trend-item">
+        <div class="trend-rank top3">2</div>
+        <div class="trend-info">
+          <div class="trend-title">버뮤다 삼각지대 최신 과학 해석</div>
+          <div class="trend-tags"><span class="trend-tag">버뮤다</span><span class="trend-tag">미설명현상</span></div>
+        </div>
+        <div class="trend-score top">86</div>
+      </div>
+      <div class="trend-item">
+        <div class="trend-rank top3">3</div>
+        <div class="trend-info">
+          <div class="trend-title">딥스테이트 음모론의 심리적 기원</div>
+          <div class="trend-tags"><span class="trend-tag">음모론</span><span class="trend-tag">딥스테이트</span></div>
+        </div>
+        <div class="trend-score">80</div>
+      </div>
+      <div class="trend-item">
+        <div class="trend-rank">4</div>
+        <div class="trend-info">
+          <div class="trend-title">고대 피라미드 내부 신비 공간 발견</div>
+          <div class="trend-tags"><span class="trend-tag">피라미드</span><span class="trend-tag">고고학</span></div>
+        </div>
+        <div class="trend-score">74</div>
+      </div>
+      <div class="trend-item">
+        <div class="trend-rank">5</div>
+        <div class="trend-info">
+          <div class="trend-title">유령 목격담의 신경과학적 설명</div>
+          <div class="trend-tags"><span class="trend-tag">유령</span><span class="trend-tag">신경과학</span></div>
+        </div>
+        <div class="trend-score">69</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="score-legend">
+    <span>점수 = 관심도 40% + 적합도 25% + 수익성 20% + 긴급도 15%</span>
+    <span class="legend-item"><span class="legend-dot" style="background:rgba(238,36,0,0.3)"></span>90+ 긴급</span>
+    <span class="legend-item"><span class="legend-dot" style="background:rgba(144,0,0,0.2)"></span>80+ 우선</span>
+    <span class="legend-item"><span class="legend-dot" style="background:rgba(155,96,96,0.2)"></span>일반</span>
+  </div>
+</div>
+
+<!-- 데이터 흐름 설명 -->
+<div class="flow-box" style="max-width:680px;margin:16px auto 0">
+  <div class="flow-title">📡 자동 데이터 흐름</div>
+  <div class="flow-step">
+    <div class="flow-num">1</div>
+    <div class="flow-text">파이프라인 <span class="flow-code">Step05</span> 실행 → 채널별 트렌드 수집 → <span class="flow-code">data/knowledge_store/CH*/</span> 저장</div>
+  </div>
+  <div class="flow-step">
+    <div class="flow-num">2</div>
+    <div class="flow-text">대시보드 <span class="flow-code">GET /api/knowledge?channel=CH1</span> → JSONL 파싱 → 점수순 정렬</div>
+  </div>
+  <div class="flow-step">
+    <div class="flow-num">3</div>
+    <div class="flow-text">탭 클릭 → 클라이언트에서 채널 파라미터 변경 → 자동 fetch → 탭 콘텐츠 교체</div>
+  </div>
+  <div class="flow-step" style="margin-bottom:0">
+    <div class="flow-num">4</div>
+    <div class="flow-text">Step05 완료 즉시 <span class="flow-code">↻ 새로고침</span> 또는 30초 자동 폴링으로 최신 데이터 반영</div>
+  </div>
+</div>
+
+<script>
+function switchTab(el, id) {
+  document.querySelectorAll('.ch-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.channel-panel').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  const panel = document.getElementById(id);
+  if (panel) panel.classList.add('active');
+  if (window.__sp_select) window.__sp_select(id, el.textContent.trim());
+}
+</script>
+</body>
+</html>

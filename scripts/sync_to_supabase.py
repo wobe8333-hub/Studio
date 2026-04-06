@@ -57,7 +57,7 @@ def sync_channels() -> int:
     upserted = 0
     for ch in channels:
         row = {
-            "id": ch.get("id"),
+            "id": ch.get("id") or ch.get("channel_id"),
             "category": ch.get("category", ""),
             "category_ko": ch.get("category_ko", ""),
             "youtube_channel_id": ch.get("youtube_channel_id"),
@@ -150,14 +150,17 @@ def sync_risk() -> int:
     for rf in risk_files:
         try:
             data = read_json(rf)
-            records = data if isinstance(data, list) else data.get("channels", [])
+            channels_raw = data.get("channels", []) if isinstance(data, dict) else data
+            # channels가 dict(키=채널ID)인 경우 values()로 변환
+            records = list(channels_raw.values()) if isinstance(channels_raw, dict) else channels_raw
+            month = data.get("month") if isinstance(data, dict) else None
             for rec in records:
                 row = {
                     "channel_id": rec.get("channel_id"),
-                    "month": rec.get("month"),
+                    "month": rec.get("month") or month,
                     "net_profit": rec.get("net_profit", 0),
                     "target": rec.get("target", 2000000),
-                    "risk_level": rec.get("risk_level", "HIGH"),
+                    "risk_level": "HIGH" if not rec.get("target_achieved", False) else "LOW",
                     "risks": rec.get("risks", []),
                     "generated_at": datetime.utcnow().isoformat(),
                 }
@@ -204,7 +207,9 @@ def sync_trend_topics() -> int:
                         "topic_type": rec.get("topic_type"),
                         "collected_at": rec.get("collected_at", datetime.utcnow().isoformat()),
                     }
-                    supabase.table("trend_topics").insert(row).execute()
+                    supabase.table("trend_topics").upsert(
+                        row, on_conflict="channel_id,reinterpreted_title"
+                    ).execute()
                     total += 1
                 except Exception as e:
                     logger.warning(f"트렌드 주제 파싱 실패: {e}")
@@ -244,13 +249,50 @@ def sync_quota() -> int:
     return total
 
 
+def sync_learning_feedback() -> int:
+    """Step13 학습 피드백 동기화"""
+    total = 0
+    for ch_id in CHANNEL_IDS:
+        for run_dir in sorted((KAS_ROOT / "runs" / ch_id).glob("run_*")):
+            s13 = run_dir / "step13" / "variant_performance.json"
+            s12 = run_dir / "step12" / "kpi_48h.json"
+            if not s13.exists() or not s12.exists():
+                continue
+            try:
+                perf = read_json(s13)
+                kpi  = read_json(s12)
+                row = {
+                    "run_id":               perf.get("run_id"),
+                    "channel_id":           ch_id,
+                    "ctr":                  kpi.get("ctr"),
+                    "avp":                  kpi.get("avg_view_percentage"),
+                    "views":                kpi.get("views"),
+                    "algorithm_stage":      perf.get("algorithm_stage"),
+                    "preferred_title_mode": "curiosity",
+                    "revenue_on_track":     bool(perf.get("revenue_on_track", False)),
+                    "recorded_at":          perf.get("recorded_at"),
+                }
+                if not row["run_id"]:
+                    continue
+                supabase.table("learning_feedback").upsert(
+                    row, on_conflict="run_id"
+                ).execute()
+                total += 1
+            except Exception as e:
+                logger.warning(f"학습 피드백 파싱 실패 {run_dir}: {e}")
+
+    logger.info(f"학습 피드백 동기화 완료: {total}건")
+    return total
+
+
 SYNC_MAP = {
-    "channels": sync_channels,
-    "runs": sync_pipeline_runs,
-    "revenue": sync_revenue,
-    "risk": sync_risk,
-    "trends": sync_trend_topics,
-    "quota": sync_quota,
+    "channels":  sync_channels,
+    "runs":      sync_pipeline_runs,
+    "revenue":   sync_revenue,
+    "risk":      sync_risk,
+    "trends":    sync_trend_topics,
+    "quota":     sync_quota,
+    "learning":  sync_learning_feedback,
 }
 
 

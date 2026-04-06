@@ -1,0 +1,212 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e5]:
+      - generic [ref=e7]:
+        - img [ref=e9]
+        - generic [ref=e11]:
+          - text: KAS Studio
+          - paragraph [ref=e12]: AI 자동화 파이프라인
+      - generic [ref=e13]:
+        - generic [ref=e14]:
+          - generic [ref=e15]: 대시보드
+          - list [ref=e17]:
+            - listitem [ref=e18]:
+              - link "전체 KPI" [ref=e19] [cursor=pointer]:
+                - /url: /
+                - img [ref=e20]
+                - generic [ref=e25]: 전체 KPI
+            - listitem [ref=e26]:
+              - link "트렌드 관리" [ref=e27] [cursor=pointer]:
+                - /url: /trends
+                - img [ref=e28]
+                - generic [ref=e31]: 트렌드 관리
+            - listitem [ref=e32]:
+              - link "수익 추적" [ref=e33] [cursor=pointer]:
+                - /url: /revenue
+                - img [ref=e34]
+                - generic [ref=e36]: 수익 추적
+            - listitem [ref=e37]:
+              - link "리스크 모니터링" [ref=e38] [cursor=pointer]:
+                - /url: /risk
+                - img [ref=e39]
+                - generic [ref=e41]: 리스크 모니터링
+            - listitem [ref=e42]:
+              - link "학습 피드백" [ref=e43] [cursor=pointer]:
+                - /url: /learning
+                - img [ref=e44]
+                - generic [ref=e52]: 학습 피드백
+            - listitem [ref=e53]:
+              - link "비용/쿼터" [ref=e54] [cursor=pointer]:
+                - /url: /cost
+                - img [ref=e55]
+                - generic [ref=e57]: 비용/쿼터
+        - generic [ref=e58]:
+          - generic [ref=e59]: 채널별 상세
+          - list [ref=e61]:
+            - listitem [ref=e62]:
+              - link "CH1 경제" [ref=e63] [cursor=pointer]:
+                - /url: /channels/CH1
+                - generic [ref=e65]: CH1 경제
+            - listitem [ref=e66]:
+              - link "CH2 부동산" [ref=e67] [cursor=pointer]:
+                - /url: /channels/CH2
+                - generic [ref=e69]: CH2 부동산
+            - listitem [ref=e70]:
+              - link "CH3 심리" [ref=e71] [cursor=pointer]:
+                - /url: /channels/CH3
+                - generic [ref=e73]: CH3 심리
+            - listitem [ref=e74]:
+              - link "CH4 미스터리" [ref=e75] [cursor=pointer]:
+                - /url: /channels/CH4
+                - generic [ref=e77]: CH4 미스터리
+            - listitem [ref=e78]:
+              - link "CH5 전쟁사" [ref=e79] [cursor=pointer]:
+                - /url: /channels/CH5
+                - generic [ref=e81]: CH5 전쟁사
+            - listitem [ref=e82]:
+              - link "CH6 과학" [ref=e83] [cursor=pointer]:
+                - /url: /channels/CH6
+                - generic [ref=e85]: CH6 과학
+            - listitem [ref=e86]:
+              - link "CH7 역사" [ref=e87] [cursor=pointer]:
+                - /url: /channels/CH7
+                - generic [ref=e89]: CH7 역사
+      - list [ref=e91]:
+        - listitem [ref=e92]:
+          - link "설정" [ref=e93] [cursor=pointer]:
+            - /url: /settings
+            - img [ref=e94]
+            - generic [ref=e97]: 설정
+    - main [ref=e98]:
+      - generic [ref=e99]:
+        - button "Toggle Sidebar" [ref=e100]:
+          - img
+          - generic [ref=e101]: Toggle Sidebar
+        - separator [ref=e102]
+        - generic [ref=e103]:
+          - generic [ref=e104]:
+            - generic [ref=e105]: KAS Studio
+            - generic [ref=e106]: LIVE
+          - button [ref=e107]
+      - main [ref=e108]:
+        - generic [ref=e109]:
+          - generic [ref=e110]:
+            - heading "트렌드 주제 관리" [level=1] [ref=e111]
+            - paragraph [ref=e112]: 수집된 트렌드 주제 검토 및 승인/거부
+          - generic [ref=e113]:
+            - generic [ref=e114]:
+              - generic [ref=e115]:
+                - generic [ref=e116]: 자동 승인
+                - img [ref=e117]
+              - generic [ref=e120]:
+                - generic [ref=e121]: "2"
+                - paragraph [ref=e122]: 점수 80+ 자동 통과
+            - generic [ref=e123]:
+              - generic [ref=e124]:
+                - generic [ref=e125]: 수동 승인
+                - img [ref=e126]
+              - generic [ref=e128]:
+                - generic [ref=e129]: "0"
+                - paragraph [ref=e130]: 검토 후 승인됨
+            - generic [ref=e131]:
+              - generic [ref=e132]:
+                - generic [ref=e133]: 검토 대기
+                - img [ref=e134]
+              - generic [ref=e137]:
+                - generic [ref=e138]: "2"
+                - paragraph [ref=e139]: 수동 검토 필요
+            - generic [ref=e140]:
+              - generic [ref=e141]:
+                - generic [ref=e142]: 거부됨
+                - img [ref=e143]
+              - generic [ref=e147]:
+                - generic [ref=e148]: "0"
+                - paragraph [ref=e149]: 블랙리스트 주제
+          - generic [ref=e150]:
+            - generic [ref=e152]:
+              - generic [ref=e153]:
+                - img [ref=e154]
+                - generic [ref=e157]: 수집된 주제 목록
+                - generic [ref=e158]: (4 / 4)
+              - generic [ref=e159]:
+                - img [ref=e160]
+                - combobox [ref=e162]:
+                  - generic [ref=e163]: 전체
+                  - img: ▼
+                - textbox [ref=e164]: 전체
+                - combobox [ref=e165]:
+                  - generic [ref=e166]: all
+                  - img: ▼
+                - textbox [ref=e167]: all
+            - table [ref=e170]:
+              - rowgroup [ref=e171]:
+                - row "채널 주제 점수 트렌딩 상태 액션" [ref=e172]:
+                  - columnheader "채널" [ref=e173]
+                  - columnheader "주제" [ref=e174]
+                  - columnheader "점수" [ref=e175]
+                  - columnheader "트렌딩" [ref=e176]
+                  - columnheader "상태" [ref=e177]
+                  - columnheader "액션" [ref=e178]
+              - rowgroup [ref=e179]:
+                - row "CH1 금리 인상이 내 지갑을 얇게 만드는 5가지 방법 trending 85 자동 승인 —" [ref=e180]:
+                  - cell "CH1" [ref=e181]:
+                    - generic [ref=e182]: CH1
+                  - cell "금리 인상이 내 지갑을 얇게 만드는 5가지 방법 trending" [ref=e183]:
+                    - paragraph [ref=e184]: 금리 인상이 내 지갑을 얇게 만드는 5가지 방법
+                    - paragraph [ref=e185]: trending
+                  - cell "85" [ref=e186]
+                  - cell [ref=e187]:
+                    - img [ref=e188]
+                  - cell "자동 승인" [ref=e191]:
+                    - generic [ref=e192]: 자동 승인
+                  - cell "—" [ref=e193]
+                - row "CH1 부동산 하락장에서 살아남는 투자 전략 evergreen 72 — 검토 필요 승인 거부" [ref=e194]:
+                  - cell "CH1" [ref=e195]:
+                    - generic [ref=e196]: CH1
+                  - cell "부동산 하락장에서 살아남는 투자 전략 evergreen" [ref=e197]:
+                    - paragraph [ref=e198]: 부동산 하락장에서 살아남는 투자 전략
+                    - paragraph [ref=e199]: evergreen
+                  - cell "72" [ref=e200]
+                  - cell "—" [ref=e201]
+                  - cell "검토 필요" [ref=e202]:
+                    - generic [ref=e203]: 검토 필요
+                  - cell "승인 거부" [ref=e204]:
+                    - generic [ref=e205]:
+                      - button "승인" [ref=e206]:
+                        - img
+                        - text: 승인
+                      - button "거부" [ref=e207]:
+                        - img
+                        - text: 거부
+                - row "CH2 양자컴퓨터가 현실이 된다면 우리 생활은? trending 91 자동 승인 —" [ref=e208]:
+                  - cell "CH2" [ref=e209]:
+                    - generic [ref=e210]: CH2
+                  - cell "양자컴퓨터가 현실이 된다면 우리 생활은? trending" [ref=e211]:
+                    - paragraph [ref=e212]: 양자컴퓨터가 현실이 된다면 우리 생활은?
+                    - paragraph [ref=e213]: trending
+                  - cell "91" [ref=e214]
+                  - cell [ref=e215]:
+                    - img [ref=e216]
+                  - cell "자동 승인" [ref=e219]:
+                    - generic [ref=e220]: 자동 승인
+                  - cell "—" [ref=e221]
+                - row "CH2 블랙홀 사건지평선의 비밀 evergreen 68 — 검토 필요 승인 거부" [ref=e222]:
+                  - cell "CH2" [ref=e223]:
+                    - generic [ref=e224]: CH2
+                  - cell "블랙홀 사건지평선의 비밀 evergreen" [ref=e225]:
+                    - paragraph [ref=e226]: 블랙홀 사건지평선의 비밀
+                    - paragraph [ref=e227]: evergreen
+                  - cell "68" [ref=e228]
+                  - cell "—" [ref=e229]
+                  - cell "검토 필요" [ref=e230]:
+                    - generic [ref=e231]: 검토 필요
+                  - cell "승인 거부" [ref=e232]:
+                    - generic [ref=e233]:
+                      - button "승인" [ref=e234]:
+                        - img
+                        - text: 승인
+                      - button "거부" [ref=e235]:
+                        - img
+                        - text: 거부
+  - button "Open Next.js Dev Tools" [ref=e241] [cursor=pointer]:
+    - img [ref=e242]

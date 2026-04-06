@@ -31,6 +31,9 @@ CHANNEL_VOICE_IDS = {
     "CH7": os.getenv("CH7_VOICE_ID", ""),
 }
 
+# USD → KRW 환산율 (YouTube 수익은 USD 기준)
+USD_TO_KRW = int(os.getenv("USD_TO_KRW", "1350"))
+
 # ─── 로그 / 모델 설정 ────────────────────────────────────────────
 LOG_LEVEL         = os.getenv("KAS_LOG_LEVEL", "INFO")
 GEMINI_TEXT_MODEL = os.getenv("GEMINI_TEXT_MODEL", "gemini-2.5-flash")
@@ -148,8 +151,30 @@ CHANNEL_LAUNCH_PHASE = {
 }
 
 # 수익 목표
-REVENUE_TARGET_PER_CHANNEL = 2_000_000   # 채널당 월 200만원
+REVENUE_TARGET_PER_CHANNEL = 2_000_000   # 채널당 월 200만원 (안정화 목표)
 REVENUE_TARGET_TOTAL       = 14_000_000  # 7채널 합산 월 1,400만원
+
+# Phase별 단계적 수익 목표 (채널당, 원화)
+# Phase 1 (month 1~2): 초기 - 알고리즘 진입 전 수익 미미
+# Phase 2 (month 3~5): 성장 - 구독자 확보 단계
+# Phase 3 (month 6+): 안정화 - 목표 수익 달성 단계
+REVENUE_TARGET_BY_PHASE = {
+    1: 0,           # 초기: 수익화 미적용, 알고리즘 진입 집중
+    2: 500_000,     # 성장: 채널당 월 50만원 목표
+    3: 2_000_000,   # 안정화: 채널당 월 200만원 목표
+}
+
+# RPM 실측값 (원화/1,000회 조회수) — 파이프라인 실행 후 KPI 수집 시 업데이트
+# None = 아직 실측 데이터 없음 (CHANNEL_RPM_INITIAL/PROXY 사용)
+CHANNEL_RPM_ACTUAL = {
+    "CH1": None,
+    "CH2": None,
+    "CH3": None,
+    "CH4": None,
+    "CH5": None,
+    "CH6": None,
+    "CH7": None,
+}
 
 # 채널별 훅 방향 (step03/step06 공통 SSOT)
 CHANNEL_HOOK_DIRECTION = {
