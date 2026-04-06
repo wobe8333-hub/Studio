@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef, useTransition, useCallback } from 'react'
+import Link from 'next/link'
 import {
   Activity, CheckCircle2,
   RefreshCw, Play, Loader2, Terminal, Clock,
@@ -114,19 +115,21 @@ function RunBadge({ state }: { state: string }) {
 
 function RunRow({ run, compact = false }: { run: ManifestSummary; compact?: boolean }) {
   return (
-    <div className={cn(
-      'flex items-center gap-3 rounded-lg border border-white/[0.06] bg-white/[0.02]',
-      compact ? 'px-3 py-1.5' : 'px-3 py-2.5',
-    )}>
-      <span className="font-mono text-xs text-amber-400 shrink-0 w-8">{run.channel_id}</span>
-      <span className="flex-1 text-xs text-muted-foreground truncate">{run.topic_title}</span>
-      {!compact && (
-        <span className="text-xs text-muted-foreground shrink-0">
-          {run.created_at?.slice(0, 10)}
-        </span>
-      )}
-      <RunBadge state={run.run_state} />
-    </div>
+    <Link href={`/runs/${run.channel_id}/${run.run_id}`} className="block hover:opacity-80 transition-opacity">
+      <div className={cn(
+        'flex items-center gap-3 rounded-lg border border-white/[0.06] bg-white/[0.02]',
+        compact ? 'px-3 py-1.5' : 'px-3 py-2.5',
+      )}>
+        <span className="font-mono text-xs text-amber-400 shrink-0 w-8">{run.channel_id}</span>
+        <span className="flex-1 text-xs text-muted-foreground truncate">{run.topic_title}</span>
+        {!compact && (
+          <span className="text-xs text-muted-foreground shrink-0">
+            {run.created_at?.slice(0, 10)}
+          </span>
+        )}
+        <RunBadge state={run.run_state} />
+      </div>
+    </Link>
   )
 }
 
