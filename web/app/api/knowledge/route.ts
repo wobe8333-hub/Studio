@@ -94,8 +94,8 @@ export async function GET(req: NextRequest) {
   let channelIds: string[]
 
   if (channelParam) {
-    // 경로 탈출 방지
-    if (channelParam.includes('..') || path.isAbsolute(channelParam)) {
+    // CH1~CH99 패턴만 허용 (경로 탈출 + 임의 문자열 방지)
+    if (!/^CH\d+$/.test(channelParam)) {
       return NextResponse.json({ error: 'Invalid channel' }, { status: 400 })
     }
     channelIds = [channelParam]

@@ -102,7 +102,7 @@ function ChannelKnowledgePanel({ ck }: { ck: ChannelKnowledge }) {
             <p className="text-sm text-muted-foreground text-center py-4">수집된 트렌드 없음</p>
           ) : (
             <div className="max-h-64 overflow-y-auto">
-              {ck.topics.map((t, i) => <TopicRow key={i} topic={t} />)}
+              {ck.topics.map((t) => <TopicRow key={t.original_topic || t.reinterpreted_title} topic={t} />)}
             </div>
           )
         )}
@@ -111,7 +111,7 @@ function ChannelKnowledgePanel({ ck }: { ck: ChannelKnowledge }) {
             <p className="text-sm text-muted-foreground text-center py-4">등록된 시리즈 없음</p>
           ) : (
             <div className="space-y-3">
-              {ck.series.map((s, i) => <SeriesCard key={i} series={s} />)}
+              {ck.series.map((s) => <SeriesCard key={s.series_name} series={s} />)}
             </div>
           )
         )}
@@ -123,14 +123,19 @@ function ChannelKnowledgePanel({ ck }: { ck: ChannelKnowledge }) {
 export default function KnowledgePage() {
   const [channels, setChannels] = useState<ChannelKnowledge[]>([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
   const load = useCallback(async () => {
     setLoading(true)
+    setError(null)
     try {
       const res = await fetch('/api/knowledge')
+      if (!res.ok) throw new Error(`HTTP ${res.status}`)
       const data: { channels: ChannelKnowledge[] } = await res.json()
-      setChannels(data.channels.filter((c) => c.topics.length > 0 || c.series.length > 0))
-    } catch { /* 무시 */ } finally {
+      setChannels((data.channels ?? []).filter((c) => c.topics.length > 0 || c.series.length > 0))
+    } catch (e) {
+      setError(e instanceof Error ? e.message : '데이터 로드 실패')
+    } finally {
       setLoading(false)
     }
   }, [])
@@ -164,6 +169,10 @@ export default function KnowledgePage() {
         <div className="flex items-center justify-center h-48">
           <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
         </div>
+      ) : error ? (
+        <Card className="glass-card">
+          <CardContent className="py-8 text-center text-red-400 text-sm">{error}</CardContent>
+        </Card>
       ) : channels.length === 0 ? (
         <Card className="glass-card">
           <CardContent className="py-12 text-center text-muted-foreground text-sm">
