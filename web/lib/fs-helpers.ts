@@ -4,6 +4,14 @@ import path from 'path'
 // process.cwd() in Next.js = {project}/web/ → parent = KAS 루트
 const KAS_ROOT = process.env.KAS_ROOT_DIR ?? path.resolve(process.cwd(), '..')
 
+/** KAS 루트 외부 경로 탈출 차단 */
+function assertWithinRoot(fullPath: string): void {
+  const rel = path.relative(KAS_ROOT, fullPath)
+  if (rel.startsWith('..') || path.isAbsolute(rel)) {
+    throw new Error(`경로 탈출 차단: ${fullPath}`)
+  }
+}
+
 export function getKasRoot(): string {
   return KAS_ROOT
 }
@@ -12,6 +20,7 @@ export function getKasRoot(): string {
 export async function readKasJson<T = unknown>(relativePath: string): Promise<T | null> {
   try {
     const fullPath = path.join(KAS_ROOT, relativePath)
+    assertWithinRoot(fullPath)   // 경로 탈출 차단
     const text = await fs.readFile(fullPath, 'utf-8')
     return JSON.parse(text) as T
   } catch {
@@ -22,10 +31,16 @@ export async function readKasJson<T = unknown>(relativePath: string): Promise<T 
 /** KAS 루트 기준 상대 경로로 JSON 파일 원자적 쓰기 (tmp → rename) */
 export async function writeKasJson(relativePath: string, data: unknown): Promise<void> {
   const fullPath = path.join(KAS_ROOT, relativePath)
+  assertWithinRoot(fullPath)   // 경로 탈출 차단
   await fs.mkdir(path.dirname(fullPath), { recursive: true })
   const tmp = fullPath + '.tmp'
   await fs.writeFile(tmp, JSON.stringify(data, null, 2), 'utf-8')
-  await fs.rename(tmp, fullPath)
+  try {
+    await fs.rename(tmp, fullPath)
+  } catch (e) {
+    await fs.unlink(tmp).catch(() => {})
+    throw e
+  }
 }
 
 // ─── 타입 정의 ──────────────────────────────────────────────────────────────
