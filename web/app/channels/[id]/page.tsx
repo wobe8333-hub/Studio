@@ -1,11 +1,13 @@
 'use client'
 
-import { use, useState, useEffect } from 'react'
+import { use, useState, useEffect, useTransition } from 'react'
 import { notFound } from 'next/navigation'
 import {
   Tv, Activity, CheckCircle, XCircle, Clock,
   DollarSign, Users, Video, TrendingUp, MousePointerClick,
+  Play, Loader2,
 } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
@@ -109,6 +111,9 @@ export default function ChannelDetailPage({ params }: { params: Promise<{ id: st
   })
   const [runs, setRuns] = useState<RunRow[]>([])
   const [kpiHistory, setKpiHistory] = useState<KpiPoint[]>([])
+  const [monthInput, setMonthInput] = useState(1)
+  const [triggerMsg, setTriggerMsg] = useState('')
+  const [isTriggerPending, startTrigger] = useTransition()
 
   useEffect(() => {
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
@@ -153,6 +158,18 @@ export default function ChannelDetailPage({ params }: { params: Promise<{ id: st
       }
     })
   }, [channelId])
+
+  function handleTrigger() {
+    startTrigger(async () => {
+      const res = await fetch('/api/pipeline/trigger', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ month_number: monthInput }),
+      })
+      const data: { ok: boolean; message?: string; error?: string } = await res.json()
+      setTriggerMsg(data.message ?? (data.ok ? '시작됨' : data.error ?? '실패'))
+    })
+  }
 
   const isActive = channel.launch_phase === 1
   const achieveRate = channel.revenue_target > 0
@@ -346,6 +363,50 @@ export default function ChannelDetailPage({ params }: { params: Promise<{ id: st
                 ))}
               </TableBody>
             </Table>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* 파이프라인 트리거 */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-sm font-medium flex items-center gap-2">
+            <Play className="h-4 w-4 text-green-400" />
+            파이프라인 실행
+          </CardTitle>
+          <CardDescription>
+            월간 파이프라인을 백그라운드로 시작합니다. 완료까지 수분~수시간 소요될 수 있습니다.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
+              <label htmlFor="month-input" className="text-sm text-muted-foreground whitespace-nowrap">
+                월 번호
+              </label>
+              <input
+                id="month-input"
+                type="number"
+                min={1}
+                max={12}
+                value={monthInput}
+                onChange={(e) => setMonthInput(Number(e.target.value))}
+                className="w-16 rounded-md border border-input bg-background px-2 py-1 text-sm text-center focus:outline-none focus:ring-1 focus:ring-ring"
+              />
+            </div>
+            <Button
+              onClick={handleTrigger}
+              disabled={isTriggerPending}
+              className="bg-green-500/10 border border-green-500/30 text-green-400 hover:bg-green-500/20 hover:shadow-[0_0_12px_rgba(34,197,94,0.3)] transition-shadow"
+            >
+              {isTriggerPending
+                ? <Loader2 className="h-3.5 w-3.5 animate-spin mr-1.5" />
+                : <Play className="h-3.5 w-3.5 mr-1.5" />}
+              실행
+            </Button>
+          </div>
+          {triggerMsg && (
+            <p className="mt-2 text-xs text-green-400">{triggerMsg}</p>
           )}
         </CardContent>
       </Card>
