@@ -115,6 +115,8 @@ web/.env.local
 # === KAS 정리 후 추가 ===
 artifacts/
 channels/
+# web/app/channels 는 Next.js 페이지이므로 추적 허용
+!web/app/channels/
 backend/cache/
 _gemini_debug/
 _gemini_quota_test/

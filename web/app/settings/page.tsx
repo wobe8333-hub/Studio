@@ -10,14 +10,15 @@ import {
   TableRow,
 } from '@/components/ui/table'
 
+// config.py SSOT 기준 채널 정보 (CH1~CH7)
 const CHANNELS = [
-  { id: 'CH1', category_ko: '경제', launch_phase: 1, status: 'active', rpm_proxy: 3, revenue_target: 2000000, monthly_longform: 4, monthly_shorts: 8 },
-  { id: 'CH2', category_ko: '과학', launch_phase: 1, status: 'active', rpm_proxy: 2, revenue_target: 2000000, monthly_longform: 4, monthly_shorts: 8 },
-  { id: 'CH3', category_ko: '부동산', launch_phase: 2, status: 'pending', rpm_proxy: 4, revenue_target: 2000000, monthly_longform: 4, monthly_shorts: 8 },
-  { id: 'CH4', category_ko: '심리', launch_phase: 2, status: 'pending', rpm_proxy: 3, revenue_target: 2000000, monthly_longform: 4, monthly_shorts: 8 },
-  { id: 'CH5', category_ko: '미스터리', launch_phase: 3, status: 'pending', rpm_proxy: 2, revenue_target: 2000000, monthly_longform: 4, monthly_shorts: 8 },
-  { id: 'CH6', category_ko: '역사', launch_phase: 3, status: 'pending', rpm_proxy: 3, revenue_target: 2000000, monthly_longform: 4, monthly_shorts: 8 },
-  { id: 'CH7', category_ko: '전쟁사', launch_phase: 3, status: 'pending', rpm_proxy: 3, revenue_target: 2000000, monthly_longform: 4, monthly_shorts: 8 },
+  { id: 'CH1', category_ko: '경제',    launch_phase: 1, status: 'active',  rpm_proxy: 7000, revenue_target: 2000000, monthly_longform: 10, monthly_shorts: 30 },
+  { id: 'CH2', category_ko: '부동산',  launch_phase: 1, status: 'active',  rpm_proxy: 6000, revenue_target: 2000000, monthly_longform: 10, monthly_shorts: 30 },
+  { id: 'CH3', category_ko: '심리',    launch_phase: 2, status: 'pending', rpm_proxy: 4000, revenue_target: 2000000, monthly_longform: 10, monthly_shorts: 30 },
+  { id: 'CH4', category_ko: '미스터리', launch_phase: 2, status: 'pending', rpm_proxy: 3500, revenue_target: 2000000, monthly_longform: 12, monthly_shorts: 40 },
+  { id: 'CH5', category_ko: '전쟁사',  launch_phase: 3, status: 'pending', rpm_proxy: 3500, revenue_target: 2000000, monthly_longform: 12, monthly_shorts: 40 },
+  { id: 'CH6', category_ko: '과학',    launch_phase: 3, status: 'pending', rpm_proxy: 4000, revenue_target: 2000000, monthly_longform: 10, monthly_shorts: 30 },
+  { id: 'CH7', category_ko: '역사',    launch_phase: 3, status: 'pending', rpm_proxy: 4000, revenue_target: 2000000, monthly_longform: 10, monthly_shorts: 30 },
 ]
 
 const QUOTA_POLICIES = [
@@ -28,7 +29,7 @@ const QUOTA_POLICIES = [
 
 export default function SettingsPage() {
   return (
-    <div className="space-y-6">
+    <div className="relative space-y-6 ambient-bg overflow-hidden">
       <div>
         <h1 className="text-2xl font-bold tracking-tight">설정</h1>
         <p className="text-muted-foreground text-sm">채널 설정 및 API 쿼터 정책 — 현재 읽기 전용 (Supabase 연동 후 수정 가능)</p>
@@ -72,7 +73,7 @@ export default function SettingsPage() {
                       {ch.status === 'active' ? '활성' : '대기'}
                     </Badge>
                   </TableCell>
-                  <TableCell className="text-center text-sm">₩{ch.rpm_proxy}</TableCell>
+                  <TableCell className="text-center text-sm">₩{ch.rpm_proxy.toLocaleString()}</TableCell>
                   <TableCell className="text-center text-sm">₩{(ch.revenue_target / 10000).toFixed(0)}만</TableCell>
                   <TableCell className="text-center text-sm">{ch.monthly_longform}편</TableCell>
                   <TableCell className="text-center text-sm">{ch.monthly_shorts}편</TableCell>
@@ -120,9 +121,9 @@ export default function SettingsPage() {
         </CardHeader>
         <CardContent className="space-y-3">
           {[
-            { phase: 'Phase 1', months: 'Month 1', channels: 'CH1 + CH2', desc: '경제·과학 2채널로 파이프라인 검증' },
-            { phase: 'Phase 2', months: 'Month 2', channels: 'CH1~CH4', desc: '부동산·심리 추가, 4채널 운영' },
-            { phase: 'Phase 3', months: 'Month 3+', channels: '전체 7채널', desc: '미스터리·역사·전쟁사 합류, 풀 운영' },
+            { phase: 'Phase 1', months: 'Month 1~2', channels: 'CH1 + CH2', desc: '경제·부동산 2채널로 파이프라인 검증' },
+            { phase: 'Phase 2', months: 'Month 2~3', channels: 'CH1~CH4', desc: '심리·미스터리 추가, 4채널 운영' },
+            { phase: 'Phase 3', months: 'Month 3+', channels: '전체 7채널', desc: '전쟁사·과학·역사 합류, 풀 운영' },
           ].map((p, i) => (
             <div key={i} className="flex items-start gap-4 p-3 rounded-lg border">
               <div className="min-w-[72px]">
