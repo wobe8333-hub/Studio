@@ -66,14 +66,13 @@ export async function GET(
 ) {
   const { channelId, runId } = await params
 
-  // 경로 탈출 방지
-  if (channelId.includes('..') || runId.includes('..') ||
-      path.isAbsolute(channelId) || path.isAbsolute(runId)) {
+  const kasRoot = getKasRoot()
+  const runDir = path.resolve(path.join(kasRoot, 'runs', channelId, runId))
+
+  // 경로 탈출 방지 — 조합 후 실제 경로가 KAS 루트 외부면 차단
+  if (!runDir.startsWith(path.resolve(kasRoot))) {
     return NextResponse.json({ error: 'Invalid path' }, { status: 400 })
   }
-
-  const kasRoot = getKasRoot()
-  const runDir = path.join(kasRoot, 'runs', channelId, runId)
 
   // manifest
   const raw = await tryReadJson<Record<string, unknown>>(path.join(runDir, 'manifest.json'))
@@ -99,7 +98,7 @@ export async function GET(
   const step08Dir = path.join(runDir, 'step08')
   const scriptData = await tryReadJson<Record<string, unknown>>(path.join(step08Dir, 'script.json'))
   const titleData  = await tryReadJson<Record<string, unknown>>(path.join(step08Dir, 'title.json'))
-  const maninData  = await tryReadJson<Record<string, unknown>>(
+  const manimData  = await tryReadJson<Record<string, unknown>>(
     path.join(step08Dir, 'manim_stability_report.json')
   )
 
@@ -131,11 +130,11 @@ export async function GET(
       has_narration:   await fileExists(path.join(step08Dir, 'narration.wav')),
       has_video:       await fileExists(path.join(step08Dir, 'video.mp4')),
       image_paths:     imageFiles,
-      manim: maninData ? {
-        attempted:    Number(maninData.manim_sections_attempted ?? 0),
-        success:      Number(maninData.manim_sections_success ?? 0),
-        fallback:     Number(maninData.manim_sections_fallback ?? 0),
-        fallback_rate: Number(maninData.fallback_rate ?? 0),
+      manim: manimData ? {
+        attempted:    Number(manimData.manim_sections_attempted ?? 0),
+        success:      Number(manimData.manim_sections_success ?? 0),
+        fallback:     Number(manimData.manim_sections_fallback ?? 0),
+        fallback_rate: Number(manimData.fallback_rate ?? 0),
       } : null,
     }
   }
@@ -155,7 +154,7 @@ export async function GET(
 
   // cost
   const costData = await tryReadJson<Record<string, unknown>>(path.join(runDir, 'cost.json'))
-  const cost_krw = costData ? Number(costData.total_cost_krw ?? 0) : null
+  const cost_krw = costData?.total_cost_krw != null ? Number(costData.total_cost_krw) : null
 
   return NextResponse.json({ manifest, step08, step11, cost_krw } satisfies RunArtifacts)
 }
