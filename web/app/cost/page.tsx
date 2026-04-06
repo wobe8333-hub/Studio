@@ -1,9 +1,10 @@
 'use client'
 
+import { useEffect, useState } from 'react'
 import { CreditCard, Zap, PlayCircle } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { Progress } from '@/components/ui/progress'
+import { cn } from '@/lib/utils'
 import {
   ChartConfig,
   ChartContainer,
@@ -19,58 +20,124 @@ import {
   YAxis,
   CartesianGrid,
 } from 'recharts'
+import { createClient } from '@/lib/supabase/client'
 
 // 쿼터 상수 (config.py 기준)
 const GEMINI_DAILY_IMAGE_LIMIT = 500
 const YOUTUBE_DAILY_QUOTA = 10000
 const YOUTUBE_UPLOAD_COST = 1700
 
-// mock 데이터 (Supabase 연동 전)
-const today = '2026-04-02'
-const mockQuota = [
-  {
-    date: today,
-    service: 'gemini',
-    total_requests: 0,
-    images_generated: 0,
-    cache_hit_rate: 0,
-    quota_used: 0,
-    quota_remaining: GEMINI_DAILY_IMAGE_LIMIT,
-    cost_krw: 0,
-  },
-  {
-    date: today,
-    service: 'youtube',
-    total_requests: 0,
-    images_generated: 0,
-    cache_hit_rate: 0,
-    quota_used: 0,
-    quota_remaining: YOUTUBE_DAILY_QUOTA,
-    cost_krw: 0,
-  },
-]
-
-// 주간 사용량 차트 데이터 (mock)
-const weeklyData = ['03-27', '03-28', '03-29', '03-30', '03-31', '04-01', '04-02'].map((d) => ({
-  date: d,
-  gemini: 0,
-  youtube: 0,
-}))
-
 const chartConfig: ChartConfig = {
   gemini: { label: 'Gemini API', color: 'var(--chart-1)' },
   youtube: { label: 'YouTube API', color: 'var(--chart-3)' },
 }
 
-const geminiQuota = mockQuota.find((q) => q.service === 'gemini')!
-const youtubeQuota = mockQuota.find((q) => q.service === 'youtube')!
+interface QuotaRow {
+  date: string
+  service: string
+  total_requests: number
+  images_generated: number
+  cache_hit_rate: number
+  quota_used: number
+  quota_remaining: number
+  cost_krw: number
+}
 
-const geminiImageRate = ((geminiQuota.images_generated / GEMINI_DAILY_IMAGE_LIMIT) * 100)
-const youtubeUsedRate = ((youtubeQuota.quota_used / YOUTUBE_DAILY_QUOTA) * 100)
-const uploadsRemaining = Math.floor(youtubeQuota.quota_remaining / YOUTUBE_UPLOAD_COST)
+const today = new Date().toISOString().slice(0, 10)
+
+const DEFAULT_QUOTA: QuotaRow[] = [
+  { date: today, service: 'gemini', total_requests: 0, images_generated: 0, cache_hit_rate: 0, quota_used: 0, quota_remaining: GEMINI_DAILY_IMAGE_LIMIT, cost_krw: 0 },
+  { date: today, service: 'youtube', total_requests: 0, images_generated: 0, cache_hit_rate: 0, quota_used: 0, quota_remaining: YOUTUBE_DAILY_QUOTA, cost_krw: 0 },
+]
+
+// 최근 7일 날짜 배열 생성
+function getLast7Days(): string[] {
+  return Array.from({ length: 7 }, (_, i) => {
+    const d = new Date()
+    d.setDate(d.getDate() - (6 - i))
+    return d.toISOString().slice(5, 10)
+  })
+}
+
+function GradientProgress({
+  value,
+  max,
+  gradient,
+  glowColor,
+}: {
+  value: number
+  max: number
+  gradient: string
+  glowColor: string
+}) {
+  const pct = Math.min((value / max) * 100, 100)
+  return (
+    <div className="relative mt-2 h-2 w-full overflow-hidden rounded-full bg-muted">
+      <div
+        className="h-full rounded-full transition-all duration-500"
+        style={{
+          width: `${pct}%`,
+          background: gradient,
+          boxShadow: `0 0 8px ${glowColor}`,
+        }}
+      />
+    </div>
+  )
+}
 
 export default function CostPage() {
-  const totalCostKrw = mockQuota.reduce((s, q) => s + q.cost_krw, 0)
+  const [quota, setQuota] = useState<QuotaRow[]>(DEFAULT_QUOTA)
+  const [weeklyData, setWeeklyData] = useState(
+    getLast7Days().map((d) => ({ date: d, gemini: 0, youtube: 0 }))
+  )
+
+  useEffect(() => {
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+    const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+    if (!supabaseUrl || !supabaseKey || supabaseUrl.includes('xxxxxxxxxxxx')) return
+
+    const supabase = createClient()
+    const sevenDaysAgo = new Date()
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 6)
+    const sinceDate = sevenDaysAgo.toISOString().slice(0, 10)
+
+    supabase
+      .from('quota_daily')
+      .select('*')
+      .gte('date', sinceDate)
+      .order('date', { ascending: true })
+      .then(({ data }) => {
+        if (!data || data.length === 0) return
+        const rows = data as QuotaRow[]
+
+        // 오늘 데이터
+        const todayRows = rows.filter((r) => r.date === today)
+        if (todayRows.length > 0) setQuota(todayRows)
+
+        // 주간 바차트 데이터
+        const days = getLast7Days()
+        setWeeklyData(
+          days.map((d) => {
+            const fullDate = `${new Date().getFullYear()}-${d}`
+            const gemini = rows.find((r) => r.service === 'gemini' && r.date.slice(5, 10) === d)
+            const youtube = rows.find((r) => r.service === 'youtube' && r.date.slice(5, 10) === d)
+            return {
+              date: d,
+              gemini: gemini?.total_requests ?? 0,
+              youtube: youtube?.total_requests ?? 0,
+              _fullDate: fullDate,
+            }
+          })
+        )
+      })
+  }, [])
+
+  const geminiQuota = quota.find((q) => q.service === 'gemini') ?? DEFAULT_QUOTA[0]
+  const youtubeQuota = quota.find((q) => q.service === 'youtube') ?? DEFAULT_QUOTA[1]
+  const geminiImageRate = (geminiQuota.images_generated / GEMINI_DAILY_IMAGE_LIMIT) * 100
+  const youtubeUsedRate = (youtubeQuota.quota_used / YOUTUBE_DAILY_QUOTA) * 100
+  const uploadsRemaining = Math.floor(youtubeQuota.quota_remaining / YOUTUBE_UPLOAD_COST)
+  const totalCostKrw = quota.reduce((s, q) => s + q.cost_krw, 0)
 
   return (
     <div className="space-y-6">
@@ -101,28 +168,57 @@ export default function CostPage() {
             <div className="text-2xl font-bold">
               {geminiQuota.images_generated} / {GEMINI_DAILY_IMAGE_LIMIT}
             </div>
-            <Progress value={geminiImageRate} className="mt-2 h-1.5" />
+            {(() => {
+              const geminiQuotaData = quota.find((q) => q.service === 'gemini') ?? DEFAULT_QUOTA[0]
+              return (
+                <GradientProgress
+                  value={geminiQuotaData.quota_used}
+                  max={GEMINI_DAILY_IMAGE_LIMIT}
+                  gradient="linear-gradient(90deg, #818cf8, #a78bfa)"
+                  glowColor="rgba(139, 92, 246, 0.5)"
+                />
+              )
+            })()}
             <p className="text-xs text-muted-foreground mt-1">
               {geminiImageRate.toFixed(1)}% 사용 · 캐시 히트율 {(geminiQuota.cache_hit_rate * 100).toFixed(0)}%
             </p>
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">YouTube 쿼터</CardTitle>
-            <PlayCircle className="h-4 w-4 text-red-500" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
-              {youtubeQuota.quota_used.toLocaleString()} / {YOUTUBE_DAILY_QUOTA.toLocaleString()}
-            </div>
-            <Progress value={youtubeUsedRate} className="mt-2 h-1.5" />
-            <p className="text-xs text-muted-foreground mt-1">
-              업로드 가능 잔여: {uploadsRemaining}건 (건당 {YOUTUBE_UPLOAD_COST.toLocaleString()}단위)
-            </p>
-          </CardContent>
-        </Card>
+        {(() => {
+          const ytQuota = quota.find((q) => q.service === 'youtube')
+          const ytUsed = ytQuota?.quota_used ?? 0
+          const ytRate = ytUsed / YOUTUBE_DAILY_QUOTA
+          return (
+            <Card className={cn(ytRate >= 0.8 && 'glow-danger')}>
+              <CardHeader className="flex flex-row items-center justify-between pb-2">
+                <CardTitle className="text-sm font-medium">YouTube API</CardTitle>
+                <PlayCircle
+                  className={cn('h-4 w-4', ytRate >= 0.8 ? 'text-destructive' : 'text-muted-foreground')}
+                />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold tabular-nums">{ytUsed.toLocaleString()}</div>
+                <p className="text-xs text-muted-foreground mt-1">/ {YOUTUBE_DAILY_QUOTA.toLocaleString()} 단위</p>
+                <GradientProgress
+                  value={ytUsed}
+                  max={YOUTUBE_DAILY_QUOTA}
+                  gradient={
+                    ytRate >= 0.8
+                      ? 'linear-gradient(90deg, #ef4444, #f87171)'
+                      : 'linear-gradient(90deg, #f59e0b, #fbbf24)'
+                  }
+                  glowColor={
+                    ytRate >= 0.8 ? 'rgba(239, 68, 68, 0.5)' : 'rgba(245, 158, 11, 0.4)'
+                  }
+                />
+                {ytRate >= 0.8 && (
+                  <p className="text-xs text-destructive mt-1">⚠ 임계값 근접</p>
+                )}
+              </CardContent>
+            </Card>
+          )
+        })()}
       </div>
 
       {/* 주간 사용량 바차트 */}
