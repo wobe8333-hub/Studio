@@ -21,12 +21,15 @@ export function HitlBanner() {
   }, [])
 
   async function dismiss(id: string) {
-    await fetch('/api/hitl-signals', {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id }),
-    })
-    setSignals((prev) => prev.filter((s) => s.id !== id))
+    try {
+      const res = await fetch('/api/hitl-signals', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id }),
+      })
+      if (!res.ok) return
+      setSignals((prev) => prev.filter((s) => s.id !== id))
+    } catch { /* 조용히 실패 */ }
   }
 
   if (signals.length === 0) return null
@@ -44,9 +47,10 @@ export function HitlBanner() {
               [{TYPE_LABEL[signal.type] ?? signal.type}]
             </span>{' '}
             <span className="text-red-200/80">
-              {(signal.details as { error?: string; run_id?: string }).error
-                ?? (signal.details as { run_id?: string }).run_id
-                ?? '운영자 확인 필요'}
+              {(() => {
+                const d = signal.details as Record<string, unknown>
+                return (d?.error as string) || (d?.run_id as string) || '운영자 확인 필요'
+              })()}
             </span>
             <span className="ml-2 text-red-400/60 text-xs">
               {signal.timestamp?.slice(0, 16).replace('T', ' ')}
