@@ -1,9 +1,10 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { CreditCard, Zap, PlayCircle } from 'lucide-react'
+import { useEffect, useState, useTransition } from 'react'
+import { CreditCard, Zap, PlayCircle, RefreshCw, Clock, Loader2 } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import {
   ChartConfig,
@@ -90,6 +91,22 @@ export default function CostPage() {
   const [weeklyData, setWeeklyData] = useState(
     getLast7Days().map((d) => ({ date: d, gemini: 0, youtube: 0 }))
   )
+  const [deferredJobs, setDeferredJobs] = useState<Array<{
+    channel_id: string; run_id: string; topic_title?: string
+  }>>([])
+  const [quotaRemaining, setQuotaRemaining] = useState(10000)
+  const [retrying, startRetry] = useTransition()
+  const [retryMsg, setRetryMsg] = useState('')
+
+  useEffect(() => {
+    fetch('/api/deferred-jobs')
+      .then((r) => r.json())
+      .then((d: { deferred_jobs: Array<{ channel_id: string; run_id: string; topic_title?: string }>; quota_remaining: number }) => {
+        setDeferredJobs(d.deferred_jobs ?? [])
+        setQuotaRemaining(d.quota_remaining ?? 10000)
+      })
+      .catch(() => {})
+  }, [])
 
   useEffect(() => {
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
@@ -131,6 +148,14 @@ export default function CostPage() {
         )
       })
   }, [])
+
+  function handleRetry() {
+    startRetry(async () => {
+      const res = await fetch('/api/deferred-jobs', { method: 'POST' })
+      const data: { ok: boolean; message?: string; error?: string } = await res.json()
+      setRetryMsg(data.message ?? (data.ok ? '시작됨' : data.error ?? '실패'))
+    })
+  }
 
   const geminiQuota = quota.find((q) => q.service === 'gemini') ?? DEFAULT_QUOTA[0]
   const youtubeQuota = quota.find((q) => q.service === 'youtube') ?? DEFAULT_QUOTA[1]
@@ -299,6 +324,55 @@ export default function CostPage() {
           </CardContent>
         </Card>
       </div>
+
+      {deferredJobs.length > 0 && (
+        <Card className={cn(deferredJobs.length > 0 && 'glow-amber')}>
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <div>
+              <CardTitle className="text-sm font-medium flex items-center gap-2">
+                <Clock className="h-4 w-4 text-amber-400" />
+                이연된 YouTube 업로드
+              </CardTitle>
+              <CardDescription className="mt-0.5">
+                쿼터 초과로 대기 중 · 잔여 쿼터 {quotaRemaining.toLocaleString()} 단위
+              </CardDescription>
+            </div>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={handleRetry}
+              disabled={retrying}
+              className="border-amber-500/30 text-amber-400 hover:bg-amber-500/10"
+            >
+              {retrying
+                ? <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                : <RefreshCw className="h-3.5 w-3.5 mr-1.5" />}
+              재시도
+            </Button>
+          </CardHeader>
+          <CardContent>
+            {retryMsg && (
+              <p className="text-xs text-green-400 mb-3">{retryMsg}</p>
+            )}
+            <div className="space-y-1.5">
+              {deferredJobs.map((job, i) => (
+                <div
+                  key={i}
+                  className="flex items-center justify-between p-2 rounded-lg bg-white/[0.02] border border-white/[0.06] text-sm"
+                >
+                  <span className="font-mono text-xs text-amber-400">{job.channel_id}</span>
+                  <span className="flex-1 mx-3 truncate text-muted-foreground text-xs">
+                    {job.topic_title ?? job.run_id}
+                  </span>
+                  <Badge variant="outline" className="text-xs border-amber-500/30 text-amber-400">
+                    대기
+                  </Badge>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
     </div>
   )
 }
