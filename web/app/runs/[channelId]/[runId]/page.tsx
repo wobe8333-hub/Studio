@@ -69,6 +69,14 @@ export default function RunDetailPage() {
 
   useEffect(() => { load() }, [load])
 
+  // 라이트박스 ESC 닫기
+  useEffect(() => {
+    if (!selectedImg) return
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setSelectedImg(null) }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [selectedImg])
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
@@ -188,7 +196,9 @@ export default function RunDetailPage() {
                 <div>
                   <p className="text-xs text-muted-foreground mb-2 uppercase tracking-wide font-semibold">이미지 갤러리</p>
                   <div className="grid grid-cols-3 gap-2">
-                    {step08.image_paths.map((imgPath, i) => (
+                    {step08.image_paths
+                      .filter((p) => /^runs\/[^./][^/]*\/[^./][^/]*\//.test(p))
+                      .map((imgPath, i) => (
                       <button
                         key={i}
                         onClick={() => setSelectedImg(imgPath)}
