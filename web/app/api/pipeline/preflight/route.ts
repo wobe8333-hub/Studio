@@ -29,6 +29,19 @@ export async function POST() {
   })
 
   const duration_ms = Date.now() - start
+
+  // 타임아웃 또는 프로세스 실행 오류 처리
+  if (result.error) {
+    const isTimeout = result.signal === 'SIGTERM' || result.error.message.includes('ETIMEDOUT')
+    return NextResponse.json({
+      exit_code: 1,
+      all_passed: false,
+      stdout: '',
+      failures: [isTimeout ? `타임아웃 (${duration_ms}ms 경과)` : result.error.message],
+      duration_ms,
+    } satisfies PreflightResult)
+  }
+
   const stdout = (result.stdout ?? '') + (result.stderr ?? '')
   const exit_code = result.status ?? 1
 
