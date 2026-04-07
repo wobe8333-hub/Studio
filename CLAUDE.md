@@ -113,6 +113,26 @@ ngrok start kas-studio
 - Layer 3~4: `sources/reddit.py`, `sources/arxiv.py`, `sources/scholar.py`
 - Layer 5: `sources/wikipedia.py`, `sources/curated.py`
 - 점수화: `scorer.py` (관심도 40% + 적합도 25% + 수익성 20% + 긴급도 15%)
+- **grade 임계값**: 80점+ → `auto`, 60~79 → `review`, <60 → `rejected`
+
+**소스별 fallback 동작** (API 미설정/오류 시):
+- Google Trends 429 Rate Limit → `sources/google_trends.py`의 `_KEYWORD_BASELINES` 딕셔너리에서 키워드별 베이스라인 점수(0.55~0.92) 자동 사용
+- YouTube search.list `relevanceLanguage` 파라미터 사용 금지 — 400 오류 발생함
+- Reddit(`praw`) 미설치 시 → `news_score * 0.6`을 community_score proxy로 사용
+
+**수동 트렌드 재수집 워크플로우**:
+```bash
+# 1. 수집 + knowledge_store 저장
+python -c "
+from src.step05.trend_collector import collect_trends, reinterpret_trend, save_knowledge
+for ch, cat in [('CH1','economy'),('CH2','realestate')]:
+    scored = collect_trends(ch, cat, limit=10)
+    topics = [reinterpret_trend(s, cat, ch) for s in scored if s['grade'] in ('auto','review')]
+    save_knowledge(ch, topics)
+"
+# 2. Supabase 동기화
+python scripts/sync_to_supabase.py
+```
 
 **지식 수집** (`knowledge/`): 3단계 파이프라인
 - Stage 1: Tavily AI Search + Perplexity API + Gemini Deep Research
@@ -336,6 +356,12 @@ const { data } = await supabase.from('channels').select('*')
 
 **Supabase 테이블**: `channels`, `pipeline_runs`, `kpi_48h`, `revenue_monthly`, `risk_monthly`, `sustainability`, `learning_feedback`, `quota_daily`, `trend_topics`. 스키마는 `scripts/supabase_schema.sql` 참고.
 
+`trend_topics` 테이블 주요 컬럼: `channel_id`, `reinterpreted_title`(UNIQUE 복합키), `score`, `grade`(`auto`/`review`/`rejected`/`approved`), `breakdown`(JSONB — `{interest, fit, revenue, urgency}`). UNIQUE 제약은 `(channel_id, reinterpreted_title)` 조합.
+
+**Supabase 클라이언트 선택 규칙**:
+- 읽기 전용 서버 컴포넌트 → `lib/supabase/server.ts`의 `createClient()` (anon key, RLS 적용)
+- 트렌드 grade 업데이트 등 RLS 우회 필요 → `lib/supabase/server-admin.ts`의 `createAdminClient()` (service_role key, **절대 클라이언트 컴포넌트에서 사용 금지**)
+
 ## 테스트 핵심 패턴
 
 ### Gemini API 의존성 격리
@@ -384,6 +410,7 @@ setattr(_google_pkg, "generativeai", _genai_mock)
 - **웹 다크모드**: `document.documentElement.classList`를 직접 조작하지 말 것. `next-themes`의 `useTheme`/`ThemeProvider` 사용.
 - **웹 인라인 스타일**: 클라이언트 컴포넌트에서 색상은 Tailwind 클래스 대신 `G` 상수(각 파일 상단 정의) + CSS 변수(`--c-*`, `--t-*`)로 표현. 새 페이지 작성 시 `monitor/page.tsx`의 `G` 상수 구조를 복사한다.
 - **웹 파일 서빙**: `runs/` 결과물은 반드시 `/api/artifacts/[channelId]/[runId]/...` 경로 사용. `/api/files/` 경로는 존재하지 않는다.
+- **Supabase 쓰기 작업**: anon key + RLS가 아닌 `createAdminClient()` (service_role) 사용. `web/app/trends/actions.ts`가 참조 구현이다.
 - **Sub-Agent 비침습**: `src/agents/` 코드는 기존 파이프라인(Step00~17) 로직을 변경하지 않는다. JSON 결과물 읽기 + 정책 파일 쓰기만 허용.
 - **Sub-Agent BaseAgent**: `if root:` 대신 `if root is not None:` 사용. Path 객체는 항상 truthy이므로 None 체크를 명시적으로 작성.
 - **type_syncer SQL 타입**: `_SQL_TO_TS` 매핑에 없는 타입은 `"unknown"` 반환. 새 SQL 타입 추가 시 `type_syncer.py`의 `_SQL_TO_TS` dict를 업데이트.
@@ -410,6 +437,7 @@ setattr(_google_pkg, "generativeai", _genai_mock)
 **웹 (`web/.env.local`)**: `web/.env.local.example` 참고.
 - `NEXT_PUBLIC_SUPABASE_URL` — Supabase 프로젝트 URL
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY` — Supabase anon 공개 키
+- `SUPABASE_SERVICE_ROLE_KEY` — **서버 전용** service_role 키. 트렌드 주제 승인/거부 등 RLS를 우회하는 쓰기 작업에 필요. `web/lib/supabase/server-admin.ts`의 `createAdminClient()`에서만 사용.
 - `DASHBOARD_PASSWORD` — 웹 대시보드 비밀번호. 미설정 시 인증 자동 통과 (개발 환경)
 
 **YouTube OAuth 토큰**: 업로드/KPI 수집은 API 키가 아닌 OAuth2 인증이 필요하다. `credentials/{CH}_token.json`이 채널당 존재해야 한다. 만료 토큰은 자동 갱신 후 파일에 저장된다. 초기 발급: `python scripts/generate_oauth_token.py --channel CH1`.
