@@ -8,7 +8,6 @@ import {
 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
 import type { Channel } from '@/lib/types'
-import { RadialGauge } from '@/components/home-charts'
 import { StaggerContainer, StaggerItem, ScrollReveal } from '@/components/animated-sections'
 import { readKasJson, getKasRoot } from '@/lib/fs-helpers'
 import fs from 'fs/promises'
@@ -26,7 +25,6 @@ const MOCK_CHANNELS: Channel[] = [
   { id: 'CH7', category: 'history',     category_ko: '역사',    youtube_channel_id: null, launch_phase: 3, status: 'pending', rpm_proxy: 4000, revenue_target_monthly: 2000000, monthly_longform_target: 10, monthly_shorts_target: 30, subscriber_count: 0, video_count: 0, algorithm_trust_level: 'PRE-ENTRY', updated_at: null },
 ]
 
-// runs/ 디렉토리 스캔으로 총 Run 수 계산
 async function countTotalRuns(): Promise<number> {
   const kasRoot = getKasRoot()
   const runsDir = path.join(kasRoot, 'runs')
@@ -46,7 +44,6 @@ async function countTotalRuns(): Promise<number> {
   return count
 }
 
-// 미해결 HITL 신호 수 계산
 async function countHitlPending(): Promise<number> {
   const signals = await readKasJson<HitlSignal[]>('data/global/notifications/hitl_signals.json')
   if (!Array.isArray(signals)) return 0
@@ -79,7 +76,6 @@ async function fetchData() {
   }
 }
 
-// 채널별 고유 색상 (sidebar-nav.tsx와 동일한 CSS 변수)
 const CHANNEL_COLORS: Record<string, string> = {
   CH1: 'var(--channel-ch1)',
   CH2: 'var(--channel-ch2)',
@@ -93,101 +89,95 @@ const CHANNEL_COLORS: Record<string, string> = {
 export default async function HomePage() {
   const { channels, totalRuns, hitlPending } = await fetchData()
 
-  const activeChannels = channels.filter((ch) => ch.status === 'active')
+  // launch_phase === 1 이 파이프라인 SSOT (pipeline.py get_active_channels 기준)
+  const activeChannels = channels.filter((ch) => ch.launch_phase === 1)
 
   return (
-    <div className="relative space-y-6 ambient-bg overflow-hidden">
-      {/* 배경 메시 그라데이션 */}
+    <div className="relative space-y-3 ambient-bg overflow-hidden">
       <div className="pointer-events-none absolute inset-0 -z-10 bg-mesh-warm" />
 
       {/* 페이지 헤더 */}
       <div>
-        <h1 className="text-3xl font-bold tracking-tight" style={{ fontFamily: "'Libre Baskerville', Georgia, serif", color: '#1a0505' }}>
+        <h1 className="text-xl font-bold tracking-tight" style={{ fontFamily: "'Libre Baskerville', Georgia, serif", color: '#1a0505' }}>
           파이프라인 대시보드
         </h1>
-        <p className="text-sm mt-1" style={{ color: '#9b6060' }}>
+        <p className="text-xs mt-0.5" style={{ color: '#9b6060' }}>
           7채널 AI 자동화 파이프라인 현황 · 월 목표: 1,400만원
         </p>
       </div>
 
       {/* KPI 카드 6개 (3×2) */}
-      <StaggerContainer className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+      <StaggerContainer className="grid grid-cols-2 gap-2 sm:grid-cols-3">
 
-        {/* 1. 월 목표 */}
         <StaggerItem>
-          <div className="glass-card glass-card-hover p-4">
-            <div className="flex items-center justify-between mb-2">
+          <div className="glass-card glass-card-hover p-3">
+            <div className="flex items-center justify-between mb-1">
               <span className="text-xs font-medium" style={{ color: '#9b6060' }}>월 목표</span>
-              <DollarSign className="h-4 w-4" style={{ color: '#ee2400' }} />
+              <DollarSign className="h-3.5 w-3.5" style={{ color: '#ee2400' }} />
             </div>
-            <div className="text-2xl font-bold tabular-nums" style={{ fontFamily: "'Libre Baskerville', Georgia, serif", color: '#1a0505' }}>₩14M</div>
-            <p className="text-xs mt-1" style={{ color: '#9b6060' }}>채널당 ₩2,000,000</p>
+            <div className="text-xl font-bold tabular-nums" style={{ fontFamily: "'Libre Baskerville', Georgia, serif", color: '#1a0505' }}>₩14M</div>
+            <p className="text-[11px] mt-0.5" style={{ color: '#9b6060' }}>채널당 ₩2,000,000</p>
           </div>
         </StaggerItem>
 
-        {/* 2. 활성 채널 */}
         <StaggerItem>
-          <div className="glass-card glass-card-hover p-4">
-            <div className="flex items-center justify-between mb-2">
+          <div className="glass-card glass-card-hover p-3">
+            <div className="flex items-center justify-between mb-1">
               <span className="text-xs font-medium" style={{ color: '#9b6060' }}>활성 채널</span>
-              <Activity className="h-4 w-4" style={{ color: '#ee2400' }} />
+              <Activity className="h-3.5 w-3.5" style={{ color: '#ee2400' }} />
             </div>
-            <div className="text-2xl font-bold tabular-nums" style={{ fontFamily: "'Libre Baskerville', Georgia, serif", color: '#1a0505' }}>
-              {activeChannels.length} <span style={{ color: '#9b6060', fontSize: '1rem' }}>/ {channels.length}</span>
+            <div className="text-xl font-bold tabular-nums" style={{ fontFamily: "'Libre Baskerville', Georgia, serif", color: '#1a0505' }}>
+              {activeChannels.length} <span style={{ color: '#9b6060', fontSize: '0.9rem' }}>/ {channels.length}</span>
             </div>
-            <p className="text-xs mt-1" style={{ color: '#9b6060' }}>
-              {activeChannels.map((c) => c.id).join(', ')}
+            <p className="text-[11px] mt-0.5" style={{ color: '#9b6060' }}>
+              {activeChannels.length > 0 ? activeChannels.map((c) => c.id).join(', ') : '활성 채널 없음'}
             </p>
           </div>
         </StaggerItem>
 
-        {/* 3. 총 Runs */}
         <StaggerItem>
-          <div className="glass-card glass-card-hover p-4">
-            <div className="flex items-center justify-between mb-2">
+          <div className="glass-card glass-card-hover p-3">
+            <div className="flex items-center justify-between mb-1">
               <span className="text-xs font-medium" style={{ color: '#9b6060' }}>총 Runs</span>
-              <BarChart2 className="h-4 w-4" style={{ color: '#ee2400' }} />
+              <BarChart2 className="h-3.5 w-3.5" style={{ color: '#ee2400' }} />
             </div>
-            <div className="text-2xl font-bold tabular-nums" style={{ fontFamily: "'Libre Baskerville', Georgia, serif", color: '#1a0505' }}>{totalRuns}</div>
-            <p className="text-xs mt-1" style={{ color: '#9b6060' }}>누적 파이프라인 실행</p>
+            <div className="text-xl font-bold tabular-nums" style={{ fontFamily: "'Libre Baskerville', Georgia, serif", color: '#1a0505' }}>{totalRuns}</div>
+            <p className="text-[11px] mt-0.5" style={{ color: '#9b6060' }}>누적 파이프라인 실행</p>
           </div>
         </StaggerItem>
 
-        {/* 4. 달성률 */}
         <StaggerItem>
-          <div className="glass-card glass-card-hover p-4">
-            <div className="flex items-center justify-between mb-2">
+          <div className="glass-card glass-card-hover p-3">
+            <div className="flex items-center justify-between mb-1">
               <span className="text-xs font-medium" style={{ color: '#9b6060' }}>이번달 달성률</span>
-              <TrendingUp className="h-4 w-4" style={{ color: '#ee2400' }} />
+              <TrendingUp className="h-3.5 w-3.5" style={{ color: '#ee2400' }} />
             </div>
-            <div className="text-2xl font-bold tabular-nums" style={{ fontFamily: "'Libre Baskerville', Georgia, serif", color: '#1a0505' }}>0%</div>
-            <RadialGauge value={0} color="rgba(238,36,0,0.6)" />
+            <div className="text-xl font-bold tabular-nums" style={{ fontFamily: "'Libre Baskerville', Georgia, serif", color: '#1a0505' }}>0%</div>
+            <p className="text-[11px] mt-0.5" style={{ color: '#9b6060' }}>목표 ₩14M</p>
           </div>
         </StaggerItem>
 
-        {/* 5. 리스크 채널 */}
         <StaggerItem>
-          <div className="glass-card glass-card-hover p-4">
-            <div className="flex items-center justify-between mb-2">
+          <div className="glass-card glass-card-hover p-3">
+            <div className="flex items-center justify-between mb-1">
               <span className="text-xs font-medium" style={{ color: '#9b6060' }}>리스크 채널</span>
-              <AlertTriangle className="h-4 w-4" style={{ color: '#ee2400' }} />
+              <AlertTriangle className="h-3.5 w-3.5" style={{ color: '#ee2400' }} />
             </div>
-            <div className="text-2xl font-bold tabular-nums" style={{ fontFamily: "'Libre Baskerville', Georgia, serif", color: '#22c55e' }}>0</div>
-            <p className="text-xs mt-1" style={{ color: '#22c55e' }}>HIGH 리스크 없음</p>
+            <div className="text-xl font-bold tabular-nums" style={{ fontFamily: "'Libre Baskerville', Georgia, serif", color: '#22c55e' }}>0</div>
+            <p className="text-[11px] mt-0.5" style={{ color: '#22c55e' }}>HIGH 리스크 없음</p>
           </div>
         </StaggerItem>
 
-        {/* 6. HITL 대기 */}
         <StaggerItem>
-          <div className="glass-card glass-card-hover p-4">
-            <div className="flex items-center justify-between mb-2">
+          <div className="glass-card glass-card-hover p-3">
+            <div className="flex items-center justify-between mb-1">
               <span className="text-xs font-medium" style={{ color: '#9b6060' }}>HITL 대기</span>
-              <Bell className="h-4 w-4" style={{ color: hitlPending > 0 ? '#f59e0b' : '#ee2400' }} />
+              <Bell className="h-3.5 w-3.5" style={{ color: hitlPending > 0 ? '#f59e0b' : '#ee2400' }} />
             </div>
-            <div className="text-2xl font-bold tabular-nums" style={{ fontFamily: "'Libre Baskerville', Georgia, serif", color: hitlPending > 0 ? '#f59e0b' : '#1a0505' }}>
+            <div className="text-xl font-bold tabular-nums" style={{ fontFamily: "'Libre Baskerville', Georgia, serif", color: hitlPending > 0 ? '#f59e0b' : '#1a0505' }}>
               {hitlPending}
             </div>
-            <p className="text-xs mt-1" style={{ color: '#9b6060' }}>
+            <p className="text-[11px] mt-0.5" style={{ color: '#9b6060' }}>
               {hitlPending > 0 ? '운영자 확인 필요' : '대기 신호 없음'}
             </p>
           </div>
@@ -197,29 +187,29 @@ export default async function HomePage() {
 
       {/* 채널 상태 도트 */}
       <ScrollReveal>
-        <div className="glass-card p-5">
-          <h2 className="text-sm font-bold mb-4" style={{ color: '#5c1a1a' }}>채널별 상태</h2>
-          <div className="flex flex-wrap gap-5">
+        <div className="glass-card p-3">
+          <h2 className="text-xs font-bold mb-2.5" style={{ color: '#5c1a1a' }}>채널별 상태</h2>
+          <div className="flex flex-wrap gap-3">
             {channels.map((ch) => {
-              const isActive = ch.status === 'active'
+              const isActive = ch.launch_phase === 1
               const color = CHANNEL_COLORS[ch.id] ?? '#ddd'
               return (
-                <div key={ch.id} className="flex flex-col items-center gap-1.5">
+                <div key={ch.id} className="flex flex-col items-center gap-1">
                   <div
-                    className="flex items-center justify-center rounded-full text-white font-bold text-[11px] transition-opacity"
+                    className="flex items-center justify-center rounded-full text-white font-bold text-[10px]"
                     style={{
-                      width: 44,
-                      height: 44,
+                      width: 36,
+                      height: 36,
                       background: isActive ? color : '#d1d5db',
-                      boxShadow: isActive ? `0 0 12px ${color}` : 'none',
+                      boxShadow: isActive ? `0 0 10px ${color}` : 'none',
                       opacity: isActive ? 1 : 0.45,
                     }}
                   >
                     {ch.id}
                   </div>
-                  <span className="text-[10px] font-medium" style={{ color: '#5c1a1a' }}>{ch.category_ko}</span>
+                  <span className="text-[9px] font-medium" style={{ color: '#5c1a1a' }}>{ch.category_ko}</span>
                   <span
-                    className="text-[9px] font-bold px-1.5 py-0.5 rounded-full"
+                    className="text-[8px] font-bold px-1 py-0.5 rounded-full"
                     style={{
                       background: isActive ? 'rgba(34,197,94,0.12)' : 'rgba(0,0,0,0.06)',
                       color: isActive ? '#16a34a' : '#9b6060',
