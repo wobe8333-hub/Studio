@@ -37,8 +37,17 @@ def generate_metadata(channel_id: str, run_id: str, script: dict,
     # 설명
     seo = script.get("seo", {})
     desc_first = seo.get("description_first_2lines", "")
+
+    # chapter_markers 포맷: [{"time": "00:00", "title": "인트로"}, ...]
+    chapters = seo.get("chapter_markers", [])
+    chapter_block = ""
+    if chapters:
+        lines = [f"{c.get('time', '00:00')} {c.get('title', '')}" for c in chapters]
+        chapter_block = "\n\n" + "\n".join(lines)
+
     description = (
-        f"{desc_first}\n\n"
+        f"{desc_first}"
+        f"{chapter_block}\n\n"
         f"▼ 관련 링크\n"
         f"─────────────────────────────\n"
         f"🔗 {script.get('affiliate_insert', {}).get('text', '')}\n\n"
