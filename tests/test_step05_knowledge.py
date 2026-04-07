@@ -105,3 +105,71 @@ class TestCategoryEnricher:
             # crash 없어야 함
             result = enrich_by_category(pkg)
             assert isinstance(result, KnowledgePackage)
+
+
+class TestCollectLayer2YouTubeKeywords:
+    """Layer2 YouTube 수집이 keywords를 사용하는지 검증."""
+
+    def test_layer2_uses_keywords_not_raw_titles(self):
+        """YouTube raw 제목 대신 정제된 keywords가 수집 결과에 포함되어야 함."""
+        from unittest.mock import patch
+        from src.step05.trend_collector import _collect_layer2
+
+        mock_yt = {
+            "configured": True,
+            "topics": ["[한국경제TV LIVE] 금리 인상 긴급 분석", "주식 전망 #shorts"],
+            "keywords": ["금리", "주식"],
+            "scores": {"금리": 0.9, "주식": 0.7},
+        }
+        mock_rss = ({"금리": 0.5}, [])  # fetch_news_context 반환 형식
+
+        with patch("src.step05.sources.youtube_trending.fetch_youtube_trending",
+                   return_value=mock_yt), \
+             patch("src.step05.sources.rss.fetch_news_context",
+                   return_value=mock_rss):
+            result = _collect_layer2("economy")
+
+        # raw 제목이 포함되면 안 됨
+        assert "[한국경제TV LIVE] 금리 인상 긴급 분석" not in result["topics"]
+        assert "#shorts" not in " ".join(result["topics"])
+
+        # 정제된 키워드가 포함되어야 함
+        assert "금리" in result["topics"] or "주식" in result["topics"]
+
+        # YouTube scores가 news_scores에 반영되어야 함
+        assert result["news_scores"].get("금리") == 0.9 or \
+               result["news_scores"].get("주식") == 0.7
+
+    def test_layer2_news_scores_enable_interest_calculation(self):
+        """news_scores가 있으면 interest_score가 0보다 커야 함."""
+        from unittest.mock import patch
+        from src.step05.trend_collector import collect_trends
+
+        mock_yt = {
+            "configured": True,
+            "topics": ["[라이브] 경제 뉴스"],
+            "keywords": ["금리"],
+            "scores": {"금리": 0.8},
+        }
+        mock_google = {"demand_score": {}, "pytrends_available": False, "error": None}
+
+        with patch("src.step05.sources.youtube_trending.fetch_youtube_trending",
+                   return_value=mock_yt), \
+             patch("src.step05.sources.google_trends.fetch_trends_scores",
+                   return_value=mock_google), \
+             patch("src.step05.sources.naver.fetch_naver_trends",
+                   return_value={"topics": []}), \
+             patch("src.step05.sources.reddit.fetch_reddit_topics",
+                   return_value={"configured": False}), \
+             patch("src.step05.sources.community.fetch_community_topics",
+                   return_value={"topics": []}), \
+             patch("src.step05.trend_collector.deduplicate_topics",
+                   side_effect=lambda ch, topics, **kw: topics):
+
+            results = collect_trends("CH1", "economy", limit=5)
+
+        # 금리 주제가 수집됐으면 점수가 0보다 높아야 함
+        matched = [r for r in results if r.get("topic") == "금리"]
+        if matched:
+            assert matched[0]["score"] > 52.5, \
+                f"interest_score 연결 안 됨: score={matched[0]['score']}"

@@ -88,7 +88,10 @@ def _collect_layer2(category: str) -> Dict[str, Any]:
         from src.step05.sources.youtube_trending import fetch_youtube_trending
         result = fetch_youtube_trending(category)
         if result.get("configured"):
-            topics.extend(result.get("topics", [])[:8])
+            # raw 영상 제목(topics) 대신 정제된 키워드(keywords) 사용
+            topics.extend(result.get("keywords", [])[:8])
+            # YouTube 빈도 점수를 news_scores에 연결 → interest_score 계산에 반영
+            news_scores.update(result.get("scores", {}))
     except Exception as e:
         logger.debug(f"[STEP05-L2] youtube_trending 수집 실패: {e}")
 
@@ -269,9 +272,10 @@ def collect_trends(channel_id: str, category: str, limit: int = 20) -> list:
     # 등급별 통계 로깅
     auto_count = sum(1 for s in scored if s["grade"] == "auto")
     review_count = sum(1 for s in scored if s["grade"] == "review")
+    rejected_count = sum(1 for s in scored if s["grade"] == "rejected")
     logger.info(
         f"[STEP05] {channel_id} 수집 완료: 전체={len(scored)} "
-        f"자동승격={auto_count} 리뷰대기={review_count}"
+        f"자동승격={auto_count} 리뷰대기={review_count} 거부={rejected_count}"
     )
 
     return scored[:limit]
