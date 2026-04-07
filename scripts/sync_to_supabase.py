@@ -178,6 +178,7 @@ def sync_risk() -> int:
 def sync_trend_topics() -> int:
     """트렌드 주제 동기화 (knowledge store)"""
     total = 0
+
     for ch_id in CHANNEL_IDS:
         assets_path = (
             KAS_ROOT
@@ -190,6 +191,24 @@ def sync_trend_topics() -> int:
         )
         if not assets_path.exists():
             continue
+
+        # 기존 DB에서 이미 검토 완료된 항목의 grade 일괄 조회
+        try:
+            existing = (
+                supabase.table("trend_topics")
+                .select("reinterpreted_title, grade")
+                .eq("channel_id", ch_id)
+                .in_("grade", ["approved", "rejected"])
+                .execute()
+            )
+            protected_titles = {
+                row["reinterpreted_title"]
+                for row in (existing.data or [])
+            }
+        except Exception as e:
+            logger.warning(f"기존 grade 조회 실패 {ch_id}: {e}")
+            protected_titles = set()
+
         with open(assets_path, "r", encoding="utf-8-sig") as f:
             for line in f:
                 line = line.strip()
@@ -197,16 +216,23 @@ def sync_trend_topics() -> int:
                     continue
                 try:
                     rec = json.loads(line)
+                    reinterpreted_title = rec.get("reinterpreted_title")
+
                     row = {
                         "channel_id": ch_id,
                         "original_topic": rec.get("original_topic"),
-                        "reinterpreted_title": rec.get("reinterpreted_title"),
+                        "reinterpreted_title": reinterpreted_title,
                         "score": rec.get("score"),
-                        "grade": rec.get("grade", "review"),
                         "is_trending": rec.get("is_trending", False),
                         "topic_type": rec.get("topic_type"),
                         "collected_at": rec.get("collected_at", datetime.utcnow().isoformat()),
+                        "breakdown": rec.get("breakdown"),
                     }
+
+                    # 이미 승인/거부된 항목은 grade 덮어쓰지 않음
+                    if reinterpreted_title not in protected_titles:
+                        row["grade"] = rec.get("grade", "review")
+
                     supabase.table("trend_topics").upsert(
                         row, on_conflict="channel_id,reinterpreted_title"
                     ).execute()
