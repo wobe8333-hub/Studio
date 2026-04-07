@@ -6,24 +6,25 @@
 import re
 from typing import Dict, Any, List, Optional
 
-# 채널별 RPM 프록시 (원화 기준)
+# 채널별 RPM 프록시 (원화 기준, 한국 YouTube 교육 카테고리 실측 기반)
 _CHANNEL_RPM: Dict[str, int] = {
     "economy": 7000,
-    "realestate": 6000,
-    "psychology": 4000,
-    "mystery": 3500,
-    "war_history": 3500,
-    "science": 4000,
-    "history": 4000,
+    "realestate": 7000,    # 부동산 CPM 경제급으로 상향 (투자·재테크 광고)
+    "psychology": 4500,
+    "mystery": 4000,
+    "war_history": 5000,   # 역사·교육 카테고리 CPM 상향
+    "science": 4500,
+    "history": 4500,
 }
 
 # 카테고리별 귀여운 애니메이션 변환 적합도 기본값 (0~1)
+# 애니메이션으로 시각화·캐릭터화가 용이할수록 높은 값
 _ANIMATION_FIT: Dict[str, float] = {
     "economy": 0.7,
-    "realestate": 0.6,
+    "realestate": 0.75,    # 부동산 그래프·지도·캐릭터 설명에 적합
     "psychology": 0.9,
     "mystery": 0.95,
-    "war_history": 0.75,
+    "war_history": 0.85,   # 전쟁사 캐릭터화·지도 애니메이션에 매우 적합
     "science": 0.95,
     "history": 0.9,
 }
@@ -70,7 +71,7 @@ def score_topic(
             "topic": str,
             "category": str,
             "score": float (0~100),
-            "grade": str ("auto" / "review" / "rejected"),
+            "grade": str ("auto"(80+) / "review"(60~79) / "rejected"(<60)),
             "breakdown": {interest, fit, revenue, urgency},
         }
     """
@@ -107,9 +108,9 @@ def score_topic(
     final_score = round(raw_score * 100, 1)
 
     # 등급 분류
-    if final_score >= 70:
+    if final_score >= 80:
         grade = "auto"      # 자동 승격
-    elif final_score >= 55:
+    elif final_score >= 60:
         grade = "review"    # 인간 리뷰 대기
     else:
         grade = "rejected"  # 폐기

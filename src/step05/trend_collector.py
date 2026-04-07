@@ -248,12 +248,17 @@ def collect_trends(channel_id: str, category: str, limit: int = 20) -> list:
     trends_scores = layer1.get("trends_scores", {})
     news_scores = layer2.get("news_scores", {})
     community_scores = layer3.get("community_scores", {})
+    # Reddit/커뮤니티 미설정 시 뉴스 빈도를 커뮤니티 proxy로 활용 (0.6 감쇠)
+    community_available = bool(community_scores)
 
     scored: List[dict] = []
     for topic in all_raw_topics:
         t_score = max(trends_scores.get(topic, 0.0), trends_scores.get(topic.lower(), 0.0))
         n_score = max(news_scores.get(topic, 0.0), news_scores.get(topic.lower(), 0.0))
         c_score = max(community_scores.get(topic, 0.0), community_scores.get(topic.lower(), 0.0))
+        # 커뮤니티 점수 없으면 뉴스 점수의 60%를 proxy로 사용
+        if not community_available and c_score == 0.0:
+            c_score = round(n_score * 0.6, 3)
 
         result = score_topic(
             topic=topic,

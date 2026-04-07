@@ -36,7 +36,6 @@ def _search_videos(query: str, api_key: str, max_results: int = 10) -> List[Dict
         "type": "video",
         "order": "viewCount",
         "regionCode": "KR",
-        "relevanceLanguage": "ko",
         "maxResults": max_results,
         "key": api_key,
     })
