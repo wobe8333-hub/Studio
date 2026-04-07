@@ -9,7 +9,7 @@ import {
 import { createClient } from '@/lib/supabase/server'
 import type { Channel } from '@/lib/types'
 import { RadialGauge } from '@/components/home-charts'
-import { StaggerContainer, StaggerItem } from '@/components/animated-sections'
+import { StaggerContainer, StaggerItem, ScrollReveal } from '@/components/animated-sections'
 import { readKasJson, getKasRoot } from '@/lib/fs-helpers'
 import fs from 'fs/promises'
 import path from 'path'
@@ -93,7 +93,7 @@ const CHANNEL_COLORS: Record<string, string> = {
 export default async function HomePage() {
   const { channels, totalRuns, hitlPending } = await fetchData()
 
-  const activeChannels = channels.filter((ch) => ch.launch_phase === 1)
+  const activeChannels = channels.filter((ch) => ch.status === 'active')
 
   return (
     <div className="relative space-y-6 ambient-bg overflow-hidden">
@@ -196,12 +196,12 @@ export default async function HomePage() {
       </StaggerContainer>
 
       {/* 채널 상태 도트 */}
-      <StaggerItem>
+      <ScrollReveal>
         <div className="glass-card p-5">
           <h2 className="text-sm font-bold mb-4" style={{ color: '#5c1a1a' }}>채널별 상태</h2>
           <div className="flex flex-wrap gap-5">
             {channels.map((ch) => {
-              const isActive = ch.launch_phase === 1
+              const isActive = ch.status === 'active'
               const color = CHANNEL_COLORS[ch.id] ?? '#ddd'
               return (
                 <div key={ch.id} className="flex flex-col items-center gap-1.5">
@@ -232,7 +232,7 @@ export default async function HomePage() {
             })}
           </div>
         </div>
-      </StaggerItem>
+      </ScrollReveal>
 
     </div>
   )
