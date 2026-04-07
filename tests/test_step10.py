@@ -124,3 +124,77 @@ class TestGetPreferredMode:
         result = _get_preferred_mode("CH1")
 
         assert result == "authority"
+
+
+class TestGenerateThumbnailPIL:
+    """PIL 합성 기반 generate_thumbnail() 단위 테스트."""
+
+    def _make_fake_base(self, tmp_path: Path, channel_id: str = "CH1") -> Path:
+        """1920×1080 단색 PNG를 베이스 이미지로 생성."""
+        from PIL import Image
+        base_dir = tmp_path / "assets" / "thumbnails"
+        base_dir.mkdir(parents=True)
+        img = Image.new("RGB", (1920, 1080), color=(26, 18, 0))
+        path = base_dir / f"{channel_id}_base.png"
+        img.save(path)
+        return path
+
+    def test_returns_true_when_base_exists(self, tmp_path, monkeypatch):
+        """베이스 PNG가 있으면 True를 반환하고 output 파일을 생성한다."""
+        base_path = self._make_fake_base(tmp_path, "CH1")
+        output = tmp_path / "out" / "thumbnail_variant_01.png"
+        output.parent.mkdir(parents=True)
+
+        import src.step10.thumbnail_generator as tg
+        monkeypatch.setitem(tg.CHANNEL_BASE_TEMPLATES, "CH1", base_path)
+
+        result = tg.generate_thumbnail("CH1", "금리 인하의 충격", "01", output)
+
+        assert result is True
+        assert output.exists()
+
+    def test_fallback_when_base_missing(self, tmp_path):
+        """베이스 PNG가 없으면 _generate_placeholder()로 폴백하고 True를 반환한다."""
+        output = tmp_path / "thumb.png"
+
+        import src.step10.thumbnail_generator as tg
+        result = tg.generate_thumbnail("CH_NONEXISTENT", "제목", "01", output)
+
+        assert result is True
+        assert output.exists()
+
+    def test_mode02_detects_number(self):
+        """mode 02는 제목에서 아라비아 숫자를 감지한다."""
+        import re
+        title = "10억 모은 비밀 전략"
+        match = re.search(r'\d+', title)
+        assert match is not None
+        assert match.group() == "10"
+
+    def test_mode02_no_number_returns_none(self):
+        """mode 02에서 숫자 없는 제목은 None을 반환한다."""
+        import re
+        title = "당신이 몰랐던 진실"
+        match = re.search(r'\d+', title)
+        assert match is None
+
+    def test_mode03_appends_question_mark(self):
+        """mode 03은 제목 끝에 '?'를 추가한다."""
+        title = "조선 왕들이 숨긴 비밀"
+        question_title = title + "?"
+        last_word = title.split()[-1]
+        assert question_title.endswith("?")
+        assert last_word == "비밀"
+
+    def test_output_parent_created(self, tmp_path, monkeypatch):
+        """output_path의 부모 디렉토리가 없어도 자동 생성된다."""
+        base_path = self._make_fake_base(tmp_path, "CH1")
+        output = tmp_path / "deep" / "nested" / "thumb.png"
+
+        import src.step10.thumbnail_generator as tg
+        monkeypatch.setitem(tg.CHANNEL_BASE_TEMPLATES, "CH1", base_path)
+
+        result = tg.generate_thumbnail("CH1", "테스트 제목", "01", output)
+
+        assert result is True
+        assert output.parent.exists()
