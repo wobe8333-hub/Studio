@@ -22,6 +22,7 @@ export function validateRunPath(
 ): string | null {
   if (!CHANNEL_ID_RE.test(channelId)) return null
   if (!RUN_ID_RE.test(runId)) return null
+  if (sub.some(s => s.includes('..') || path.isAbsolute(s))) return null
 
   const allowedRoot = path.resolve(kasRoot)
   const requestedPath = path.resolve(
@@ -45,6 +46,7 @@ export function validateChannelPath(
   ...sub: string[]
 ): string | null {
   if (!CHANNEL_ID_RE.test(channelId)) return null
+  if (sub.some(s => s.includes('..') || path.isAbsolute(s))) return null
 
   const allowedRoot = path.resolve(kasRoot)
   const requestedPath = path.resolve(
@@ -60,7 +62,7 @@ export function validateChannelPath(
 }
 
 // process.cwd() in Next.js = {project}/web/ → parent = KAS 루트
-const KAS_ROOT = process.env.KAS_ROOT_DIR ?? path.resolve(process.cwd(), '..')
+const KAS_ROOT = process.env.KAS_ROOT ?? path.resolve(process.cwd(), '..')
 
 /** KAS 루트 외부 경로 탈출 차단 */
 function assertWithinRoot(fullPath: string): void {
