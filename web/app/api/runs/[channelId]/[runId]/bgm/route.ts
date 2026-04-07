@@ -1,10 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
-import fs from 'fs'
-import { validateRunPath } from '@/lib/fs-helpers'
-
-function getKasRoot(): string {
-  return process.env.KAS_ROOT ?? require('path').join(process.cwd(), '..')
-}
+import fs from 'fs/promises'
+import { validateRunPath, getKasRoot } from '@/lib/fs-helpers'
 
 export async function GET(
   _req: NextRequest,
@@ -18,15 +14,14 @@ export async function GET(
     return NextResponse.json({ error: '잘못된 채널 또는 Run ID' }, { status: 400 })
   }
 
-  if (!fs.existsSync(reportFile)) {
-    return NextResponse.json({ bgm: null })
-  }
-
   try {
-    const raw = fs.readFileSync(reportFile, 'utf-8')
+    const raw = await fs.readFile(reportFile, 'utf-8')
     const data = JSON.parse(raw)
     return NextResponse.json({ bgm: data })
-  } catch {
+  } catch (e: unknown) {
+    if ((e as NodeJS.ErrnoException).code === 'ENOENT') {
+      return NextResponse.json({ bgm: null })
+    }
     return NextResponse.json({ error: 'render_report.json 파싱 오류' }, { status: 500 })
   }
 }

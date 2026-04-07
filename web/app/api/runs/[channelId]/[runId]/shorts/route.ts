@@ -1,10 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
-import fs from 'fs'
-import { validateRunPath } from '@/lib/fs-helpers'
-
-function getKasRoot(): string {
-  return process.env.KAS_ROOT ?? require('path').join(process.cwd(), '..')
-}
+import fs from 'fs/promises'
+import { validateRunPath, getKasRoot } from '@/lib/fs-helpers'
 
 export async function GET(
   _req: NextRequest,
@@ -18,16 +14,23 @@ export async function GET(
     return NextResponse.json({ error: '잘못된 채널 또는 Run ID' }, { status: 400 })
   }
 
-  if (!fs.existsSync(shortsDir)) {
-    return NextResponse.json({ shorts: [] })
+  let files: string[]
+  try {
+    files = await fs.readdir(shortsDir)
+  } catch (e: unknown) {
+    if ((e as NodeJS.ErrnoException).code === 'ENOENT') {
+      return NextResponse.json({ shorts: [] })
+    }
+    return NextResponse.json({ error: 'shorts 디렉토리 읽기 오류' }, { status: 500 })
   }
 
-  const files = fs.readdirSync(shortsDir).filter(f => f.endsWith('.mp4'))
-  const shorts = files.map((f, i) => ({
-    index: i + 1,
-    filename: f,
-    url: `/api/artifacts/${channelId}/${runId}/step08_s/${f}`,
-  }))
+  const shorts = files
+    .filter(f => f.endsWith('.mp4'))
+    .map((f, i) => ({
+      index: i + 1,
+      filename: f,
+      url: `/api/artifacts/${channelId}/${runId}/step08_s/${f}`,
+    }))
 
   return NextResponse.json({ shorts })
 }

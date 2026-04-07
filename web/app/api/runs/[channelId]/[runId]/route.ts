@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import fs from 'fs/promises'
 import path from 'path'
-import { getKasRoot } from '@/lib/fs-helpers'
+import { getKasRoot, validateRunPath } from '@/lib/fs-helpers'
 
 export interface RunArtifacts {
   manifest: {
@@ -67,10 +67,10 @@ export async function GET(
   const { channelId, runId } = await params
 
   const kasRoot = getKasRoot()
-  const runDir = path.resolve(path.join(kasRoot, 'runs', channelId, runId))
 
-  // 경로 탈출 방지 — 조합 후 실제 경로가 KAS 루트 외부면 차단
-  if (!runDir.startsWith(path.resolve(kasRoot))) {
+  // channelId/runId 형식 검증 + 경로 탈출 방지
+  const runDir = validateRunPath(kasRoot, channelId, runId)
+  if (!runDir) {
     return NextResponse.json({ error: 'Invalid path' }, { status: 400 })
   }
 

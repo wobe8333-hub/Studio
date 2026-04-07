@@ -1,10 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
-import fs from 'fs'
-import { validateRunPath } from '@/lib/fs-helpers'
-
-function getKasRoot(): string {
-  return process.env.KAS_ROOT ?? require('path').join(process.cwd(), '..')
-}
+import fs from 'fs/promises'
+import { validateRunPath, getKasRoot } from '@/lib/fs-helpers'
 
 // SEO PATCH에서 허용할 최상위 키 목록 (임의 키 삽입 방지)
 const ALLOWED_SEO_KEYS = new Set([
@@ -24,15 +20,14 @@ export async function GET(
     return NextResponse.json({ error: '잘못된 채널 또는 Run ID' }, { status: 400 })
   }
 
-  if (!fs.existsSync(metaFile)) {
-    return NextResponse.json({ seo: null })
-  }
-
   try {
-    const raw = fs.readFileSync(metaFile, 'utf-8')
+    const raw = await fs.readFile(metaFile, 'utf-8')
     const data = JSON.parse(raw)
     return NextResponse.json({ seo: data })
-  } catch {
+  } catch (e: unknown) {
+    if ((e as NodeJS.ErrnoException).code === 'ENOENT') {
+      return NextResponse.json({ seo: null })
+    }
     return NextResponse.json({ error: 'metadata.json 파싱 오류' }, { status: 500 })
   }
 }
@@ -49,8 +44,15 @@ export async function PATCH(
     return NextResponse.json({ error: '잘못된 채널 또는 Run ID' }, { status: 400 })
   }
 
-  if (!fs.existsSync(metaFile)) {
-    return NextResponse.json({ error: 'metadata.json 없음' }, { status: 404 })
+  let current: Record<string, unknown>
+  try {
+    const raw = await fs.readFile(metaFile, 'utf-8')
+    current = JSON.parse(raw)
+  } catch (e: unknown) {
+    if ((e as NodeJS.ErrnoException).code === 'ENOENT') {
+      return NextResponse.json({ error: 'metadata.json 없음' }, { status: 404 })
+    }
+    return NextResponse.json({ error: '파일 읽기 오류' }, { status: 500 })
   }
 
   try {
@@ -67,10 +69,18 @@ export async function PATCH(
       return NextResponse.json({ error: '수정 가능한 필드가 없습니다' }, { status: 400 })
     }
 
-    const raw = fs.readFileSync(metaFile, 'utf-8')
-    const current = JSON.parse(raw)
     const updated = { ...current, ...safeBody, updated_at: new Date().toISOString() }
-    fs.writeFileSync(metaFile, JSON.stringify(updated, null, 2), 'utf-8')
+
+    // 원자적 쓰기: tmp → rename
+    const tmpFile = metaFile + '.tmp'
+    await fs.writeFile(tmpFile, JSON.stringify(updated, null, 2), 'utf-8')
+    try {
+      await fs.rename(tmpFile, metaFile)
+    } catch (e) {
+      await fs.unlink(tmpFile).catch(() => {})
+      throw e
+    }
+
     return NextResponse.json({ ok: true, seo: updated })
   } catch {
     return NextResponse.json({ error: '저장 실패' }, { status: 500 })
