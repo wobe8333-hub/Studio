@@ -42,8 +42,6 @@ def _gemini_vision_qa(video_path) -> dict:
 
         # ── 실제 영상 길이 측정 (ffprobe) ──────────────────────────────
         import subprocess
-        import tempfile
-        import os
 
         duration_cmd = [
             "ffprobe", "-v", "error",
