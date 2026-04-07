@@ -6,6 +6,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **KAS (Knowledge Animation Studio)** — AI가 트렌드 주제를 자동 발굴하고, 스크립트/이미지/나레이션을 생성하여 YouTube에 업로드하는 7채널 풀 자동화 파이프라인. 채널당 월 200만원, 총 1,400만원/월 수익 목표.
 
+GitHub: `https://github.com/wobe8333-hub/Studio`
+
 7채널: CH1(경제) / CH2(부동산) / CH3(심리) / CH4(미스터리) / CH5(전쟁사) / CH6(과학) / CH7(역사)
 
 ## 주요 명령어
@@ -422,6 +424,9 @@ setattr(_google_pkg, "generativeai", _genai_mock)
 - **웹 API 경로 보안**: `channelId`/`runId` URL 파라미터를 파일 경로에 사용하는 모든 API 라우트는 반드시 `web/lib/fs-helpers.ts`의 `validateRunPath()` 또는 `validateChannelPath()`를 사용해야 한다. 직접 `path.join(kasRoot, channelId, ...)` 패턴은 경로 트래버설 취약점이므로 금지.
 - **웹 getKasRoot 싱글턴**: API 라우트에서 KAS 루트 경로가 필요하면 로컬 `getKasRoot()` 함수를 직접 정의하지 말고 반드시 `import { getKasRoot } from '@/lib/fs-helpers'`로 가져온다. 로컬 정의 시 `path.join` vs `path.resolve` 불일치로 경계 검사가 실패할 수 있다.
 - **Next.js 16 미들웨어**: `web/proxy.ts`가 Next.js 16.2.2의 미들웨어 파일이다. `web/middleware.ts`를 별도로 생성하면 빌드 오류("Both middleware file and proxy file detected")가 발생한다. 인증 로직 수정 시 `proxy.ts`만 편집할 것.
+- **웹 Next.js 16 params**: Route handler의 params는 `Promise<{...}>` 타입이므로 반드시 `await params`로 구조분해해야 한다. `{ params }: { params: Promise<{ channelId: string }> }` 패턴.
+- **chapter_markers 형식**: `step10/metadata.json`의 `chapter_markers` 키 값은 `[{"time": "00:00", "title": "인트로"}, ...]` 배열. `metadata_generator.py`가 description에 자동 삽입하며 `time` 필드는 `MM:SS` 또는 `H:MM:SS` 형식.
+- **FFmpeg 인코딩 표준**: `ffmpeg_composer.py`의 모든 영상 인코딩은 `-crf 22 -preset medium`을 기본값으로 사용. YouTube 권장(18-20)과 처리 속도의 절충점.
 
 ## 환경 변수
 
