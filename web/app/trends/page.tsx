@@ -25,6 +25,13 @@ import { updateTopicGrade } from './actions'
 
 type Grade = 'auto' | 'review' | 'approved' | 'rejected'
 
+interface Breakdown {
+  interest: number
+  fit: number
+  revenue: number
+  urgency: number
+}
+
 interface Topic {
   id: number
   channel_id: string
@@ -33,6 +40,7 @@ interface Topic {
   grade: Grade
   is_trending: boolean
   topic_type: string
+  breakdown?: Breakdown
 }
 
 // Supabase 미연동 시 사용하는 초기 mock 데이터
@@ -77,7 +85,7 @@ export default function TrendsPage() {
     const supabase = createClient()
     supabase
       .from('trend_topics')
-      .select('id, channel_id, reinterpreted_title, score, grade, is_trending, topic_type')
+      .select('id, channel_id, reinterpreted_title, score, grade, is_trending, topic_type, breakdown')
       .order('score', { ascending: false })
       .limit(100)
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -92,6 +100,7 @@ export default function TrendsPage() {
             grade: (row.grade as Grade) ?? 'review',
             is_trending: row.is_trending ?? false,
             topic_type: row.topic_type ?? '',
+            breakdown: row.breakdown ?? undefined,
           }))
         )
       })
@@ -247,15 +256,20 @@ export default function TrendsPage() {
                       {/* 점수 구성 배지 */}
                       <div className="flex gap-1 flex-wrap mt-1">
                         {[
-                          { label: '관심도', pct: 40 },
-                          { label: '적합도', pct: 25 },
-                          { label: '수익성', pct: 20 },
-                          { label: '긴급도', pct: 15 },
-                        ].map(s => (
-                          <span key={s.label} className="text-[9px] px-1.5 py-0.5 rounded" style={{ background: 'rgba(238,36,0,0.07)', color: '#9b6060' }}>
-                            {s.label} {s.pct}%·{Math.round(topic.score * s.pct / 100)}
-                          </span>
-                        ))}
+                          { label: '관심도', pct: 40, key: 'interest' as const },
+                          { label: '적합도', pct: 25, key: 'fit' as const },
+                          { label: '수익성', pct: 20, key: 'revenue' as const },
+                          { label: '긴급도', pct: 15, key: 'urgency' as const },
+                        ].map(s => {
+                          const val = topic.breakdown
+                            ? Math.round(topic.breakdown[s.key])
+                            : Math.round(topic.score * s.pct / 100)
+                          return (
+                            <span key={s.label} className="text-[9px] px-1.5 py-0.5 rounded" style={{ background: 'rgba(238,36,0,0.07)', color: '#9b6060' }}>
+                              {s.label} {s.pct}%·{val}
+                            </span>
+                          )
+                        })}
                       </div>
                     </TableCell>
                     <TableCell className="text-center">
