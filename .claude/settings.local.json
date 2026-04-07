@@ -35,7 +35,9 @@
       "mcp__playwright__browser_evaluate",
       "mcp__playwright__browser_tabs",
       "mcp__playwright__browser_close",
-      "mcp__playwright__browser_console_messages"
+      "mcp__playwright__browser_console_messages",
+      "mcp__figma__whoami",
+      "mcp__playwright__browser_run_code"
     ]
   }
 }
