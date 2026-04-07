@@ -1,6 +1,64 @@
 import fs from 'fs/promises'
 import path from 'path'
 
+const CHANNEL_ID_RE = /^CH[1-7]$/
+const RUN_ID_RE     = /^run_CH[1-7]_\d{7,13}$/
+
+/**
+ * channelId / runId 형식 검증 후 허용된 kasRoot 하위 경로를 반환한다.
+ * 형식 불일치 또는 경로 트래버설 시 null 반환.
+ *
+ * @param kasRoot  KAS_ROOT 환경변수 값
+ * @param channelId URL 파라미터 (예: "CH1")
+ * @param runId     URL 파라미터 (예: "run_CH1_1775143500")
+ * @param ...sub    kasRoot/runs/{channelId}/{runId}/ 이후 경로 세그먼트
+ * @returns         절대 경로 문자열, 또는 null (검증 실패)
+ */
+export function validateRunPath(
+  kasRoot: string,
+  channelId: string,
+  runId: string,
+  ...sub: string[]
+): string | null {
+  if (!CHANNEL_ID_RE.test(channelId)) return null
+  if (!RUN_ID_RE.test(runId)) return null
+
+  const allowedRoot = path.resolve(kasRoot)
+  const requestedPath = path.resolve(
+    path.join(kasRoot, 'runs', channelId, runId, ...sub)
+  )
+
+  if (!requestedPath.startsWith(allowedRoot + path.sep) &&
+      requestedPath !== allowedRoot) {
+    return null
+  }
+
+  return requestedPath
+}
+
+/**
+ * channelId만 검증 (runs 목록 등 runId 없는 경우용).
+ */
+export function validateChannelPath(
+  kasRoot: string,
+  channelId: string,
+  ...sub: string[]
+): string | null {
+  if (!CHANNEL_ID_RE.test(channelId)) return null
+
+  const allowedRoot = path.resolve(kasRoot)
+  const requestedPath = path.resolve(
+    path.join(kasRoot, 'runs', channelId, ...sub)
+  )
+
+  if (!requestedPath.startsWith(allowedRoot + path.sep) &&
+      requestedPath !== allowedRoot) {
+    return null
+  }
+
+  return requestedPath
+}
+
 // process.cwd() in Next.js = {project}/web/ → parent = KAS 루트
 const KAS_ROOT = process.env.KAS_ROOT_DIR ?? path.resolve(process.cwd(), '..')
 
