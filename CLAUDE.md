@@ -47,11 +47,11 @@ pip install torch diffusers transformers accelerate safetensors
 
 # ── 웹 프론트엔드 (web/) ───────────────────────────
 cd web
-npm run dev          # 개발 서버 (localhost:3000)
+npm run dev          # 개발 서버 (localhost:7002)
 npm run build        # 프로덕션 빌드 (TypeScript 타입 검사 포함)
 
 # ── ngrok 외부 공개 ────────────────────────────────
-# 고정 도메인: https://cwstudio.ngrok.app → localhost:3000
+# 고정 도메인: https://cwstudio.ngrok.app → localhost:7002
 ngrok start kas-studio
 ```
 
@@ -186,6 +186,28 @@ class MyAgent(BaseAgent):
 - 자동 처리: 스키마 불일치 → UiUxAgent 위임, Phase 승격 → 알림만 기록
 - 운영자 확인: FAILED 실행 1건 이상, pytest 실패
 
+### Step10 — 썸네일 생성 (PIL 합성)
+
+`src/step10/thumbnail_generator.py`는 Gemini 이미지 생성을 **완전히 제거**하고 PIL 4레이어 합성으로 교체됐다.
+
+**베이스 템플릿**: `assets/thumbnails/CH{1-7}_base.png` (1920×1080, HTML+Playwright 스크린샷으로 생성)
+- 재생성이 필요하면 `.superpowers/brainstorm/*/content/ch{N}_thumbnail.html` → Playwright 스크린샷
+
+**PIL 합성 레이어**:
+1. `CH{N}_base.png` 로드 (마스코트 + 아이콘 상단 62%)
+2. 하단 38% 반투명 오버레이 (`CHANNEL_COLORS[ch_id]["overlay"]` RGBA)
+3. 채널명 소형 텍스트 (primary색)
+4. 제목 텍스트 (mode별 변형)
+
+**mode별 출력 파일** (`step10/thumbnail_v1~3.png`):
+- `01`: 제목 원문 흰색 텍스트
+- `02`: 제목 내 아라비아 숫자 2× 크기 강조 (없으면 mode01과 동일)
+- `03`: 마지막 어절 + "?" 질문형, 마지막 어절 채널 primary색
+
+**폴백**: `CH{N}_base.png` 없거나 PIL 실패 시 `_generate_placeholder()` (단색 배경 + 텍스트)
+
+**웹 경로**: `/api/artifacts/{channelId}/{runId}/step10/thumbnail_v{1|2|3}.png` — `runs/` prefix 포함
+
 ### 쿼터/캐시 시스템
 
 - **`src/quota/gemini_quota.py`**: RPM 50 제한, 이미지 일 500장, 일간 자동 리셋. 상태 파일 `data/global/quota/gemini_quota_daily.json`.
@@ -213,32 +235,56 @@ class MyAgent(BaseAgent):
 ```
 새 Tailwind 유틸리티 추가 시 `@layer utilities {}` 블록 사용. PostCSS는 `@tailwindcss/postcss` 단일 플러그인.
 
-#### 디자인 시스템 — Amber Studio
+#### 디자인 시스템 — Red Light Glassmorphism
 
-색상은 oklch 색공간 사용. 7채널 고유 CSS 변수가 `globals.css`에 정의됨:
+`globals.css`에 정의된 Red Light 팔레트 CSS 변수:
 ```css
---channel-ch1: oklch(0.65 0.19 55)   /* CH1 경제: 골드 */
---channel-ch2: oklch(0.60 0.18 175)  /* CH2 부동산: 틸 */
---channel-ch3: oklch(0.62 0.16 25)   /* CH3 심리: 테라코타 */
-/* ... ch4~ch7 */
+--c-dark:   #900000;   /* 주 강조 / 활성 탭 배경 */
+--c-red:    #ee2400;   /* 보조 강조 / 경고 */
+--c-salmon: #ffb09c;
+--c-blush:  #fbd9d3;
+--c-cream:  #ffefea;   /* 활성 탭 텍스트 */
+--t-primary:   #1a0505;
+--t-secondary: #5c1a1a;
+--t-muted:     #9b6060;
 ```
-`--font-heading: var(--font-display)` → `card.tsx`의 `CardTitle`이 자동으로 **Sora** 폰트 적용.
-Primary 색상: 라이트 `oklch(0.55 0.16 55)` (앰버 골드), 다크 `oklch(0.72 0.17 65)`.
+폰트: **Libre Baskerville** (제목), **M PLUS Rounded 1c** (본문).
+
+클라이언트 컴포넌트에서는 `tailwind` 클래스 대신 인라인 `style` + `G` 상수를 사용한다:
+```tsx
+const G = {
+  card: {
+    background: 'rgba(255,255,255,0.55)',
+    backdropFilter: 'blur(20px)',
+    WebkitBackdropFilter: 'blur(20px)',
+    border: '1px solid rgba(238,36,0,0.12)',
+    borderRadius: '1rem',
+    boxShadow: '0 8px 32px rgba(144,0,0,0.08)',
+  } as React.CSSProperties,
+  text: { primary: '#1a0505', secondary: '#5c1a1a', muted: '#9b6060' },
+}
+```
+탭 버튼 활성 상태: `background: '#900000', color: '#ffefea'` / 비활성: `transparent, '#9b6060'`
 
 #### 디렉토리 구조
 
 ```
 web/
 ├── app/
-│   ├── layout.tsx          — ThemeProvider(next-themes) + Sora 폰트 + 글래스모피즘 헤더
+│   ├── layout.tsx          — ThemeProvider(next-themes) + Libre Baskerville 폰트 + 글래스모피즘 헤더
 │   ├── page.tsx            — KPI 대시보드 (서버 컴포넌트, Supabase fetch + mock fallback)
-│   ├── globals.css         — Tailwind v4 설정 + Amber Studio 색상 + @keyframes
+│   ├── globals.css         — Tailwind v4 설정 + Red Light 색상 + @keyframes
 │   ├── channels/[id]/      — 채널 상세 (클라이언트)
-│   ├── trends/             — 트렌드 주제 관리 (클라이언트, 승인/거부/필터)
-│   ├── revenue/            — 수익 추적 (클라이언트, useEffect fetch)
+│   ├── trends/             — 트렌드 주제 관리 (클라이언트, 채널탭 + 승인/거부/필터)
+│   ├── revenue/            — 수익 추적 (클라이언트, 이번달/월별추세 2탭)
 │   ├── risk/               — 리스크 모니터링 (서버 컴포넌트)
-│   ├── learning/           — 학습 피드백
-│   ├── cost/               — 비용/쿼터 추적
+│   │   └── sustainability-section.tsx  — 클라이언트 컴포넌트 분리 예시 (서버 페이지 내 클라이언트 탭)
+│   ├── learning/           — 학습 피드백 (KPI/알고리즘/바이어스 3탭)
+│   ├── cost/               — 비용/쿼터 추적 (쿼터현황/예측vs실제/이연업로드 3탭)
+│   ├── monitor/            — 파이프라인 실시간 모니터링 (폴링 기반)
+│   ├── runs/[channelId]/[runId]/ — Run 상세 (10탭: 이미지/영상/Shorts/나레이션/BGM/썸네일/제목/QA/메타/로그)
+│   ├── qa/                 — QA 결과 관리
+│   ├── knowledge/          — 지식 수집 현황 (단계별 배지)
 │   └── settings/           — 설정 (읽기 전용)
 ├── components/
 │   ├── animated-sections.tsx — motion 래퍼: StaggerContainer/StaggerItem/ScrollReveal/AnimatedCard/SectionWithInView
@@ -252,6 +298,10 @@ web/
     │   └── server.ts       — 서버용 (createServerClient + cookies)
     └── types.ts            — Supabase DB 전체 타입 (Database, Channel, PipelineRun 등)
 ```
+
+**API 라우트** (`app/api/`): `artifacts/[...path]`(파일 서빙), `agents/status`, `cost/projection`, `deferred-jobs`, `hitl-signals`, `knowledge`, `learning/algorithm|kpi`, `pipeline/logs|preflight|status|steps|trigger`, `qa-data`, `runs/[ch]/[id]`, `runs/[ch]/[id]/bgm|seo|shorts`, `sustainability`
+
+**서버 컴포넌트 내 클라이언트 탭 분리 패턴**: 서버 컴포넌트 페이지에 `'use client'`를 붙일 수 없을 때, 클라이언트 로직이 필요한 섹션을 별도 파일로 분리 후 import. `risk/sustainability-section.tsx`가 참조 구현이다.
 
 #### 애니메이션 패턴 (`animated-sections.tsx`)
 
@@ -332,9 +382,14 @@ setattr(_google_pkg, "generativeai", _genai_mock)
 - **웹 채널 데이터**: 웹에서 채널 정보 하드코딩 금지. 항상 Supabase `channels` 테이블 또는 fallback 상수 사용.
 - **웹 Recharts**: `page.tsx`는 서버 컴포넌트이므로 Recharts 직접 사용 불가. `home-charts.tsx` 또는 별도 `'use client'` 파일에 격리.
 - **웹 다크모드**: `document.documentElement.classList`를 직접 조작하지 말 것. `next-themes`의 `useTheme`/`ThemeProvider` 사용.
+- **웹 인라인 스타일**: 클라이언트 컴포넌트에서 색상은 Tailwind 클래스 대신 `G` 상수(각 파일 상단 정의) + CSS 변수(`--c-*`, `--t-*`)로 표현. 새 페이지 작성 시 `monitor/page.tsx`의 `G` 상수 구조를 복사한다.
+- **웹 파일 서빙**: `runs/` 결과물은 반드시 `/api/artifacts/[channelId]/[runId]/...` 경로 사용. `/api/files/` 경로는 존재하지 않는다.
 - **Sub-Agent 비침습**: `src/agents/` 코드는 기존 파이프라인(Step00~17) 로직을 변경하지 않는다. JSON 결과물 읽기 + 정책 파일 쓰기만 허용.
 - **Sub-Agent BaseAgent**: `if root:` 대신 `if root is not None:` 사용. Path 객체는 항상 truthy이므로 None 체크를 명시적으로 작성.
 - **type_syncer SQL 타입**: `_SQL_TO_TS` 매핑에 없는 타입은 `"unknown"` 반환. 새 SQL 타입 추가 시 `type_syncer.py`의 `_SQL_TO_TS` dict를 업데이트.
+- **썸네일 베이스 PNG**: `assets/thumbnails/CH{N}_base.png` 7개가 Step10의 입력이다. 채널 마스코트 디자인 변경 시 `.superpowers/brainstorm/*/content/ch{N}_thumbnail.html`을 수정 후 Playwright로 재스크린샷.
+- **Step10 Gemini 금지**: `thumbnail_generator.py`에 `genai` / `google.generativeai` 임포트를 추가하지 말 것. PIL 합성만 사용한다.
+- **`assets/` 디렉토리**: `characters/`(캐릭터 이미지), `lora/`(SD LoRA 가중치), `thumbnails/`(CH 베이스 PNG) 3개 하위 디렉토리. 파이프라인 런타임에 읽기 전용으로만 사용.
 
 ## 환경 변수
 
