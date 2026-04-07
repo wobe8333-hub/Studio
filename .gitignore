@@ -127,3 +127,6 @@ kas_*.py
 Untitled
 _step2_file_trace.json
 _task_dump.xml
+
+# Visual companion brainstorm sessions
+.superpowers/
