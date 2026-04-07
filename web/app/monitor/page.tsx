@@ -171,52 +171,125 @@ function StepProgressPanel() {
 
 // ─── 실시간 미리보기 탭 ──────────────────────────────────────────────────────
 
+interface PreviewItem {
+  index: number
+  heading: string
+  narration: string
+  prompt: string
+  image: string | null
+}
+
+interface PreviewData {
+  channel: string
+  runId: string
+  title: string | null
+  hook: string | null
+  previews: PreviewItem[]
+}
+
 function PreviewPanel() {
-  const [data, setData] = useState<StepProgress | null>(null)
+  const [preview, setPreview] = useState<PreviewData | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     const poll = async () => {
-      const res = await fetch('/api/pipeline/steps')
-      if (res.ok) setData(await res.json())
+      try {
+        const res = await fetch('/api/pipeline/preview')
+        if (res.ok) {
+          setPreview(await res.json())
+          setError(null)
+        } else {
+          setError('실행 결과 없음')
+        }
+      } catch {
+        setError('API 오류')
+      } finally {
+        setLoading(false)
+      }
     }
     poll()
-    const id = setInterval(poll, 3000)
+    const id = setInterval(poll, 5000)
     return () => clearInterval(id)
   }, [])
 
-  if (!data?.active || !data.channel_id || !data.run_id) {
-    return (
-      <div style={G.card} className="p-8 text-center">
-        <ImageIcon className="h-12 w-12 mx-auto mb-4" style={{ color: 'rgba(238,36,0,0.3)' }} />
-        <p className="text-sm" style={{ color: '#9b6060' }}>파이프라인 실행 중일 때 이미지가 실시간으로 표시됩니다</p>
-      </div>
-    )
-  }
+  if (loading) return (
+    <div className="flex items-center justify-center py-20" style={{ color: '#9b6060' }}>
+      <Loader2 className="h-6 w-6 animate-spin" />
+    </div>
+  )
 
-  const ch = data.channel_id
-  const runId = data.run_id
-  const scenesPath = `/api/artifacts/${ch}/${runId}/step08/scenes/`
+  if (error || !preview) return (
+    <div style={G.card} className="p-8 text-center">
+      <ImageIcon className="h-12 w-12 mx-auto mb-4" style={{ color: 'rgba(238,36,0,0.3)' }} />
+      <p className="text-sm" style={{ color: '#9b6060' }}>완료된 파이프라인 Run이 없습니다</p>
+    </div>
+  )
 
   return (
-    <div className="space-y-4">
-      <div style={G.card} className="p-5">
-        <h3 className="font-bold mb-1" style={{ fontFamily: "'Libre Baskerville', serif", color: '#1a0505' }}>생성 이미지 미리보기</h3>
-        <p className="text-xs mb-4" style={{ color: '#9b6060' }}>Step08 실행 중 생성되는 장면 이미지가 여기에 표시됩니다 · 3초 폴링</p>
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-          {[1, 2, 3, 4, 5, 6].map(n => (
-            <div key={n} className="aspect-video rounded-lg overflow-hidden flex items-center justify-center" style={{ background: 'rgba(238,36,0,0.06)', border: '1px solid rgba(238,36,0,0.1)' }}>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={`${scenesPath}scene_${String(n).padStart(3, '0')}.jpg`}
-                alt={`장면 ${n}`}
-                className="w-full h-full object-cover"
-                onError={e => { (e.target as HTMLImageElement).style.display = 'none' }}
-              />
-              <span className="text-xs absolute" style={{ color: '#9b6060' }}>장면 {n}</span>
-            </div>
-          ))}
+    <div className="space-y-3">
+      {/* 헤더 */}
+      <div style={G.card} className="px-4 py-3 flex items-center justify-between">
+        <div>
+          <p className="text-xs font-bold" style={{ color: '#1a0505' }}>
+            {preview.channel} · {preview.runId}
+          </p>
+          {preview.title && (
+            <p className="text-xs mt-0.5" style={{ color: '#5c1a1a' }}>
+              제목: {preview.title}
+            </p>
+          )}
         </div>
+        <Link href={`/runs/${preview.channel}/${preview.runId}`}
+          className="text-[11px] px-2 py-1 rounded"
+          style={{ background: 'rgba(144,0,0,0.08)', color: '#900000' }}>
+          상세보기 →
+        </Link>
       </div>
+
+      {/* hook */}
+      {preview.hook && (
+        <div style={G.card} className="px-4 py-3">
+          <p className="text-[10px] font-bold uppercase mb-1" style={{ color: '#9b6060' }}>Hook</p>
+          <p className="text-sm" style={{ color: '#1a0505' }}>{preview.hook}</p>
+        </div>
+      )}
+
+      {/* 대사 + 이미지 2개 */}
+      {preview.previews.map((item) => (
+        <div key={item.index} style={G.card} className="p-4">
+          <p className="text-xs font-bold mb-2" style={{ color: '#5c1a1a' }}>
+            섹션 {item.index} · {item.heading}
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            {/* 대사 프롬프트 */}
+            <div className="rounded-lg p-3" style={{ background: 'rgba(238,36,0,0.04)', border: '1px solid rgba(238,36,0,0.1)' }}>
+              <p className="text-[10px] font-bold mb-1" style={{ color: '#9b6060' }}>대사 / 나레이션</p>
+              <p className="text-xs leading-relaxed" style={{ color: '#1a0505' }}>
+                {item.narration || '(나레이션 없음)'}
+              </p>
+              {item.prompt && (
+                <>
+                  <p className="text-[10px] font-bold mt-2 mb-1" style={{ color: '#9b6060' }}>이미지 프롬프트</p>
+                  <p className="text-[11px] leading-relaxed" style={{ color: '#5c1a1a', fontFamily: "'DM Mono', monospace" }}>
+                    {item.prompt}
+                  </p>
+                </>
+              )}
+            </div>
+            {/* 이미지 */}
+            <div className="aspect-video rounded-lg overflow-hidden flex items-center justify-center"
+              style={{ background: 'rgba(238,36,0,0.06)', border: '1px solid rgba(238,36,0,0.1)' }}>
+              {item.image ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={item.image} alt={item.heading} className="w-full h-full object-cover" />
+              ) : (
+                <span className="text-xs" style={{ color: '#9b6060' }}>이미지 없음</span>
+              )}
+            </div>
+          </div>
+        </div>
+      ))}
     </div>
   )
 }
