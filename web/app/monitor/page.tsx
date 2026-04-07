@@ -202,36 +202,91 @@ function PreviewPanel() {
 
 // ─── Manim 안정성 탭 ─────────────────────────────────────────────────────────
 
+interface ManImAgentStatus {
+  name: string
+  last_run_at?: string
+  manim_fallback_rate?: number
+  character_drift?: number
+  error?: string
+}
+
 function ManImPanel() {
+  const [agents, setAgents] = useState<ManImAgentStatus[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    fetch('/api/agents/status')
+      .then(r => r.ok ? r.json() : { agents: [] })
+      .then(d => setAgents(d.agents ?? []))
+      .finally(() => setLoading(false))
+  }, [])
+
+  const videoAgent = agents.find(a =>
+    a.name?.toLowerCase().includes('videostyle') ||
+    a.name?.toLowerCase().includes('video_style')
+  )
+  const fallbackRate = videoAgent?.manim_fallback_rate
+  const charDrift = videoAgent?.character_drift
+  const lastRun = videoAgent?.last_run_at
+
+  if (loading) return (
+    <div className="flex items-center justify-center py-12">
+      <Loader2 className="h-6 w-6 animate-spin" style={{ color: '#ee2400' }} />
+    </div>
+  )
+
   return (
     <div style={G.card} className="p-6">
       <div className="flex items-center gap-3 mb-5">
         <Cpu className="h-5 w-5" style={{ color: '#ee2400' }} />
         <div>
           <h3 className="font-bold" style={{ fontFamily: "'Libre Baskerville', serif", color: '#1a0505' }}>Manim 렌더링 안정성</h3>
-          <p className="text-xs" style={{ color: '#9b6060' }}>Step08 Manim fallback 비율 모니터링</p>
+          <p className="text-xs" style={{ color: G.text.muted }}>Step08 Manim fallback 비율 모니터링</p>
         </div>
       </div>
       <div className="grid grid-cols-2 gap-4 mb-6">
         {[
-          { label: 'Manim 성공률', value: '—', sub: '임계값: 50%' },
-          { label: 'Fallback 횟수', value: '—', sub: '이번 달' },
-          { label: '캐릭터 드리프트', value: '—', sub: '임계값: 0.7' },
-          { label: '마지막 체크', value: '—', sub: 'Sub-Agent 실행 기준' },
+          {
+            label: 'Manim 성공률',
+            value: fallbackRate != null ? `${((1 - fallbackRate) * 100).toFixed(0)}%` : '—',
+            sub: '임계값: 50%',
+            warn: fallbackRate != null && fallbackRate > 0.5,
+          },
+          {
+            label: 'Fallback 비율',
+            value: fallbackRate != null ? `${(fallbackRate * 100).toFixed(0)}%` : '—',
+            sub: '이미지 대체 비율',
+            warn: fallbackRate != null && fallbackRate > 0.5,
+          },
+          {
+            label: '캐릭터 드리프트',
+            value: charDrift != null ? charDrift.toFixed(2) : '—',
+            sub: '임계값: 0.7',
+            warn: charDrift != null && charDrift > 0.7,
+          },
+          {
+            label: '마지막 체크',
+            value: lastRun ? new Date(lastRun).toLocaleDateString('ko-KR') : '—',
+            sub: 'VideoStyleAgent 실행 기준',
+            warn: false,
+          },
         ].map(item => (
-          <div key={item.label} className="p-4 rounded-xl" style={{ background: 'rgba(238,36,0,0.04)', border: '1px solid rgba(238,36,0,0.08)' }}>
-            <p className="text-xs mb-1" style={{ color: '#9b6060' }}>{item.label}</p>
-            <p className="text-xl font-bold" style={{ fontFamily: "'Libre Baskerville', serif", color: '#1a0505' }}>{item.value}</p>
-            <p className="text-[10px] mt-0.5" style={{ color: '#9b6060' }}>{item.sub}</p>
+          <div key={item.label} className="p-4 rounded-xl" style={{
+            background: item.warn ? 'rgba(238,36,0,0.08)' : 'rgba(238,36,0,0.04)',
+            border: `1px solid rgba(238,36,0,${item.warn ? '0.2' : '0.08'})`,
+          }}>
+            <p className="text-xs mb-1" style={{ color: G.text.muted }}>{item.label}</p>
+            <p className="text-xl font-bold" style={{ fontFamily: "'Libre Baskerville', serif", color: item.warn ? '#ee2400' : '#1a0505' }}>{item.value}</p>
+            <p className="text-[10px] mt-0.5" style={{ color: G.text.muted }}>{item.sub}</p>
           </div>
         ))}
       </div>
-      <div className="rounded-xl p-4" style={{ background: 'rgba(0,0,0,0.03)', border: '1px solid rgba(238,36,0,0.06)' }}>
-        <p className="text-xs font-semibold mb-2" style={{ color: '#5c1a1a' }}>VideoStyleAgent 실행 시 자동 업데이트</p>
-        <p className="text-xs" style={{ color: '#9b6060' }}>
-          Sub-Agent 탭에서 VideoStyleAgent를 수동 실행하거나, 파이프라인 완료 후 자동 업데이트됩니다.
-        </p>
-      </div>
+      {agents.length === 0 && (
+        <div className="rounded-xl p-4" style={{ background: 'rgba(0,0,0,0.03)', border: '1px solid rgba(238,36,0,0.06)' }}>
+          <p className="text-xs font-semibold mb-1" style={{ color: '#5c1a1a' }}>데이터 없음</p>
+          <p className="text-xs" style={{ color: G.text.muted }}>Sub-Agent 탭에서 VideoStyleAgent를 실행하면 데이터가 생성됩니다.</p>
+        </div>
+      )}
     </div>
   )
 }

@@ -196,46 +196,104 @@ function AudioTab({ artifacts, channelId, runId }: { artifacts: RunArtifacts | n
 
 // ─── 썸네일 탭 ──────────────────────────────────────────────────────────────
 
-function ThumbnailTab({ artifacts, channelId, runId }: { artifacts: RunArtifacts | null; channelId: string; runId: string }) {
-  // 썸네일 파일명은 선택 제목으로부터 유추하거나 step10 폴더에서 확인 필요
-  const hasThumbnail = artifacts?.step08 != null
-
-  if (!hasThumbnail) return <EmptyState icon={ImageIcon} msg="썸네일이 없습니다" sub="Step10 완료 후 생성됩니다" />
-
+function ThumbnailTab({ channelId, runId }: { channelId: string; runId: string }) {
+  const variants = ['thumbnail_v1', 'thumbnail_v2', 'thumbnail_v3']
   return (
-    <div style={G.card} className="p-6">
-      <h3 className="font-bold mb-4" style={{ fontFamily: "'Libre Baskerville', serif", color: '#1a0505' }}>썸네일</h3>
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src={`/api/artifacts/${channelId}/${runId}/step10/thumbnail.jpg`}
-        alt="썸네일"
-        className="w-full max-w-xl rounded-xl shadow-lg mx-auto block"
-        style={{ border: '1px solid rgba(238,36,0,0.12)' }}
-        onError={e => { (e.target as HTMLImageElement).src = `/api/artifacts/${channelId}/${runId}/step10/thumbnail.png` }}
-      />
+    <div className="space-y-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {variants.map((v, i) => (
+          <div key={v} style={G.card} className="p-4">
+            <p className="text-xs font-bold mb-3" style={{ color: '#9b6060' }}>썸네일 {String.fromCharCode(65 + i)}</p>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={`/api/artifacts/${channelId}/${runId}/step10/${v}.jpg`}
+              alt={`썸네일 ${String.fromCharCode(65 + i)}`}
+              className="w-full rounded-lg"
+              style={{ border: '1px solid rgba(238,36,0,0.12)', aspectRatio: '16/9', objectFit: 'cover' }}
+              onError={e => {
+                const el = e.target as HTMLImageElement
+                if (el.src.endsWith('.jpg')) {
+                  el.src = `/api/artifacts/${channelId}/${runId}/step10/${v}.png`
+                } else {
+                  el.style.display = 'none'
+                }
+              }}
+            />
+          </div>
+        ))}
+      </div>
+      <p className="text-xs text-center" style={{ color: '#9b6060' }}>
+        3종 썸네일 A/B/C 비교 · Step10 완료 후 생성됩니다
+      </p>
     </div>
   )
 }
 
 // ─── 제목 A/B/C 탭 ──────────────────────────────────────────────────────────
 
-function TitleTab({ artifacts }: { artifacts: RunArtifacts | null }) {
+function TitleTab({ artifacts, channelId, runId }: { artifacts: RunArtifacts | null; channelId: string; runId: string }) {
   const titles = artifacts?.step08?.title_candidates ?? []
+  const [selected, setSelected] = useState<number | null>(null)
+  const [saving, setSaving] = useState(false)
+  const [saved, setSaved] = useState(false)
 
   if (!titles.length) return <EmptyState icon={Type} msg="제목 후보가 없습니다" sub="Step10 완료 후 생성됩니다" />
 
   const typeLabels = ['호기심 자극형', '권위 신뢰형', '이익 제공형']
 
+  async function handleSelect(i: number) {
+    setSelected(i)
+    setSaving(true)
+    setSaved(false)
+    await fetch(`/api/runs/${channelId}/${runId}/seo`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ selected_title_index: i, selected_title: (titles as string[])[i] }),
+    })
+    setSaving(false)
+    setSaved(true)
+    setTimeout(() => setSaved(false), 2000)
+  }
+
   return (
     <div className="space-y-3">
+      {saved && (
+        <div className="px-4 py-2 rounded-xl text-sm font-medium" style={{ background: 'rgba(34,197,94,0.1)', color: '#22c55e' }}>
+          ✓ 제목이 저장되었습니다
+        </div>
+      )}
       {(titles as string[]).map((title: string, i: number) => (
-        <div key={i} style={G.card} className="p-5">
+        <div
+          key={i}
+          style={{
+            ...G.card,
+            border: selected === i ? '2px solid #ee2400' : '1px solid rgba(238,36,0,0.12)',
+          }}
+          className="p-5"
+        >
           <div className="flex items-center gap-2 mb-2">
             <span className="text-xs font-bold px-2.5 py-1 rounded-full" style={{ background: 'rgba(238,36,0,0.1)', color: '#ee2400' }}>
               {String.fromCharCode(65 + i)} — {typeLabels[i] ?? `타입 ${i + 1}`}
             </span>
+            {selected === i && (
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full ml-auto" style={{ background: 'rgba(34,197,94,0.15)', color: '#22c55e' }}>
+                선택됨
+              </span>
+            )}
           </div>
-          <p className="text-base font-medium leading-snug" style={{ color: '#1a0505' }}>{title}</p>
+          <p className="text-base font-medium leading-snug mb-3" style={{ color: '#1a0505' }}>{title}</p>
+          <button
+            onClick={() => handleSelect(i)}
+            disabled={saving}
+            className="text-xs px-3 py-1.5 rounded-lg transition-all"
+            style={{
+              background: selected === i ? 'rgba(34,197,94,0.1)' : 'rgba(238,36,0,0.08)',
+              color: selected === i ? '#22c55e' : '#5c1a1a',
+              border: `1px solid ${selected === i ? 'rgba(34,197,94,0.3)' : 'rgba(238,36,0,0.15)'}`,
+            }}
+          >
+            {saving && selected === i ? '저장 중...' : '이 제목 선택'}
+          </button>
         </div>
       ))}
     </div>
@@ -483,8 +541,8 @@ export default function RunDetailPage() {
             {tab === 'video'     && <VideoTab artifacts={artifacts} channelId={channelId} runId={runId} />}
             {tab === 'shorts'    && <ShortsTab channelId={channelId} runId={runId} />}
             {tab === 'audio'     && <AudioTab artifacts={artifacts} channelId={channelId} runId={runId} />}
-            {tab === 'thumbnail' && <ThumbnailTab artifacts={artifacts} channelId={channelId} runId={runId} />}
-            {tab === 'title'     && <TitleTab artifacts={artifacts} />}
+            {tab === 'thumbnail' && <ThumbnailTab channelId={channelId} runId={runId} />}
+            {tab === 'title'     && <TitleTab artifacts={artifacts} channelId={channelId} runId={runId} />}
             {tab === 'seo'       && <SeoTab channelId={channelId} runId={runId} />}
             {tab === 'qa'        && <QaTab artifacts={artifacts} />}
             {tab === 'cost'      && <CostTab artifacts={artifacts} />}
