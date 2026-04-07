@@ -303,6 +303,7 @@ web/
 │   ├── cost/               — 비용/쿼터 추적 (쿼터현황/예측vs실제/이연업로드 3탭)
 │   ├── monitor/            — 파이프라인 실시간 모니터링 (폴링 기반)
 │   ├── runs/[channelId]/[runId]/ — Run 상세 (10탭: 이미지/영상/Shorts/나레이션/BGM/썸네일/제목/QA/메타/로그)
+│   ├── runs/[channelId]/   — 채널별 Run 목록 (클라이언트, 홈 채널 카드 링크 대상)
 │   ├── qa/                 — QA 결과 관리
 │   ├── knowledge/          — 지식 수집 현황 (단계별 배지)
 │   └── settings/           — 설정 (읽기 전용)
@@ -316,10 +317,11 @@ web/
     ├── supabase/
     │   ├── client.ts       — 브라우저용 (createBrowserClient)
     │   └── server.ts       — 서버용 (createServerClient + cookies)
+    ├── fs-helpers.ts       — 경로 보안 유틸리티: validateRunPath / validateChannelPath / getKasRoot / readKasJson / writeKasJson
     └── types.ts            — Supabase DB 전체 타입 (Database, Channel, PipelineRun 등)
 ```
 
-**API 라우트** (`app/api/`): `artifacts/[...path]`(파일 서빙), `agents/status`, `cost/projection`, `deferred-jobs`, `hitl-signals`, `knowledge`, `learning/algorithm|kpi`, `pipeline/logs|preflight|status|steps|trigger`, `qa-data`, `runs/[ch]/[id]`, `runs/[ch]/[id]/bgm|seo|shorts`, `sustainability`
+**API 라우트** (`app/api/`): `artifacts/[...path]`(파일 서빙), `agents/status`, `cost/projection`, `deferred-jobs`, `hitl-signals`, `knowledge`, `learning/algorithm|kpi`, `pipeline/logs|preflight|status|steps|trigger`, `qa-data`, `runs/[ch]`(채널별 Run 목록), `runs/[ch]/[id]`, `runs/[ch]/[id]/bgm|seo|shorts`, `sustainability`
 
 **서버 컴포넌트 내 클라이언트 탭 분리 패턴**: 서버 컴포넌트 페이지에 `'use client'`를 붙일 수 없을 때, 클라이언트 로직이 필요한 섹션을 별도 파일로 분리 후 import. `risk/sustainability-section.tsx`가 참조 구현이다.
 
@@ -417,6 +419,9 @@ setattr(_google_pkg, "generativeai", _genai_mock)
 - **썸네일 베이스 PNG**: `assets/thumbnails/CH{N}_base.png` 7개가 Step10의 입력이다. 채널 마스코트 디자인 변경 시 `.superpowers/brainstorm/*/content/ch{N}_thumbnail.html`을 수정 후 Playwright로 재스크린샷.
 - **Step10 Gemini 금지**: `thumbnail_generator.py`에 `genai` / `google.generativeai` 임포트를 추가하지 말 것. PIL 합성만 사용한다.
 - **`assets/` 디렉토리**: `characters/`(캐릭터 이미지), `lora/`(SD LoRA 가중치), `thumbnails/`(CH 베이스 PNG) 3개 하위 디렉토리. 파이프라인 런타임에 읽기 전용으로만 사용.
+- **웹 API 경로 보안**: `channelId`/`runId` URL 파라미터를 파일 경로에 사용하는 모든 API 라우트는 반드시 `web/lib/fs-helpers.ts`의 `validateRunPath()` 또는 `validateChannelPath()`를 사용해야 한다. 직접 `path.join(kasRoot, channelId, ...)` 패턴은 경로 트래버설 취약점이므로 금지.
+- **웹 getKasRoot 싱글턴**: API 라우트에서 KAS 루트 경로가 필요하면 로컬 `getKasRoot()` 함수를 직접 정의하지 말고 반드시 `import { getKasRoot } from '@/lib/fs-helpers'`로 가져온다. 로컬 정의 시 `path.join` vs `path.resolve` 불일치로 경계 검사가 실패할 수 있다.
+- **Next.js 16 미들웨어**: `web/proxy.ts`가 Next.js 16.2.2의 미들웨어 파일이다. `web/middleware.ts`를 별도로 생성하면 빌드 오류("Both middleware file and proxy file detected")가 발생한다. 인증 로직 수정 시 `proxy.ts`만 편집할 것.
 
 ## 환경 변수
 
