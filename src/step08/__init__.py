@@ -159,20 +159,28 @@ def run_step08(channel_id: str, topic: dict, style_policy: dict,
         raise RuntimeError("STEP08_FAIL: 생성된 클립 없음")
 
     concat_path = step08_dir / "video_raw.mp4"
-    concat_clips(ordered_clips, concat_path)
+    if not concat_clips(ordered_clips, concat_path):
+        raise RuntimeError(f"STEP08_FAIL: concat_clips 실패 — {channel_id}/{run_id}")
+    if not concat_path.exists() or concat_path.stat().st_size == 0:
+        raise RuntimeError(f"STEP08_FAIL: video_raw.mp4 생성 실패 — {channel_id}/{run_id}")
 
     logger.info(f"[STEP08] {channel_id}/{run_id} narration 생성 중...")
     narration_path = step08_dir / "narration.wav"
     generate_narration(script, narration_path, channel_id)
 
     with_narr = step08_dir / "video_narr.mp4"
-    add_narration(concat_path, narration_path, with_narr)
+    if not add_narration(concat_path, narration_path, with_narr):
+        raise RuntimeError(f"STEP08_FAIL: add_narration 실패 — {channel_id}/{run_id}")
+    if not with_narr.exists() or with_narr.stat().st_size == 0:
+        raise RuntimeError(f"STEP08_FAIL: video_narr.mp4 생성 실패 — {channel_id}/{run_id}")
 
     srt_path = step08_dir / "subtitles.srt"
     generate_subtitles(script, narration_path, srt_path)
 
     with_subs = step08_dir / "video_subs.mp4"
-    add_subtitles(with_narr, srt_path, with_subs)
+    if not add_subtitles(with_narr, srt_path, with_subs):
+        logger.warning(f"[STEP08] 자막 추가 실패 — narration 영상으로 진행: {channel_id}/{run_id}")
+        with_subs = with_narr  # 자막 없이 진행 (업로드 차단 대신 경고)
 
     final_video = step08_dir / "video.mp4"
     shutil.copy2(with_subs, final_video)
