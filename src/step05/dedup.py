@@ -26,7 +26,8 @@ def _load_existing_topics(channel_id: str) -> Set[str]:
         return set()
 
     existing: Set[str] = set()
-    for json_file in store_dir.glob("*.json"):
+    # glob("*.json") → glob("**/*.json") : packages/ 하위 재귀 탐색
+    for json_file in store_dir.glob("**/*.json"):
         try:
             data = read_json(json_file)
             # 단일 주제 파일
@@ -39,6 +40,9 @@ def _load_existing_topics(channel_id: str) -> Set[str]:
                         existing.add(_normalize(t))
                     elif isinstance(t, dict) and "reinterpreted_title" in t:
                         existing.add(_normalize(t["reinterpreted_title"]))
+            # knowledge_package.py 형식: 루트에 reinterpreted_title
+            if "reinterpreted_title" in data:
+                existing.add(_normalize(data["reinterpreted_title"]))
         except Exception:
             pass
 
