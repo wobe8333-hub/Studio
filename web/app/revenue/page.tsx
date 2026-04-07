@@ -19,8 +19,23 @@ import {
   XAxis,
   YAxis,
   CartesianGrid,
+  LineChart,
+  Line,
 } from 'recharts'
 import { createClient } from '@/lib/supabase/client'
+
+const REV_TABS = [
+  { id: 'current', label: '이번달' },
+  { id: 'trend',   label: '월별 추세' },
+] as const
+type RevTabId = typeof REV_TABS[number]['id']
+
+interface MonthlyTrend {
+  month: string
+  total: number
+  adsense: number
+  affiliate: number
+}
 
 const CHANNEL_IDS = ['CH1', 'CH2', 'CH3', 'CH4', 'CH5', 'CH6', 'CH7']
 const TARGET = 2_000_000
@@ -58,6 +73,8 @@ function formatKrw(v: number) {
 
 export default function RevenuePage() {
   const [revenue, setRevenue] = useState<RevenueRow[]>(DEFAULT_REVENUE)
+  const [trendData, setTrendData] = useState<MonthlyTrend[]>([])
+  const [tab, setTab] = useState<RevTabId>('current')
 
   useEffect(() => {
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
@@ -89,6 +106,35 @@ export default function RevenuePage() {
       })
   }, [])
 
+  useEffect(() => {
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+    const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+    if (!supabaseUrl || !supabaseKey || supabaseUrl.includes('xxxxxxxxxxxx')) return
+
+    const supabase = createClient()
+    const sixMonthsAgo = new Date()
+    sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 5)
+    const since = sixMonthsAgo.toISOString().slice(0, 7)
+
+    supabase
+      .from('revenue_monthly')
+      .select('month, adsense_krw, affiliate_krw, net_profit')
+      .gte('month', since)
+      .order('month', { ascending: true })
+      .then(({ data }) => {
+        if (!data) return
+        const byMonth: Record<string, MonthlyTrend> = {}
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        ;(data as any[]).forEach((r) => {
+          if (!byMonth[r.month]) byMonth[r.month] = { month: r.month, total: 0, adsense: 0, affiliate: 0 }
+          byMonth[r.month].adsense += r.adsense_krw ?? 0
+          byMonth[r.month].affiliate += r.affiliate_krw ?? 0
+          byMonth[r.month].total += r.net_profit ?? 0
+        })
+        setTrendData(Object.values(byMonth))
+      })
+  }, [])
+
   const totalRevenue = revenue.reduce((s, r) => s + r.net_profit, 0)
   const achieveRate = (totalRevenue / TOTAL_TARGET) * 100
   const achievedCount = revenue.filter((r) => r.target_achieved).length
@@ -106,6 +152,21 @@ export default function RevenuePage() {
         <p className="text-sm mt-1" style={{ color: '#9b6060' }}>월 목표: 채널당 200만원 / 전체 1,400만원</p>
       </div>
 
+      {/* 탭 바 */}
+      <div className="flex gap-1 p-1 rounded-xl w-fit" style={{ background: 'rgba(255,255,255,0.4)', border: '1px solid rgba(238,36,0,0.1)' }}>
+        {REV_TABS.map(t => (
+          <button
+            key={t.id}
+            onClick={() => setTab(t.id)}
+            className="px-5 py-2 rounded-lg text-xs font-medium transition-all"
+            style={{ background: tab === t.id ? '#900000' : 'transparent', color: tab === t.id ? '#ffefea' : '#9b6060' }}
+          >
+            {t.label}
+          </button>
+        ))}
+      </div>
+
+      {tab === 'current' && (<>
       {/* 요약 카드 */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         <Card className="dark:bg-green-500/[0.07] dark:border-green-500/20 glow-success">
@@ -191,6 +252,41 @@ export default function RevenuePage() {
           })}
         </CardContent>
       </Card>
+      </>)}
+
+      {tab === 'trend' && (
+        <Card>
+          <CardHeader>
+            <CardTitle>월별 수익 추세</CardTitle>
+            <CardDescription>AdSense + 제휴마케팅 월별 합산 추이</CardDescription>
+          </CardHeader>
+          <CardContent>
+            {trendData.length === 0 ? (
+              <p className="text-sm text-muted-foreground text-center py-8">
+                수익 데이터 없음 (Supabase 연동 후 표시)
+              </p>
+            ) : (
+              <ChartContainer
+                config={{
+                  total: { label: '총수익', color: 'var(--chart-1)' },
+                  adsense: { label: 'AdSense', color: 'var(--chart-2)' },
+                }}
+                className="h-64 w-full"
+              >
+                <LineChart data={trendData}>
+                  <CartesianGrid vertical={false} />
+                  <XAxis dataKey="month" tickLine={false} axisLine={false} />
+                  <YAxis tickFormatter={(v) => formatKrw(v)} axisLine={false} tickLine={false} />
+                  <ChartTooltip content={<ChartTooltipContent />} />
+                  <ChartLegend content={<ChartLegendContent />} />
+                  <Line type="monotone" dataKey="total" stroke="var(--chart-1)" strokeWidth={2} dot={{ r: 4 }} />
+                  <Line type="monotone" dataKey="adsense" stroke="var(--chart-2)" strokeWidth={2} dot={false} strokeDasharray="4 2" />
+                </LineChart>
+              </ChartContainer>
+            )}
+          </CardContent>
+        </Card>
+      )}
     </div>
   )
 }
