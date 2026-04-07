@@ -17,7 +17,8 @@ export async function GET(
 ) {
   const { path: segments } = await params
   const relativePath = segments.join('/')
-  const fullPath = path.join(getKasRoot(), relativePath)
+  // 실행 결과물은 KAS 루트 하위 runs/ 에 저장됨
+  const fullPath = path.join(getKasRoot(), 'runs', relativePath)
 
   // 경로 트래버설 방지
   const resolved = path.resolve(fullPath)

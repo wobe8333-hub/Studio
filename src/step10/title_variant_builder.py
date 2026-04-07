@@ -49,8 +49,12 @@ def run_step10(channel_id: str, run_id: str) -> bool:
     base     = tc[0] if tc else "제목 없음"
     keyword  = script.get("seo",{}).get("primary_keyword","")
     variants = _generate_titles(channel_id, base, keyword)
-    for mode in ["01","02","03"]:
-        generate_thumbnail(channel_id, base, mode, var_dir/f"thumbnail_variant_{mode}.png")
+    # 썸네일은 step10/ 에 저장 (대시보드 /api/artifacts/{ch}/{run}/step10/ 경로와 일치)
+    step10_dir = run_dir / "step10"
+    step10_dir.mkdir(parents=True, exist_ok=True)
+    _mode_to_variant = {"01": "thumbnail_v1", "02": "thumbnail_v2", "03": "thumbnail_v3"}
+    for mode in ["01", "02", "03"]:
+        generate_thumbnail(channel_id, base, mode, step10_dir / f"{_mode_to_variant[mode]}.png")
     sp  = s08/"style_policy.json"
     fp  = sha256_dict(read_json(sp)) if json_exists(sp) else ""
     write_json(var_dir/"title_variants.json", {
@@ -62,7 +66,7 @@ def run_step10(channel_id: str, run_id: str) -> bool:
     write_json(var_dir/"variant_manifest.json", {
         "variant_version":"v1.0","run_id":run_id,"channel_id":channel_id,
         "title_variants_path":str(var_dir/"title_variants.json"),
-        "thumbnail_variants":[str(var_dir/f"thumbnail_variant_{n}.png") for n in ["01","02","03"]],
+        "thumbnail_variants":[str(step10_dir/f"thumbnail_v{n}.png") for n in ["1","2","3"]],
         "style_policy_fingerprint":fp,"title_variant_count":3,"thumbnail_variant_count":3,
         "created_at":now_iso(),
     })
