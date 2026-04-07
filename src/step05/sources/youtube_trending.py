@@ -58,7 +58,8 @@ def _extract_keywords(title: str) -> List[str]:
     words = [w for w in cleaned.split() if 2 <= len(w) <= 10]
     # 흔한 불용어 제거
     stopwords = {"이유", "방법", "의미", "이것", "그것", "하지만", "그리고", "또한"}
-    return [w for w in words if w not in stopwords]
+    # 순수 숫자 키워드 제거 (예: "39", "2024" 등)
+    return [w for w in words if w not in stopwords and not w.isdigit()]
 
 
 def fetch_youtube_trending(

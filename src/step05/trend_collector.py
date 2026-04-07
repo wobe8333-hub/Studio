@@ -307,6 +307,7 @@ def reinterpret_trend(trend: dict, category: str, channel_id: str) -> dict:
         "is_trending": True,
         "score": trend.get("score", 0.0),
         "grade": trend.get("grade", "review"),
+        "breakdown": trend.get("breakdown"),
         "trend_collected_at": trend.get("collected_at", now_iso()),
         "trend_validity_days": TREND_VALIDITY_DAYS,
         "topic_type": "trending",
