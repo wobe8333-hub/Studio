@@ -40,20 +40,35 @@ def _gemini_vision_qa(video_path) -> dict:
         import google.generativeai as genai
         genai.configure(api_key=GEMINI_API_KEY)
 
-        # FFmpeg로 5프레임 추출 (0%, 25%, 50%, 75%, 90% 위치)
+        # ── 실제 영상 길이 측정 (ffprobe) ──────────────────────────────
         import subprocess
         import tempfile
         import os
 
+        duration_cmd = [
+            "ffprobe", "-v", "error",
+            "-show_entries", "format=duration",
+            "-of", "default=noprint_wrappers=1:nokey=1",
+            str(video_path),
+        ]
+        try:
+            dur_result = subprocess.run(
+                duration_cmd, capture_output=True, text=True, timeout=10
+            )
+            video_duration = float(dur_result.stdout.strip()) if dur_result.returncode == 0 else 120.0
+        except Exception:
+            video_duration = 120.0  # ffprobe 실패 시 fallback
+
+        # ── 5프레임 추출 (5%, 25%, 50%, 75%, 90% 위치) ─────────────────
         frames_dir = video_path.parent / "_qa_frames"
         frames_dir.mkdir(exist_ok=True)
         frame_files = []
 
         for i, pct in enumerate([5, 25, 50, 75, 90]):
             frame_path = frames_dir / f"frame_{i:02d}.jpg"
-            # ss 옵션: 전체 길이의 pct% 위치 추정 (기본 120초 영상 기준)
+            seek_sec = pct / 100.0 * video_duration
             cmd = [
-                "ffmpeg", "-y", "-ss", str(pct * 1.2),
+                "ffmpeg", "-y", "-ss", f"{seek_sec:.1f}",
                 "-i", str(video_path),
                 "-frames:v", "1",
                 "-q:v", "2",
