@@ -1,48 +1,182 @@
-"""STEP 10 — 썸네일 3종 생성."""
-import base64
+"""STEP 10 — PIL 합성 기반 썸네일 생성 (Figma 베이스 + 텍스트 레이어)."""
+import re
 from pathlib import Path
 from loguru import logger
-from tenacity import retry, stop_after_attempt, wait_exponential
-import google.generativeai as genai
-from src.core.config import GEMINI_API_KEY, GEMINI_IMAGE_MODEL
-from src.quota.gemini_quota import throttle_if_needed, record_request, record_image
-from src.step08.image_generator import _generate_placeholder
+from PIL import Image, ImageDraw, ImageFont
 
-genai.configure(api_key=GEMINI_API_KEY)
-CHANNEL_THUMBNAIL_STYLE = {
-    "CH1": "숫자/그래프 강조, 임팩트 텍스트, 다크 배경, 골드/레드 색상, 귀여운 경제 캐릭터",
-    "CH2": "부동산 건물/지도 비주얼, 손실/이익 대비, 레드/그린 색상, 귀여운 부동산 캐릭터",
-    "CH3": "사람 실루엣/표정, 질문형 텍스트, 퍼플/블루 색상, 귀여운 심리 캐릭터",
-    "CH4": "미스터리/서스펜스 비주얼, 어두운 배경, 그림자 효과, 귀여운 탐정 캐릭터",
-    "CH5": "전쟁/역사 비주얼, 강렬한 색상 대비, 드라마틱한 구도, 귀여운 군인 캐릭터",
-    "CH6": "우주/과학 비주얼, 데이터 흐름, 사이버 블루/민트 색상, 귀여운 과학자 캐릭터",
-    "CH7": "역사 유물/지도 비주얼, 세피아/골드 색상, 고전적 분위기, 귀여운 역사학자 캐릭터",
-}
-THUMBNAIL_MODES = {
-    "01":"채널 스타일 강조 + 애니메이션 요소",
-    "02":"숫자/데이터/결과 강조",
-    "03":"강렬한 질문/텍스트 강조",
+# ── 프로젝트 루트 ──────────────────────────────────────────────────────────────
+_ROOT = Path(__file__).resolve().parents[2]
+
+# ── 채널별 베이스 템플릿 경로 ──────────────────────────────────────────────────
+CHANNEL_BASE_TEMPLATES: dict[str, Path] = {
+    "CH1": _ROOT / "assets/thumbnails/CH1_base.png",
+    "CH2": _ROOT / "assets/thumbnails/CH2_base.png",
+    "CH3": _ROOT / "assets/thumbnails/CH3_base.png",
+    "CH4": _ROOT / "assets/thumbnails/CH4_base.png",
+    "CH5": _ROOT / "assets/thumbnails/CH5_base.png",
+    "CH6": _ROOT / "assets/thumbnails/CH6_base.png",
+    "CH7": _ROOT / "assets/thumbnails/CH7_base.png",
 }
 
-@retry(stop=stop_after_attempt(3), wait=wait_exponential(min=2, max=30))
-def generate_thumbnail(channel_id: str, title: str, mode: str, output_path: Path) -> bool:
-    if not record_image(1): return _generate_placeholder(title, output_path)
-    throttle_if_needed(); record_request()
-    style = CHANNEL_THUMBNAIL_STYLE.get(channel_id,"")
-    mode_desc = THUMBNAIL_MODES.get(mode,"")
-    prompt = (f"YouTube thumbnail for Korean knowledge animation. "
-              f"Title: {title}. Style: {style}. Mode: {mode_desc}. "
-              f"1920x1080, bold Korean text, high contrast, NO faces.")
+# ── 채널별 색상 스펙 ───────────────────────────────────────────────────────────
+CHANNEL_COLORS: dict[str, dict] = {
+    "CH1": {"overlay": (180, 120,  0, 235), "top_line": (255, 215,   0), "primary": "#FFD700", "label": "#FFD700", "name": "경제"},
+    "CH2": {"overlay": (  0,  80,  0, 235), "top_line": ( 76, 175,  80), "primary": "#4CAF50", "label": "#4CAF50", "name": "부동산"},
+    "CH3": {"overlay": ( 80,   0, 120, 235), "top_line": (206, 147, 216), "primary": "#CE93D8", "label": "#CE93D8", "name": "심리"},
+    "CH4": {"overlay": (100,  20,   0, 235), "top_line": (255, 112,  67), "primary": "#FF7043", "label": "#FF7043", "name": "미스터리"},
+    "CH5": {"overlay": (120,  20,  20, 235), "top_line": (239, 154, 154), "primary": "#EF9A9A", "label": "#EF9A9A", "name": "전쟁사"},
+    "CH6": {"overlay": (  0,  60,  80, 235), "top_line": ( 77, 208, 225), "primary": "#4DD0E1", "label": "#4DD0E1", "name": "과학"},
+    "CH7": {"overlay": ( 80,  55,   0, 235), "top_line": (200, 169, 110), "primary": "#C8A96E", "label": "#C8A96E", "name": "역사"},
+}
+
+# ── 폰트 ─────────────────────────────────────────────────────────────────────
+_FONT_PATH = Path("C:/Windows/Fonts/malgun.ttf")
+
+
+def _load_font(size: int) -> ImageFont.FreeTypeFont:
+    """malgun.ttf 로드, 실패 시 기본 폰트 반환."""
     try:
-        model    = genai.GenerativeModel(GEMINI_IMAGE_MODEL)
-        response = model.generate_content(
-            prompt, generation_config=genai.GenerationConfig(response_mime_type="image/png"),
-        )
-        for part in response.parts:
-            if hasattr(part,"inline_data") and part.inline_data:
-                output_path.parent.mkdir(parents=True, exist_ok=True)
-                output_path.write_bytes(base64.b64decode(part.inline_data.data))
-                return True
+        return ImageFont.truetype(str(_FONT_PATH), size)
+    except Exception:
+        return ImageFont.load_default()
+
+
+def _hex_to_rgb(hex_color: str) -> tuple[int, int, int]:
+    """#RRGGBB → (R, G, B)."""
+    h = hex_color.lstrip("#")
+    return tuple(int(h[i:i+2], 16) for i in (0, 2, 4))  # type: ignore
+
+
+def _wrap_text(text: str, max_chars: int = 16) -> list[str]:
+    """제목을 max_chars 기준으로 최대 2줄 분리."""
+    if len(text) <= max_chars:
+        return [text]
+    words = text.split()
+    line1: list[str] = []
+    line2: list[str] = []
+    for w in words:
+        if len(" ".join(line1 + [w])) <= max_chars:
+            line1.append(w)
+        else:
+            line2.append(w)
+    if not line1:
+        return [text[:max_chars], text[max_chars:max_chars * 2]]
+    return [" ".join(line1), " ".join(line2)] if line2 else [" ".join(line1)]
+
+
+def _draw_title(
+    draw: ImageDraw.ImageDraw,
+    title: str,
+    mode: str,
+    colors: dict,
+    W: int,
+    y: int,
+) -> None:
+    """mode별 제목 텍스트 렌더링."""
+    primary_rgb = _hex_to_rgb(colors["primary"])
+
+    if mode == "02":
+        m = re.search(r'\d+', title)
+        if m:
+            number_str = m.group()
+            rest = (title[:m.start()].strip() + " " + title[m.end():].strip()).strip()
+            font_num = _load_font(160)
+            font_rest = _load_font(72)
+            draw.text((48, y - 30), number_str, font=font_num, fill=primary_rgb)
+            for i, line in enumerate(_wrap_text(rest)[:2]):
+                draw.text((320, y + i * 88), line, font=font_rest, fill=(255, 255, 255))
+            return
+        mode = "01"  # 숫자 없으면 mode01 폴백
+
+    if mode == "03":
+        question = title + "?"
+        words = question.split()
+        last_word = words[-1]
+        rest = " ".join(words[:-1])
+        font_title = _load_font(80)
+        lines = _wrap_text(rest)
+        for i, line in enumerate(lines[:2]):
+            draw.text((48, y + i * 96), line, font=font_title, fill=(255, 255, 255))
+        draw.text((48, y + len(lines) * 96), last_word, font=font_title, fill=primary_rgb)
+        return
+
+    # mode 01 기본: 흰색 텍스트
+    font_title = _load_font(80)
+    for i, line in enumerate(_wrap_text(title)[:2]):
+        draw.text((48, y + i * 96), line, font=font_title, fill=(255, 255, 255))
+
+
+def _compose_thumbnail(
+    base_img: Image.Image,
+    channel_id: str,
+    title: str,
+    mode: str,
+) -> Image.Image:
+    """베이스 이미지 위에 4레이어 합성."""
+    W, H = 1920, 1080
+    img = base_img.convert("RGBA").resize((W, H), Image.LANCZOS)
+    draw = ImageDraw.Draw(img)
+    colors = CHANNEL_COLORS.get(channel_id, CHANNEL_COLORS["CH1"])
+
+    # Layer 2: 하단 38% 반투명 오버레이
+    overlay_top = int(H * 0.62)
+    overlay = Image.new("RGBA", (W, H - overlay_top), colors["overlay"])
+    img.paste(overlay, (0, overlay_top), overlay)
+
+    # 상단 구분선
+    draw.rectangle([(0, overlay_top), (W, overlay_top + 4)], fill=colors["top_line"])
+
+    # Layer 3: 채널명 소형 텍스트
+    font_label = _load_font(40)
+    label_text = f"{channel_id} · {colors['name']}"
+    draw.text((48, overlay_top + 18), label_text, font=font_label, fill=colors["top_line"])
+
+    # Layer 4: 제목 텍스트
+    _draw_title(draw, title, mode, colors, W, overlay_top + 72)
+
+    return img.convert("RGB")
+
+
+def _generate_placeholder(title: str, output_path: Path) -> bool:
+    """베이스 없을 때 단색 플레이스홀더 생성."""
+    try:
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        img = Image.new("RGB", (1920, 1080), color=(30, 30, 30))
+        draw = ImageDraw.Draw(img)
+        font = _load_font(80)
+        draw.text((60, 480), title[:32], font=font, fill=(200, 200, 200))
+        img.save(str(output_path))
+        return True
     except Exception as e:
-        logger.warning(f"[STEP10] 썸네일 실패 -> 플레이스홀더: {e}")
-    return _generate_placeholder(title, output_path)
+        logger.warning(f"[STEP10] 플레이스홀더 생성 실패: {e}")
+        return False
+
+
+def generate_thumbnail(channel_id: str, title: str, mode: str, output_path: Path) -> bool:
+    """채널 베이스 PNG + PIL 합성으로 썸네일 생성.
+
+    Args:
+        channel_id: "CH1" ~ "CH7"
+        title: 영상 제목
+        mode: "01" | "02" | "03"
+        output_path: 저장 경로 (.png)
+
+    Returns:
+        True: 성공 (합성 또는 플레이스홀더)
+        False: 완전 실패
+    """
+    base_path = CHANNEL_BASE_TEMPLATES.get(channel_id)
+    if not base_path or not base_path.exists():
+        logger.warning(f"[STEP10] 베이스 없음({channel_id}) → 플레이스홀더")
+        return _generate_placeholder(title, output_path)
+
+    try:
+        base_img = Image.open(base_path)
+        result = _compose_thumbnail(base_img, channel_id, title, mode)
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        result.save(str(output_path))
+        logger.info(f"[STEP10] 썸네일 생성: {output_path.name} (mode={mode})")
+        return True
+    except Exception as e:
+        logger.warning(f"[STEP10] PIL 합성 실패 → 플레이스홀더: {e}")
+        return _generate_placeholder(title, output_path)
