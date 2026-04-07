@@ -30,15 +30,23 @@ CHANNEL_COLORS: dict[str, dict] = {
 }
 
 # ── 폰트 ─────────────────────────────────────────────────────────────────────
-_FONT_PATH = Path("C:/Windows/Fonts/malgun.ttf")
+_FONT_CANDIDATES = [
+    Path("C:/Windows/Fonts/malgun.ttf"),                                    # Windows
+    Path("/usr/share/fonts/truetype/nanum/NanumGothic.ttf"),               # Ubuntu
+    Path("/System/Library/Fonts/AppleSDGothicNeo.ttc"),                    # macOS
+]
 
 
 def _load_font(size: int) -> ImageFont.FreeTypeFont:
-    """malgun.ttf 로드, 실패 시 기본 폰트 반환."""
-    try:
-        return ImageFont.truetype(str(_FONT_PATH), size)
-    except Exception:
-        return ImageFont.load_default()
+    """플랫폼별 한국어 폰트 탐색, 실패 시 기본 폰트 반환."""
+    for candidate in _FONT_CANDIDATES:
+        if candidate.exists():
+            try:
+                return ImageFont.truetype(str(candidate), size)
+            except Exception:
+                continue
+    logger.warning("[STEP10] 한국어 폰트 없음 — 텍스트가 깨질 수 있음")
+    return ImageFont.load_default()
 
 
 def _hex_to_rgb(hex_color: str) -> tuple[int, int, int]:
@@ -52,6 +60,9 @@ def _wrap_text(text: str, max_chars: int = 16) -> list[str]:
     if len(text) <= max_chars:
         return [text]
     words = text.split()
+    if len(words) == 1:
+        # 공백 없는 한국어: 글자 수 기준 강제 분리
+        return [text[:max_chars], text[max_chars:max_chars * 2]]
     line1: list[str] = []
     line2: list[str] = []
     for w in words:
@@ -86,7 +97,7 @@ def _draw_title(
             for i, line in enumerate(_wrap_text(rest)[:2]):
                 draw.text((320, y + i * 88), line, font=font_rest, fill=(255, 255, 255))
             return
-        mode = "01"  # 숫자 없으면 mode01 폴백
+        # 숫자 없으면 아래 기본 경로(mode 01)로 fall-through
 
     if mode == "03":
         words = title.split()
