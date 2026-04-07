@@ -58,6 +58,7 @@ interface StepProgress {
 function StepProgressPanel() {
   const [data, setData] = useState<StepProgress | null>(null)
   const [loading, setLoading] = useState(true)
+  const [triggering, setTriggering] = useState(false)
 
   const poll = useCallback(async () => {
     try {
@@ -73,6 +74,20 @@ function StepProgressPanel() {
     const id = setInterval(poll, 3000)
     return () => clearInterval(id)
   }, [poll])
+
+  const startDryRun = async () => {
+    setTriggering(true)
+    try {
+      const res = await fetch('/api/pipeline/trigger', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ dry_run: true, channel_id: 'CH1', month_number: 1 }),
+      })
+      if (res.ok) await poll()
+    } finally {
+      setTriggering(false)
+    }
+  }
 
   const statusColor = (s: string) => {
     if (s === 'done') return '#22c55e'
@@ -94,10 +109,16 @@ function StepProgressPanel() {
       <div style={G.card} className="p-8 text-center">
         <Activity className="h-12 w-12 mx-auto mb-4" style={{ color: 'rgba(238,36,0,0.3)' }} />
         <p className="text-lg font-bold mb-2" style={{ fontFamily: "'Libre Baskerville', serif", color: '#1a0505' }}>파이프라인 대기 중</p>
-        <p className="text-sm mb-6" style={{ color: '#9b6060' }}>홈에서 '테스트 런' 버튼을 눌러 파이프라인을 시작하세요</p>
-        <Link href="/" className="inline-flex items-center gap-2 rounded-lg px-5 py-2.5 text-sm font-semibold" style={{ background: '#900000', color: '#ffefea' }}>
-          ▶ 테스트 런 시작
-        </Link>
+        <p className="text-sm mb-6" style={{ color: '#9b6060' }}>버튼을 눌러 DRY RUN 시뮬레이션을 시작하세요</p>
+        <button
+          onClick={startDryRun}
+          disabled={triggering}
+          className="inline-flex items-center gap-2 rounded-lg px-5 py-2.5 text-sm font-semibold disabled:opacity-60"
+          style={{ background: '#900000', color: '#ffefea', cursor: triggering ? 'not-allowed' : 'pointer' }}
+        >
+          {triggering ? <Loader2 className="h-4 w-4 animate-spin" /> : <Play className="h-4 w-4" />}
+          {triggering ? '시작 중...' : '테스트 런 시작'}
+        </button>
       </div>
     )
   }
