@@ -237,10 +237,10 @@ export default function QaPage() {
     <div className="relative space-y-6 ambient-bg overflow-hidden">
       <div>
         <div className="flex items-center gap-2">
-          <ClipboardCheck className="h-5 w-5" />
-          <h1 className="text-2xl font-bold tracking-tight">QA 검수</h1>
+          <ClipboardCheck className="h-5 w-5" style={{ color: '#ee2400' }} />
+          <h1 className="text-2xl font-bold" style={{ fontFamily: "'Libre Baskerville', serif", color: '#1a0505' }}>QA 검수</h1>
         </div>
-        <p className="text-muted-foreground text-sm mt-1">수동 검수 승인 및 Step10 배리언트 선택</p>
+        <p className="text-sm mt-1" style={{ color: '#9b6060' }}>수동 검수 승인 및 Step10 배리언트 선택</p>
       </div>
 
       {loading ? (

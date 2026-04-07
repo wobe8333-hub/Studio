@@ -91,8 +91,8 @@ export default async function RiskPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight">리스크 모니터링</h1>
-        <p className="text-muted-foreground text-sm">채널별 월간 수익 리스크 평가</p>
+        <h1 className="text-2xl font-bold" style={{ fontFamily: "'Libre Baskerville', serif", color: '#1a0505' }}>리스크 모니터링</h1>
+        <p className="text-sm mt-1" style={{ color: '#9b6060' }}>채널별 월간 수익 리스크 평가</p>
       </div>
 
       {/* 경고 배너 — 활성 채널(Phase 1)만 */}

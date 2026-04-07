@@ -102,8 +102,8 @@ export default function RevenuePage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight">수익 추적</h1>
-        <p className="text-muted-foreground text-sm">월 목표: 채널당 200만원 / 전체 1,400만원</p>
+        <h1 className="text-2xl font-bold" style={{ fontFamily: "'Libre Baskerville', serif", color: '#1a0505' }}>수익 추적</h1>
+        <p className="text-sm mt-1" style={{ color: '#9b6060' }}>월 목표: 채널당 200만원 / 전체 1,400만원</p>
       </div>
 
       {/* 요약 카드 */}

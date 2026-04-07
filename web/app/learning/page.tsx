@@ -132,8 +132,8 @@ export default function LearningPage() {
   return (
     <div className="relative space-y-6 ambient-bg overflow-hidden">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight">학습 피드백</h1>
-        <p className="text-muted-foreground text-sm">업로드 48시간 후 KPI 수집 기반 성과 분석</p>
+        <h1 className="text-2xl font-bold" style={{ fontFamily: "'Libre Baskerville', serif", color: '#1a0505' }}>학습 피드백</h1>
+        <p className="text-sm mt-1" style={{ color: '#9b6060' }}>업로드 48시간 후 KPI 수집 기반 성과 분석</p>
       </div>
 
       {/* CTR / AVP 추이 라인차트 */}

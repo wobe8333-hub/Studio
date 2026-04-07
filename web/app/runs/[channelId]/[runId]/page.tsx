@@ -44,29 +44,24 @@ type TabId = typeof TABS[number]['id']
 // ─── 스크립트 탭 ──────────────────────────────────────────────────────────────
 
 function ScriptTab({ artifacts }: { artifacts: RunArtifacts | null }) {
-  const script = artifacts?.script
-  if (!script) return <EmptyState icon={FileText} msg="스크립트 파일을 찾을 수 없습니다" sub="Step06/07 실행 후 생성됩니다" />
+  const step08 = artifacts?.step08
+  if (!step08?.has_script) return <EmptyState icon={FileText} msg="스크립트 파일을 찾을 수 없습니다" sub="Step06/07 실행 후 생성됩니다" />
 
   return (
     <div style={G.card} className="p-6">
       <h3 className="font-bold text-lg mb-4" style={{ fontFamily: "'Libre Baskerville', serif", color: '#1a0505' }}>
-        {script.title ?? '제목 없음'}
+        {step08.selected_title ?? artifacts?.manifest?.topic_title ?? '제목 없음'}
       </h3>
-      {script.hook && (
-        <div className="mb-4 p-4 rounded-xl" style={{ background: 'rgba(238,36,0,0.06)', border: '1px solid rgba(238,36,0,0.12)' }}>
-          <p className="text-xs font-bold mb-2" style={{ color: '#ee2400' }}>🎣 도입부 후킹</p>
-          <p className="text-sm leading-relaxed" style={{ color: '#1a0505' }}>{script.hook}</p>
-        </div>
-      )}
-      {script.scenes?.map((scene: { scene_number: number; narration: string; visual_prompt: string }, i: number) => (
-        <div key={i} className="mb-4 pb-4 border-b last:border-0" style={{ borderColor: 'rgba(238,36,0,0.08)' }}>
-          <p className="text-xs font-bold mb-2" style={{ color: '#9b6060' }}>장면 {scene.scene_number}</p>
-          <p className="text-sm mb-2 leading-relaxed" style={{ color: '#1a0505' }}>{scene.narration}</p>
-          <p className="text-xs p-2 rounded-lg" style={{ fontFamily: "'DM Mono', monospace", background: 'rgba(0,0,0,0.04)', color: '#5c1a1a' }}>
-            {scene.visual_prompt}
-          </p>
-        </div>
-      ))}
+      <div className="mb-4 p-4 rounded-xl" style={{ background: 'rgba(238,36,0,0.06)', border: '1px solid rgba(238,36,0,0.12)' }}>
+        <p className="text-xs font-bold mb-2" style={{ color: '#ee2400' }}>🎣 도입부 후킹</p>
+        <p className="text-sm leading-relaxed" style={{ color: '#5c1a1a' }}>
+          스크립트 파일이 생성되었습니다. 원본 파일에서 후킹 내용을 확인하세요.
+        </p>
+      </div>
+      <div className="p-4 rounded-xl" style={{ background: 'rgba(0,0,0,0.03)', border: '1px solid rgba(238,36,0,0.06)' }}>
+        <p className="text-xs mb-2" style={{ color: '#9b6060' }}>장면 수</p>
+        <p className="text-2xl font-bold" style={{ fontFamily: "'Libre Baskerville', serif", color: '#1a0505' }}>{step08.section_count}</p>
+      </div>
     </div>
   )
 }
@@ -74,7 +69,7 @@ function ScriptTab({ artifacts }: { artifacts: RunArtifacts | null }) {
 // ─── 이미지 탭 ───────────────────────────────────────────────────────────────
 
 function ImagesTab({ artifacts, channelId, runId }: { artifacts: RunArtifacts | null; channelId: string; runId: string }) {
-  const images = artifacts?.images ?? []
+  const images = artifacts?.step08?.image_paths ?? []
 
   if (!images.length) return <EmptyState icon={ImageIcon} msg="생성된 이미지가 없습니다" sub="Step08 실행 후 생성됩니다" />
 
@@ -97,9 +92,9 @@ function ImagesTab({ artifacts, channelId, runId }: { artifacts: RunArtifacts | 
 // ─── 영상 탭 ─────────────────────────────────────────────────────────────────
 
 function VideoTab({ artifacts, channelId, runId }: { artifacts: RunArtifacts | null; channelId: string; runId: string }) {
-  const videoFile = artifacts?.video_file
+  const hasVideo = artifacts?.step08?.has_video
 
-  if (!videoFile) return <EmptyState icon={Video} msg="최종 영상이 없습니다" sub="Step08 FFmpeg 합성 완료 후 생성됩니다" />
+  if (!hasVideo) return <EmptyState icon={Video} msg="최종 영상이 없습니다" sub="Step08 FFmpeg 합성 완료 후 생성됩니다" />
 
   return (
     <div style={G.card} className="p-5">
@@ -108,7 +103,7 @@ function VideoTab({ artifacts, channelId, runId }: { artifacts: RunArtifacts | n
         controls
         className="w-full rounded-xl"
         style={{ maxHeight: '480px', background: '#000' }}
-        src={`/api/files/${channelId}/${runId}/step08/${videoFile}`}
+        src={`/api/files/${channelId}/${runId}/step08/final.mp4`}
       >
         브라우저가 video 태그를 지원하지 않습니다.
       </video>
@@ -161,7 +156,7 @@ function AudioTab({ artifacts, channelId, runId }: { artifacts: RunArtifacts | n
       .then(d => setBgm(d?.bgm ?? null))
   }, [channelId, runId])
 
-  const narrationFile = artifacts?.narration_file
+  const narrationFile = artifacts?.step08?.has_narration ? 'narration.mp3' : null
 
   return (
     <div className="space-y-4">
@@ -202,19 +197,21 @@ function AudioTab({ artifacts, channelId, runId }: { artifacts: RunArtifacts | n
 // ─── 썸네일 탭 ──────────────────────────────────────────────────────────────
 
 function ThumbnailTab({ artifacts, channelId, runId }: { artifacts: RunArtifacts | null; channelId: string; runId: string }) {
-  const thumbFile = artifacts?.thumbnail_file
+  // 썸네일 파일명은 선택 제목으로부터 유추하거나 step10 폴더에서 확인 필요
+  const hasThumbnail = artifacts?.step08 != null
 
-  if (!thumbFile) return <EmptyState icon={ImageIcon} msg="썸네일이 없습니다" sub="Step10 완료 후 생성됩니다" />
+  if (!hasThumbnail) return <EmptyState icon={ImageIcon} msg="썸네일이 없습니다" sub="Step10 완료 후 생성됩니다" />
 
   return (
     <div style={G.card} className="p-6">
       <h3 className="font-bold mb-4" style={{ fontFamily: "'Libre Baskerville', serif", color: '#1a0505' }}>썸네일</h3>
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        src={`/api/files/${channelId}/${runId}/step10/${thumbFile}`}
+        src={`/api/files/${channelId}/${runId}/step10/thumbnail.jpg`}
         alt="썸네일"
         className="w-full max-w-xl rounded-xl shadow-lg mx-auto block"
         style={{ border: '1px solid rgba(238,36,0,0.12)' }}
+        onError={e => { (e.target as HTMLImageElement).src = `/api/files/${channelId}/${runId}/step10/thumbnail.png` }}
       />
     </div>
   )
@@ -223,24 +220,22 @@ function ThumbnailTab({ artifacts, channelId, runId }: { artifacts: RunArtifacts
 // ─── 제목 A/B/C 탭 ──────────────────────────────────────────────────────────
 
 function TitleTab({ artifacts }: { artifacts: RunArtifacts | null }) {
-  const titles = artifacts?.title_candidates ?? []
+  const titles = artifacts?.step08?.title_candidates ?? []
 
   if (!titles.length) return <EmptyState icon={Type} msg="제목 후보가 없습니다" sub="Step10 완료 후 생성됩니다" />
 
-  const types = ['curiosity', 'authority', 'benefit']
-  const typeLabel: Record<string, string> = { curiosity: '호기심 자극형', authority: '권위 신뢰형', benefit: '이익 제공형' }
+  const typeLabels = ['호기심 자극형', '권위 신뢰형', '이익 제공형']
 
   return (
     <div className="space-y-3">
-      {titles.map((t: { type: string; title: string; reason?: string }, i: number) => (
+      {(titles as string[]).map((title: string, i: number) => (
         <div key={i} style={G.card} className="p-5">
           <div className="flex items-center gap-2 mb-2">
             <span className="text-xs font-bold px-2.5 py-1 rounded-full" style={{ background: 'rgba(238,36,0,0.1)', color: '#ee2400' }}>
-              {String.fromCharCode(65 + i)} — {typeLabel[t.type] ?? t.type}
+              {String.fromCharCode(65 + i)} — {typeLabels[i] ?? `타입 ${i + 1}`}
             </span>
           </div>
-          <p className="text-base font-medium leading-snug" style={{ color: '#1a0505' }}>{t.title}</p>
-          {t.reason && <p className="text-xs mt-2" style={{ color: '#9b6060' }}>{t.reason}</p>}
+          <p className="text-base font-medium leading-snug" style={{ color: '#1a0505' }}>{title}</p>
         </div>
       ))}
     </div>
@@ -324,16 +319,22 @@ function SeoTab({ channelId, runId }: { channelId: string; runId: string }) {
 // ─── QA 탭 ──────────────────────────────────────────────────────────────────
 
 function QaTab({ artifacts }: { artifacts: RunArtifacts | null }) {
-  const qa = artifacts?.qa_result
+  const qa = artifacts?.step11
 
   if (!qa) return <EmptyState icon={CheckCircle2} msg="QA 결과가 없습니다" sub="Step11 완료 후 생성됩니다" />
 
-  const score = qa.total_score ?? 0
-  const passed = qa.passed ?? false
+  const passed = qa.overall_pass ?? false
+
+  const checks = [
+    { label: '애니메이션 OK', passed: qa.animation_ok },
+    { label: '스크립트 OK', passed: qa.script_ok },
+    { label: '정책 준수', passed: qa.policy_ok },
+    { label: '수동 검토 필요', passed: !qa.human_review_required, invert: true },
+    { label: '수동 검토 완료', passed: qa.human_review_completed },
+  ]
 
   return (
     <div className="space-y-4">
-      {/* 종합 결과 */}
       <div style={G.card} className="p-6">
         <div className="flex items-center gap-4 mb-5">
           <div className="h-16 w-16 rounded-full flex items-center justify-center" style={{ background: passed ? 'rgba(34,197,94,0.1)' : 'rgba(238,36,0,0.1)', border: `2px solid ${passed ? '#22c55e' : '#ee2400'}` }}>
@@ -344,7 +345,7 @@ function QaTab({ artifacts }: { artifacts: RunArtifacts | null }) {
           </div>
           <div>
             <p className="text-2xl font-bold" style={{ fontFamily: "'Libre Baskerville', serif", color: '#1a0505' }}>
-              {score}점
+              {passed ? '통과' : '실패'}
             </p>
             <p className="text-sm" style={{ color: passed ? '#22c55e' : '#ee2400' }}>
               {passed ? 'QA 통과' : 'QA 실패'}
@@ -352,28 +353,17 @@ function QaTab({ artifacts }: { artifacts: RunArtifacts | null }) {
           </div>
         </div>
 
-        {qa.checks && (
-          <div className="space-y-2">
-            {Object.entries(qa.checks).map(([key, val]: [string, unknown]) => {
-              const check = val as { passed: boolean; score?: number; detail?: string }
-              return (
-                <div key={key} className="flex items-center gap-3 py-2.5 border-b last:border-0" style={{ borderColor: 'rgba(238,36,0,0.08)' }}>
-                  {check.passed
-                    ? <CheckCircle2 className="h-4 w-4 text-green-500 shrink-0" />
-                    : <XCircle className="h-4 w-4 shrink-0" style={{ color: '#ee2400' }} />
-                  }
-                  <div className="flex-1">
-                    <p className="text-sm" style={{ color: '#1a0505' }}>{key}</p>
-                    {check.detail && <p className="text-xs" style={{ color: '#9b6060' }}>{check.detail}</p>}
-                  </div>
-                  {check.score !== undefined && (
-                    <span className="text-sm font-bold" style={{ color: '#5c1a1a' }}>{check.score}점</span>
-                  )}
-                </div>
-              )
-            })}
-          </div>
-        )}
+        <div className="space-y-2">
+          {checks.map(({ label, passed: p }) => (
+            <div key={label} className="flex items-center gap-3 py-2.5 border-b last:border-0" style={{ borderColor: 'rgba(238,36,0,0.08)' }}>
+              {p
+                ? <CheckCircle2 className="h-4 w-4 text-green-500 shrink-0" />
+                : <XCircle className="h-4 w-4 shrink-0" style={{ color: '#ee2400' }} />
+              }
+              <p className="text-sm" style={{ color: '#1a0505' }}>{label}</p>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   )
@@ -382,22 +372,21 @@ function QaTab({ artifacts }: { artifacts: RunArtifacts | null }) {
 // ─── 비용 탭 ────────────────────────────────────────────────────────────────
 
 function CostTab({ artifacts }: { artifacts: RunArtifacts | null }) {
-  const cost = artifacts?.cost_breakdown
+  const costKrw = artifacts?.cost_krw
 
-  if (!cost) return <EmptyState icon={DollarSign} msg="비용 내역이 없습니다" sub="파이프라인 실행 완료 후 생성됩니다" />
+  if (costKrw == null) return <EmptyState icon={DollarSign} msg="비용 내역이 없습니다" sub="파이프라인 실행 완료 후 생성됩니다" />
 
   return (
     <div style={G.card} className="p-6">
-      <h3 className="font-bold mb-4" style={{ fontFamily: "'Libre Baskerville', serif", color: '#1a0505' }}>이번 Run 비용 내역</h3>
-      <div className="space-y-2">
-        {Object.entries(cost).map(([key, val]: [string, unknown]) => (
-          <div key={key} className="flex items-center justify-between py-2.5 border-b last:border-0" style={{ borderColor: 'rgba(238,36,0,0.08)' }}>
-            <span className="text-sm" style={{ color: '#5c1a1a' }}>{key}</span>
-            <span className="text-sm font-bold" style={{ fontFamily: "'DM Mono', monospace", color: '#1a0505' }}>
-              ${typeof val === 'number' ? val.toFixed(4) : String(val)}
-            </span>
-          </div>
-        ))}
+      <h3 className="font-bold mb-4" style={{ fontFamily: "'Libre Baskerville', serif", color: '#1a0505' }}>이번 Run 비용</h3>
+      <div className="flex items-center gap-4 p-5 rounded-xl" style={{ background: 'rgba(238,36,0,0.05)', border: '1px solid rgba(238,36,0,0.1)' }}>
+        <DollarSign className="h-8 w-8" style={{ color: '#ee2400' }} />
+        <div>
+          <p className="text-3xl font-bold" style={{ fontFamily: "'Libre Baskerville', serif", color: '#1a0505' }}>
+            ₩{costKrw.toLocaleString()}
+          </p>
+          <p className="text-xs mt-1" style={{ color: '#9b6060' }}>API 비용 합산 (Gemini + YouTube)</p>
+        </div>
       </div>
     </div>
   )
@@ -451,15 +440,15 @@ export default function RunDetailPage() {
             </h1>
             <p className="text-sm mt-0.5" style={{ color: '#9b6060' }}>{channelId} · 결과물 검수 허브</p>
           </div>
-          {artifacts?.run_state && (
+          {artifacts?.manifest?.run_state && (
             <span
               className="text-xs font-bold px-3 py-1 rounded-full"
               style={{
-                background: artifacts.run_state === 'COMPLETED' ? 'rgba(34,197,94,0.12)' : artifacts.run_state === 'FAILED' ? 'rgba(238,36,0,0.12)' : 'rgba(238,36,0,0.08)',
-                color: artifacts.run_state === 'COMPLETED' ? '#22c55e' : artifacts.run_state === 'FAILED' ? '#ee2400' : '#9b6060',
+                background: artifacts.manifest.run_state === 'COMPLETED' ? 'rgba(34,197,94,0.12)' : artifacts.manifest.run_state === 'FAILED' ? 'rgba(238,36,0,0.12)' : 'rgba(238,36,0,0.08)',
+                color: artifacts.manifest.run_state === 'COMPLETED' ? '#22c55e' : artifacts.manifest.run_state === 'FAILED' ? '#ee2400' : '#9b6060',
               }}
             >
-              {artifacts.run_state}
+              {artifacts.manifest.run_state}
             </span>
           )}
         </div>

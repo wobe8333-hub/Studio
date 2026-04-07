@@ -146,23 +146,21 @@ export default function KnowledgePage() {
     <div className="relative space-y-6 ambient-bg overflow-hidden">
       <div className="flex items-center justify-between">
         <div>
-          <div className="flex items-center gap-2">
-            <BookOpen className="h-5 w-5" />
-            <h1 className="text-2xl font-bold tracking-tight">지식 수집</h1>
-          </div>
-          <p className="text-muted-foreground text-sm mt-1">
-            채널별 트렌드 토픽 및 시리즈 계획
+          <h1 className="text-2xl font-bold" style={{ fontFamily: "'Libre Baskerville', serif", color: '#1a0505' }}>
+            지식 수집
+          </h1>
+          <p className="text-sm mt-1" style={{ color: '#9b6060' }}>
+            채널별 트렌드 토픽 및 시리즈 계획 · Stage 1~3 파이프라인
           </p>
         </div>
-        <Button
-          size="sm"
-          variant="ghost"
+        <button
           onClick={load}
           disabled={loading}
-          className="text-muted-foreground"
+          className="flex items-center gap-2 px-3 py-2 rounded-xl text-sm transition-all"
+          style={{ background: 'rgba(255,255,255,0.55)', border: '1px solid rgba(238,36,0,0.12)', color: '#5c1a1a' }}
         >
           <RefreshCw className={cn('h-4 w-4', loading && 'animate-spin')} />
-        </Button>
+        </button>
       </div>
 
       {loading ? (

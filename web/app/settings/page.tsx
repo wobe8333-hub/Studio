@@ -31,8 +31,8 @@ export default function SettingsPage() {
   return (
     <div className="relative space-y-6 ambient-bg overflow-hidden">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight">설정</h1>
-        <p className="text-muted-foreground text-sm">채널 설정 및 API 쿼터 정책 — 현재 읽기 전용 (Supabase 연동 후 수정 가능)</p>
+        <h1 className="text-2xl font-bold" style={{ fontFamily: "'Libre Baskerville', serif", color: '#1a0505' }}>설정</h1>
+        <p className="text-sm mt-1" style={{ color: '#9b6060' }}>채널 설정 및 API 쿼터 정책 — 현재 읽기 전용 (Supabase 연동 후 수정 가능)</p>
       </div>
 
       {/* 채널 설정 */}

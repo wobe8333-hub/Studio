@@ -185,10 +185,10 @@ export default function ChannelDetailPage({ params }: { params: Promise<{ id: st
       <div className="flex items-start justify-between">
         <div>
           <div className="flex items-center gap-2">
-            <Tv className="h-5 w-5" />
-            <h1 className="text-2xl font-bold tracking-tight">{channel.id} — {channel.category_ko}</h1>
+            <Tv className="h-5 w-5" style={{ color: '#ee2400' }} />
+            <h1 className="text-2xl font-bold" style={{ fontFamily: "'Libre Baskerville', serif", color: '#1a0505' }}>{channel.id} — {channel.category_ko}</h1>
           </div>
-          <p className="text-muted-foreground text-sm mt-1">채널 상세 현황 및 KPI 이력</p>
+          <p className="text-sm mt-1" style={{ color: '#9b6060' }}>채널 상세 현황 및 KPI 이력</p>
         </div>
         <Badge variant={isActive ? 'default' : 'secondary'} className="mt-1">
           {isActive ? '활성' : '대기'}

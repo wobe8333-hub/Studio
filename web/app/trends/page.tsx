@@ -128,55 +128,51 @@ export default function TrendsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight">트렌드 주제 관리</h1>
-        <p className="text-muted-foreground text-sm">수집된 트렌드 주제 검토 및 승인/거부</p>
+        <h1 className="text-2xl font-bold" style={{ fontFamily: "'Libre Baskerville', serif", color: '#1a0505' }}>
+          트렌드 주제 관리
+        </h1>
+        <p className="text-sm mt-1" style={{ color: '#9b6060' }}>
+          수집된 트렌드 주제 검토 및 승인/거부 · 점수 = 관심도40% + 적합도25% + 수익성20% + 긴급도15%
+        </p>
       </div>
 
       {/* 요약 카드 */}
-      <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">자동 승인</CardTitle>
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+        <div className="glass-card p-4">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-xs" style={{ color: '#9b6060' }}>자동 승인</span>
             <CheckCircle className="h-4 w-4 text-green-500" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{autoCount}</div>
-            <p className="text-xs text-muted-foreground mt-1">점수 80+ 자동 통과</p>
-          </CardContent>
-        </Card>
+          </div>
+          <div className="text-2xl font-bold" style={{ fontFamily: "'Libre Baskerville', serif", color: '#1a0505' }}>{autoCount}</div>
+          <p className="text-xs mt-1" style={{ color: '#9b6060' }}>점수 80+ 자동 통과</p>
+        </div>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">수동 승인</CardTitle>
-            <ThumbsUp className="h-4 w-4 text-blue-500" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-blue-600">{approvedCount}</div>
-            <p className="text-xs text-muted-foreground mt-1">검토 후 승인됨</p>
-          </CardContent>
-        </Card>
+        <div className="glass-card p-4">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-xs" style={{ color: '#9b6060' }}>수동 승인</span>
+            <ThumbsUp className="h-4 w-4" style={{ color: '#ee2400' }} />
+          </div>
+          <div className="text-2xl font-bold" style={{ fontFamily: "'Libre Baskerville', serif", color: '#ee2400' }}>{approvedCount}</div>
+          <p className="text-xs mt-1" style={{ color: '#9b6060' }}>검토 후 승인됨</p>
+        </div>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">검토 대기</CardTitle>
-            <Clock className="h-4 w-4 text-yellow-500" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-yellow-600">{reviewCount}</div>
-            <p className="text-xs text-muted-foreground mt-1">수동 검토 필요</p>
-          </CardContent>
-        </Card>
+        <div className="glass-card p-4">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-xs" style={{ color: '#9b6060' }}>검토 대기</span>
+            <Clock className="h-4 w-4" style={{ color: '#f59e0b' }} />
+          </div>
+          <div className="text-2xl font-bold" style={{ fontFamily: "'Libre Baskerville', serif", color: '#f59e0b' }}>{reviewCount}</div>
+          <p className="text-xs mt-1" style={{ color: '#9b6060' }}>수동 검토 필요</p>
+        </div>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">거부됨</CardTitle>
-            <XCircle className="h-4 w-4 text-destructive" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-destructive">{rejectedCount}</div>
-            <p className="text-xs text-muted-foreground mt-1">블랙리스트 주제</p>
-          </CardContent>
-        </Card>
+        <div className="glass-card p-4">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-xs" style={{ color: '#9b6060' }}>거부됨</span>
+            <XCircle className="h-4 w-4" style={{ color: '#ef4444' }} />
+          </div>
+          <div className="text-2xl font-bold" style={{ fontFamily: "'Libre Baskerville', serif", color: '#ef4444' }}>{rejectedCount}</div>
+          <p className="text-xs mt-1" style={{ color: '#9b6060' }}>블랙리스트 주제</p>
+        </div>
       </div>
 
       {/* 주제 테이블 */}
