@@ -1,4 +1,4 @@
-import subprocess, shutil
+import subprocess
 from loguru import logger
 from pathlib import Path
 from src.core.config import FFMPEG_PATH
