@@ -4,6 +4,7 @@ import { Badge } from '@/components/ui/badge'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { createClient } from '@/lib/supabase/server'
 import type { Channel, RevenueMonthly } from '@/lib/types'
+import { SustainabilitySection } from './sustainability-section'
 
 type RiskMonthly = { channel_id: string | null; month: string | null; net_profit: number | null; target: number | null; risk_level: string | null; risks: string[] | null }
 
@@ -207,6 +208,9 @@ export default async function RiskPage() {
           </Card>
         ))}
       </div>
+
+      {/* 주제 지속성 분석 — 클라이언트 컴포넌트 (/api/sustainability 연동) */}
+      <SustainabilitySection />
     </div>
   )
 }
