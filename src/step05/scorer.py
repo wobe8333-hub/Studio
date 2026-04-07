@@ -107,12 +107,12 @@ def score_topic(
     final_score = round(raw_score * 100, 1)
 
     # 등급 분류
-    if final_score >= 80:
-        grade = "auto"     # 자동 승격
-    elif final_score >= 60:
-        grade = "review"   # 인간 리뷰 대기
+    if final_score >= 70:
+        grade = "auto"      # 자동 승격
+    elif final_score >= 55:
+        grade = "review"    # 인간 리뷰 대기
     else:
-        grade = "reject"   # 에버그린 풀 이동 또는 폐기
+        grade = "rejected"  # 폐기
 
     return {
         "topic": topic,
