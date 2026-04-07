@@ -20,13 +20,13 @@ CHANNEL_BASE_TEMPLATES: dict[str, Path] = {
 
 # ── 채널별 색상 스펙 ───────────────────────────────────────────────────────────
 CHANNEL_COLORS: dict[str, dict] = {
-    "CH1": {"overlay": (180, 120,  0, 235), "top_line": (255, 215,   0), "primary": "#FFD700", "label": "#FFD700", "name": "경제"},
-    "CH2": {"overlay": (  0,  80,  0, 235), "top_line": ( 76, 175,  80), "primary": "#4CAF50", "label": "#4CAF50", "name": "부동산"},
-    "CH3": {"overlay": ( 80,   0, 120, 235), "top_line": (206, 147, 216), "primary": "#CE93D8", "label": "#CE93D8", "name": "심리"},
-    "CH4": {"overlay": (100,  20,   0, 235), "top_line": (255, 112,  67), "primary": "#FF7043", "label": "#FF7043", "name": "미스터리"},
-    "CH5": {"overlay": (120,  20,  20, 235), "top_line": (239, 154, 154), "primary": "#EF9A9A", "label": "#EF9A9A", "name": "전쟁사"},
-    "CH6": {"overlay": (  0,  60,  80, 235), "top_line": ( 77, 208, 225), "primary": "#4DD0E1", "label": "#4DD0E1", "name": "과학"},
-    "CH7": {"overlay": ( 80,  55,   0, 235), "top_line": (200, 169, 110), "primary": "#C8A96E", "label": "#C8A96E", "name": "역사"},
+    "CH1": {"overlay": (180, 120,  0, 235), "top_line": (255, 215,   0), "primary": "#FFD700", "name": "경제"},
+    "CH2": {"overlay": (  0,  80,  0, 235), "top_line": ( 76, 175,  80), "primary": "#4CAF50", "name": "부동산"},
+    "CH3": {"overlay": ( 80,   0, 120, 235), "top_line": (206, 147, 216), "primary": "#CE93D8", "name": "심리"},
+    "CH4": {"overlay": (100,  20,   0, 235), "top_line": (255, 112,  67), "primary": "#FF7043", "name": "미스터리"},
+    "CH5": {"overlay": (120,  20,  20, 235), "top_line": (239, 154, 154), "primary": "#EF9A9A", "name": "전쟁사"},
+    "CH6": {"overlay": (  0,  60,  80, 235), "top_line": ( 77, 208, 225), "primary": "#4DD0E1", "name": "과학"},
+    "CH7": {"overlay": ( 80,  55,   0, 235), "top_line": (200, 169, 110), "primary": "#C8A96E", "name": "역사"},
 }
 
 # ── 폰트 ─────────────────────────────────────────────────────────────────────
@@ -89,9 +89,8 @@ def _draw_title(
         mode = "01"  # 숫자 없으면 mode01 폴백
 
     if mode == "03":
-        question = title + "?"
-        words = question.split()
-        last_word = words[-1]
+        words = title.split()
+        last_word = words[-1] + "?"
         rest = " ".join(words[:-1])
         font_title = _load_font(80)
         lines = _wrap_text(rest)
