@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import fs from 'fs'
-import path from 'path'
+import { validateRunPath } from '@/lib/fs-helpers'
 
 function getKasRoot(): string {
-  return process.env.KAS_ROOT ?? path.join(process.cwd(), '..')
+  return process.env.KAS_ROOT ?? require('path').join(process.cwd(), '..')
 }
 
 export async function GET(
@@ -12,7 +12,11 @@ export async function GET(
 ) {
   const { channelId, runId } = await params
   const kasRoot = getKasRoot()
-  const reportFile = path.join(kasRoot, 'runs', channelId, runId, 'step09', 'render_report.json')
+
+  const reportFile = validateRunPath(kasRoot, channelId, runId, 'step09', 'render_report.json')
+  if (!reportFile) {
+    return NextResponse.json({ error: '잘못된 채널 또는 Run ID' }, { status: 400 })
+  }
 
   if (!fs.existsSync(reportFile)) {
     return NextResponse.json({ bgm: null })
