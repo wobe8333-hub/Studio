@@ -198,6 +198,26 @@ export default async function HomePage() {
         </StaggerItem>
       </StaggerContainer>
 
+      {/* 채널별 수익 현황 */}
+      <ScrollReveal>
+        <section>
+          <h2 className="text-sm font-bold mb-3" style={{ color: '#5c1a1a' }}>채널별 이번달 수익 현황</h2>
+          <div className="grid grid-cols-7 gap-2">
+            {channels.map((ch) => (
+              <div key={ch.id} className="rounded-xl p-3 text-center" style={{ background: 'rgba(255,255,255,0.45)', border: '1px solid rgba(238,36,0,0.1)' }}>
+                <p className="text-xs font-bold" style={{ color: '#1a0505' }}>{ch.id}</p>
+                <p className="text-[10px] mt-0.5 mb-2" style={{ color: '#9b6060' }}>{ch.category_ko}</p>
+                <div className="h-1 rounded-full w-full mb-1" style={{ background: 'rgba(238,36,0,0.1)' }}>
+                  <div className="h-1 rounded-full" style={{ width: '0%', background: '#ee2400' }} />
+                </div>
+                <p className="text-[10px]" style={{ color: '#9b6060' }}>₩0</p>
+              </div>
+            ))}
+          </div>
+          <p className="text-[10px] mt-2" style={{ color: '#9b6060' }}>* Supabase 연동 후 실시간 수익 반영</p>
+        </section>
+      </ScrollReveal>
+
       {/* 파이프라인 현황 + 채널별 현황 */}
       <ScrollReveal className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         {/* 파이프라인 타임라인 */}

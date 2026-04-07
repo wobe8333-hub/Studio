@@ -192,16 +192,19 @@ export default function TrendsPage() {
             {/* 필터 */}
             <div className="flex items-center gap-2">
               <Filter className="h-4 w-4 text-muted-foreground shrink-0" />
-              <Select value={channelFilter} onValueChange={(v) => v && setChannelFilter(v)}>
-                <SelectTrigger className="h-8 w-28 text-xs">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {CHANNEL_OPTIONS.map((ch) => (
-                    <SelectItem key={ch} value={ch} className="text-xs">{ch}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              {/* 채널 탭 버튼 — 기존 Select 교체 */}
+              <div className="flex gap-1 flex-wrap p-1 rounded-xl" style={{ background: 'rgba(255,255,255,0.4)', border: '1px solid rgba(238,36,0,0.1)' }}>
+                {CHANNEL_OPTIONS.map(ch => (
+                  <button
+                    key={ch}
+                    onClick={() => setChannelFilter(ch)}
+                    className="px-3 py-1.5 rounded-lg text-xs font-medium transition-all"
+                    style={{ background: channelFilter === ch ? '#900000' : 'transparent', color: channelFilter === ch ? '#ffefea' : '#9b6060' }}
+                  >
+                    {ch}
+                  </button>
+                ))}
+              </div>
               <Select value={gradeFilter} onValueChange={(v) => v && setGradeFilter(v)}>
                 <SelectTrigger className="h-8 w-32 text-xs">
                   <SelectValue />
@@ -241,6 +244,19 @@ export default function TrendsPage() {
                     <TableCell className="max-w-xs">
                       <p className="truncate text-sm">{topic.reinterpreted_title}</p>
                       <p className="text-xs text-muted-foreground mt-0.5">{topic.topic_type}</p>
+                      {/* 점수 구성 배지 */}
+                      <div className="flex gap-1 flex-wrap mt-1">
+                        {[
+                          { label: '관심도', pct: 40 },
+                          { label: '적합도', pct: 25 },
+                          { label: '수익성', pct: 20 },
+                          { label: '긴급도', pct: 15 },
+                        ].map(s => (
+                          <span key={s.label} className="text-[9px] px-1.5 py-0.5 rounded" style={{ background: 'rgba(238,36,0,0.07)', color: '#9b6060' }}>
+                            {s.label} {s.pct}%·{Math.round(topic.score * s.pct / 100)}
+                          </span>
+                        ))}
+                      </div>
                     </TableCell>
                     <TableCell className="text-center">
                       <span className={`font-semibold ${topic.score >= 80 ? 'text-green-600' : 'text-yellow-600'}`}>

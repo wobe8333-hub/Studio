@@ -26,6 +26,27 @@ function TopicRow({ topic }: { topic: KnowledgeTopic }) {
         <p className="text-xs text-muted-foreground mt-0.5">
           {topic.category} · {topic.trend_collected_at?.slice(0, 10)}
         </p>
+        {/* 수집 단계 배지 */}
+        {(() => {
+          const stages = (topic as { knowledge_stages?: string[] }).knowledge_stages
+          if (!stages || stages.length === 0) return null
+          return (
+            <div className="flex gap-1 mt-1.5">
+              {(['tavily', 'wikipedia', 'gemini'] as const).map(src => {
+                const done = stages.includes(src)
+                return (
+                  <span key={src} className="text-[9px] px-1.5 py-0.5 rounded font-medium" style={{
+                    background: done ? 'rgba(34,197,94,0.1)' : 'rgba(238,36,0,0.06)',
+                    color: done ? '#22c55e' : '#9b6060',
+                    border: `1px solid ${done ? 'rgba(34,197,94,0.3)' : 'rgba(238,36,0,0.1)'}`,
+                  }}>
+                    {src === 'tavily' ? 'Tavily' : src === 'wikipedia' ? 'Wiki' : 'Gemini'}
+                  </span>
+                )
+              })}
+            </div>
+          )
+        })()}
       </div>
       <div className="flex items-center gap-2 shrink-0">
         <span className="text-xs text-muted-foreground">{topic.score.toFixed(1)}</span>
