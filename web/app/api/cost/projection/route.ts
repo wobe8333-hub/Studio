@@ -15,7 +15,7 @@ export async function GET() {
   }
 
   try {
-    const raw = fs.readFileSync(projFile, 'utf-8')
+    const raw = fs.readFileSync(projFile, 'utf-8').replace(/^\uFEFF/, '')
     return NextResponse.json({ projection: JSON.parse(raw) })
   } catch {
     return NextResponse.json({ error: 'cost_projection.json 파싱 오류' }, { status: 500 })

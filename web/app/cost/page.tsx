@@ -118,7 +118,8 @@ export default function CostPage() {
   useEffect(() => {
     fetch('/api/cost/projection')
       .then(r => r.ok ? r.json() : { projection: null })
-      .then(d => setProjection(d.projection))
+      .then(d => setProjection(d?.projection ?? null))
+      .catch(() => setProjection(null))
   }, [])
 
   useEffect(() => {
