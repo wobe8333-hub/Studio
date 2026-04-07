@@ -125,6 +125,7 @@ CREATE TABLE IF NOT EXISTS trend_topics (
   original_topic       TEXT,
   reinterpreted_title  TEXT,
   score                REAL,
+  breakdown            JSONB,
   grade                TEXT DEFAULT 'review',
   is_trending          BOOLEAN DEFAULT FALSE,
   topic_type           TEXT,
@@ -163,3 +164,15 @@ CREATE POLICY "anon_select_quota_daily" ON quota_daily FOR SELECT TO anon USING 
 CREATE POLICY "anon_select_trend_topics" ON trend_topics FOR SELECT TO anon USING (true);
 
 -- service_role: 전체 접근 (RLS를 우회하므로 별도 정책 불필요)
+
+-- ── 마이그레이션: breakdown 컬럼 추가 (2026-04-07) ─────────────────
+-- 기존 DB에는 아래 ALTER 문을 Supabase SQL Editor에서 직접 실행:
+-- ALTER TABLE trend_topics ADD COLUMN IF NOT EXISTS breakdown JSONB;
+--
+-- 기존 중복 데이터 정리 (동일 channel_id + reinterpreted_title 중 id가 큰 것 삭제):
+-- DELETE FROM trend_topics
+-- WHERE id NOT IN (
+--   SELECT MIN(id)
+--   FROM trend_topics
+--   GROUP BY channel_id, reinterpreted_title
+-- );
