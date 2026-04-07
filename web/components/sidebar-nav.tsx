@@ -26,19 +26,51 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarFooter,
+  SidebarSeparator,
 } from '@/components/ui/sidebar'
 import { cn } from '@/lib/utils'
 
-const navItems = [
-  { title: '전체 KPI', url: '/', icon: LayoutDashboard },
-  { title: '트렌드 관리', url: '/trends', icon: TrendingUp },
-  { title: '수익 추적', url: '/revenue', icon: DollarSign },
-  { title: '리스크 모니터링', url: '/risk', icon: ShieldAlert },
-  { title: '학습 피드백', url: '/learning', icon: Brain },
-  { title: '파이프라인 모니터', url: '/monitor',   icon: Monitor },
-  { title: '지식 수집',         url: '/knowledge', icon: BookOpen },
-  { title: 'QA 검수',           url: '/qa',        icon: ClipboardCheck },
-  { title: '비용/쿼터', url: '/cost', icon: CreditCard },
+interface NavItem {
+  title: string
+  url: string
+  icon: React.ElementType
+}
+
+interface NavGroup {
+  label: string
+  items: NavItem[]
+}
+
+const NAV_GROUPS: NavGroup[] = [
+  {
+    label: '대시보드',
+    items: [
+      { title: '전체 KPI', url: '/', icon: LayoutDashboard },
+    ],
+  },
+  {
+    label: '콘텐츠',
+    items: [
+      { title: '트렌드 관리',  url: '/trends',    icon: TrendingUp },
+      { title: '지식 수집',   url: '/knowledge', icon: BookOpen },
+      { title: 'QA 검수',     url: '/qa',        icon: ClipboardCheck },
+    ],
+  },
+  {
+    label: '수익 / 비용',
+    items: [
+      { title: '수익 추적',      url: '/revenue', icon: DollarSign },
+      { title: '비용/쿼터',      url: '/cost',    icon: CreditCard },
+      { title: '리스크 모니터링', url: '/risk',    icon: ShieldAlert },
+    ],
+  },
+  {
+    label: '시스템',
+    items: [
+      { title: '파이프라인 모니터', url: '/monitor',  icon: Monitor },
+      { title: '학습 피드백',       url: '/learning', icon: Brain },
+    ],
+  },
 ]
 
 // 채널별 고유 색상 CSS 변수 맵
@@ -52,7 +84,7 @@ const CHANNEL_COLORS: Record<string, string> = {
   CH7: 'var(--channel-ch7)',
 }
 
-// fallback — Supabase 연동 전 기본값 (config.py CHANNEL_CATEGORY_KO 기준)
+// fallback — Supabase 연동 전 기본값
 const DEFAULT_CHANNELS = [
   { id: 'CH1', category_ko: '경제' },
   { id: 'CH2', category_ko: '부동산' },
@@ -89,24 +121,31 @@ export function AppSidebar({ channels = DEFAULT_CHANNELS }: AppSidebarProps) {
       </SidebarHeader>
 
       <SidebarContent>
-        <SidebarGroup>
-          <SidebarGroupLabel>대시보드</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {navItems.map((item) => (
-                <SidebarMenuItem key={item.url}>
-                  <SidebarMenuButton
-                    isActive={pathname === item.url}
-                    render={<Link href={item.url} />}
-                  >
-                    <item.icon className="h-4 w-4" />
-                    <span>{item.title}</span>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
+        {NAV_GROUPS.map((group, idx) => (
+          <div key={group.label}>
+            {idx > 0 && <SidebarSeparator />}
+            <SidebarGroup>
+              <SidebarGroupLabel>{group.label}</SidebarGroupLabel>
+              <SidebarGroupContent>
+                <SidebarMenu>
+                  {group.items.map((item) => (
+                    <SidebarMenuItem key={item.url}>
+                      <SidebarMenuButton
+                        isActive={pathname === item.url}
+                        render={<Link href={item.url} />}
+                      >
+                        <item.icon className="h-4 w-4" />
+                        <span>{item.title}</span>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  ))}
+                </SidebarMenu>
+              </SidebarGroupContent>
+            </SidebarGroup>
+          </div>
+        ))}
+
+        <SidebarSeparator />
 
         <SidebarGroup>
           <SidebarGroupLabel>채널별 상세</SidebarGroupLabel>
@@ -118,7 +157,6 @@ export function AppSidebar({ channels = DEFAULT_CHANNELS }: AppSidebarProps) {
                     isActive={pathname.startsWith(`/channels/${ch.id}`)}
                     render={<Link href={`/channels/${ch.id}`} />}
                   >
-                    {/* 채널 고유 색상 dot */}
                     <span
                       className={cn(
                         'h-2.5 w-2.5 rounded-full shrink-0',
