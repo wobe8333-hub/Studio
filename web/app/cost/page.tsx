@@ -23,6 +23,21 @@ import {
 } from 'recharts'
 import { createClient } from '@/lib/supabase/client'
 
+// 탭 정의
+const COST_TABS = [
+  { id: 'quota',      label: '쿼터 현황' },
+  { id: 'projection', label: '예측 vs 실제' },
+  { id: 'deferred',   label: '이연 업로드' },
+] as const
+type CostTabId = typeof COST_TABS[number]['id']
+
+interface CostProjection {
+  estimated_total_krw?: number
+  actual_total_krw?: number
+  by_step?: Array<{ step: string; estimated_krw: number; actual_krw?: number }>
+  generated_at?: string
+}
+
 // 쿼터 상수 (config.py 기준)
 const GEMINI_DAILY_IMAGE_LIMIT = 500
 const YOUTUBE_DAILY_QUOTA = 10000
@@ -97,6 +112,14 @@ export default function CostPage() {
   const [quotaRemaining, setQuotaRemaining] = useState(10000)
   const [retrying, startRetry] = useTransition()
   const [retryMsg, setRetryMsg] = useState('')
+  const [costTab, setCostTab] = useState<CostTabId>('quota')
+  const [projection, setProjection] = useState<CostProjection | null>(null)
+
+  useEffect(() => {
+    fetch('/api/cost/projection')
+      .then(r => r.ok ? r.json() : { projection: null })
+      .then(d => setProjection(d.projection))
+  }, [])
 
   useEffect(() => {
     fetch('/api/deferred-jobs')
@@ -169,6 +192,29 @@ export default function CostPage() {
         <h1 className="text-2xl font-bold" style={{ fontFamily: "'Libre Baskerville', serif", color: '#1a0505' }}>비용 / 쿼터 추적</h1>
         <p className="text-sm mt-1" style={{ color: '#9b6060' }}>Gemini & YouTube API 일간 사용량 및 비용</p>
       </div>
+
+      {/* 탭 바 */}
+      <div className="flex gap-1 p-1 rounded-xl w-fit" style={{ background: 'rgba(255,255,255,0.4)', border: '1px solid rgba(238,36,0,0.1)' }}>
+        {COST_TABS.map(t => (
+          <button
+            key={t.id}
+            onClick={() => setCostTab(t.id)}
+            className="px-4 py-2 rounded-lg text-xs font-medium transition-all flex items-center gap-1.5"
+            style={{ background: costTab === t.id ? '#900000' : 'transparent', color: costTab === t.id ? '#ffefea' : '#9b6060' }}
+          >
+            {t.label}
+            {t.id === 'deferred' && deferredJobs.length > 0 && (
+              <span className="px-1.5 py-0.5 rounded-full text-[9px] font-bold" style={{ background: '#ee2400', color: '#ffefea' }}>
+                {deferredJobs.length}
+              </span>
+            )}
+          </button>
+        ))}
+      </div>
+
+      {/* 쿼터 현황 탭 */}
+      {costTab === 'quota' && (
+        <div className="space-y-6">
 
       {/* 요약 카드 */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
@@ -325,53 +371,113 @@ export default function CostPage() {
         </Card>
       </div>
 
-      {deferredJobs.length > 0 && (
-        <Card className={cn(deferredJobs.length > 0 && 'glow-amber')}>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
+        </div>
+      )}{/* 쿼터 현황 탭 끝 */}
+
+      {/* 예측 vs 실제 탭 */}
+      {costTab === 'projection' && (
+        <div className="space-y-4">
+          {projection === null ? (
+            <Card>
+              <CardContent className="py-10 text-center">
+                <p className="text-sm text-muted-foreground">비용 예측 데이터 없음</p>
+                <p className="text-xs text-muted-foreground mt-1">data/global/cost_projection.json 에서 읽어옵니다</p>
+              </CardContent>
+            </Card>
+          ) : (
+            <>
+              <div className="grid grid-cols-2 gap-4">
+                <Card>
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-sm">예측 총비용</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold">₩{(projection.estimated_total_krw ?? 0).toLocaleString()}</div>
+                    <p className="text-xs text-muted-foreground mt-1">pre_cost_estimator 산출값</p>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-sm">실제 총비용</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold">₩{(projection.actual_total_krw ?? 0).toLocaleString()}</div>
+                    <p className="text-xs text-muted-foreground mt-1">실제 API 과금 합산</p>
+                  </CardContent>
+                </Card>
+              </div>
+              {projection.by_step && projection.by_step.length > 0 && (
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-sm">Step별 예측 vs 실제</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-2">
+                      {projection.by_step.map((s, i) => (
+                        <div key={i} className="flex items-center gap-3 py-2 border-b last:border-0 text-xs">
+                          <span className="w-20 font-medium shrink-0" style={{ fontFamily: "'DM Mono', monospace" }}>{s.step}</span>
+                          <div className="flex-1">
+                            <div className="flex justify-between mb-1">
+                              <span className="text-muted-foreground">예측: ₩{s.estimated_krw.toLocaleString()}</span>
+                              <span>실제: ₩{(s.actual_krw ?? 0).toLocaleString()}</span>
+                            </div>
+                            <div className="h-1.5 rounded-full bg-muted overflow-hidden">
+                              <div
+                                className="h-full rounded-full"
+                                style={{
+                                  width: `${Math.min(((s.actual_krw ?? 0) / (s.estimated_krw || 1)) * 100, 200)}%`,
+                                  background: (s.actual_krw ?? 0) > s.estimated_krw ? '#ee2400' : '#22c55e',
+                                }}
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+            </>
+          )}
+        </div>
+      )}
+
+      {/* 이연 업로드 탭 */}
+      {costTab === 'deferred' && (
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
             <div>
-              <CardTitle className="text-sm font-medium flex items-center gap-2">
-                <Clock className="h-4 w-4 text-amber-400" />
-                이연된 YouTube 업로드
-              </CardTitle>
-              <CardDescription className="mt-0.5">
-                쿼터 초과로 대기 중 · 잔여 쿼터 {quotaRemaining.toLocaleString()} 단위
-              </CardDescription>
+              <p className="text-sm font-bold" style={{ color: '#1a0505' }}>이연된 YouTube 업로드</p>
+              <p className="text-xs mt-0.5" style={{ color: '#9b6060' }}>쿼터 초과로 대기 중 · 잔여 {quotaRemaining.toLocaleString()} 단위</p>
             </div>
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={handleRetry}
-              disabled={retrying}
-              className="border-amber-500/30 text-amber-400 hover:bg-amber-500/10"
-            >
-              {retrying
-                ? <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                : <RefreshCw className="h-3.5 w-3.5 mr-1.5" />}
+            <Button size="sm" variant="outline" onClick={handleRetry} disabled={retrying}
+              className="border-amber-500/30 text-amber-400 hover:bg-amber-500/10">
+              {retrying ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <RefreshCw className="h-3.5 w-3.5 mr-1.5" />}
               재시도
             </Button>
-          </CardHeader>
-          <CardContent>
-            {retryMsg && (
-              <p className="text-xs text-green-400 mb-3">{retryMsg}</p>
-            )}
-            <div className="space-y-1.5">
-              {deferredJobs.map((job, i) => (
-                <div
-                  key={i}
-                  className="flex items-center justify-between p-2 rounded-lg bg-white/[0.02] border border-white/[0.06] text-sm"
-                >
-                  <span className="font-mono text-xs text-amber-400">{job.channel_id}</span>
-                  <span className="flex-1 mx-3 truncate text-muted-foreground text-xs">
-                    {job.topic_title ?? job.run_id}
-                  </span>
-                  <Badge variant="outline" className="text-xs border-amber-500/30 text-amber-400">
-                    대기
-                  </Badge>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
+          </div>
+          {retryMsg && <p className="text-xs" style={{ color: '#22c55e' }}>{retryMsg}</p>}
+          {deferredJobs.length === 0 ? (
+            <Card>
+              <CardContent className="py-10 text-center">
+                <p className="text-sm text-muted-foreground">이연된 업로드 없음 · YouTube 쿼터 정상</p>
+              </CardContent>
+            </Card>
+          ) : (
+            <Card>
+              <CardContent className="pt-4 space-y-1.5">
+                {deferredJobs.map((job, i) => (
+                  <div key={i} className="flex items-center justify-between p-2 rounded-lg text-sm"
+                    style={{ background: 'rgba(238,36,0,0.04)', border: '1px solid rgba(238,36,0,0.08)' }}>
+                    <span style={{ fontFamily: "'DM Mono', monospace", color: '#ee2400', fontSize: '11px' }}>{job.channel_id}</span>
+                    <span className="flex-1 mx-3 truncate text-xs" style={{ color: '#5c1a1a' }}>{job.topic_title ?? job.run_id}</span>
+                    <Badge variant="outline" className="text-xs" style={{ borderColor: 'rgba(238,36,0,0.3)', color: '#ee2400' }}>대기</Badge>
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
+          )}
+        </div>
       )}
     </div>
   )
