@@ -79,7 +79,7 @@ function ImagesTab({ artifacts, channelId, runId }: { artifacts: RunArtifacts | 
         <div key={i} className="aspect-video rounded-xl overflow-hidden" style={G.card}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src={`/api/files/${channelId}/${runId}/step08/${img}`}
+            src={`/api/artifacts/${channelId}/${runId}/step08/${img}`}
             alt={`장면 ${i + 1}`}
             className="w-full h-full object-cover"
           />
@@ -103,7 +103,7 @@ function VideoTab({ artifacts, channelId, runId }: { artifacts: RunArtifacts | n
         controls
         className="w-full rounded-xl"
         style={{ maxHeight: '480px', background: '#000' }}
-        src={`/api/files/${channelId}/${runId}/step08/final.mp4`}
+        src={`/api/artifacts/${channelId}/${runId}/step08/final.mp4`}
       >
         브라우저가 video 태그를 지원하지 않습니다.
       </video>
@@ -136,7 +136,7 @@ function ShortsTab({ channelId, runId }: { channelId: string; runId: string }) {
             controls
             className="w-full rounded-lg"
             style={{ background: '#000', aspectRatio: '9/16', objectFit: 'cover' }}
-            src={`/api/files/${channelId}/${runId}/step08_s/${s.filename}`}
+            src={`/api/artifacts/${channelId}/${runId}/step08_s/${s.filename}`}
           />
           <p className="text-xs mt-2 truncate" style={{ fontFamily: "'DM Mono', monospace", color: '#9b6060' }}>{s.filename}</p>
         </div>
@@ -167,7 +167,7 @@ function AudioTab({ artifacts, channelId, runId }: { artifacts: RunArtifacts | n
           <h3 className="font-bold" style={{ fontFamily: "'Libre Baskerville', serif", color: '#1a0505' }}>나레이션</h3>
         </div>
         {narrationFile ? (
-          <audio controls className="w-full" src={`/api/files/${channelId}/${runId}/step08/${narrationFile}`} />
+          <audio controls className="w-full" src={`/api/artifacts/${channelId}/${runId}/step08/${narrationFile}`} />
         ) : (
           <p className="text-sm" style={{ color: '#9b6060' }}>나레이션 파일이 없습니다 (Step08 완료 후 생성)</p>
         )}
@@ -185,7 +185,7 @@ function AudioTab({ artifacts, channelId, runId }: { artifacts: RunArtifacts | n
           )}
         </div>
         {bgm?.file ? (
-          <audio controls className="w-full" src={`/api/files/${channelId}/${runId}/step09/${bgm.file}`} />
+          <audio controls className="w-full" src={`/api/artifacts/${channelId}/${runId}/step09/${bgm.file}`} />
         ) : (
           <p className="text-sm" style={{ color: '#9b6060' }}>BGM 파일이 없습니다 (Step09 완료 후 생성)</p>
         )}
@@ -207,11 +207,11 @@ function ThumbnailTab({ artifacts, channelId, runId }: { artifacts: RunArtifacts
       <h3 className="font-bold mb-4" style={{ fontFamily: "'Libre Baskerville', serif", color: '#1a0505' }}>썸네일</h3>
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        src={`/api/files/${channelId}/${runId}/step10/thumbnail.jpg`}
+        src={`/api/artifacts/${channelId}/${runId}/step10/thumbnail.jpg`}
         alt="썸네일"
         className="w-full max-w-xl rounded-xl shadow-lg mx-auto block"
         style={{ border: '1px solid rgba(238,36,0,0.12)' }}
-        onError={e => { (e.target as HTMLImageElement).src = `/api/files/${channelId}/${runId}/step10/thumbnail.png` }}
+        onError={e => { (e.target as HTMLImageElement).src = `/api/artifacts/${channelId}/${runId}/step10/thumbnail.png` }}
       />
     </div>
   )

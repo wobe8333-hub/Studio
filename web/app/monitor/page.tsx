@@ -174,7 +174,7 @@ function PreviewPanel() {
 
   const ch = data.channel_id
   const runId = data.run_id
-  const scenesPath = `/api/files/${ch}/${runId}/step08/scenes/`
+  const scenesPath = `/api/artifacts/${ch}/${runId}/step08/scenes/`
 
   return (
     <div className="space-y-4">
