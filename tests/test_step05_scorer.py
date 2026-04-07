@@ -35,8 +35,9 @@ def test_grade_auto_high_score():
 
 def test_grade_review_mid_score():
     """중간 점수(55~69)는 'review' 등급이어야 함."""
-    # economy: fit=0.7, revenue=1.0, urgency=1.0 → base=52.5
-    # trends_score=0.4 → interest=0.4*40=16 → total=68.5 → review
+    # economy: fit=0.7, revenue=1.0, urgency=1.0(days<=3)
+    # interest = trends*0.5 = 0.4*0.5 = 0.2 → interest_score = 0.2*40 = 8
+    # total = 8 + 17.5 + 20 + 15 = 60.5 → review (55~69)
     result = score_topic("중간 주제", "economy", 0.4, 0.0, 0.0, days_since_trending=1)
     assert result["grade"] == "review"
 

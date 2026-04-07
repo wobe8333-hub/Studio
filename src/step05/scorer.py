@@ -70,7 +70,7 @@ def score_topic(
             "topic": str,
             "category": str,
             "score": float (0~100),
-            "grade": str ("auto" / "review" / "reject"),
+            "grade": str ("auto" / "review" / "rejected"),
             "breakdown": {interest, fit, revenue, urgency},
         }
     """

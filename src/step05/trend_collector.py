@@ -210,7 +210,7 @@ def collect_trends(channel_id: str, category: str, limit: int = 20) -> list:
     5계층 소스에서 트렌드 주제 수집 후 점수화·분류
 
     Returns:
-        점수순 정렬된 트렌드 dict 리스트 (grade: auto/review/reject 포함)
+        점수순 정렬된 트렌드 dict 리스트 (grade: auto/review/rejected 포함)
     """
     logger.info(f"[STEP05] {channel_id} ({category}) 5계층 수집 시작")
 
