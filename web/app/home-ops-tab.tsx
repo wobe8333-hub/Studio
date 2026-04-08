@@ -1,0 +1,216 @@
+'use client'
+
+import { useState, useEffect, useCallback } from 'react'
+
+interface StepStatus {
+  step: string
+  status: 'idle' | 'running' | 'done' | 'error' | 'skipped'
+}
+
+interface HitlSignal {
+  id: string
+  type: string
+  message: string
+  resolved: boolean
+}
+
+const STEP_LABELS: Record<string, string> = {
+  step05: 'Step05 · 트렌드 수집',
+  step06: 'Step06 · 정책 적용',
+  step07: 'Step07 · 콘텐츠 계획',
+  step08: 'Step08 · 영상 생성',
+  step09: 'Step09 · BGM 합성',
+  step10: 'Step10 · 제목/썸네일',
+  step11: 'Step11 · QA 검수',
+  step12: 'Step12 · YouTube 업로드',
+}
+
+const STATUS_STYLE: Record<string, { bg: string; color: string; label: string }> = {
+  idle:    { bg: 'rgba(152,150,176,0.10)', color: '#9896b0', label: 'IDLE' },
+  running: { bg: 'rgba(255,199,100,0.15)', color: '#c4860f', label: 'RUNNING' },
+  done:    { bg: 'rgba(34,197,94,0.12)',   color: '#16a34a', label: 'DONE' },
+  error:   { bg: 'rgba(239,68,68,0.12)',   color: '#dc2626', label: 'ERROR' },
+  skipped: { bg: 'rgba(152,150,176,0.06)', color: '#c0bdd8', label: 'SKIPPED' },
+}
+
+const CARD_BASE: React.CSSProperties = {
+  background: 'rgba(255,255,255,0.55)',
+  backdropFilter: 'blur(20px)',
+  WebkitBackdropFilter: 'blur(20px)',
+  border: '1px solid rgba(255,199,199,0.3)',
+  borderRadius: '0.75rem',
+  boxShadow: '0 4px 16px rgba(135,133,162,0.08)',
+  padding: 16,
+}
+
+export default function HomeOpsTab() {
+  const [steps, setSteps] = useState<StepStatus[]>([])
+  const [hitlSignals, setHitlSignals] = useState<HitlSignal[]>([])
+  const [loading, setLoading] = useState(true)
+  const [triggering, setTriggering] = useState(false)
+
+  const fetchAll = useCallback(async () => {
+    try {
+      const [stepsRes, hitlRes] = await Promise.all([
+        fetch('/api/pipeline/steps').then((r) => (r.ok ? r.json() : { steps: [] })),
+        fetch('/api/hitl-signals').then((r) => (r.ok ? r.json() : [])),
+      ])
+      setSteps(stepsRes.steps ?? [])
+      setHitlSignals(
+        Array.isArray(hitlRes) ? hitlRes.filter((s: HitlSignal) => !s.resolved) : []
+      )
+    } catch {
+      /* 네트워크 오류 무시 */
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
+  // 탭이 활성일 때만 폴링 (cleanup으로 interval 해제)
+  useEffect(() => {
+    fetchAll()
+    const interval = setInterval(fetchAll, 3000)
+    return () => clearInterval(interval)
+  }, [fetchAll])
+
+  const triggerRun = async () => {
+    setTriggering(true)
+    try {
+      await fetch('/api/pipeline/trigger', { method: 'POST' })
+      await fetchAll()
+    } finally {
+      setTriggering(false)
+    }
+  }
+
+  return (
+    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+      {/* 파이프라인 스텝 현황 */}
+      <div style={CARD_BASE}>
+        <h3 style={{ fontSize: 13, fontWeight: 600, color: '#2d2b3d', marginBottom: 12 }}>
+          파이프라인 스텝 현황
+        </h3>
+        {loading ? (
+          <div style={{ color: '#9896b0', fontSize: 12 }}>불러오는 중...</div>
+        ) : (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
+            {Object.entries(STEP_LABELS).map(([stepId, label]) => {
+              const stepData = steps.find((s) => s.step === stepId)
+              const status = stepData?.status ?? 'idle'
+              const style = STATUS_STYLE[status] ?? STATUS_STYLE.idle
+              return (
+                <div
+                  key={stepId}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    padding: '7px 10px',
+                    borderRadius: 8,
+                    background: style.bg,
+                  }}
+                >
+                  <span style={{ fontSize: 12, color: '#5c5a74', fontWeight: 500 }}>{label}</span>
+                  <span
+                    style={{
+                      fontSize: 10,
+                      fontWeight: 700,
+                      color: style.color,
+                      letterSpacing: '0.05em',
+                    }}
+                  >
+                    {style.label}
+                  </span>
+                </div>
+              )
+            })}
+          </div>
+        )}
+      </div>
+
+      {/* 오른쪽 패널: HITL + 파이프라인 제어 */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+        {/* HITL 신호 */}
+        <div style={CARD_BASE}>
+          <h3 style={{ fontSize: 13, fontWeight: 600, color: '#2d2b3d', marginBottom: 12 }}>
+            HITL 대기 신호
+            {hitlSignals.length > 0 && (
+              <span
+                style={{
+                  marginLeft: 8,
+                  background: 'rgba(239,68,68,0.12)',
+                  color: '#dc2626',
+                  fontSize: 10,
+                  fontWeight: 700,
+                  padding: '2px 7px',
+                  borderRadius: 99,
+                }}
+              >
+                {hitlSignals.length}
+              </span>
+            )}
+          </h3>
+          {hitlSignals.length === 0 ? (
+            <div style={{ color: '#16a34a', fontSize: 12 }}>대기 신호 없음 ✓</div>
+          ) : (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+              {hitlSignals.slice(0, 4).map((sig) => (
+                <div
+                  key={sig.id}
+                  style={{
+                    padding: '8px 10px',
+                    borderRadius: 8,
+                    background: 'rgba(239,68,68,0.06)',
+                    border: '1px solid rgba(239,68,68,0.15)',
+                  }}
+                >
+                  <div style={{ fontSize: 11, color: '#dc2626', fontWeight: 600 }}>
+                    {sig.type}
+                  </div>
+                  <div style={{ fontSize: 11, color: '#5c5a74', marginTop: 2 }}>
+                    {sig.message}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* 파이프라인 제어 */}
+        <div style={CARD_BASE}>
+          <h3 style={{ fontSize: 13, fontWeight: 600, color: '#2d2b3d', marginBottom: 12 }}>
+            파이프라인 제어
+          </h3>
+          <button
+            onClick={triggerRun}
+            disabled={triggering}
+            style={{
+              width: '100%',
+              padding: '9px 16px',
+              borderRadius: 8,
+              border: 'none',
+              background: triggering ? '#c0bdd8' : '#8785A2',
+              color: '#ffffff',
+              fontSize: 13,
+              fontWeight: 600,
+              cursor: triggering ? 'not-allowed' : 'pointer',
+              transition: 'transform 0.15s ease, box-shadow 0.15s ease',
+            }}
+            onMouseEnter={(e) => {
+              if (!triggering) {
+                e.currentTarget.style.transform = 'translateY(-1px)'
+                e.currentTarget.style.boxShadow = '0 4px 12px rgba(135,133,162,0.35)'
+              }
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = 'none'
+              e.currentTarget.style.boxShadow = 'none'
+            }}
+          >
+            {triggering ? '실행 중...' : '테스트 런 실행'}
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
