@@ -3,8 +3,10 @@
 import { useState, useEffect, useCallback } from 'react'
 
 interface StepStatus {
-  step: string
+  index: number
+  name: string
   status: 'idle' | 'running' | 'done' | 'error' | 'skipped'
+  elapsed_ms?: number
 }
 
 interface HitlSignal {
@@ -14,15 +16,16 @@ interface HitlSignal {
   resolved: boolean
 }
 
-const STEP_LABELS: Record<string, string> = {
-  step05: 'Step05 · 트렌드 수집',
-  step06: 'Step06 · 정책 적용',
-  step07: 'Step07 · 콘텐츠 계획',
-  step08: 'Step08 · 영상 생성',
-  step09: 'Step09 · BGM 합성',
-  step10: 'Step10 · 제목/썸네일',
-  step11: 'Step11 · QA 검수',
-  step12: 'Step12 · YouTube 업로드',
+// API index(0~7) → 표시 레이블 매핑
+const STEP_LABELS: Record<number, string> = {
+  0: 'Step05 · 트렌드 수집',
+  1: 'Step06 · 정책 적용',
+  2: 'Step07 · 콘텐츠 계획',
+  3: 'Step08 · 영상 생성',
+  4: 'Step09 · BGM 합성',
+  5: 'Step10 · 제목/썸네일',
+  6: 'Step11 · QA 검수',
+  7: 'Step12 · YouTube 업로드',
 }
 
 const STATUS_STYLE: Record<string, { bg: string; color: string; label: string }> = {
@@ -94,13 +97,14 @@ export default function HomeOpsTab() {
           <div style={{ color: '#9896b0', fontSize: 12 }}>불러오는 중...</div>
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
-            {Object.entries(STEP_LABELS).map(([stepId, label]) => {
-              const stepData = steps.find((s) => s.step === stepId)
+            {Object.entries(STEP_LABELS).map(([idxStr, label]) => {
+              const idx = Number(idxStr)
+              const stepData = steps.find((s) => s.index === idx)
               const status = stepData?.status ?? 'idle'
               const style = STATUS_STYLE[status] ?? STATUS_STYLE.idle
               return (
                 <div
-                  key={stepId}
+                  key={idx}
                   style={{
                     display: 'flex',
                     alignItems: 'center',
@@ -111,16 +115,23 @@ export default function HomeOpsTab() {
                   }}
                 >
                   <span style={{ fontSize: 12, color: '#5c5a74', fontWeight: 500 }}>{label}</span>
-                  <span
-                    style={{
-                      fontSize: 10,
-                      fontWeight: 700,
-                      color: style.color,
-                      letterSpacing: '0.05em',
-                    }}
-                  >
-                    {style.label}
-                  </span>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                    {stepData?.elapsed_ms && (
+                      <span style={{ fontSize: 10, color: '#9896b0' }}>
+                        {(stepData.elapsed_ms / 1000).toFixed(1)}s
+                      </span>
+                    )}
+                    <span
+                      style={{
+                        fontSize: 10,
+                        fontWeight: 700,
+                        color: style.color,
+                        letterSpacing: '0.05em',
+                      }}
+                    >
+                      {style.label}
+                    </span>
+                  </div>
                 </div>
               )
             })}
