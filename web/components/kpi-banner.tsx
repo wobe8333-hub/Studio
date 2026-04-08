@@ -1,5 +1,7 @@
 'use client'
 
+import { useIsMobile } from '@/hooks/use-is-mobile'
+
 interface KpiBannerProps {
   revenue: number
   achievementRate: number
@@ -18,6 +20,7 @@ interface KpiItemProps {
 }
 
 function KpiItem({ label, value, sub, highlight, isLast }: KpiItemProps) {
+  const isMobile = useIsMobile()
   return (
     <div
       style={{
@@ -25,10 +28,11 @@ function KpiItem({ label, value, sub, highlight, isLast }: KpiItemProps) {
         flexDirection: 'column',
         alignItems: 'center',
         gap: 2,
-        padding: '0 24px',
-        borderRight: isLast ? 'none' : '1px solid rgba(220,80,80,0.18)',
-        minWidth: 130,
-        flex: 1,
+        padding: isMobile ? '8px 12px' : '0 24px',
+        borderRight: isMobile ? 'none' : (isLast ? 'none' : '1px solid rgba(220,80,80,0.18)'),
+        borderBottom: isMobile ? '1px solid rgba(220,80,80,0.12)' : 'none',
+        flex: isMobile ? '1 1 30%' : 1,
+        minWidth: isMobile ? 0 : 130,
       }}
     >
       <span
@@ -69,11 +73,13 @@ export function KpiBanner({
   totalRuns,
   hitlPending,
 }: KpiBannerProps) {
+  const isMobile = useIsMobile()
   return (
     <div
       style={{
         display: 'flex',
-        alignItems: 'center',
+        flexWrap: isMobile ? 'wrap' : 'nowrap',
+        alignItems: isMobile ? 'flex-start' : 'center',
         background: 'rgba(255,210,210,0.65)',
         backdropFilter: 'blur(16px)',
         WebkitBackdropFilter: 'blur(16px)',

@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
+import { useIsMobile } from '@/hooks/use-is-mobile'
 
 interface StepStatus {
   index: number
@@ -51,6 +52,7 @@ export default function HomeOpsTab() {
   const [hitlSignals, setHitlSignals] = useState<HitlSignal[]>([])
   const [loading, setLoading] = useState(true)
   const [triggering, setTriggering] = useState(false)
+  const isMobile = useIsMobile()
 
   const fetchAll = useCallback(async () => {
     try {
@@ -87,7 +89,7 @@ export default function HomeOpsTab() {
   }
 
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+    <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? 8 : 12 }}>
       {/* 파이프라인 스텝 현황 */}
       <div style={CARD_BASE}>
         <h3 style={{ fontSize: 13, fontWeight: 600, color: '#4a1010', marginBottom: 12 }}>

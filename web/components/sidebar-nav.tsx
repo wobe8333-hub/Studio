@@ -51,6 +51,7 @@ export function CollapsibleSidebar({ channels: _channels }: CollapsibleSidebarPr
 
   return (
     <div
+      className="kas-sidebar"
       style={{
         width: open ? 160 : 44,
         height: '100vh',

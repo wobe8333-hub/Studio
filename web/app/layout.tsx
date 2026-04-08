@@ -3,6 +3,7 @@ import './globals.css'
 import { ThemeProvider } from 'next-themes'
 import { TooltipProvider } from '@/components/ui/tooltip'
 import { CollapsibleSidebar } from '@/components/sidebar-nav'
+import { BottomNav } from '@/components/bottom-nav'
 import { createClient } from '@/lib/supabase/server'
 
 export const metadata: Metadata = {
@@ -45,11 +46,11 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
           <TooltipProvider>
             <div style={{ display: 'flex', height: '100vh', overflow: 'hidden' }}>
-              {/* 접이식 사이드바 */}
+              {/* 접이식 사이드바 (데스크톱 전용) */}
               <CollapsibleSidebar channels={channels ?? undefined} />
 
               {/* 오른쪽 메인 영역 */}
-              <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+              <div className="kas-main-col" style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
                 {/* 탑바 */}
                 <header
                   style={{
@@ -95,6 +96,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
                 {/* 페이지 콘텐츠 */}
                 <main
+                  className="kas-content"
                   style={{
                     flex: 1,
                     overflowY: 'auto',
@@ -105,6 +107,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                 </main>
               </div>
             </div>
+
+            {/* 하단 탭 바 (모바일 전용) */}
+            <BottomNav />
           </TooltipProvider>
         </ThemeProvider>
       </body>

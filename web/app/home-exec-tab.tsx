@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useIsMobile } from '@/hooks/use-is-mobile'
 import {
   LayoutDashboard,
   Monitor,
@@ -154,6 +155,7 @@ interface HomeExecTabProps {
 
 export default function HomeExecTab({ channels, totalRuns, activeChannelCount }: HomeExecTabProps) {
   const [activeTab, setActiveTab] = useState<'exec' | 'ops'>('exec')
+  const isMobile = useIsMobile()
 
   const TABS = [
     { id: 'exec' as const, label: '경영', Icon: LayoutDashboard },
@@ -199,9 +201,9 @@ export default function HomeExecTab({ channels, totalRuns, activeChannelCount }:
           <div
             style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(4, 1fr)',
-              gap: 12,
-              marginBottom: 16,
+              gridTemplateColumns: isMobile ? '1fr 1fr' : 'repeat(4, 1fr)',
+              gap: isMobile ? 8 : 12,
+              marginBottom: isMobile ? 12 : 16,
             }}
           >
             <KpiCard label="이번달 수익"  value="₩0"                        sub="목표: ₩14,000,000" Icon={DollarSign} />
@@ -214,9 +216,9 @@ export default function HomeExecTab({ channels, totalRuns, activeChannelCount }:
           <div
             style={{
               display: 'grid',
-              gridTemplateColumns: '1fr 1fr',
-              gap: 12,
-              marginBottom: 16,
+              gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',
+              gap: isMobile ? 8 : 12,
+              marginBottom: isMobile ? 12 : 16,
             }}
           >
             {/* 채널별 목표 진행 */}
@@ -290,8 +292,10 @@ export default function HomeExecTab({ channels, totalRuns, activeChannelCount }:
           <div
             style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))',
-              gap: 10,
+              gridTemplateColumns: isMobile
+                ? 'repeat(2, 1fr)'
+                : 'repeat(auto-fill, minmax(160px, 1fr))',
+              gap: isMobile ? 8 : 10,
             }}
           >
             {channels.map((ch) => (

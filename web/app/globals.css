@@ -273,3 +273,17 @@
     }
   }
 }
+
+/* ── 모바일 반응형 ──────────────────────────────── */
+.kas-bottom-nav { display: none; }
+
+@media (max-width: 767px) {
+  /* 사이드바 숨김 */
+  .kas-sidebar { display: none !important; }
+
+  /* 하단 탭 표시 */
+  .kas-bottom-nav { display: flex !important; }
+
+  /* 콘텐츠 하단 패딩 (하단 탭 공간 확보) */
+  .kas-content { padding-bottom: 68px !important; }
+}
