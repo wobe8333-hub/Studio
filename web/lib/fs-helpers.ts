@@ -81,7 +81,9 @@ export async function readKasJson<T = unknown>(relativePath: string): Promise<T 
   try {
     const fullPath = path.join(KAS_ROOT, relativePath)
     assertWithinRoot(fullPath)   // 경로 탈출 차단
-    const text = await fs.readFile(fullPath, 'utf-8')
+    let text = await fs.readFile(fullPath, 'utf-8')
+    // ssot.write_json()이 utf-8-sig(BOM 포함)으로 쓰므로 BOM 제거
+    if (text.charCodeAt(0) === 0xFEFF) text = text.slice(1)
     return JSON.parse(text) as T
   } catch {
     return null

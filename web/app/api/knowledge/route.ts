@@ -30,7 +30,7 @@ export interface ChannelKnowledge {
 async function readTopics(channelId: string, kasRoot: string): Promise<KnowledgeTopic[]> {
   const jsonlPath = path.join(kasRoot, 'data', 'knowledge_store', channelId, 'discovery', 'raw', 'assets.jsonl')
   try {
-    const text = await fs.readFile(jsonlPath, 'utf-8')
+    const text = (await fs.readFile(jsonlPath, 'utf-8')).replace(/^\uFEFF/, '')
     const topics: KnowledgeTopic[] = []
     for (const line of text.split('\n')) {
       if (!line.trim()) continue
@@ -65,7 +65,7 @@ async function readSeries(channelId: string, kasRoot: string): Promise<SeriesEnt
       if (!file.endsWith('.json')) continue
       try {
         const raw = JSON.parse(
-          await fs.readFile(path.join(seriesDir, file), 'utf-8')
+          (await fs.readFile(path.join(seriesDir, file), 'utf-8')).replace(/^\uFEFF/, '')
         ) as Record<string, unknown>
         const eps = Array.isArray(raw.episodes) ? (raw.episodes as Record<string, unknown>[]) : []
         result.push({

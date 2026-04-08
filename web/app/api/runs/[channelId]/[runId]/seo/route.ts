@@ -21,7 +21,7 @@ export async function GET(
   }
 
   try {
-    const raw = await fs.readFile(metaFile, 'utf-8')
+    const raw = (await fs.readFile(metaFile, 'utf-8')).replace(/^\uFEFF/, '')
     const data = JSON.parse(raw)
     return NextResponse.json({ seo: data })
   } catch (e: unknown) {
@@ -46,7 +46,7 @@ export async function PATCH(
 
   let current: Record<string, unknown>
   try {
-    const raw = await fs.readFile(metaFile, 'utf-8')
+    const raw = (await fs.readFile(metaFile, 'utf-8')).replace(/^\uFEFF/, '')
     current = JSON.parse(raw)
   } catch (e: unknown) {
     if ((e as NodeJS.ErrnoException).code === 'ENOENT') {

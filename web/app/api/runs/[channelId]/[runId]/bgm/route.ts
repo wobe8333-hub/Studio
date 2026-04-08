@@ -15,7 +15,7 @@ export async function GET(
   }
 
   try {
-    const raw = await fs.readFile(reportFile, 'utf-8')
+    const raw = (await fs.readFile(reportFile, 'utf-8')).replace(/^\uFEFF/, '')
     const data = JSON.parse(raw)
     return NextResponse.json({ bgm: data })
   } catch (e: unknown) {

@@ -21,7 +21,7 @@ export interface PipelineStatusResult {
 
 async function readManifest(filePath: string): Promise<ManifestSummary | null> {
   try {
-    const text = await fs.readFile(filePath, 'utf-8')
+    const text = (await fs.readFile(filePath, 'utf-8')).replace(/^\uFEFF/, '')
     const m = JSON.parse(text)
     return {
       run_id:      m.run_id      ?? '',

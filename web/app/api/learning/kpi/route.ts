@@ -18,7 +18,7 @@ export async function GET() {
     const files = fs.readdirSync(kpiDir).filter(f => f.endsWith('.json'))
     const items = files.flatMap(f => {
       try {
-        const raw = fs.readFileSync(path.join(kpiDir, f), 'utf-8')
+        const raw = fs.readFileSync(path.join(kpiDir, f), 'utf-8').replace(/^\uFEFF/, '')
         return [JSON.parse(raw)]
       } catch {
         return []

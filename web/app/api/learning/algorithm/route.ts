@@ -20,7 +20,7 @@ export async function GET() {
       const policyFile = path.join(channelsDir, ch, 'algorithm_policy.json')
       if (!fs.existsSync(policyFile)) return { channel_id: ch, policy: null }
       try {
-        const raw = fs.readFileSync(policyFile, 'utf-8')
+        const raw = fs.readFileSync(policyFile, 'utf-8').replace(/^\uFEFF/, '')
         return { channel_id: ch, policy: JSON.parse(raw) }
       } catch {
         return { channel_id: ch, policy: null }

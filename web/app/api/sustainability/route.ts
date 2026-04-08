@@ -18,7 +18,7 @@ export async function GET() {
     const files = fs.readdirSync(globalDir).filter(f => f.startsWith('sustainability_') && f.endsWith('.json'))
     const items = files.flatMap(f => {
       try {
-        const raw = fs.readFileSync(path.join(globalDir, f), 'utf-8')
+        const raw = fs.readFileSync(path.join(globalDir, f), 'utf-8').replace(/^\uFEFF/, '')
         return [JSON.parse(raw)]
       } catch {
         return []

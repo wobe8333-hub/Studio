@@ -41,7 +41,9 @@ export async function GET(
 
     let manifest: Record<string, unknown>
     try {
-      const text = await fs.readFile(manifestPath, 'utf-8')
+      let text = await fs.readFile(manifestPath, 'utf-8')
+      // ssot.write_json()이 utf-8-sig(BOM 포함)으로 쓰므로 BOM 제거
+      if (text.charCodeAt(0) === 0xFEFF) text = text.slice(1)
       manifest = JSON.parse(text)
     } catch {
       continue
@@ -50,7 +52,8 @@ export async function GET(
     // QA 결과 (있으면 로드)
     let qa_pass: boolean | null = null
     try {
-      const qaText = await fs.readFile(`${runDir}/step11/qa_result.json`, 'utf-8')
+      let qaText = await fs.readFile(`${runDir}/step11/qa_result.json`, 'utf-8')
+      if (qaText.charCodeAt(0) === 0xFEFF) qaText = qaText.slice(1)
       const qa = JSON.parse(qaText)
       qa_pass = qa.overall_pass ?? null
     } catch {

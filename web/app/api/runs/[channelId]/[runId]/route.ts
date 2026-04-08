@@ -41,7 +41,10 @@ export interface RunArtifacts {
 
 async function tryReadJson<T>(filePath: string): Promise<T | null> {
   try {
-    return JSON.parse(await fs.readFile(filePath, 'utf-8')) as T
+    let text = await fs.readFile(filePath, 'utf-8')
+    // ssot.write_json()이 utf-8-sig(BOM 포함)으로 쓰므로 BOM 제거
+    if (text.charCodeAt(0) === 0xFEFF) text = text.slice(1)
+    return JSON.parse(text) as T
   } catch {
     return null
   }

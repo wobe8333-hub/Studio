@@ -18,7 +18,7 @@ export async function GET() {
     const files = fs.readdirSync(logsDir).filter(f => f.endsWith('.json'))
     const agents = files.map(f => {
       try {
-        const raw = fs.readFileSync(path.join(logsDir, f), 'utf-8')
+        const raw = fs.readFileSync(path.join(logsDir, f), 'utf-8').replace(/^\uFEFF/, '')
         return JSON.parse(raw)
       } catch {
         return { name: f.replace('.json', ''), error: '파싱 오류' }
