@@ -15,15 +15,25 @@ import {
   ChevronsRight,
 } from 'lucide-react'
 
-const NAV_ITEMS = [
-  { title: 'KPI 대시보드', url: '/',             icon: LayoutDashboard },
-  { title: '트렌드 관리',  url: '/trends',       icon: TrendingUp },
-  { title: '수익 추적',   url: '/revenue',      icon: BarChart2 },
-  { title: 'QA 검수',     url: '/qa',           icon: CheckSquare },
-  { title: '런 목록',     url: '/runs/CH1',     icon: List },
-  { title: '파이프라인',  url: '/monitor',      icon: Monitor },
-  { title: '채널 상세',   url: '/channels/CH1', icon: Tv },
-  { title: '설정',        url: '/settings',     icon: Settings },
+const NAV_GROUPS = [
+  {
+    label: '경영',
+    items: [
+      { title: 'KPI 대시보드', url: '/',        icon: LayoutDashboard },
+      { title: '트렌드 관리',  url: '/trends',  icon: TrendingUp },
+      { title: '수익 추적',   url: '/revenue', icon: BarChart2 },
+    ],
+  },
+  {
+    label: '운영',
+    items: [
+      { title: 'QA 검수',    url: '/qa',           icon: CheckSquare },
+      { title: '런 목록',    url: '/runs/CH1',     icon: List },
+      { title: '파이프라인', url: '/monitor',      icon: Monitor },
+      { title: '채널 상세',  url: '/channels/CH1', icon: Tv },
+      { title: '설정',       url: '/settings',     icon: Settings },
+    ],
+  },
 ]
 
 interface ChannelItem {
@@ -87,51 +97,93 @@ export function CollapsibleSidebar({ channels: _channels }: CollapsibleSidebarPr
 
       {/* 네비게이션 */}
       <nav style={{ flex: 1, paddingTop: 4, overflowY: 'auto', overflowX: 'hidden' }}>
-        {NAV_ITEMS.map((item) => {
-          const isActive = item.url === '/'
-            ? pathname === '/'
-            : pathname.startsWith(item.url)
-          return (
-            <Link
-              key={item.url}
-              href={item.url}
+        {NAV_GROUPS.map((group, gi) => (
+          <div key={group.label}>
+            {/* 그룹 구분선 + 레이블 */}
+            {gi > 0 && (
+              <div
+                style={{
+                  margin: '6px 8px',
+                  height: 1,
+                  background: 'rgba(255,255,255,0.15)',
+                }}
+              />
+            )}
+            <div
               style={{
                 display: 'flex',
                 alignItems: 'center',
-                gap: 10,
-                padding: '8px 12px',
-                margin: '1px 4px',
-                borderRadius: 8,
-                color: isActive ? '#ffffff' : 'rgba(255,255,255,0.7)',
-                background: isActive ? 'rgba(255,255,255,0.18)' : 'transparent',
-                textDecoration: 'none',
-                whiteSpace: 'nowrap',
-                transition: 'background 0.2s ease',
-              }}
-              onMouseEnter={(e) => {
-                if (!isActive) e.currentTarget.style.background = 'rgba(255,255,255,0.10)'
-              }}
-              onMouseLeave={(e) => {
-                if (!isActive) e.currentTarget.style.background = 'transparent'
+                padding: '2px 12px 2px',
+                height: 20,
+                overflow: 'hidden',
               }}
             >
-              <item.icon size={18} strokeWidth={1.8} style={{ flexShrink: 0 }} />
               <span
                 style={{
                   maxWidth: open ? 120 : 0,
                   overflow: 'hidden',
-                  opacity: open ? 1 : 0,
+                  opacity: open ? 0.55 : 0,
                   transition: 'max-width 0.25s ease, opacity 0.2s ease',
-                  fontSize: 13,
-                  fontWeight: 500,
+                  fontSize: 10,
+                  fontWeight: 700,
+                  letterSpacing: '0.08em',
+                  color: 'rgba(255,255,255,0.9)',
                   whiteSpace: 'nowrap',
+                  textTransform: 'uppercase',
                 }}
               >
-                {item.title}
+                {group.label}
               </span>
-            </Link>
-          )
-        })}
+            </div>
+
+            {/* 메뉴 아이템 */}
+            {group.items.map((item) => {
+              const isActive = item.url === '/'
+                ? pathname === '/'
+                : pathname.startsWith(item.url)
+              return (
+                <Link
+                  key={item.url}
+                  href={item.url}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 10,
+                    padding: '8px 12px',
+                    margin: '1px 4px',
+                    borderRadius: 8,
+                    color: isActive ? '#ffffff' : 'rgba(255,255,255,0.7)',
+                    background: isActive ? 'rgba(255,255,255,0.18)' : 'transparent',
+                    textDecoration: 'none',
+                    whiteSpace: 'nowrap',
+                    transition: 'background 0.2s ease',
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!isActive) e.currentTarget.style.background = 'rgba(255,255,255,0.10)'
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!isActive) e.currentTarget.style.background = 'transparent'
+                  }}
+                >
+                  <item.icon size={18} strokeWidth={1.8} style={{ flexShrink: 0 }} />
+                  <span
+                    style={{
+                      maxWidth: open ? 120 : 0,
+                      overflow: 'hidden',
+                      opacity: open ? 1 : 0,
+                      transition: 'max-width 0.25s ease, opacity 0.2s ease',
+                      fontSize: 13,
+                      fontWeight: 500,
+                      whiteSpace: 'nowrap',
+                    }}
+                  >
+                    {item.title}
+                  </span>
+                </Link>
+              )
+            })}
+          </div>
+        ))}
       </nav>
     </div>
   )
