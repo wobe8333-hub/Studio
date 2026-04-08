@@ -259,43 +259,58 @@ class MyAgent(BaseAgent):
 
 #### 디자인 시스템 — Red Light Glassmorphism
 
-`globals.css`에 정의된 Red Light 팔레트 CSS 변수:
+`globals.css`에 정의된 현재 팔레트 CSS 변수:
 ```css
---c-dark:   #900000;   /* 주 강조 / 활성 탭 배경 */
---c-red:    #ee2400;   /* 보조 강조 / 경고 */
---c-salmon: #ffb09c;
---c-blush:  #fbd9d3;
---c-cream:  #ffefea;   /* 활성 탭 텍스트 */
---t-primary:   #1a0505;
---t-secondary: #5c1a1a;
---t-muted:     #9b6060;
+--p1: #FFB0B0;   /* 살구레드 — 강조 */
+--p2: #FFD5D5;   /* 연핑크레드 — 배너 배경 */
+--p4: #B42828;   /* 딥레드 — 탑바, 사이드바, 버튼 */
+--t1: #4a1010;   /* 진한 텍스트 */
+--t2: #7a3030;   /* 서브 텍스트 */
+--t3: #b06060;   /* 뮤트 텍스트 */
+/* 하위 호환 alias: --c-dark(#B42828), --c-red(#e85555) 등 */
 ```
-폰트: **Libre Baskerville** (제목), **M PLUS Rounded 1c** (본문).
+폰트: **Noto Sans KR** (400/500/600/700/800) — Google Fonts.
+페이지 배경: `linear-gradient(135deg, #fff0f0 0%, #ffe0e0 40%, #f8f4f4 100%)`.
 
-클라이언트 컴포넌트에서는 `tailwind` 클래스 대신 인라인 `style` + `G` 상수를 사용한다:
+클라이언트 컴포넌트에서는 `tailwind` 클래스 대신 인라인 `style` + `CARD_BASE` 상수를 사용한다:
 ```tsx
-const G = {
-  card: {
-    background: 'rgba(255,255,255,0.55)',
-    backdropFilter: 'blur(20px)',
-    WebkitBackdropFilter: 'blur(20px)',
-    border: '1px solid rgba(238,36,0,0.12)',
-    borderRadius: '1rem',
-    boxShadow: '0 8px 32px rgba(144,0,0,0.08)',
-  } as React.CSSProperties,
-  text: { primary: '#1a0505', secondary: '#5c1a1a', muted: '#9b6060' },
+const CARD_BASE: React.CSSProperties = {
+  background: 'rgba(255,255,255,0.60)',
+  backdropFilter: 'blur(20px)',
+  WebkitBackdropFilter: 'blur(20px)',
+  border: '1px solid rgba(220,80,80,0.18)',
+  borderRadius: '0.75rem',
+  boxShadow: '0 4px 16px rgba(180,40,40,0.07)',
 }
 ```
-탭 버튼 활성 상태: `background: '#900000', color: '#ffefea'` / 비활성: `transparent, '#9b6060'`
+사이드바/탑바: `background: rgba(180,40,40,0.82/0.92)` + `backdropFilter: blur(20px)`.
+탭 버튼 활성: `rgba(180,40,40,0.88)` 배경 + 흰 텍스트 / 비활성: `transparent`, `#9b4040`.
+
+#### 모바일 반응형
+
+`web/hooks/use-is-mobile.ts`의 `useIsMobile(breakpoint=768)` 훅으로 클라이언트 컴포넌트 내부 레이아웃 분기. 레이아웃 수준(사이드바 숨김·하단 탭)은 CSS 클래스 + `globals.css` 미디어 쿼리로 처리:
+```css
+/* globals.css */
+.kas-bottom-nav { display: none; }
+@media (max-width: 767px) {
+  .kas-sidebar { display: none !important; }
+  .kas-bottom-nav { display: flex !important; }
+  .kas-content { padding-bottom: 68px !important; }
+}
+```
+`web/components/bottom-nav.tsx` — 모바일 전용 하단 탭 바 (홈·트렌드·수익·QA·런 5개 항목).
+`web/capacitor.config.ts` — Capacitor 모바일 앱 설정 파일 존재. `appId: com.kas.studio`, `webDir: out`.
 
 #### 디렉토리 구조
 
 ```
 web/
 ├── app/
-│   ├── layout.tsx          — ThemeProvider(next-themes) + Libre Baskerville 폰트 + 글래스모피즘 헤더
-│   ├── page.tsx            — KPI 대시보드 (서버 컴포넌트, Supabase fetch + mock fallback)
-│   ├── globals.css         — Tailwind v4 설정 + Red Light 색상 + @keyframes
+│   ├── layout.tsx          — CollapsibleSidebar + 탑바(딥레드 glass) + BottomNav + ThemeProvider
+│   ├── page.tsx            — 서버 컴포넌트: KpiBanner + HomeExecTab(경영/운영 탭 컨트롤러)
+│   ├── home-exec-tab.tsx   — 경영 탭 (KPI 카드 4개, 채널 목표 진행 바, 6개월 차트, 채널 카드 7개)
+│   ├── home-ops-tab.tsx    — 운영 탭 (파이프라인 스텝 현황, HITL 신호, 파이프라인 제어 버튼)
+│   ├── globals.css         — Tailwind v4 설정 + Red Light Glassmorphism 팔레트 + 모바일 미디어 쿼리
 │   ├── channels/[id]/      — 채널 상세 (클라이언트)
 │   ├── trends/             — 트렌드 주제 관리 (클라이언트, 채널탭 + 승인/거부/필터)
 │   ├── revenue/            — 수익 추적 (클라이언트, 이번달/월별추세 2탭)
@@ -310,20 +325,29 @@ web/
 │   ├── knowledge/          — 지식 수집 현황 (단계별 배지)
 │   └── settings/           — 설정 (읽기 전용)
 ├── components/
-│   ├── animated-sections.tsx — motion 래퍼: StaggerContainer/StaggerItem/ScrollReveal/AnimatedCard/SectionWithInView
+│   ├── kpi-banner.tsx        — KPI 배너 (이번달 수익/달성률/활성채널/총Runs/HITL 대기, 항상 고정)
+│   ├── bottom-nav.tsx        — 모바일 전용 하단 탭 바 (홈·트렌드·수익·QA·런)
+│   ├── sidebar-nav.tsx       — CollapsibleSidebar: 44px↔160px 토글, 경영/운영 섹션 분류, kas-sidebar 클래스
+│   ├── animated-sections.tsx — motion 래퍼: StaggerContainer/StaggerItem/ScrollReveal/AnimatedCard
 │   ├── home-charts.tsx       — Recharts 클라이언트 컴포넌트: Sparkline/RadialGauge/ChannelDots
-│   ├── sidebar-nav.tsx       — AppSidebar: channels props 수신, 채널 고유 색상 dot
 │   ├── theme-toggle.tsx      — next-themes useTheme (mounted 패턴으로 hydration mismatch 방지)
 │   └── ui/                   — shadcn/ui 컴포넌트 (16개)
+├── hooks/
+│   └── use-is-mobile.ts      — useIsMobile(breakpoint=768): SSR-safe 모바일 감지 훅
 └── lib/
     ├── supabase/
-    │   ├── client.ts       — 브라우저용 (createBrowserClient)
-    │   └── server.ts       — 서버용 (createServerClient + cookies)
-    ├── fs-helpers.ts       — 경로 보안 유틸리티: validateRunPath / validateChannelPath / getKasRoot / readKasJson / writeKasJson
-    └── types.ts            — Supabase DB 전체 타입 (Database, Channel, PipelineRun 등)
+    │   ├── client.ts         — 브라우저용 (createBrowserClient)
+    │   ├── server.ts         — 서버용 (createServerClient + cookies)
+    │   └── server-admin.ts   — service_role 전용 (RLS 우회, 서버에서만 사용)
+    ├── fs-helpers.ts         — 경로 보안 유틸리티: validateRunPath / validateChannelPath / getKasRoot / readKasJson / writeKasJson
+    └── types.ts              — Supabase DB 전체 타입 (Database, Channel, PipelineRun 등)
 ```
 
-**API 라우트** (`app/api/`): `artifacts/[...path]`(파일 서빙), `agents/status`, `cost/projection`, `deferred-jobs`, `hitl-signals`, `knowledge`, `learning/algorithm|kpi`, `pipeline/logs|preflight|status|steps|trigger`, `qa-data`, `runs/[ch]`(채널별 Run 목록), `runs/[ch]/[id]`, `runs/[ch]/[id]/bgm|seo|shorts`, `sustainability`
+**홈 페이지 구조**: `page.tsx`(서버) → `KpiBanner`(항상 고정) + `HomeExecTab`(탭 컨트롤러). `HomeExecTab`은 활성 탭에 따라 자체 콘텐츠(경영) 또는 `<HomeOpsTab />`(운영)을 렌더링.
+
+**운영 탭 API 형식**: `/api/pipeline/steps`는 `{ steps: [{ index: 0, name: string, status: 'idle'|'running'|'done'|'error'|'skipped', elapsed_ms?: number }] }` 반환. `index` 0~7이 Step05~12에 대응.
+
+**API 라우트** (`app/api/`): `artifacts/[...path]`(파일 서빙), `agents/status`, `agents/run`, `cost/projection`, `deferred-jobs`, `hitl-signals`, `knowledge`, `learning/algorithm|kpi`, `pipeline/logs|preflight|preview|status|steps|trigger`, `qa-data`, `runs/[ch]`(채널별 Run 목록), `runs/[ch]/[id]`, `runs/[ch]/[id]/bgm|seo|shorts`, `sustainability`
 
 **서버 컴포넌트 내 클라이언트 탭 분리 패턴**: 서버 컴포넌트 페이지에 `'use client'`를 붙일 수 없을 때, 클라이언트 로직이 필요한 섹션을 별도 파일로 분리 후 import. `risk/sustainability-section.tsx`가 참조 구현이다.
 
@@ -356,7 +380,7 @@ const { data } = await supabase.from('channels').select('*')
 
 **fallback 패턴**: `NEXT_PUBLIC_SUPABASE_URL`에 `xxxxxxxxxxxx` 포함 시 mock 데이터 사용. Supabase 쿼리 결과가 `never` 타입으로 추론되는 경우 `as any[]` 캐스팅 필요 (알려진 타입 추론 한계).
 
-**사이드바 채널 동기화**: `app/layout.tsx`(서버)에서 Supabase `channels` 조회 → `AppSidebar` props → 실제 DB 채널명 표시. 미연동 시 `DEFAULT_CHANNELS` 상수 폴백.
+**사이드바 채널 동기화**: `app/layout.tsx`(서버)에서 Supabase `channels` 조회 → `CollapsibleSidebar` props → 실제 DB 채널명 표시. 미연동 시 폴백.
 
 **Supabase 테이블**: `channels`, `pipeline_runs`, `kpi_48h`, `revenue_monthly`, `risk_monthly`, `sustainability`, `learning_feedback`, `quota_daily`, `trend_topics`. 스키마는 `scripts/supabase_schema.sql` 참고.
 
@@ -412,7 +436,8 @@ setattr(_google_pkg, "generativeai", _genai_mock)
 - **웹 채널 데이터**: 웹에서 채널 정보 하드코딩 금지. 항상 Supabase `channels` 테이블 또는 fallback 상수 사용.
 - **웹 Recharts**: `page.tsx`는 서버 컴포넌트이므로 Recharts 직접 사용 불가. `home-charts.tsx` 또는 별도 `'use client'` 파일에 격리.
 - **웹 다크모드**: `document.documentElement.classList`를 직접 조작하지 말 것. `next-themes`의 `useTheme`/`ThemeProvider` 사용.
-- **웹 인라인 스타일**: 클라이언트 컴포넌트에서 색상은 Tailwind 클래스 대신 `G` 상수(각 파일 상단 정의) + CSS 변수(`--c-*`, `--t-*`)로 표현. 새 페이지 작성 시 `monitor/page.tsx`의 `G` 상수 구조를 복사한다.
+- **웹 인라인 스타일**: 클라이언트 컴포넌트에서 색상은 Tailwind 클래스 대신 `CARD_BASE` 상수(각 파일 상단 정의) + CSS 변수(`--p1~4`, `--t1~3`)로 표현. 새 홈 탭 컴포넌트 작성 시 `home-exec-tab.tsx`의 `CARD_BASE` 패턴을 복사한다.
+- **웹 모바일 반응형**: 레이아웃 수준 변경은 `globals.css` 미디어 쿼리(`kas-sidebar`, `kas-bottom-nav`, `kas-content` 클래스)로 처리. 컴포넌트 내부 그리드/폰트 분기는 `hooks/use-is-mobile.ts`의 `useIsMobile()` 훅 사용.
 - **웹 파일 서빙**: `runs/` 결과물은 반드시 `/api/artifacts/[channelId]/[runId]/...` 경로 사용. `/api/files/` 경로는 존재하지 않는다.
 - **Supabase 쓰기 작업**: anon key + RLS가 아닌 `createAdminClient()` (service_role) 사용. `web/app/trends/actions.ts`가 참조 구현이다.
 - **Sub-Agent 비침습**: `src/agents/` 코드는 기존 파이프라인(Step00~17) 로직을 변경하지 않는다. JSON 결과물 읽기 + 정책 파일 쓰기만 허용.
