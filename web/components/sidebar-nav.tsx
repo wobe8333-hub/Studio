@@ -1,98 +1,29 @@
 'use client'
 
+import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import {
   LayoutDashboard,
   TrendingUp,
-  DollarSign,
-  ShieldAlert,
-  Brain,
+  BarChart2,
+  CheckSquare,
+  List,
   Monitor,
-  BookOpen,
-  ClipboardCheck,
-  CreditCard,
+  Tv,
   Settings,
-  Zap,
+  ChevronsRight,
 } from 'lucide-react'
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
-  SidebarHeader,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  SidebarFooter,
-  SidebarSeparator,
-} from '@/components/ui/sidebar'
-import { cn } from '@/lib/utils'
 
-interface NavItem {
-  title: string
-  url: string
-  icon: React.ElementType
-}
-
-interface NavGroup {
-  label: string
-  items: NavItem[]
-}
-
-const NAV_GROUPS: NavGroup[] = [
-  {
-    label: '대시보드',
-    items: [
-      { title: '전체 KPI', url: '/', icon: LayoutDashboard },
-    ],
-  },
-  {
-    label: '콘텐츠',
-    items: [
-      { title: '트렌드 관리',  url: '/trends',    icon: TrendingUp },
-      { title: '지식 수집',   url: '/knowledge', icon: BookOpen },
-      { title: 'QA 검수',     url: '/qa',        icon: ClipboardCheck },
-    ],
-  },
-  {
-    label: '수익 / 비용',
-    items: [
-      { title: '수익 추적',      url: '/revenue', icon: DollarSign },
-      { title: '비용/쿼터',      url: '/cost',    icon: CreditCard },
-      { title: '리스크 모니터링', url: '/risk',    icon: ShieldAlert },
-    ],
-  },
-  {
-    label: '시스템',
-    items: [
-      { title: '파이프라인 모니터', url: '/monitor',  icon: Monitor },
-      { title: '학습 피드백',       url: '/learning', icon: Brain },
-    ],
-  },
-]
-
-// 채널별 고유 색상 CSS 변수 맵
-const CHANNEL_COLORS: Record<string, string> = {
-  CH1: 'var(--channel-ch1)',
-  CH2: 'var(--channel-ch2)',
-  CH3: 'var(--channel-ch3)',
-  CH4: 'var(--channel-ch4)',
-  CH5: 'var(--channel-ch5)',
-  CH6: 'var(--channel-ch6)',
-  CH7: 'var(--channel-ch7)',
-}
-
-// fallback — Supabase 연동 전 기본값
-const DEFAULT_CHANNELS = [
-  { id: 'CH1', category_ko: '경제' },
-  { id: 'CH2', category_ko: '부동산' },
-  { id: 'CH3', category_ko: '심리' },
-  { id: 'CH4', category_ko: '미스터리' },
-  { id: 'CH5', category_ko: '전쟁사' },
-  { id: 'CH6', category_ko: '과학' },
-  { id: 'CH7', category_ko: '역사' },
+const NAV_ITEMS = [
+  { title: 'KPI 대시보드', url: '/',             icon: LayoutDashboard },
+  { title: '트렌드 관리',  url: '/trends',       icon: TrendingUp },
+  { title: '수익 추적',   url: '/revenue',      icon: BarChart2 },
+  { title: 'QA 검수',     url: '/qa',           icon: CheckSquare },
+  { title: '런 목록',     url: '/runs/CH1',     icon: List },
+  { title: '파이프라인',  url: '/monitor',      icon: Monitor },
+  { title: '채널 상세',   url: '/channels/CH1', icon: Tv },
+  { title: '설정',        url: '/settings',     icon: Settings },
 ]
 
 interface ChannelItem {
@@ -100,95 +31,111 @@ interface ChannelItem {
   category_ko: string | null
 }
 
-interface AppSidebarProps {
+interface CollapsibleSidebarProps {
   channels?: ChannelItem[]
 }
 
-export function AppSidebar({ channels = DEFAULT_CHANNELS }: AppSidebarProps) {
+export function CollapsibleSidebar({ channels: _channels }: CollapsibleSidebarProps) {
+  const [open, setOpen] = useState(false)
   const pathname = usePathname()
 
   return (
-    <Sidebar>
-      <SidebarHeader className="border-b px-4 py-5" style={{ borderColor: 'rgba(255, 176, 156, 0.2)' }}>
-        <div className="flex items-center gap-2.5">
-          <div className="h-2 w-2 rounded-full shrink-0" style={{ backgroundColor: '#ffb09c', boxShadow: '0 0 8px rgba(255,176,156,0.6)' }} />
-          <div>
-            <span className="font-bold text-base tracking-tight" style={{ fontFamily: "'Libre Baskerville', Georgia, serif", color: '#ffefea' }}>KAS</span>
-            <p className="text-[10px] uppercase tracking-widest leading-tight mt-0.5" style={{ color: 'rgba(255,176,156,0.6)' }}>Knowledge Animation Studio</p>
-          </div>
-          <Zap className="h-3.5 w-3.5 ml-auto shrink-0" style={{ color: 'rgba(255,176,156,0.5)' }} />
-        </div>
-      </SidebarHeader>
+    <div
+      style={{
+        width: open ? 160 : 44,
+        height: '100vh',
+        position: 'sticky',
+        top: 0,
+        flexShrink: 0,
+        display: 'flex',
+        flexDirection: 'column',
+        background: 'rgba(135,133,162,0.92)',
+        backdropFilter: 'blur(20px)',
+        WebkitBackdropFilter: 'blur(20px)',
+        borderRight: '1px solid rgba(255,199,199,0.2)',
+        transition: 'width 0.25s ease',
+        overflow: 'hidden',
+        zIndex: 20,
+      }}
+    >
+      {/* 토글 버튼 */}
+      <button
+        onClick={() => setOpen(!open)}
+        aria-label={open ? '사이드바 닫기' : '사이드바 열기'}
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          width: 44,
+          height: 44,
+          flexShrink: 0,
+          background: 'transparent',
+          border: 'none',
+          cursor: 'pointer',
+          color: 'rgba(255,255,255,0.7)',
+        }}
+      >
+        <ChevronsRight
+          size={18}
+          strokeWidth={1.8}
+          style={{
+            transform: open ? 'rotate(180deg)' : 'none',
+            transition: 'transform 0.25s ease',
+          }}
+        />
+      </button>
 
-      <SidebarContent>
-        {NAV_GROUPS.map((group, idx) => (
-          <div key={group.label}>
-            {idx > 0 && <SidebarSeparator />}
-            <SidebarGroup>
-              <SidebarGroupLabel>{group.label}</SidebarGroupLabel>
-              <SidebarGroupContent>
-                <SidebarMenu>
-                  {group.items.map((item) => (
-                    <SidebarMenuItem key={item.url}>
-                      <SidebarMenuButton
-                        isActive={pathname === item.url}
-                        render={<Link href={item.url} />}
-                      >
-                        <item.icon className="h-4 w-4" />
-                        <span>{item.title}</span>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
-                  ))}
-                </SidebarMenu>
-              </SidebarGroupContent>
-            </SidebarGroup>
-          </div>
-        ))}
-
-        <SidebarSeparator />
-
-        <SidebarGroup>
-          <SidebarGroupLabel>채널별 상세</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {channels.map((ch) => (
-                <SidebarMenuItem key={ch.id}>
-                  <SidebarMenuButton
-                    isActive={pathname.startsWith(`/channels/${ch.id}`)}
-                    render={<Link href={`/channels/${ch.id}`} />}
-                  >
-                    <span
-                      className={cn(
-                        'h-2.5 w-2.5 rounded-full shrink-0',
-                        'ring-1 ring-inset ring-black/10 dark:ring-white/10'
-                      )}
-                      style={{
-                        backgroundColor: CHANNEL_COLORS[ch.id] ?? 'var(--muted-foreground)',
-                        boxShadow: `0 0 6px ${CHANNEL_COLORS[ch.id] ?? 'transparent'}`,
-                      }}
-                    />
-                    <span>{ch.id} {ch.category_ko}</span>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-      </SidebarContent>
-
-      <SidebarFooter className="border-t border-sidebar-border/60">
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton
-              isActive={pathname === '/settings'}
-              render={<Link href="/settings" />}
+      {/* 네비게이션 */}
+      <nav style={{ flex: 1, paddingTop: 4, overflowY: 'auto', overflowX: 'hidden' }}>
+        {NAV_ITEMS.map((item) => {
+          const isActive = item.url === '/'
+            ? pathname === '/'
+            : pathname.startsWith(item.url)
+          return (
+            <Link
+              key={item.url}
+              href={item.url}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 10,
+                padding: '8px 12px',
+                margin: '1px 4px',
+                borderRadius: 8,
+                color: isActive ? '#ffffff' : 'rgba(255,255,255,0.7)',
+                background: isActive ? 'rgba(255,255,255,0.18)' : 'transparent',
+                textDecoration: 'none',
+                whiteSpace: 'nowrap',
+                transition: 'background 0.2s ease',
+              }}
+              onMouseEnter={(e) => {
+                if (!isActive) e.currentTarget.style.background = 'rgba(255,255,255,0.10)'
+              }}
+              onMouseLeave={(e) => {
+                if (!isActive) e.currentTarget.style.background = 'transparent'
+              }}
             >
-              <Settings className="h-4 w-4" />
-              <span>설정</span>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarMenu>
-      </SidebarFooter>
-    </Sidebar>
+              <item.icon size={18} strokeWidth={1.8} style={{ flexShrink: 0 }} />
+              <span
+                style={{
+                  maxWidth: open ? 120 : 0,
+                  overflow: 'hidden',
+                  opacity: open ? 1 : 0,
+                  transition: 'max-width 0.25s ease, opacity 0.2s ease',
+                  fontSize: 13,
+                  fontWeight: 500,
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                {item.title}
+              </span>
+            </Link>
+          )
+        })}
+      </nav>
+    </div>
   )
 }
+
+// AppSidebar alias — layout.tsx 교체 전 하위호환
+export { CollapsibleSidebar as AppSidebar }
