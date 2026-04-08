@@ -1,20 +1,12 @@
-import {
-  DollarSign,
-  Activity,
-  TrendingUp,
-  AlertTriangle,
-  BarChart2,
-  Bell,
-} from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
 import type { Channel } from '@/lib/types'
-import { StaggerContainer, StaggerItem, ScrollReveal } from '@/components/animated-sections'
 import { readKasJson, getKasRoot } from '@/lib/fs-helpers'
 import fs from 'fs/promises'
 import path from 'path'
 import type { HitlSignal } from '@/lib/fs-helpers'
+import { KpiBanner } from '@/components/kpi-banner'
+import HomeExecTab from './home-exec-tab'
 
-// Supabase 미연동 시 fallback mock 데이터
 const MOCK_CHANNELS: Channel[] = [
   { id: 'CH1', category: 'economy',     category_ko: '경제',    youtube_channel_id: null, launch_phase: 1, status: 'active',  rpm_proxy: 7000, revenue_target_monthly: 2000000, monthly_longform_target: 10, monthly_shorts_target: 30, subscriber_count: 0, video_count: 0, algorithm_trust_level: 'PRE-ENTRY', updated_at: null },
   { id: 'CH2', category: 'realestate',  category_ko: '부동산',  youtube_channel_id: null, launch_phase: 1, status: 'active',  rpm_proxy: 6000, revenue_target_monthly: 2000000, monthly_longform_target: 10, monthly_shorts_target: 30, subscriber_count: 0, video_count: 0, algorithm_trust_level: 'PRE-ENTRY', updated_at: null },
@@ -37,7 +29,7 @@ async function countTotalRuns(): Promise<number> {
         const stat = await fs.stat(chDir)
         if (!stat.isDirectory()) continue
         const runs = await fs.readdir(chDir)
-        count += runs.filter(r => r.startsWith('run_')).length
+        count += runs.filter((r) => r.startsWith('run_')).length
       } catch { /* 빈 채널 무시 */ }
     }
   } catch { /* runs/ 없음 */ }
@@ -47,7 +39,7 @@ async function countTotalRuns(): Promise<number> {
 async function countHitlPending(): Promise<number> {
   const signals = await readKasJson<HitlSignal[]>('data/global/notifications/hitl_signals.json')
   if (!Array.isArray(signals)) return 0
-  return signals.filter(s => !s.resolved).length
+  return signals.filter((s) => !s.resolved).length
 }
 
 async function fetchData() {
@@ -76,154 +68,32 @@ async function fetchData() {
   }
 }
 
-const CHANNEL_COLORS: Record<string, string> = {
-  CH1: 'var(--channel-ch1)',
-  CH2: 'var(--channel-ch2)',
-  CH3: 'var(--channel-ch3)',
-  CH4: 'var(--channel-ch4)',
-  CH5: 'var(--channel-ch5)',
-  CH6: 'var(--channel-ch6)',
-  CH7: 'var(--channel-ch7)',
-}
-
 export default async function HomePage() {
   const { channels, totalRuns, hitlPending } = await fetchData()
 
   // launch_phase === 1 이 파이프라인 SSOT (pipeline.py get_active_channels 기준)
-  const activeChannels = channels.filter((ch) => ch.launch_phase === 1)
+  const activeChannelCount = channels.filter((ch) => ch.launch_phase === 1).length
+  const totalRevenue = 0   // Supabase revenue_monthly 미연동 시 mock 0
+  const achievementRate = totalRevenue > 0 ? (totalRevenue / 14_000_000) * 100 : 0
 
   return (
-    <div className="relative space-y-3 ambient-bg overflow-hidden">
-      <div className="pointer-events-none absolute inset-0 -z-10 bg-mesh-warm" />
+    <div>
+      {/* KPI 배너 — 항상 고정 */}
+      <KpiBanner
+        revenue={totalRevenue}
+        achievementRate={achievementRate}
+        activeChannels={activeChannelCount}
+        totalChannels={channels.length}
+        totalRuns={totalRuns}
+        hitlPending={hitlPending}
+      />
 
-      {/* 페이지 헤더 */}
-      <div>
-        <h1 className="text-xl font-bold tracking-tight" style={{ fontFamily: "'Libre Baskerville', Georgia, serif", color: '#1a0505' }}>
-          파이프라인 대시보드
-        </h1>
-        <p className="text-xs mt-0.5" style={{ color: '#9b6060' }}>
-          7채널 AI 자동화 파이프라인 현황 · 월 목표: 1,400만원
-        </p>
-      </div>
-
-      {/* KPI 카드 6개 (3×2) */}
-      <StaggerContainer className="grid grid-cols-2 gap-2 sm:grid-cols-3">
-
-        <StaggerItem>
-          <div className="glass-card glass-card-hover p-3">
-            <div className="flex items-center justify-between mb-1">
-              <span className="text-xs font-medium" style={{ color: '#9b6060' }}>월 목표</span>
-              <DollarSign className="h-3.5 w-3.5" style={{ color: '#ee2400' }} />
-            </div>
-            <div className="text-xl font-bold tabular-nums" style={{ fontFamily: "'Libre Baskerville', Georgia, serif", color: '#1a0505' }}>₩14M</div>
-            <p className="text-[11px] mt-0.5" style={{ color: '#9b6060' }}>채널당 ₩2,000,000</p>
-          </div>
-        </StaggerItem>
-
-        <StaggerItem>
-          <div className="glass-card glass-card-hover p-3">
-            <div className="flex items-center justify-between mb-1">
-              <span className="text-xs font-medium" style={{ color: '#9b6060' }}>활성 채널</span>
-              <Activity className="h-3.5 w-3.5" style={{ color: '#ee2400' }} />
-            </div>
-            <div className="text-xl font-bold tabular-nums" style={{ fontFamily: "'Libre Baskerville', Georgia, serif", color: '#1a0505' }}>
-              {activeChannels.length} <span style={{ color: '#9b6060', fontSize: '0.9rem' }}>/ {channels.length}</span>
-            </div>
-            <p className="text-[11px] mt-0.5" style={{ color: '#9b6060' }}>
-              {activeChannels.length > 0 ? activeChannels.map((c) => c.id).join(', ') : '활성 채널 없음'}
-            </p>
-          </div>
-        </StaggerItem>
-
-        <StaggerItem>
-          <div className="glass-card glass-card-hover p-3">
-            <div className="flex items-center justify-between mb-1">
-              <span className="text-xs font-medium" style={{ color: '#9b6060' }}>총 Runs</span>
-              <BarChart2 className="h-3.5 w-3.5" style={{ color: '#ee2400' }} />
-            </div>
-            <div className="text-xl font-bold tabular-nums" style={{ fontFamily: "'Libre Baskerville', Georgia, serif", color: '#1a0505' }}>{totalRuns}</div>
-            <p className="text-[11px] mt-0.5" style={{ color: '#9b6060' }}>누적 파이프라인 실행</p>
-          </div>
-        </StaggerItem>
-
-        <StaggerItem>
-          <div className="glass-card glass-card-hover p-3">
-            <div className="flex items-center justify-between mb-1">
-              <span className="text-xs font-medium" style={{ color: '#9b6060' }}>이번달 달성률</span>
-              <TrendingUp className="h-3.5 w-3.5" style={{ color: '#ee2400' }} />
-            </div>
-            <div className="text-xl font-bold tabular-nums" style={{ fontFamily: "'Libre Baskerville', Georgia, serif", color: '#1a0505' }}>0%</div>
-            <p className="text-[11px] mt-0.5" style={{ color: '#9b6060' }}>목표 ₩14M</p>
-          </div>
-        </StaggerItem>
-
-        <StaggerItem>
-          <div className="glass-card glass-card-hover p-3">
-            <div className="flex items-center justify-between mb-1">
-              <span className="text-xs font-medium" style={{ color: '#9b6060' }}>리스크 채널</span>
-              <AlertTriangle className="h-3.5 w-3.5" style={{ color: '#ee2400' }} />
-            </div>
-            <div className="text-xl font-bold tabular-nums" style={{ fontFamily: "'Libre Baskerville', Georgia, serif", color: '#22c55e' }}>0</div>
-            <p className="text-[11px] mt-0.5" style={{ color: '#22c55e' }}>HIGH 리스크 없음</p>
-          </div>
-        </StaggerItem>
-
-        <StaggerItem>
-          <div className="glass-card glass-card-hover p-3">
-            <div className="flex items-center justify-between mb-1">
-              <span className="text-xs font-medium" style={{ color: '#9b6060' }}>HITL 대기</span>
-              <Bell className="h-3.5 w-3.5" style={{ color: hitlPending > 0 ? '#f59e0b' : '#ee2400' }} />
-            </div>
-            <div className="text-xl font-bold tabular-nums" style={{ fontFamily: "'Libre Baskerville', Georgia, serif", color: hitlPending > 0 ? '#f59e0b' : '#1a0505' }}>
-              {hitlPending}
-            </div>
-            <p className="text-[11px] mt-0.5" style={{ color: '#9b6060' }}>
-              {hitlPending > 0 ? '운영자 확인 필요' : '대기 신호 없음'}
-            </p>
-          </div>
-        </StaggerItem>
-
-      </StaggerContainer>
-
-      {/* 채널 상태 도트 */}
-      <ScrollReveal>
-        <div className="glass-card p-3">
-          <h2 className="text-xs font-bold mb-2.5" style={{ color: '#5c1a1a' }}>채널별 상태</h2>
-          <div className="flex flex-wrap gap-3">
-            {channels.map((ch) => {
-              const isActive = ch.launch_phase === 1
-              const color = CHANNEL_COLORS[ch.id] ?? '#ddd'
-              return (
-                <div key={ch.id} className="flex flex-col items-center gap-1">
-                  <div
-                    className="flex items-center justify-center rounded-full text-white font-bold text-[10px]"
-                    style={{
-                      width: 36,
-                      height: 36,
-                      background: isActive ? color : '#d1d5db',
-                      boxShadow: isActive ? `0 0 10px ${color}` : 'none',
-                      opacity: isActive ? 1 : 0.45,
-                    }}
-                  >
-                    {ch.id}
-                  </div>
-                  <span className="text-[9px] font-medium" style={{ color: '#5c1a1a' }}>{ch.category_ko}</span>
-                  <span
-                    className="text-[8px] font-bold px-1 py-0.5 rounded-full"
-                    style={{
-                      background: isActive ? 'rgba(34,197,94,0.12)' : 'rgba(0,0,0,0.06)',
-                      color: isActive ? '#16a34a' : '#9b6060',
-                    }}
-                  >
-                    {isActive ? 'LIVE' : '준비중'}
-                  </span>
-                </div>
-              )
-            })}
-          </div>
-        </div>
-      </ScrollReveal>
-
+      {/* 탭 컨트롤러 + 탭 콘텐츠 (경영/운영) */}
+      <HomeExecTab
+        channels={channels}
+        totalRuns={totalRuns}
+        activeChannelCount={activeChannelCount}
+      />
     </div>
   )
 }
