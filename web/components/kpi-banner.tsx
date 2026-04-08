@@ -26,7 +26,7 @@ function KpiItem({ label, value, sub, highlight, isLast }: KpiItemProps) {
         alignItems: 'center',
         gap: 2,
         padding: '0 24px',
-        borderRight: isLast ? 'none' : '1px solid rgba(255,199,199,0.25)',
+        borderRight: isLast ? 'none' : '1px solid rgba(220,80,80,0.18)',
         minWidth: 130,
         flex: 1,
       }}
@@ -34,7 +34,7 @@ function KpiItem({ label, value, sub, highlight, isLast }: KpiItemProps) {
       <span
         style={{
           fontSize: 11,
-          color: '#9896b0',
+          color: '#9b4040',
           fontWeight: 500,
           letterSpacing: '0.04em',
           whiteSpace: 'nowrap',
@@ -46,7 +46,7 @@ function KpiItem({ label, value, sub, highlight, isLast }: KpiItemProps) {
         style={{
           fontSize: 22,
           fontWeight: 700,
-          color: highlight ? '#dc3545' : '#2d2b3d',
+          color: highlight ? '#c03030' : '#6b1a1a',
           letterSpacing: '-0.02em',
           lineHeight: 1.2,
           whiteSpace: 'nowrap',
@@ -55,7 +55,7 @@ function KpiItem({ label, value, sub, highlight, isLast }: KpiItemProps) {
         {value}
       </span>
       {sub && (
-        <span style={{ fontSize: 10, color: '#9896b0', whiteSpace: 'nowrap' }}>{sub}</span>
+        <span style={{ fontSize: 10, color: '#b06060', whiteSpace: 'nowrap' }}>{sub}</span>
       )}
     </div>
   )
@@ -74,12 +74,12 @@ export function KpiBanner({
       style={{
         display: 'flex',
         alignItems: 'center',
-        background: 'rgba(255,226,226,0.62)',
+        background: 'rgba(255,210,210,0.65)',
         backdropFilter: 'blur(16px)',
         WebkitBackdropFilter: 'blur(16px)',
-        border: '1px solid rgba(255,199,199,0.3)',
+        border: '1px solid rgba(220,80,80,0.20)',
         borderRadius: '0.75rem',
-        boxShadow: '0 4px 16px rgba(135,133,162,0.08)',
+        boxShadow: '0 4px 16px rgba(180,40,40,0.07)',
         padding: '14px 0',
         marginBottom: 16,
         overflowX: 'auto',

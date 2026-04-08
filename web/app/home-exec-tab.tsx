@@ -33,12 +33,12 @@ const MONTHLY_TREND = [
 ]
 
 const CARD_BASE: React.CSSProperties = {
-  background: 'rgba(255,255,255,0.55)',
+  background: 'rgba(255,255,255,0.60)',
   backdropFilter: 'blur(20px)',
   WebkitBackdropFilter: 'blur(20px)',
-  border: '1px solid rgba(255,199,199,0.3)',
+  border: '1px solid rgba(220,80,80,0.18)',
   borderRadius: '0.75rem',
-  boxShadow: '0 4px 16px rgba(135,133,162,0.08)',
+  boxShadow: '0 4px 16px rgba(180,40,40,0.07)',
 }
 
 interface KpiCardProps {
@@ -57,19 +57,19 @@ function KpiCard({ label, value, sub, Icon }: KpiCardProps) {
         padding: 16,
         transform: hovered ? 'translateY(-2px)' : 'none',
         boxShadow: hovered
-          ? '0 12px 32px rgba(135,133,162,0.14)'
-          : '0 4px 16px rgba(135,133,162,0.08)',
+          ? '0 12px 32px rgba(180,40,40,0.12)'
+          : '0 4px 16px rgba(180,40,40,0.07)',
         transition: 'transform 0.2s ease, box-shadow 0.2s ease',
       }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
-        <span style={{ fontSize: 11, color: '#9896b0', fontWeight: 500 }}>{label}</span>
-        <Icon size={16} strokeWidth={1.8} color="#8785A2" />
+        <span style={{ fontSize: 11, color: '#9b4040', fontWeight: 500 }}>{label}</span>
+        <Icon size={16} strokeWidth={1.8} color="#c03030" />
       </div>
-      <div style={{ fontSize: 24, fontWeight: 700, color: '#2d2b3d', lineHeight: 1.2 }}>{value}</div>
-      <div style={{ fontSize: 11, color: '#9896b0', marginTop: 4 }}>{sub}</div>
+      <div style={{ fontSize: 24, fontWeight: 700, color: '#6b1a1a', lineHeight: 1.2 }}>{value}</div>
+      <div style={{ fontSize: 11, color: '#b06060', marginTop: 4 }}>{sub}</div>
     </div>
   )
 }
@@ -90,10 +90,10 @@ function ChannelCard({ ch, isActive }: ChannelCardProps) {
         opacity: isActive ? 1 : 0.35,
         transition: 'transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease',
         transform: hovered && isActive ? 'translateY(-2px)' : 'none',
-        borderColor: hovered && isActive ? 'rgba(255,199,199,0.7)' : 'rgba(255,199,199,0.3)',
+        borderColor: hovered && isActive ? 'rgba(220,80,80,0.45)' : 'rgba(220,80,80,0.18)',
         boxShadow: hovered && isActive
-          ? '0 8px 24px rgba(135,133,162,0.14)'
-          : '0 4px 16px rgba(135,133,162,0.08)',
+          ? '0 8px 24px rgba(180,40,40,0.12)'
+          : '0 4px 16px rgba(180,40,40,0.07)',
         cursor: isActive ? 'pointer' : 'default',
       }}
       onMouseEnter={() => setHovered(true)}
@@ -119,8 +119,8 @@ function ChannelCard({ ch, isActive }: ChannelCardProps) {
           {ch.id}
         </div>
         <div>
-          <div style={{ fontSize: 12, fontWeight: 600, color: '#2d2b3d' }}>{ch.category_ko}</div>
-          <div style={{ fontSize: 10, color: isActive ? '#16a34a' : '#9896b0' }}>
+          <div style={{ fontSize: 12, fontWeight: 600, color: '#4a1010' }}>{ch.category_ko}</div>
+          <div style={{ fontSize: 10, color: isActive ? '#16a34a' : '#b06060' }}>
             {isActive ? 'LIVE' : '준비중'}
           </div>
         </div>
@@ -128,10 +128,10 @@ function ChannelCard({ ch, isActive }: ChannelCardProps) {
       {/* 수익 진행 바 */}
       <div>
         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
-          <span style={{ fontSize: 10, color: '#9896b0' }}>이번달 수익</span>
-          <span style={{ fontSize: 10, color: '#2d2b3d', fontWeight: 600 }}>0%</span>
+          <span style={{ fontSize: 10, color: '#b06060' }}>이번달 수익</span>
+          <span style={{ fontSize: 10, color: '#6b1a1a', fontWeight: 600 }}>0%</span>
         </div>
-        <div style={{ height: 4, background: 'rgba(255,199,199,0.2)', borderRadius: 2, overflow: 'hidden' }}>
+        <div style={{ height: 4, background: 'rgba(220,80,80,0.10)', borderRadius: 2, overflow: 'hidden' }}>
           <div
             style={{
               height: '100%',
@@ -178,8 +178,8 @@ export default function HomeExecTab({ channels, totalRuns, activeChannelCount }:
                 borderRadius: 8,
                 border: 'none',
                 cursor: 'pointer',
-                background: isActive ? '#8785A2' : 'transparent',
-                color: isActive ? '#ffffff' : '#9896b0',
+                background: isActive ? 'rgba(180,40,40,0.88)' : 'transparent',
+                color: isActive ? '#ffffff' : '#9b4040',
                 fontSize: 13,
                 fontWeight: isActive ? 600 : 400,
                 transition: 'background 0.2s ease, color 0.2s ease',
@@ -221,7 +221,7 @@ export default function HomeExecTab({ channels, totalRuns, activeChannelCount }:
           >
             {/* 채널별 목표 진행 */}
             <div style={{ ...CARD_BASE, padding: 16 }}>
-              <h3 style={{ fontSize: 13, fontWeight: 600, color: '#2d2b3d', marginBottom: 12 }}>
+              <h3 style={{ fontSize: 13, fontWeight: 600, color: '#4a1010', marginBottom: 12 }}>
                 채널별 목표 진행
               </h3>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
@@ -231,15 +231,15 @@ export default function HomeExecTab({ channels, totalRuns, activeChannelCount }:
                   return (
                     <div key={ch.id}>
                       <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
-                        <span style={{ fontSize: 11, color: '#5c5a74', fontWeight: 500 }}>
+                        <span style={{ fontSize: 11, color: '#7a3030', fontWeight: 500 }}>
                           {ch.id} {ch.category_ko}
                         </span>
-                        <span style={{ fontSize: 11, color: '#9896b0' }}>0%</span>
+                        <span style={{ fontSize: 11, color: '#b06060' }}>0%</span>
                       </div>
                       <div
                         style={{
                           height: 5,
-                          background: 'rgba(255,199,199,0.2)',
+                          background: 'rgba(220,80,80,0.10)',
                           borderRadius: 3,
                           overflow: 'hidden',
                         }}
@@ -261,7 +261,7 @@ export default function HomeExecTab({ channels, totalRuns, activeChannelCount }:
 
             {/* 6개월 수익 추이 — CSS flex 바 차트 (mock) */}
             <div style={{ ...CARD_BASE, padding: 16 }}>
-              <h3 style={{ fontSize: 13, fontWeight: 600, color: '#2d2b3d', marginBottom: 12 }}>
+              <h3 style={{ fontSize: 13, fontWeight: 600, color: '#4a1010', marginBottom: 12 }}>
                 6개월 수익 추이
               </h3>
               <div style={{ display: 'flex', alignItems: 'flex-end', gap: 6, height: 80 }}>
@@ -274,12 +274,12 @@ export default function HomeExecTab({ channels, totalRuns, activeChannelCount }:
                       style={{
                         width: '100%',
                         height: item.value > 0 ? `${(item.value / 14000000) * 64}px` : 4,
-                        background: item.value > 0 ? '#FFC7C7' : 'rgba(255,199,199,0.2)',
+                        background: item.value > 0 ? '#e85555' : 'rgba(220,80,80,0.12)',
                         borderRadius: '3px 3px 0 0',
                         transition: 'height 0.6s ease',
                       }}
                     />
-                    <span style={{ fontSize: 9, color: '#9896b0' }}>{item.month}</span>
+                    <span style={{ fontSize: 9, color: '#b06060' }}>{item.month}</span>
                   </div>
                 ))}
               </div>

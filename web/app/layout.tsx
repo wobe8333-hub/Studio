@@ -59,10 +59,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                     alignItems: 'center',
                     justifyContent: 'space-between',
                     padding: '0 20px',
-                    background: 'rgba(135,133,162,0.82)',
+                    background: 'rgba(180,40,40,0.82)',
                     backdropFilter: 'blur(20px)',
                     WebkitBackdropFilter: 'blur(20px)',
-                    borderBottom: '1px solid rgba(255,199,199,0.2)',
+                    borderBottom: '1px solid rgba(255,140,140,0.2)',
                     position: 'sticky',
                     top: 0,
                     zIndex: 10,
@@ -84,8 +84,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                       fontWeight: 600,
                       padding: '2px 8px',
                       borderRadius: 99,
-                      background: 'rgba(255,199,199,0.25)',
-                      color: '#FFC7C7',
+                      background: 'rgba(255,160,160,0.25)',
+                      color: '#ffb0b0',
                       letterSpacing: '0.08em',
                     }}
                   >

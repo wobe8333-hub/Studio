@@ -37,12 +37,12 @@ const STATUS_STYLE: Record<string, { bg: string; color: string; label: string }>
 }
 
 const CARD_BASE: React.CSSProperties = {
-  background: 'rgba(255,255,255,0.55)',
+  background: 'rgba(255,255,255,0.60)',
   backdropFilter: 'blur(20px)',
   WebkitBackdropFilter: 'blur(20px)',
-  border: '1px solid rgba(255,199,199,0.3)',
+  border: '1px solid rgba(220,80,80,0.18)',
   borderRadius: '0.75rem',
-  boxShadow: '0 4px 16px rgba(135,133,162,0.08)',
+  boxShadow: '0 4px 16px rgba(180,40,40,0.07)',
   padding: 16,
 }
 
@@ -90,7 +90,7 @@ export default function HomeOpsTab() {
     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
       {/* 파이프라인 스텝 현황 */}
       <div style={CARD_BASE}>
-        <h3 style={{ fontSize: 13, fontWeight: 600, color: '#2d2b3d', marginBottom: 12 }}>
+        <h3 style={{ fontSize: 13, fontWeight: 600, color: '#4a1010', marginBottom: 12 }}>
           파이프라인 스텝 현황
         </h3>
         {loading ? (
@@ -114,10 +114,10 @@ export default function HomeOpsTab() {
                     background: style.bg,
                   }}
                 >
-                  <span style={{ fontSize: 12, color: '#5c5a74', fontWeight: 500 }}>{label}</span>
+                  <span style={{ fontSize: 12, color: '#7a3030', fontWeight: 500 }}>{label}</span>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                     {stepData?.elapsed_ms && (
-                      <span style={{ fontSize: 10, color: '#9896b0' }}>
+                      <span style={{ fontSize: 10, color: '#b06060' }}>
                         {(stepData.elapsed_ms / 1000).toFixed(1)}s
                       </span>
                     )}
@@ -143,7 +143,7 @@ export default function HomeOpsTab() {
       <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
         {/* HITL 신호 */}
         <div style={CARD_BASE}>
-          <h3 style={{ fontSize: 13, fontWeight: 600, color: '#2d2b3d', marginBottom: 12 }}>
+          <h3 style={{ fontSize: 13, fontWeight: 600, color: '#4a1010', marginBottom: 12 }}>
             HITL 대기 신호
             {hitlSignals.length > 0 && (
               <span
@@ -189,7 +189,7 @@ export default function HomeOpsTab() {
 
         {/* 파이프라인 제어 */}
         <div style={CARD_BASE}>
-          <h3 style={{ fontSize: 13, fontWeight: 600, color: '#2d2b3d', marginBottom: 12 }}>
+          <h3 style={{ fontSize: 13, fontWeight: 600, color: '#4a1010', marginBottom: 12 }}>
             파이프라인 제어
           </h3>
           <button
@@ -200,7 +200,7 @@ export default function HomeOpsTab() {
               padding: '9px 16px',
               borderRadius: 8,
               border: 'none',
-              background: triggering ? '#c0bdd8' : '#8785A2',
+              background: triggering ? 'rgba(180,40,40,0.38)' : 'rgba(180,40,40,0.88)',
               color: '#ffffff',
               fontSize: 13,
               fontWeight: 600,
@@ -210,7 +210,7 @@ export default function HomeOpsTab() {
             onMouseEnter={(e) => {
               if (!triggering) {
                 e.currentTarget.style.transform = 'translateY(-1px)'
-                e.currentTarget.style.boxShadow = '0 4px 12px rgba(135,133,162,0.35)'
+                e.currentTarget.style.boxShadow = '0 4px 12px rgba(180,40,40,0.30)'
               }
             }}
             onMouseLeave={(e) => {
