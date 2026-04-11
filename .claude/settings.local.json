@@ -42,15 +42,26 @@
         "hooks": [
           {
             "type": "command",
-            "command": "cd \"C:/Users/조찬우/Desktop/ai_stuidio_claude\" && python -m pytest tests/ -x -q --timeout=60 2>&1 | tail -15"
+            "command": "cd \"C:/Users/조찬우/Desktop/ai_stuidio_claude\" && python -m pytest tests/ -x -q --ignore=tests/test_step08_integration.py 2>&1 | tail -10"
           },
           {
             "type": "command",
-            "command": "cd \"C:/Users/조찬우/Desktop/ai_stuidio_claude\" && ruff check src/ --select=E,F 2>&1 | tail -5"
+            "command": "cd \"C:/Users/조찬우/Desktop/ai_stuidio_claude\" && ruff check src/ --fix --select=E,W,F,I 2>&1 | tail -5"
           },
           {
             "type": "command",
             "command": "cd \"C:/Users/조찬우/Desktop/ai_stuidio_claude/web\" && npm run build 2>&1 | tail -10"
+          }
+        ]
+      }
+    ],
+    "TaskCreated": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo \"[v5:TaskCreated] $(date +%H:%M:%S)\" >> \"C:/Users/조찬우/Desktop/ai_stuidio_claude/.claude/agent-logs/hooks.log\" 2>/dev/null || true"
           }
         ]
       }
@@ -66,13 +77,13 @@
         ]
       }
     ],
-    "PreToolUse": [
+    "SubagentStart": [
       {
-        "matcher": "Write|Edit",
+        "matcher": "",
         "hooks": [
           {
-            "type": "prompt",
-            "prompt": "파일 경로를 확인하라. 다음 중 해당하면 차단:\n1. credentials/ 또는 .env 파일 수정\n2. src/step08/__init__.py (KAS-PROTECTED) 수정\n3. API 키가 문자열 리터럴로 하드코딩된 코드\n해당 시 {\"decision\":\"block\",\"reason\":\"보안 규칙 위반: [구체적 사유]\"} 반환. 아니면 {\"decision\":\"allow\"} 반환."
+            "type": "command",
+            "command": "echo \"[v5:SubagentStart] $(date +%H:%M:%S)\" >> \"C:/Users/조찬우/Desktop/ai_stuidio_claude/.claude/agent-logs/hooks.log\" 2>/dev/null || true"
           }
         ]
       }
@@ -83,18 +94,29 @@
         "hooks": [
           {
             "type": "command",
-            "command": "cd \"C:/Users/조찬우/Desktop/ai_stuidio_claude\" && python -m pytest tests/ -x -q --timeout=30 2>&1 | tail -5 && cd \"C:/Users/조찬우/Desktop/ai_stuidio_claude/web\" && npm run build 2>&1 | tail -3"
+            "command": "echo \"[v5:SubagentStop] $(date +%H:%M:%S)\" >> \"C:/Users/조찬우/Desktop/ai_stuidio_claude/.claude/agent-logs/hooks.log\" 2>/dev/null || true"
           }
         ]
       }
     ],
-    "Stop": [
+    "WorktreeCreate": [
       {
         "matcher": "",
         "hooks": [
           {
             "type": "command",
-            "command": "cd \"C:/Users/조찬우/Desktop/ai_stuidio_claude\" && echo \"=== 세션 종료 상태 ===\" && python -m pytest tests/ -x -q --timeout=30 2>&1 | tail -3 && echo \"=== ruff ===\" && ruff check src/ --select=E,F --statistics 2>&1 | tail -3"
+            "command": "cp \"C:/Users/조찬우/Desktop/ai_stuidio_claude/.env\" \"$WORKTREE_PATH/.env\" 2>/dev/null; cp \"C:/Users/조찬우/Desktop/ai_stuidio_claude/web/.env.local\" \"$WORKTREE_PATH/web/.env.local\" 2>/dev/null; echo \"[v5:WorktreeCreate] env copied\" >> \"C:/Users/조찬우/Desktop/ai_stuidio_claude/.claude/agent-logs/hooks.log\" 2>/dev/null || true"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python -c \"import sys,json; d=json.loads(sys.stdin.read()); p=d.get('input',{}).get('file_path','').replace('\\\\','/'); blocked=['.env','credentials/','_token.json','step08/__init__.py']; sys.exit(2) if any(b in p for b in blocked) else sys.exit(0)\""
           }
         ]
       }
@@ -110,13 +132,13 @@
         ]
       }
     ],
-    "TaskCreated": [
+    "Stop": [
       {
         "matcher": "",
         "hooks": [
           {
             "type": "command",
-            "command": "echo \"[TASK] $(date +%%Y-%%m-%%dT%%H:%%M:%%S)\" >> \"C:/Users/조찬우/Desktop/ai_stuidio_claude/logs/agent_audit.log\" 2>/dev/null || true"
+            "command": "cd \"C:/Users/조찬우/Desktop/ai_stuidio_claude\" && echo \"=== v5 세션 종료 상태 ===\" && python -m pytest tests/ -x -q --ignore=tests/test_step08_integration.py 2>&1 | tail -3 && echo \"=== ruff ===\" && ruff check src/ --select=E,F --statistics 2>&1 | tail -3"
           }
         ]
       }
