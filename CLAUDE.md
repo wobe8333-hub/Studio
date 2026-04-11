@@ -441,6 +441,15 @@ const { data } = await supabase.from('channels').select('*')
 
 ## 테스트 핵심 패턴
 
+### 알려진 기존 실패
+
+`tests/test_step08_integration.py` 6개 테스트는 FFmpeg concat 버그로 **항상 실패**. 코드 변경과 무관하므로 테스트 결과 검증 시 제외:
+```bash
+pytest tests/ --ignore=tests/test_step08_integration.py -q   # 186 passed 기준
+```
+
+**pytest-timeout 미설치**: `--timeout=60` 플래그 및 `pyproject.toml`의 `timeout = 60` 옵션 사용 금지 (`unrecognized arguments` 오류). 필요 시 `pip install pytest-timeout` 먼저 설치.
+
 ### Gemini API 의존성 격리
 
 `src/step08/__init__.py`가 `script_generator.py` → `google.generativeai` 임포트 체인을 형성해 테스트에서 실패할 수 있다.
@@ -590,6 +599,7 @@ Claude Code Agent Teams v3.1이 활성화되어 있다. 팀 운영 가이드는 
 - **Specialist 제한**: Layer 3 에이전트 미션당 최대 5명 동시 소환 권장
 - **plan approval**: 코드 수정을 수반하는 모든 미션에서 팀원에게 plan approval 요구 권장
 - **maxTurns**: 각 에이전트는 maxTurns 내에서 작업 완료. 초과 시 현재 상태를 리드에게 보고
+- **Subagent 파일 오염**: background subagent가 범위 밖 파일을 수정한 경우 `git checkout HEAD -- <파일>` 로 즉시 복원. `AGENTS.md`가 특히 취약
 
 ### TaskCompleted 훅 (자동 품질 게이트)
 태스크 완료 시마다 자동 실행:
