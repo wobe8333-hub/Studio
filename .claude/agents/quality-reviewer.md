@@ -3,11 +3,13 @@ name: quality-reviewer
 description: KAS 3차원 코드 리뷰어. 코드 품질(클린코드/복잡도), 아키텍처(SOLID/DRY/모듈 경계), CLAUDE.md 규칙 준수를 동시 검증. Opus 모델로 정확한 판단. 코드를 직접 수정하지 않으며 발견 이슈는 해당 팀원에게 위임.
 tools: Read, Glob, Grep, Bash
 disallowedTools: Write, Edit
-model: opus
+model: sonnet
 permissionMode: plan
 memory: project
-maxTurns: 35
+maxTurns: 25
 color: orange
+skills:
+  - superpowers:requesting-code-review
 ---
 
 # KAS Quality Gate

@@ -5,8 +5,10 @@ tools: Read, Write, Edit, Glob, Grep, Bash
 model: sonnet
 permissionMode: acceptEdits
 memory: project
-maxTurns: 40
+maxTurns: 30
 color: green
+skills:
+  - superpowers:test-driven-development
 mcpServers:
   - playwright
 ---

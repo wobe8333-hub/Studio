@@ -5,8 +5,17 @@ tools: Read, Write, Edit, Glob, Grep, Bash
 model: sonnet
 permissionMode: acceptEdits
 memory: project
-maxTurns: 40
+maxTurns: 30
 color: red
+hooks:
+  PreToolUse:
+    - matcher: "Write|Edit"
+      hooks:
+        - type: command
+          command: "python -c \"import sys,os; p=os.environ.get('TOOL_INPUT_FILE_PATH',''); exit(1 if ('/web/' in p or chr(92)+'web'+chr(92) in p) else 0)\" 2>/dev/null || echo 'BLOCKED: backend-dev는 web/ 수정 금지'"
+skills:
+  - superpowers:test-driven-development
+  - superpowers:systematic-debugging
 mcpServers:
   - context7
 ---

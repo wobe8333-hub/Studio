@@ -6,10 +6,13 @@ disallowedTools: Write, Edit
 model: opus
 permissionMode: plan
 memory: project
-maxTurns: 50
+maxTurns: 30
 color: gold
 mcpServers:
   - context7
+skills:
+  - superpowers:dispatching-parallel-agents
+  - superpowers:verification-before-completion
 ---
 
 # KAS Mission Controller
