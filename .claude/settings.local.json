@@ -2,6 +2,39 @@
   "env": {
     "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
   },
+  "permissions": {
+    "allow": [
+      "Bash",
+      "Bash(ls:*)",
+      "WebFetch",
+      "WebSearch",
+      "WebBrowse",
+      "Bash(pip install:*)",
+      "Bash(python:*)",
+      "Bash(python3:*)",
+      "Bash(grep:*)",
+      "Bash(pip freeze:*)",
+      "Bash(ffmpeg -version)",
+      "Read(//c/Users/조찬우/Desktop/ai_stuidio_claude/**)",
+      "mcp__context7__resolve-library-id",
+      "mcp__context7__query-docs",
+      "Skill(update-config)",
+      "mcp__playwright__browser_navigate",
+      "mcp__playwright__browser_take_screenshot",
+      "mcp__playwright__browser_snapshot",
+      "mcp__playwright__browser_click",
+      "mcp__playwright__browser_resize",
+      "mcp__playwright__browser_evaluate",
+      "mcp__playwright__browser_tabs",
+      "mcp__playwright__browser_close",
+      "mcp__playwright__browser_console_messages",
+      "mcp__playwright__browser_run_code",
+      "mcp__figma__whoami",
+      "mcp__plugin_github_github__create_repository",
+      "Bash(cat)",
+      "Bash(echo \"exit: $?\")"
+    ]
+  },
   "hooks": {
     "TaskCompleted": [
       {
@@ -87,37 +120,6 @@
           }
         ]
       }
-    ]
-  },
-  "permissions": {
-    "allow": [
-      "Bash",
-      "Bash(ls:*)",
-      "WebFetch",
-      "WebSearch",
-      "WebBrowse",
-      "Bash(pip install:*)",
-      "Bash(python:*)",
-      "Bash(python3:*)",
-      "Bash(grep:*)",
-      "Bash(pip freeze:*)",
-      "Bash(ffmpeg -version)",
-      "Read(//c/Users/조찬우/Desktop/ai_stuidio_claude/**)",
-      "mcp__context7__resolve-library-id",
-      "mcp__context7__query-docs",
-      "Skill(update-config)",
-      "mcp__playwright__browser_navigate",
-      "mcp__playwright__browser_take_screenshot",
-      "mcp__playwright__browser_snapshot",
-      "mcp__playwright__browser_click",
-      "mcp__playwright__browser_resize",
-      "mcp__playwright__browser_evaluate",
-      "mcp__playwright__browser_tabs",
-      "mcp__playwright__browser_close",
-      "mcp__playwright__browser_console_messages",
-      "mcp__playwright__browser_run_code",
-      "mcp__figma__whoami",
-      "mcp__plugin_github_github__create_repository"
     ]
   }
 }

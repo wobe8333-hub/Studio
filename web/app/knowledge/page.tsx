@@ -178,7 +178,7 @@ export default function KnowledgePage() {
           onClick={load}
           disabled={loading}
           className="flex items-center gap-2 px-3 py-2 rounded-xl text-sm transition-all"
-          style={{ background: 'rgba(255,255,255,0.55)', border: '1px solid rgba(238,36,0,0.12)', color: '#5c1a1a' }}
+          style={{ background: 'var(--card)', border: '1px solid var(--border)', color: 'var(--foreground)' }}
         >
           <RefreshCw className={cn('h-4 w-4', loading && 'animate-spin')} />
         </button>

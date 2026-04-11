@@ -1,15 +1,15 @@
 ﻿{
-  "date": "2026-04-07",
-  "total_requests": 2,
-  "rpm_peak": 2,
+  "date": "2026-04-11",
+  "total_requests": 30,
+  "rpm_peak": 4,
   "rpm_timestamps": [
-    1775536858.8418105,
-    1775536868.4174416
+    1775897651.9617403,
+    1775897652.0105026
   ],
-  "images_generated": 2,
+  "images_generated": 0,
   "scoring_calls": 0,
   "cache_hits": 0,
-  "cache_misses": 1,
+  "cache_misses": 33,
   "cache_hit_rate": 0.0,
   "retry_count": 0,
   "sequential_mode_activations": 0,

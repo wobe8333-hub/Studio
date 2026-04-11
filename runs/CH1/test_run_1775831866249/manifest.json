@@ -1,0 +1,13 @@
+{
+  "run_id": "test_run_1775831866249",
+  "channel_id": "CH1",
+  "run_state": "COMPLETED",
+  "dry_run": true,
+  "month_number": 1,
+  "created_at": "2026-04-10T14:37:46.249Z",
+  "updated_at": "2026-04-10T14:38:22.819Z",
+  "topic": {
+    "reinterpreted_title": "[DRY RUN] CH1 테스트 실행"
+  },
+  "completed_at": "2026-04-10T14:38:22.819Z"
+}

@@ -1,7 +1,7 @@
 ﻿{
   "channel_id": "CH1",
   "run_id": "test_run_002",
-  "qa_timestamp": "2026-04-05T06:33:40Z",
+  "qa_timestamp": "2026-04-11T08:54:13Z",
   "animation_quality_check": {
     "pass": false,
     "vision_qa": {

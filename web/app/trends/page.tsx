@@ -202,7 +202,7 @@ export default function TrendsPage() {
             <div className="flex items-center gap-2">
               <Filter className="h-4 w-4 text-muted-foreground shrink-0" />
               {/* 채널 탭 버튼 — 기존 Select 교체 */}
-              <div className="flex gap-1 flex-wrap p-1 rounded-xl" style={{ background: 'rgba(255,255,255,0.4)', border: '1px solid rgba(238,36,0,0.1)' }}>
+              <div className="flex gap-1 flex-wrap p-1 rounded-xl" style={{ background: 'var(--tab-bg)', border: '1px solid var(--tab-border)' }}>
                 {CHANNEL_OPTIONS.map(ch => (
                   <button
                     key={ch}

@@ -1,0 +1,68 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e3]:
+      - button "사이드바 열기" [ref=e4] [cursor=pointer]:
+        - img [ref=e5]
+      - navigation [ref=e8]:
+        - generic [ref=e9]:
+          - generic [ref=e10]:
+            - generic: 경영
+          - link "KPI 대시보드" [ref=e11] [cursor=pointer]:
+            - /url: /
+            - img [ref=e12]
+            - generic: KPI 대시보드
+          - link "트렌드 관리" [ref=e17] [cursor=pointer]:
+            - /url: /trends
+            - img [ref=e18]
+            - generic: 트렌드 관리
+          - link "지식 수집" [ref=e21] [cursor=pointer]:
+            - /url: /knowledge
+            - img [ref=e22]
+            - generic: 지식 수집
+          - link "수익 추적" [ref=e24] [cursor=pointer]:
+            - /url: /revenue
+            - img [ref=e25]
+            - generic: 수익 추적
+        - generic [ref=e26]:
+          - generic [ref=e28]:
+            - generic: 운영
+          - link "QA 검수" [ref=e29] [cursor=pointer]:
+            - /url: /qa
+            - img [ref=e30]
+            - generic: QA 검수
+          - link "런 목록" [ref=e33] [cursor=pointer]:
+            - /url: /runs/CH1
+            - img [ref=e34]
+            - generic: 런 목록
+          - link "파이프라인" [ref=e35] [cursor=pointer]:
+            - /url: /monitor
+            - img [ref=e36]
+            - generic: 파이프라인
+          - link "채널 상세" [ref=e38] [cursor=pointer]:
+            - /url: /channels/CH1
+            - img [ref=e39]
+            - generic: 채널 상세
+          - link "설정" [ref=e42] [cursor=pointer]:
+            - /url: /settings
+            - img [ref=e43]
+            - generic: 설정
+    - generic [ref=e46]:
+      - banner [ref=e47]:
+        - generic [ref=e48]: KAS Studio
+        - generic [ref=e49]:
+          - generic [ref=e50]: LIVE
+          - button [ref=e51] [cursor=pointer]
+      - main [ref=e52]:
+        - generic [ref=e53]:
+          - generic [ref=e54]:
+            - link "홈" [ref=e55] [cursor=pointer]:
+              - /url: /
+              - img [ref=e56]
+              - generic [ref=e58]: 홈
+            - heading "CH1 실행 이력" [level=1] [ref=e59]
+            - button "새로고침" [ref=e61] [cursor=pointer]:
+              - img [ref=e62]
+              - text: 새로고침
+          - img [ref=e68]
+  - button "Open Next.js Dev Tools" [ref=e75] [cursor=pointer]:
+    - img [ref=e76]

@@ -2,7 +2,7 @@ import fs from 'fs/promises'
 import path from 'path'
 
 const CHANNEL_ID_RE = /^CH[1-7]$/
-const RUN_ID_RE     = /^run_CH[1-7]_\d{7,13}$/
+const RUN_ID_RE     = /^(run_CH[1-7]_\d{7,13}|test_run_\d{1,16}|test_run_\d{3})$/
 
 /**
  * channelId / runId 형식 검증 후 허용된 kasRoot 하위 경로를 반환한다.
@@ -74,6 +74,24 @@ function assertWithinRoot(fullPath: string): void {
 
 export function getKasRoot(): string {
   return KAS_ROOT
+}
+
+/**
+ * 현재 환경에서 사용 가능한 Python 실행 파일 경로를 반환한다.
+ *
+ * 우선순위:
+ *   1. PYTHON_EXECUTABLE 환경변수 (web/.env.local 에서 설정 가능)
+ *   2. Windows: 'py'  (C:\Windows\py.exe — PATH 오염 없는 고정 시스템 경로)
+ *   3. non-Windows: 'python3'
+ *   4. 최종 폴백: 'python'
+ *
+ * Windows에서 'python' 직접 호출 시 WindowsApps 스텁(0xC0000142)을 선택할 수 있어
+ * 'py' 런처를 우선 사용한다.
+ */
+export function getPythonExecutable(): string {
+  if (process.env.PYTHON_EXECUTABLE) return process.env.PYTHON_EXECUTABLE
+  if (process.platform === 'win32') return 'py'
+  return 'python3'
 }
 
 /** KAS 루트 기준 상대 경로로 JSON 파일 읽기. 없으면 null 반환 */

@@ -1,0 +1,26 @@
+{
+  "timestamp": "2026-04-11T01:49:28.562579+00:00",
+  "gemini": {
+    "images_generated_today": 0,
+    "image_limit": 500,
+    "image_usage_ratio": 0.0,
+    "image_status": "ok",
+    "last_reset": "unknown",
+    "deferred_count": 0
+  },
+  "youtube": {
+    "quota_used_today": 0,
+    "quota_limit": 10000,
+    "usage_ratio": 0.0,
+    "status": "ok",
+    "deferred_jobs": 0,
+    "deferred_estimated_cost": 0
+  },
+  "cost_report": {
+    "total_cost_krw": 0.0,
+    "cost_by_channel": {},
+    "gemini_image_ratio": 0.0,
+    "youtube_quota_ratio": 0.0
+  },
+  "recommendations": []
+}

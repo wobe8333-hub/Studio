@@ -34,10 +34,10 @@ const MONTHLY_TREND = [
 ]
 
 const CARD_BASE: React.CSSProperties = {
-  background: 'rgba(255,255,255,0.60)',
+  background: 'var(--card)',
   backdropFilter: 'blur(20px)',
   WebkitBackdropFilter: 'blur(20px)',
-  border: '1px solid rgba(220,80,80,0.18)',
+  border: '1px solid var(--border)',
   borderRadius: '0.75rem',
   boxShadow: '0 4px 16px rgba(180,40,40,0.07)',
 }

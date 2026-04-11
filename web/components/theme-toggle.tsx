@@ -21,7 +21,9 @@ export function ThemeToggle() {
       variant="ghost"
       size="icon"
       className="h-8 w-8"
+      style={{ color: 'var(--sidebar-primary)', opacity: 0.85 }}
       onClick={() => setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')}
+      title={resolvedTheme === 'dark' ? '라이트 모드로 전환' : '다크 모드로 전환'}
     >
       {resolvedTheme === 'dark' ? (
         <Sun className="h-4 w-4" />

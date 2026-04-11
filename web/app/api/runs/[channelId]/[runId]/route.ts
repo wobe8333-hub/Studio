@@ -12,15 +12,19 @@ export interface RunArtifacts {
     topic_title: string
     topic_score: number
     topic_category: string
+    dry_run?: boolean
   }
   step08: {
     has_script: boolean
     section_count: number
     title_candidates: string[]
     selected_title: string | null
+    hook_text: string | null
     has_narration: boolean
+    narration_ext: string   // 'wav' 또는 'mp3'
     has_video: boolean
-    image_paths: string[]   // /api/artifacts/ 호출용 상대 경로
+    video_filename: string  // 실제 영상 파일명
+    image_paths: string[]   // step08 디렉토리 기준 상대경로 (images/assets_ai/xxx.png)
     manim: {
       attempted: number
       success: number
@@ -95,6 +99,7 @@ export async function GET(
     ),
     topic_score:    Number(topic.score ?? 0),
     topic_category: String(topic.category ?? ''),
+    dry_run:        Boolean(raw.dry_run ?? false),
   }
 
   // step08
@@ -115,7 +120,7 @@ export async function GET(
       imageFiles = entries
         .filter((f) => /\.(png|jpg|jpeg|webp)$/i.test(f))
         .sort()
-        .map((f) => `runs/${channelId}/${runId}/step08/images/assets_ai/${f}`)
+        .map((f) => `images/assets_ai/${f}`)  // step08 기준 상대경로
     } catch { /* 이미지 없음 */ }
 
     const sections = Array.isArray(scriptData?.sections) ? scriptData.sections as unknown[] : []
@@ -125,13 +130,36 @@ export async function GET(
         ? (scriptData.title_candidates as string[])
         : []
 
+    // hook 텍스트 추출 (string 또는 {text: string} 객체 모두 처리)
+    const hookRaw = scriptData?.hook
+    const hookText = !hookRaw ? null
+      : typeof hookRaw === 'string' ? hookRaw
+      : typeof (hookRaw as Record<string, unknown>).text === 'string'
+        ? String((hookRaw as Record<string, unknown>).text)
+        : null
+
+    // 나레이션 파일 확장자 탐색 (wav 우선, mp3 폴백)
+    const hasWav = await fileExists(path.join(step08Dir, 'narration.wav'))
+    const hasMp3 = !hasWav && await fileExists(path.join(step08Dir, 'narration.mp3'))
+
+    // 영상 파일명 탐색 (video_narr > video > video_subs 순)
+    const videoFilename = await (async () => {
+      for (const name of ['video_narr.mp4', 'video.mp4', 'video_subs.mp4']) {
+        if (await fileExists(path.join(step08Dir, name))) return name
+      }
+      return 'video.mp4'
+    })()
+
     step08 = {
       has_script:      !!scriptData,
       section_count:   sections.length,
       title_candidates: titleCandidates,
       selected_title:  titleData?.selected ? String(titleData.selected) : null,
-      has_narration:   await fileExists(path.join(step08Dir, 'narration.wav')),
-      has_video:       await fileExists(path.join(step08Dir, 'video.mp4')),
+      hook_text:       hookText,
+      has_narration:   hasWav || hasMp3,
+      narration_ext:   hasWav ? 'wav' : 'mp3',
+      has_video:       await fileExists(path.join(step08Dir, videoFilename)),
+      video_filename:  videoFilename,
       image_paths:     imageFiles,
       manim: manimData ? {
         attempted:    Number(manimData.manim_sections_attempted ?? 0),

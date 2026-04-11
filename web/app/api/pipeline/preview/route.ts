@@ -11,11 +11,23 @@ interface Section {
   image_prompt?: string
 }
 
+interface HookObject {
+  text?: string
+  [key: string]: unknown
+}
+
 interface Script {
   title_candidates?: string[]
   sections?: Section[]
-  hook?: string
+  hook?: string | HookObject
   channel_id?: string
+}
+
+/** hook 필드가 string 또는 { text: string } 객체 모두 처리 */
+function extractHookText(hook: string | HookObject | undefined | null): string | null {
+  if (!hook) return null
+  if (typeof hook === 'string') return hook
+  return hook.text ?? null
 }
 
 export async function GET() {
@@ -58,39 +70,33 @@ export async function GET() {
   const script = await readKasJson<Script>(`runs/${channel}/${runId}/step08/script.json`)
   const sections = script?.sections ?? []
 
-  // assets_ai 이미지 목록
-  let images: string[] = []
+  // assets_ai 전체 이미지 목록 (갤러리용)
+  let allImages: string[] = []
   try {
     const imgDir = path.join(step08Dir, 'images', 'assets_ai')
     const files = await fs.readdir(imgDir)
-    images = files
+    allImages = files
       .filter(f => f.match(/\.(png|jpg|jpeg|webp)$/i))
       .sort()
-      .slice(0, 2)
       .map(f => `/api/artifacts/${channel}/${runId}/step08/images/assets_ai/${f}`)
   } catch { /* 이미지 없음 */ }
 
-  // sections에서 첫 2개 narration_text 추출
-  const previews = sections.slice(0, 2).map((s, i) => ({
+  // 섹션별 미리보기 (최대 3개, 이미지 매핑 포함)
+  const previews = sections.slice(0, 3).map((s, i) => ({
     index: i + 1,
     heading: s.heading ?? `섹션 ${i + 1}`,
     narration: s.narration_text ?? '',
     prompt: s.animation_prompt ?? s.image_prompt ?? '',
-    image: images[i] ?? null,
+    image: allImages[i] ?? null,
   }))
-
-  // images가 더 많으면 previews에 채워넣기
-  if (previews.length === 0 && images.length > 0) {
-    images.forEach((img, i) => {
-      previews.push({ index: i + 1, heading: `장면 ${i + 1}`, narration: '', prompt: '', image: img })
-    })
-  }
 
   return NextResponse.json({
     channel,
     runId,
     title: script?.title_candidates?.[0] ?? null,
-    hook: script?.hook ?? null,
+    hook: extractHookText(script?.hook),
     previews,
+    allImages,           // 전체 이미지 갤러리용
+    totalSections: sections.length,
   })
 }

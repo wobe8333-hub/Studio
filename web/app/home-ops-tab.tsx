@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { useIsMobile } from '@/hooks/use-is-mobile'
 
 interface StepStatus {
@@ -38,10 +38,10 @@ const STATUS_STYLE: Record<string, { bg: string; color: string; label: string }>
 }
 
 const CARD_BASE: React.CSSProperties = {
-  background: 'rgba(255,255,255,0.60)',
+  background: 'var(--card)',
   backdropFilter: 'blur(20px)',
   WebkitBackdropFilter: 'blur(20px)',
-  border: '1px solid rgba(220,80,80,0.18)',
+  border: '1px solid var(--border)',
   borderRadius: '0.75rem',
   boxShadow: '0 4px 16px rgba(180,40,40,0.07)',
   padding: 16,
@@ -52,6 +52,9 @@ export default function HomeOpsTab() {
   const [hitlSignals, setHitlSignals] = useState<HitlSignal[]>([])
   const [loading, setLoading] = useState(true)
   const [triggering, setTriggering] = useState(false)
+  const [resetting, setResetting] = useState(false)
+  const [frozen, setFrozen] = useState(false) // 완료 후 화면 고정 여부
+  const frozenRef = useRef(false)             // 폴링 클로저 내에서 참조용
   const isMobile = useIsMobile()
 
   const fetchAll = useCallback(async () => {
@@ -60,7 +63,21 @@ export default function HomeOpsTab() {
         fetch('/api/pipeline/steps').then((r) => (r.ok ? r.json() : { steps: [] })),
         fetch('/api/hitl-signals').then((r) => (r.ok ? r.json() : [])),
       ])
-      setSteps(stepsRes.steps ?? [])
+
+      // 고정 상태가 아닐 때만 steps 갱신
+      if (!frozenRef.current) {
+        const newSteps: StepStatus[] = stepsRes.steps ?? []
+        setSteps(newSteps)
+        // 실행 완료(active=false) + done 스텝 존재 → 화면 고정
+        if (
+          stepsRes.active === false &&
+          newSteps.some((s: StepStatus) => s.status === 'done')
+        ) {
+          frozenRef.current = true
+          setFrozen(true)
+        }
+      }
+
       setHitlSignals(
         Array.isArray(hitlRes) ? hitlRes.filter((s: HitlSignal) => !s.resolved) : []
       )
@@ -69,7 +86,7 @@ export default function HomeOpsTab() {
     } finally {
       setLoading(false)
     }
-  }, [])
+  }, []) // frozenRef는 ref이므로 dep 불필요
 
   // 탭이 활성일 때만 폴링 (cleanup으로 interval 해제)
   useEffect(() => {
@@ -78,13 +95,36 @@ export default function HomeOpsTab() {
     return () => clearInterval(interval)
   }, [fetchAll])
 
-  const triggerRun = async () => {
+  const triggerRun = async (dryRun: boolean) => {
+    if (!dryRun) {
+      const ok = window.confirm(
+        '실제 파이프라인을 실행합니다.\n\nGemini API 크레딧이 소모되며 완료까지 10~30분이 소요됩니다.\n계속하시겠습니까?'
+      )
+      if (!ok) return
+    }
     setTriggering(true)
     try {
-      await fetch('/api/pipeline/trigger', { method: 'POST' })
+      await fetch('/api/pipeline/trigger', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ dry_run: dryRun, month_number: 1 }),
+      })
       await fetchAll()
     } finally {
       setTriggering(false)
+    }
+  }
+
+  const resetSteps = async () => {
+    // 고정 해제 → 다시 폴링이 steps를 갱신하도록
+    frozenRef.current = false
+    setFrozen(false)
+    setResetting(true)
+    try {
+      await fetch('/api/pipeline/steps', { method: 'DELETE' })
+      await fetchAll()
+    } finally {
+      setResetting(false)
     }
   }
 
@@ -92,9 +132,19 @@ export default function HomeOpsTab() {
     <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? 8 : 12 }}>
       {/* 파이프라인 스텝 현황 */}
       <div style={CARD_BASE}>
-        <h3 style={{ fontSize: 13, fontWeight: 600, color: '#4a1010', marginBottom: 12 }}>
-          파이프라인 스텝 현황
-        </h3>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
+          <h3 style={{ fontSize: 13, fontWeight: 600, color: '#4a1010' }}>
+            파이프라인 스텝 현황
+          </h3>
+          {frozen && (
+            <span style={{
+              fontSize: 10, fontWeight: 700, padding: '2px 8px', borderRadius: 99,
+              background: 'rgba(34,197,94,0.12)', color: '#16a34a',
+            }}>
+              완료 · 고정됨
+            </span>
+          )}
+        </div>
         {loading ? (
           <div style={{ color: '#9896b0', fontSize: 12 }}>불러오는 중...</div>
         ) : (
@@ -194,11 +244,44 @@ export default function HomeOpsTab() {
           <h3 style={{ fontSize: 13, fontWeight: 600, color: '#4a1010', marginBottom: 12 }}>
             파이프라인 제어
           </h3>
+
+          {/* 실제 파이프라인 실행 */}
           <button
-            onClick={triggerRun}
-            disabled={triggering}
+            onClick={() => triggerRun(false)}
+            disabled={triggering || resetting}
             style={{
               width: '100%',
+              padding: '9px 16px',
+              borderRadius: 8,
+              border: 'none',
+              background: triggering ? 'rgba(34,197,94,0.35)' : 'rgba(34,197,94,0.85)',
+              color: '#ffffff',
+              fontSize: 13,
+              fontWeight: 600,
+              cursor: triggering || resetting ? 'not-allowed' : 'pointer',
+              transition: 'transform 0.15s ease, box-shadow 0.15s ease',
+            }}
+            onMouseEnter={(e) => {
+              if (!triggering && !resetting) {
+                e.currentTarget.style.transform = 'translateY(-1px)'
+                e.currentTarget.style.boxShadow = '0 4px 12px rgba(34,197,94,0.30)'
+              }
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = 'none'
+              e.currentTarget.style.boxShadow = 'none'
+            }}
+          >
+            {triggering ? '실행 중...' : '▶ 실제 파이프라인 실행'}
+          </button>
+
+          {/* DRY RUN 시뮬레이션 */}
+          <button
+            onClick={() => triggerRun(true)}
+            disabled={triggering || resetting}
+            style={{
+              width: '100%',
+              marginTop: 8,
               padding: '9px 16px',
               borderRadius: 8,
               border: 'none',
@@ -206,11 +289,11 @@ export default function HomeOpsTab() {
               color: '#ffffff',
               fontSize: 13,
               fontWeight: 600,
-              cursor: triggering ? 'not-allowed' : 'pointer',
+              cursor: triggering || resetting ? 'not-allowed' : 'pointer',
               transition: 'transform 0.15s ease, box-shadow 0.15s ease',
             }}
             onMouseEnter={(e) => {
-              if (!triggering) {
+              if (!triggering && !resetting) {
                 e.currentTarget.style.transform = 'translateY(-1px)'
                 e.currentTarget.style.boxShadow = '0 4px 12px rgba(180,40,40,0.30)'
               }
@@ -220,7 +303,38 @@ export default function HomeOpsTab() {
               e.currentTarget.style.boxShadow = 'none'
             }}
           >
-            {triggering ? '실행 중...' : '테스트 런 실행'}
+            {triggering ? '실행 중...' : 'DRY RUN (시뮬레이션)'}
+          </button>
+
+          {/* 스텝 초기화 */}
+          <button
+            onClick={resetSteps}
+            disabled={triggering || resetting}
+            style={{
+              width: '100%',
+              marginTop: 8,
+              padding: '9px 16px',
+              borderRadius: 8,
+              border: '1px solid rgba(180,40,40,0.30)',
+              background: 'transparent',
+              color: '#7a3030',
+              fontSize: 13,
+              fontWeight: 600,
+              cursor: triggering || resetting ? 'not-allowed' : 'pointer',
+              transition: 'transform 0.15s ease, background 0.15s ease',
+            }}
+            onMouseEnter={(e) => {
+              if (!triggering && !resetting) {
+                e.currentTarget.style.transform = 'translateY(-1px)'
+                e.currentTarget.style.background = 'rgba(180,40,40,0.08)'
+              }
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = 'none'
+              e.currentTarget.style.background = 'transparent'
+            }}
+          >
+            {resetting ? '초기화 중...' : '스텝 초기화'}
           </button>
         </div>
       </div>

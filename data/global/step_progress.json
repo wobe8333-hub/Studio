@@ -1,22 +1,22 @@
 {
   "active": true,
-  "dry_run": true,
+  "dry_run": false,
   "channel_id": "CH1",
-  "run_id": "test_run_1775552569170",
+  "run_id": "run_CH1_1775914995",
   "month_number": 1,
   "steps": [
     {
       "index": 0,
       "name": "Step05 트렌드+지식 수집",
-      "status": "running",
-      "started_at": "2026-04-07T09:02:49.170Z",
-      "completed_at": null,
-      "elapsed_ms": null
+      "status": "done",
+      "started_at": "2026-04-11T13:43:16.001813Z",
+      "completed_at": "2026-04-11T13:43:16.019001Z",
+      "elapsed_ms": 17
     },
     {
       "index": 1,
       "name": "Step06 시나리오 정책",
-      "status": "pending",
+      "status": "idle",
       "started_at": null,
       "completed_at": null,
       "elapsed_ms": null
@@ -24,7 +24,7 @@
     {
       "index": 2,
       "name": "Step07 알고리즘 정책",
-      "status": "pending",
+      "status": "idle",
       "started_at": null,
       "completed_at": null,
       "elapsed_ms": null
@@ -32,7 +32,7 @@
     {
       "index": 3,
       "name": "Step08 영상 생성",
-      "status": "pending",
+      "status": "idle",
       "started_at": null,
       "completed_at": null,
       "elapsed_ms": null
@@ -40,7 +40,7 @@
     {
       "index": 4,
       "name": "Step09 BGM",
-      "status": "pending",
+      "status": "idle",
       "started_at": null,
       "completed_at": null,
       "elapsed_ms": null
@@ -48,7 +48,7 @@
     {
       "index": 5,
       "name": "Step10 제목+썸네일",
-      "status": "pending",
+      "status": "idle",
       "started_at": null,
       "completed_at": null,
       "elapsed_ms": null
@@ -56,7 +56,7 @@
     {
       "index": 6,
       "name": "Step11 QA 검수",
-      "status": "pending",
+      "status": "idle",
       "started_at": null,
       "completed_at": null,
       "elapsed_ms": null
@@ -64,11 +64,11 @@
     {
       "index": 7,
       "name": "Step12 업로드",
-      "status": "pending",
+      "status": "idle",
       "started_at": null,
       "completed_at": null,
       "elapsed_ms": null
     }
   ],
-  "updated_at": "2026-04-07T09:02:49.170Z"
+  "updated_at": "2026-04-11T13:43:16.019001Z"
 }

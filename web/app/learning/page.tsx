@@ -67,10 +67,10 @@ const WIN_PATTERNS = [
 ]
 
 const G_CARD = {
-  background: 'rgba(255,255,255,0.55)',
+  background: 'var(--card)',
   backdropFilter: 'blur(20px)',
   WebkitBackdropFilter: 'blur(20px)',
-  border: '1px solid rgba(238,36,0,0.12)',
+  border: '1px solid var(--border)',
   borderRadius: '1rem',
   boxShadow: '0 8px 32px rgba(144,0,0,0.08)',
 } as React.CSSProperties
@@ -267,7 +267,7 @@ export default function LearningPage() {
       </div>
 
       {/* 탭 바 */}
-      <div className="flex gap-1 p-1 rounded-xl" style={{ background: 'rgba(255,255,255,0.4)', border: '1px solid rgba(238,36,0,0.1)' }}>
+      <div className="flex gap-1 p-1 rounded-xl" style={{ background: 'var(--tab-bg)', border: '1px solid var(--tab-border)' }}>
         {LEARN_TABS.map(t => (
           <button
             key={t.id}

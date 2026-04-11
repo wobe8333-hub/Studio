@@ -111,6 +111,10 @@
   --channel-ch6: #cc5a5a;
   --channel-ch7: #d46060;
 
+  /* 탭/필터 컨테이너 배경 */
+  --tab-bg:      rgba(255,255,255,0.40);
+  --tab-border:  rgba(220,80,80,0.10);
+
   /* 하위 호환 alias */
   --c-dark:      #B42828;
   --c-red:       #e85555;
@@ -125,53 +129,62 @@
 }
 
 .dark {
-  --background: #1a192b;
-  --foreground: #f0ecff;
-  --card: rgba(135,133,162,0.15);
-  --card-foreground: #f0ecff;
-  --popover: #22203a;
-  --popover-foreground: #f0ecff;
-  --primary: #FFC7C7;
-  --primary-foreground: #2d2b3d;
-  --secondary: rgba(135,133,162,0.25);
-  --secondary-foreground: #FFE2E2;
-  --muted: rgba(135,133,162,0.20);
-  --muted-foreground: #9896b0;
-  --accent: rgba(135,133,162,0.30);
-  --accent-foreground: #FFE2E2;
+  /* ─── Crimson Night 팔레트 ─── */
+  --background: #1a0808;
+  --foreground: #ffdede;
+  --card: rgba(42,16,16,0.80);
+  --card-foreground: #ffdede;
+  --popover: #250f0f;
+  --popover-foreground: #ffdede;
+  --primary: #e85555;
+  --primary-foreground: #ffffff;
+  --secondary: rgba(255,107,107,0.20);
+  --secondary-foreground: #ffdede;
+  --muted: rgba(255,107,107,0.15);
+  --muted-foreground: #c08080;
+  --accent: rgba(255,107,107,0.25);
+  --accent-foreground: #ffdede;
   --destructive: oklch(0.70 0.20 25);
-  --border: rgba(255,199,199,0.15);
-  --input: rgba(255,199,199,0.10);
-  --ring: #FFC7C7;
-  --chart-1: #FFC7C7;
-  --chart-2: #8785A2;
-  --chart-3: #5c5a74;
-  --chart-4: #FFE2E2;
-  --chart-5: #9896b0;
-  --sidebar: rgba(30,28,50,0.95);
-  --sidebar-foreground: #f0ecff;
-  --sidebar-primary: #FFC7C7;
-  --sidebar-primary-foreground: #2d2b3d;
-  --sidebar-accent: rgba(255,255,255,0.08);
-  --sidebar-accent-foreground: #f0ecff;
-  --sidebar-border: rgba(255,199,199,0.10);
-  --sidebar-ring: #FFC7C7;
-  --channel-ch1: #f09090;
-  --channel-ch2: #d4b0e4;
-  --channel-ch3: #90c3e4;
-  --channel-ch4: #9896b0;
-  --channel-ch5: #e49090;
-  --channel-ch6: #80b4e4;
-  --channel-ch7: #c480ac;
-  --c-dark:      #9896b0;
-  --c-red:       #FFC7C7;
-  --t-primary:   #f0ecff;
-  --t-secondary: #c8c6e0;
-  --t-muted:     #9896b0;
-  --glass-bg:     rgba(135,133,162,0.15);
-  --glass-border: rgba(255,199,199,0.15);
-  --glass-hover:  rgba(135,133,162,0.25);
+  --border: rgba(255,100,100,0.20);
+  --input: rgba(255,100,100,0.12);
+  --ring: #e85555;
+  --chart-1: #ff6b6b;
+  --chart-2: #FFB0B0;
+  --chart-3: #3d0f0f;
+  --chart-4: #ffdede;
+  --chart-5: #c08080;
+  --sidebar: rgba(61,15,15,0.95);
+  --sidebar-foreground: #ffdede;
+  --sidebar-primary: #FFB0B0;
+  --sidebar-primary-foreground: #1a0808;
+  --sidebar-accent: rgba(255,255,255,0.10);
+  --sidebar-accent-foreground: #ffdede;
+  --sidebar-border: rgba(255,120,120,0.15);
+  --sidebar-ring: #FFB0B0;
+  --channel-ch1: #ff6b6b;
+  --channel-ch2: #f09060;
+  --channel-ch3: #e06090;
+  --channel-ch4: #c05070;
+  --channel-ch5: #e05050;
+  --channel-ch6: #f07070;
+  --channel-ch7: #e88080;
+  --c-dark:      #e85555;
+  --c-red:       #ff6b6b;
+  --t-primary:   #ffdede;
+  --t-secondary: #e0b0b0;
+  --t-muted:     #c08080;
+  --p1: #FFB0B0;
+  --p2: rgba(255,107,107,0.20);
+  --p4: #e85555;
+  --t1: #ffdede;
+  --t2: #e0b0b0;
+  --t3: #c08080;
+  --glass-bg:     rgba(42,16,16,0.80);
+  --glass-border: rgba(255,100,100,0.20);
+  --glass-hover:  rgba(60,20,20,0.90);
   --glass-blur:   blur(16px) saturate(180%);
+  --tab-bg:       rgba(42,16,16,0.55);
+  --tab-border:   rgba(255,100,100,0.15);
 }
 
 @layer base {
@@ -184,11 +197,35 @@
     font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
     color: var(--foreground);
   }
+  .dark body {
+    background: linear-gradient(135deg, #1a0808 0%, #250d0d 40%, #1e0a0a 100%);
+  }
   html {
     font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
   }
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Noto Sans KR', sans-serif;
+  }
+
+  /* ── 전역 버튼 호버 효과 ──────────────────────── */
+  button {
+    transition: transform 0.15s ease, filter 0.15s ease;
+  }
+  button:not(:disabled) {
+    cursor: pointer;
+  }
+  button:not(:disabled):hover {
+    transform: translateY(-2px);
+    filter: brightness(1.10);
+  }
+  button:not(:disabled):active {
+    transform: translateY(0px);
+    filter: brightness(0.93);
+    transition-duration: 0.05s;
+  }
+  /* disabled 버튼은 pointer-events를 남기되 커서만 변경 */
+  button:disabled {
+    cursor: not-allowed;
   }
 }
 
@@ -225,12 +262,12 @@
     backdrop-filter: var(--glass-blur);
     -webkit-backdrop-filter: var(--glass-blur);
     border-color: var(--glass-border);
-    box-shadow: 0 4px 24px rgba(0,0,0,0.35),
-                inset 0 1px 0 rgba(255,199,199,0.06);
+    box-shadow: 0 4px 24px rgba(0,0,0,0.45),
+                inset 0 1px 0 rgba(255,107,107,0.06);
   }
   .dark .glass-card:hover {
     background: var(--glass-hover);
-    border-color: rgba(255,199,199,0.20);
+    border-color: rgba(255,100,100,0.30);
   }
 
   .heading-font {
@@ -272,6 +309,32 @@
       background: #22203a;
     }
   }
+}
+
+/* ── 링크형 버튼 호버 (Link 컴포넌트를 버튼처럼 사용할 때) ── */
+.kas-btn {
+  transition: transform 0.15s ease, filter 0.15s ease !important;
+}
+.kas-btn:hover {
+  transform: translateY(-2px) !important;
+  filter: brightness(1.10) !important;
+}
+.kas-btn:active {
+  transform: translateY(0px) !important;
+  filter: brightness(0.93) !important;
+}
+
+/* 모바일 하단 탭 호버 */
+.kas-bottom-nav a {
+  transition: background 0.2s ease, filter 0.15s ease, transform 0.15s ease !important;
+}
+.kas-bottom-nav a:hover {
+  filter: brightness(1.25);
+  transform: translateY(-1px);
+}
+.kas-bottom-nav a:active {
+  transform: translateY(0);
+  filter: brightness(0.9);
 }
 
 /* ── 모바일 반응형 ──────────────────────────────── */

@@ -4,6 +4,7 @@ import { ThemeProvider } from 'next-themes'
 import { TooltipProvider } from '@/components/ui/tooltip'
 import { CollapsibleSidebar } from '@/components/sidebar-nav'
 import { BottomNav } from '@/components/bottom-nav'
+import { ThemeToggle } from '@/components/theme-toggle'
 import { createClient } from '@/lib/supabase/server'
 
 export const metadata: Metadata = {
@@ -60,10 +61,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                     alignItems: 'center',
                     justifyContent: 'space-between',
                     padding: '0 20px',
-                    background: 'rgba(180,40,40,0.82)',
+                    background: 'var(--sidebar)',
                     backdropFilter: 'blur(20px)',
                     WebkitBackdropFilter: 'blur(20px)',
-                    borderBottom: '1px solid rgba(255,140,140,0.2)',
+                    borderBottom: '1px solid var(--sidebar-border)',
                     position: 'sticky',
                     top: 0,
                     zIndex: 10,
@@ -73,25 +74,28 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                     style={{
                       fontWeight: 700,
                       fontSize: 15,
-                      color: '#ffffff',
+                      color: 'var(--sidebar-foreground)',
                       letterSpacing: '-0.02em',
                     }}
                   >
                     KAS Studio
                   </span>
-                  <span
-                    style={{
-                      fontSize: 10,
-                      fontWeight: 600,
-                      padding: '2px 8px',
-                      borderRadius: 99,
-                      background: 'rgba(255,160,160,0.25)',
-                      color: '#ffb0b0',
-                      letterSpacing: '0.08em',
-                    }}
-                  >
-                    LIVE
-                  </span>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <span
+                      style={{
+                        fontSize: 10,
+                        fontWeight: 600,
+                        padding: '2px 8px',
+                        borderRadius: 99,
+                        background: 'rgba(255,160,160,0.25)',
+                        color: 'var(--sidebar-primary)',
+                        letterSpacing: '0.08em',
+                      }}
+                    >
+                      LIVE
+                    </span>
+                    <ThemeToggle />
+                  </div>
                 </header>
 
                 {/* 페이지 콘텐츠 */}

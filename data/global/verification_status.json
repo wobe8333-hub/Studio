@@ -1,0 +1,47 @@
+{
+  "stages": [
+    {
+      "id": 0,
+      "status": "done",
+      "updated_at": "2026-04-08T15:42:18.969Z",
+      "note": "��� �׸� ��� (34/34). google-generativeai ��ġ, Gemini Ű ���� �Ϸ�"
+    },
+    {
+      "id": 1,
+      "status": "in_progress",
+      "updated_at": "2026-04-10T14:29:35.454Z",
+      "note": ""
+    },
+    {
+      "id": 2,
+      "status": "pending",
+      "updated_at": null,
+      "note": ""
+    },
+    {
+      "id": 3,
+      "status": "pending",
+      "updated_at": null,
+      "note": ""
+    },
+    {
+      "id": 4,
+      "status": "pending",
+      "updated_at": null,
+      "note": ""
+    },
+    {
+      "id": 5,
+      "status": "pending",
+      "updated_at": null,
+      "note": ""
+    },
+    {
+      "id": 6,
+      "status": "pending",
+      "updated_at": null,
+      "note": ""
+    }
+  ],
+  "last_reset": "2026-04-08T15:42:18.969Z"
+}

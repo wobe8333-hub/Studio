@@ -6,7 +6,7 @@ import Link from 'next/link'
 import {
   ArrowLeft, FileText, Image as ImageIcon, Mic, Video,
   CheckCircle2, XCircle, AlertTriangle, Loader2, Clapperboard,
-  Music2, Type, Search, DollarSign, BarChart2,
+  Music2, Type, Search, DollarSign, BarChart2, FlaskConical,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import type { RunArtifacts } from '@/app/api/runs/[channelId]/[runId]/route'
@@ -15,10 +15,10 @@ import type { RunArtifacts } from '@/app/api/runs/[channelId]/[runId]/route'
 
 const G = {
   card: {
-    background: 'rgba(255,255,255,0.55)',
+    background: 'var(--card)',
     backdropFilter: 'blur(20px)',
     WebkitBackdropFilter: 'blur(20px)',
-    border: '1px solid rgba(238,36,0,0.12)',
+    border: '1px solid var(--border)',
     borderRadius: '1rem',
     boxShadow: '0 8px 32px rgba(144,0,0,0.08)',
   } as React.CSSProperties,
@@ -55,7 +55,7 @@ function ScriptTab({ artifacts }: { artifacts: RunArtifacts | null }) {
       <div className="mb-4 p-4 rounded-xl" style={{ background: 'rgba(238,36,0,0.06)', border: '1px solid rgba(238,36,0,0.12)' }}>
         <p className="text-xs font-bold mb-2" style={{ color: '#ee2400' }}>🎣 도입부 후킹</p>
         <p className="text-sm leading-relaxed" style={{ color: '#5c1a1a' }}>
-          스크립트 파일이 생성되었습니다. 원본 파일에서 후킹 내용을 확인하세요.
+          {step08.hook_text ?? '(후킹 텍스트 없음)'}
         </p>
       </div>
       <div className="p-4 rounded-xl" style={{ background: 'rgba(0,0,0,0.03)', border: '1px solid rgba(238,36,0,0.06)' }}>
@@ -81,6 +81,7 @@ function ImagesTab({ artifacts, channelId, runId }: { artifacts: RunArtifacts | 
           <img
             src={`/api/artifacts/${channelId}/${runId}/step08/${img}`}
             alt={`장면 ${i + 1}`}
+            onError={(e) => { (e.target as HTMLImageElement).style.opacity = '0.3' }}
             className="w-full h-full object-cover"
           />
         </div>
@@ -103,7 +104,7 @@ function VideoTab({ artifacts, channelId, runId }: { artifacts: RunArtifacts | n
         controls
         className="w-full rounded-xl"
         style={{ maxHeight: '480px', background: '#000' }}
-        src={`/api/artifacts/${channelId}/${runId}/step08/final.mp4`}
+        src={`/api/artifacts/${channelId}/${runId}/step08/${artifacts?.step08?.video_filename ?? 'video_narr.mp4'}`}
       >
         브라우저가 video 태그를 지원하지 않습니다.
       </video>
@@ -156,7 +157,8 @@ function AudioTab({ artifacts, channelId, runId }: { artifacts: RunArtifacts | n
       .then(d => setBgm(d?.bgm ?? null))
   }, [channelId, runId])
 
-  const narrationFile = artifacts?.step08?.has_narration ? 'narration.mp3' : null
+  const narrationExt = artifacts?.step08?.narration_ext ?? 'wav'
+  const narrationFile = artifacts?.step08?.has_narration ? `narration.${narrationExt}` : null
 
   return (
     <div className="space-y-4">
@@ -516,8 +518,31 @@ export default function RunDetailPage() {
         <div className="flex justify-center py-12"><Loader2 className="h-6 w-6 animate-spin" style={{ color: '#ee2400' }} /></div>
       ) : (
         <>
+          {/* DRY RUN 안내 배너 */}
+          {artifacts?.manifest?.dry_run && (
+            <div style={{
+              display: 'flex', alignItems: 'flex-start', gap: 12,
+              padding: '14px 16px', borderRadius: '0.75rem',
+              background: 'rgba(124,58,237,0.08)', border: '1px solid rgba(124,58,237,0.25)',
+            }}>
+              <FlaskConical size={18} style={{ color: '#7c3aed', flexShrink: 0, marginTop: 1 }} />
+              <div>
+                <p style={{ fontSize: 13, fontWeight: 700, color: '#7c3aed', margin: 0 }}>
+                  DRY RUN — 시뮬레이션 전용 Run
+                </p>
+                <p style={{ fontSize: 12, color: '#5c1a1a', margin: '4px 0 0' }}>
+                  이 Run은 UI 동작 테스트용 시뮬레이션입니다. 실제 영상·스크립트·이미지가 생성되지 않아 모든 탭이 비어있습니다.
+                  실제 산출물을 확인하려면 <strong>python -m src.pipeline 1</strong> 으로 실제 파이프라인을 실행하세요.
+                </p>
+                <Link href={`/runs/${channelId}`} style={{ fontSize: 12, color: '#7c3aed', marginTop: 6, display: 'inline-block' }}>
+                  ← 런 목록에서 실제 Run 선택하기
+                </Link>
+              </div>
+            </div>
+          )}
+
           {/* 탭 바 */}
-          <div className="flex gap-1 overflow-x-auto p-1 rounded-xl" style={{ background: 'rgba(255,255,255,0.4)', border: '1px solid rgba(238,36,0,0.1)' }}>
+          <div className="flex gap-1 overflow-x-auto p-1 rounded-xl" style={{ background: 'var(--tab-bg)', border: '1px solid var(--tab-border)' }}>
             {TABS.map(t => (
               <button
                 key={t.id}

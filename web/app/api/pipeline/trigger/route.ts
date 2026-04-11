@@ -2,10 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { spawn } from 'child_process'
 import path from 'path'
 import fs from 'fs'
-
-function getKasRoot(): string {
-  return process.env.KAS_ROOT ?? path.join(process.cwd(), '..')
-}
+import { getKasRoot, getPythonExecutable } from '@/lib/fs-helpers'
 
 export async function POST(req: NextRequest) {
   const body = await req.json().catch(() => ({}))
@@ -31,30 +28,50 @@ export async function POST(req: NextRequest) {
       'Step12 업로드',
     ]
 
+    const chId = channel_id ?? 'CH1'
+    const runId = `test_run_${Date.now()}`
+    const now = new Date().toISOString()
+
     const progressData = {
       active: true,
       dry_run: true,
-      channel_id: channel_id ?? 'CH1',
-      run_id: `test_run_${Date.now()}`,
+      channel_id: chId,
+      run_id: runId,
       month_number,
       steps: STEPS.map((name, i) => ({
         index: i,
         name,
         status: i === 0 ? 'running' : 'pending',
-        started_at: i === 0 ? new Date().toISOString() : null,
+        started_at: i === 0 ? now : null,
         completed_at: null,
         elapsed_ms: null,
       })),
-      updated_at: new Date().toISOString(),
+      updated_at: now,
     }
 
     fs.writeFileSync(progressFile, JSON.stringify(progressData, null, 2), 'utf-8')
-    return NextResponse.json({ ok: true, dry_run: true, run_id: progressData.run_id })
+
+    // 런 목록에 표시되도록 최소 디렉토리 + manifest.json 생성
+    const runDir = path.join(kasRoot, 'runs', chId, runId)
+    fs.mkdirSync(runDir, { recursive: true })
+    const manifest = {
+      run_id: runId,
+      channel_id: chId,
+      run_state: 'RUNNING',
+      dry_run: true,
+      month_number,
+      created_at: now,
+      updated_at: now,
+      topic: { reinterpreted_title: `[DRY RUN] ${chId} 테스트 실행` },
+    }
+    fs.writeFileSync(path.join(runDir, 'manifest.json'), JSON.stringify(manifest, null, 2), 'utf-8')
+
+    return NextResponse.json({ ok: true, dry_run: true, run_id: runId })
   }
 
-  const python = process.platform === 'win32' ? 'python' : 'python3'
-  const child = spawn(python, ['-m', 'src.pipeline', String(month_number)], {
+  const child = spawn(getPythonExecutable(), ['-m', 'src.pipeline', String(month_number)], {
     cwd: kasRoot,
+    shell: true,
     detached: true,
     stdio: 'ignore',
   })

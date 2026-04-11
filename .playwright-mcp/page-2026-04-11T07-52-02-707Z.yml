@@ -1,0 +1,355 @@
+- generic [ref=e2]:
+  - banner [ref=e3]:
+    - generic [ref=e4]: KAS AGENT TEAMS v3 · 완전 자동화
+    - heading "Knowledge Animation Studio Agent Teams" [level=1] [ref=e5]:
+      - text: Knowledge Animation Studio
+      - text: Agent Teams
+    - paragraph [ref=e6]: 상시 5명 코어 + 미션별 2명 확장 · 사람 개입은 최종 PR 승인만
+  - generic [ref=e7]:
+    - generic [ref=e8]: 팀 구성 — 7명
+    - generic [ref=e9]:
+      - generic [ref=e10] [cursor=pointer]:
+        - generic [ref=e11]: 🔴
+        - generic [ref=e12]: backend-dev
+        - generic [ref=e13]: 백엔드 전담 개발자
+        - generic [ref=e14]:
+          - text: "소유:"
+          - code [ref=e15]: src/
+          - text: 전체
+          - text: "기여:"
+          - code [ref=e16]: tests/test_step*.py
+          - text: "MCP:"
+          - code [ref=e17]: context7
+          - text: "maxTurns:"
+          - strong [ref=e18]: "40"
+        - generic [ref=e19]: ● Sonnet
+      - generic [ref=e20] [cursor=pointer]:
+        - generic [ref=e21]: 🔵
+        - generic [ref=e22]: frontend-dev
+        - generic [ref=e23]: 프론트엔드 전담 개발자
+        - generic [ref=e24]:
+          - text: "소유:"
+          - code [ref=e25]: web/
+          - text: 전체
+          - text: "기여:"
+          - code [ref=e26]: tests/test_web*.py
+          - text: "MCP:"
+          - code [ref=e27]: playwright
+          - code [ref=e28]: context7
+          - text: "maxTurns:"
+          - strong [ref=e29]: "40"
+        - generic [ref=e30]: ● Sonnet
+      - generic [ref=e31] [cursor=pointer]:
+        - generic [ref=e32]: 🟢
+        - generic [ref=e33]: test-engineer
+        - generic [ref=e34]: 테스트 전담 엔지니어
+        - generic [ref=e35]:
+          - text: "소유:"
+          - code [ref=e36]: tests/
+          - text: 전체
+          - text: "단독:"
+          - code [ref=e37]: conftest.py
+          - text: "역할: TDD 주도 + 커버리지 추적"
+          - text: "maxTurns:"
+          - strong [ref=e38]: "35"
+        - generic [ref=e39]: ● Sonnet
+      - generic [ref=e40] [cursor=pointer]:
+        - generic [ref=e41]: 🟠
+        - generic [ref=e42]: quality-reviewer
+        - generic [ref=e43]: 코드 품질 전문가
+        - generic [ref=e44]:
+          - text: "권한: Read-only (plan mode)"
+          - text: "집중: 아키텍처 + 성능 + 규칙"
+          - text: "금지: Write / Edit"
+          - text: "maxTurns:"
+          - strong [ref=e45]: "25"
+        - generic [ref=e46]: ● Sonnet
+      - generic [ref=e47] [cursor=pointer]:
+        - generic [ref=e48]: 🔷
+        - generic [ref=e49]: infra-ops
+        - generic [ref=e50]: 인프라 / 운영 전담
+        - generic [ref=e51]:
+          - text: "소유:"
+          - code [ref=e52]: scripts/
+          - code [ref=e53]: .github/
+          - text: "관리: 쿼터 + 환경변수 + CI"
+          - text: "memory:"
+          - code [ref=e54]: project
+          - text: "maxTurns:"
+          - strong [ref=e55]: "20"
+        - generic [ref=e56]: ● Haiku
+      - generic [ref=e57] [cursor=pointer]:
+        - generic [ref=e58]: 🟣
+        - generic [ref=e59]: security-auditor
+        - generic [ref=e60]: 보안 감사 전문가
+        - generic [ref=e61]:
+          - text: "권한: Read-only (plan mode)"
+          - text: "검사: OWASP + pip-audit + npm audit"
+          - text: "금지: Write / Edit"
+          - text: "maxTurns:"
+          - strong [ref=e62]: "25"
+        - generic [ref=e63]: ● Sonnet
+        - text: 미션별
+      - generic [ref=e64] [cursor=pointer]:
+        - generic [ref=e65]: 🟡
+        - generic [ref=e66]: doc-keeper
+        - generic [ref=e67]: 문서 관리 전문가
+        - generic [ref=e68]:
+          - text: "소유:"
+          - code [ref=e69]: CLAUDE.md
+          - code [ref=e70]: AGENTS.md
+          - code [ref=e71]: docs/
+          - text: "역할: 문서 자동 동기화"
+          - text: "금지: 소스코드 수정"
+          - text: "maxTurns:"
+          - strong [ref=e72]: "15"
+        - generic [ref=e73]: ● Haiku
+        - text: 미션별
+  - generic [ref=e74]:
+    - generic [ref=e75]: 파일 소유권 맵
+    - generic [ref=e77]:
+      - generic [ref=e78]:
+        - generic [ref=e79]: SRC/
+        - generic [ref=e80]:
+          - text: ● src/pipeline.py
+          - text: ● src/step*/
+          - text: ● src/agents/
+          - text: ● src/core/
+          - text: ● src/quota/
+          - text: ● src/cache/
+          - text: → backend-dev
+      - generic [ref=e81]:
+        - generic [ref=e82]: WEB/
+        - generic [ref=e83]:
+          - text: ● web/app/
+          - text: ● web/components/
+          - text: ● web/lib/
+          - text: ● web/hooks/
+          - text: ● web/app/globals.css
+          - text: ● web/public/
+          - text: → frontend-dev
+      - generic [ref=e84]:
+        - generic [ref=e85]: TESTS/
+        - generic [ref=e86]:
+          - text: ● tests/conftest.py
+          - emphasis [ref=e87]: (단독)
+          - text: ● tests/test_*.py
+          - text: ○ test_step*.py
+          - emphasis [ref=e88]: (기여)
+          - text: ○ test_web*.py
+          - emphasis [ref=e89]: (기여)
+          - text: → test-engineer (+ 기여)
+      - generic [ref=e90]:
+        - generic [ref=e91]: 인프라 / 문서
+        - generic [ref=e92]:
+          - text: ● scripts/
+          - text: ● .github/workflows/
+          - text: ● data/global/quota/
+          - text: ● CLAUDE.md
+          - text: ● AGENTS.md
+          - text: ● docs/
+          - text: → infra-ops / doc-keeper
+  - generic [ref=e93]:
+    - generic [ref=e94]: 팀원 간 통신 프로토콜
+    - generic [ref=e95]:
+      - generic [ref=e96]:
+        - generic [ref=e99]: API 계약 변경
+        - generic [ref=e100]:
+          - text: backend-dev → frontend-dev
+          - generic [ref=e101]:
+            - text: "\"API /api/X 응답 포맷 변경"
+            - text: "Before: {'{'}status: string{'}'}"
+            - text: "After: {'{'}status, run_id, dry_run{'}'}"
+            - text: 대응 수정 필요"
+      - generic [ref=e102]:
+        - generic [ref=e105]: 소스 변경 → 테스트 알림
+        - generic [ref=e106]:
+          - text: backend-dev → test-engineer
+          - generic [ref=e107]:
+            - text: "\"src/step05/ 변경 완료"
+            - text: tests/test_step05_*.py
+            - text: 업데이트 확인 부탁드립니다"
+      - generic [ref=e108]:
+        - generic [ref=e111]: 품질 이슈 발견
+        - generic [ref=e112]:
+          - text: quality-reviewer → backend-dev
+          - generic [ref=e113]:
+            - text: "\"src/pipeline.py:390"
+            - text: time.sleep(2) 하드코딩 발견
+            - text: 설정 파일 분리 요청"
+      - generic [ref=e114]:
+        - generic [ref=e117]: 보안 취약점 발견
+        - generic [ref=e118]:
+          - text: security-auditor → frontend-dev
+          - generic [ref=e119]:
+            - text: "\"🔴 CRITICAL"
+            - text: route.ts:23 경로 트래버설
+            - text: validateChannelPath() 사용 필요"
+      - generic [ref=e120]:
+        - generic [ref=e123]: 문서 드리프트 감지
+        - generic [ref=e124]:
+          - text: doc-keeper → backend-dev
+          - generic [ref=e125]:
+            - text: "\"CLAUDE.md Sub-Agent 섹션"
+            - text: ScriptQualityAgent 누락
+            - text: 동기화 예정"
+      - generic [ref=e126]:
+        - generic [ref=e129]: 자가치유 실패 에스컬레이션
+        - generic [ref=e130]:
+          - text: backend-dev → 리드
+          - generic [ref=e131]:
+            - text: "\"3회 수정 실패. git stash 보존"
+            - text: "시도: 캐시초기화/mock재등록/import선점"
+            - text: 리드 확인 필요"
+  - generic [ref=e132]:
+    - generic [ref=e133]: 자동 품질 게이트 — TaskCompleted 훅
+    - generic [ref=e134]:
+      - generic [ref=e135]:
+        - generic [ref=e136]: STEP 01
+        - generic [ref=e137]: Python 테스트
+        - generic [ref=e138]: pytest tests/ -x -q --timeout=60
+        - text: →
+      - generic [ref=e139]:
+        - generic [ref=e140]: STEP 02
+        - generic [ref=e141]: TypeScript 빌드
+        - generic [ref=e142]: cd web && npm run build
+        - text: →
+      - generic [ref=e143]:
+        - generic [ref=e144]: STEP 03
+        - generic [ref=e145]: 보안 스캔 (미션별)
+        - generic [ref=e146]:
+          - text: pip-audit + npm audit
+          - text: security-auditor 소환 시
+  - generic [ref=e147]:
+    - generic [ref=e148]: 자가 치유(Self-Healing) 프로토콜
+    - generic [ref=e150]:
+      - generic [ref=e151]:
+        - text: "1"
+        - generic [ref=e152]: 코드 수정 완료
+        - generic [ref=e153]: TaskCompleted 훅 자동 실행 (pytest + npm build)
+      - generic [ref=e154]: ↓ 실패 시
+      - generic [ref=e155]:
+        - text: "2"
+        - generic [ref=e156]: 실패 로그 분석
+        - generic [ref=e157]: 에러 메시지 파싱 → 원인 파악 → 1차 수정 시도
+      - generic [ref=e158]: ↓ 재실패 시
+      - generic [ref=e159]:
+        - text: "3"
+        - generic [ref=e160]: 2차 / 3차 재시도
+        - generic [ref=e161]: 매 시도마다 다른 접근법 사용 (캐시 초기화 → mock 재등록 → import 선점)
+      - generic [ref=e162]: ↓ 3회 모두 실패 시
+      - generic [ref=e163]:
+        - text: "!"
+        - generic [ref=e164]: 에스컬레이션
+        - generic [ref=e165]: git stash로 변경사항 보존 → 리드에게 상세 보고 → 필요시 다른 팀원 협력 요청
+  - generic [ref=e166]:
+    - generic [ref=e167]: 미션 프리셋 9종
+    - generic [ref=e168]:
+      - generic [ref=e169] [cursor=pointer]:
+        - generic [ref=e170]: MISSION · 01
+        - generic [ref=e171]: 풀스택 Feature 개발
+        - generic [ref=e172]:
+          - generic [ref=e173]: backend-dev
+          - generic [ref=e174]: frontend-dev
+          - generic [ref=e175]: test-engineer
+          - generic [ref=e176]: quality-reviewer
+      - generic [ref=e177] [cursor=pointer]:
+        - generic [ref=e178]: MISSION · 02
+        - generic [ref=e179]: 3각 코드 리뷰
+        - generic [ref=e180]:
+          - generic [ref=e181]: security-reviewer
+          - generic [ref=e182]: performance-reviewer
+          - generic [ref=e183]: test-reviewer
+      - generic [ref=e184] [cursor=pointer]:
+        - generic [ref=e185]: MISSION · 03
+        - generic [ref=e186]: 경쟁 가설 디버깅
+        - generic [ref=e188]: backend-dev ×3~5
+      - generic [ref=e189] [cursor=pointer]:
+        - generic [ref=e190]: MISSION · 04
+        - generic [ref=e191]: 파이프라인 안정화
+        - generic [ref=e192]:
+          - generic [ref=e193]: backend-dev
+          - generic [ref=e194]: test-engineer
+          - generic [ref=e195]: quality-reviewer
+          - generic [ref=e196]: infra-ops
+      - generic [ref=e197] [cursor=pointer]:
+        - generic [ref=e198]: MISSION · 05
+        - generic [ref=e199]: 대시보드 리디자인
+        - generic [ref=e200]:
+          - generic [ref=e201]: frontend-dev
+          - generic [ref=e202]: quality-reviewer
+      - generic [ref=e203] [cursor=pointer]:
+        - generic [ref=e204]: MISSION · 06
+        - generic [ref=e205]: 런타임 에이전트 확장
+        - generic [ref=e206]:
+          - generic [ref=e207]: backend-dev
+          - generic [ref=e208]: test-engineer
+          - generic [ref=e209]: quality-reviewer
+      - generic [ref=e210] [cursor=pointer]:
+        - generic [ref=e211]: MISSION · 07 (보안)
+        - generic [ref=e212]: 보안 감사
+        - generic [ref=e213]:
+          - generic [ref=e214]: security-auditor
+          - generic [ref=e215]: quality-reviewer
+          - generic [ref=e216]: backend-dev
+          - generic [ref=e217]: frontend-dev
+      - generic [ref=e218] [cursor=pointer]:
+        - generic [ref=e219]: MISSION · 08 (테스트)
+        - generic [ref=e220]: 커버리지 스프린트
+        - generic [ref=e221]:
+          - generic [ref=e222]: test-engineer
+          - generic [ref=e223]: backend-dev
+          - generic [ref=e224]: frontend-dev
+      - generic [ref=e225] [cursor=pointer]:
+        - generic [ref=e226]: MISSION · 09 (문서)
+        - generic [ref=e227]: 문서 동기화
+        - generic [ref=e228]:
+          - generic [ref=e229]: doc-keeper
+          - generic [ref=e230]: quality-reviewer
+  - generic [ref=e231]:
+    - generic [ref=e232]: 토큰 비용 효율
+    - generic [ref=e233]:
+      - generic [ref=e234]:
+        - generic [ref=e235]:
+          - generic [ref=e236]: v2 기준 (4명)
+          - generic [ref=e239]: 100%
+        - generic [ref=e240]:
+          - generic [ref=e241]: 평시 (5명)
+          - generic [ref=e244]: ~125%
+        - generic [ref=e245]:
+          - generic [ref=e246]: 보안 감사 (+1)
+          - generic [ref=e249]: ~150%
+        - generic [ref=e250]:
+          - generic [ref=e251]: 풀 스펙트럼 (7명)
+          - generic [ref=e254]: ~160%
+        - generic [ref=e255]:
+          - generic [ref=e256]: 7명 상시 (비효율)
+          - generic [ref=e259]: ~175%
+      - generic [ref=e260]:
+        - text: 💡
+        - strong [ref=e261]: 절감 전략
+        - text: ": security-auditor + doc-keeper는 미션 완료 시에만 소환. 평시 5명으로 운영 시 상시 7명 대비 ~30% 절약."
+  - generic [ref=e262]:
+    - generic [ref=e263]: 빠른 시작 — 4단계
+    - generic [ref=e264]:
+      - generic [ref=e265]:
+        - generic [ref=e266]: "01"
+        - generic [ref=e267]: 팀 활성화 확인
+        - generic [ref=e268]: Claude Code를 열고 에이전트 목록을 확인합니다. 7개가 표시되어야 합니다.
+        - generic [ref=e269]: "claude agents # 기대 출력: # backend-dev # frontend-dev # test-engineer # quality-reviewer # security-auditor # infra-ops # doc-keeper"
+      - generic [ref=e270]:
+        - generic [ref=e271]: "02"
+        - generic [ref=e272]: 미션 프리셋으로 팀 소환
+        - generic [ref=e273]: AGENTS.md의 프리셋 문장을 Claude에게 그대로 입력합니다.
+        - generic [ref=e274]: "kas-feature 팀을 생성해줘. - backend-dev: API 로직 담당 - frontend-dev: UI 담당 - test-engineer: TDD 주도 - quality-reviewer: plan 모드 리뷰 작업: [요구사항 작성]"
+      - generic [ref=e275]:
+        - generic [ref=e276]: "03"
+        - generic [ref=e277]: 팀원과 직접 대화
+        - generic [ref=e278]: Shift+Down으로 팀원을 순환하며 개별 지시를 줄 수 있습니다.
+        - generic [ref=e279]: "# in-process 모드 Shift+Down → 팀원 간 이동 Ctrl+T → 태스크 목록 열기 Enter → 팀원 세션 진입 Escape → 현재 작업 중단"
+      - generic [ref=e280]:
+        - generic [ref=e281]: "04"
+        - generic [ref=e282]: 자동 품질 게이트 확인
+        - generic [ref=e283]: 팀원이 태스크를 완료할 때마다 pytest + npm build가 자동 실행됩니다.
+        - generic [ref=e284]: "# TaskCompleted 시 자동 실행: 1. pytest tests/ -x -q --timeout=60 2. cd web && npm run build # 실패 시: 에이전트가 최대 3회 # 자가 치유 시도 → 실패 시 리드 보고"
+  - contentinfo [ref=e285]: KAS Agent Teams v3 · 상시 5명 + 미션별 2명 · 완전 자동화 파이프라인

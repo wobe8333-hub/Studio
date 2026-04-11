@@ -1,0 +1,1103 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KAS Agent Teams v3.1</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f0505;
+    --bg2: #1a0808;
+    --bg3: #250d0d;
+    --p1: #FFB0B0;
+    --p2: #FFD5D5;
+    --p4: #B42828;
+    --accent: #e85555;
+    --accent2: #ff6b6b;
+    --card: rgba(42,16,16,0.80);
+    --border: rgba(255,100,100,0.18);
+    --border2: rgba(255,100,100,0.35);
+    --t1: #ffdede;
+    --t2: #ffb0b0;
+    --t3: #b06060;
+    --glass: rgba(180,40,40,0.08);
+    --glow: rgba(232,85,85,0.3);
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background: var(--bg);
+    color: var(--t1);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── 배경 그리드 ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(180,40,40,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(180,40,40,0.04) 1px, transparent 1px);
+    background-size: 48px 48px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── 노이즈 오버레이 ── */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.4;
+  }
+
+  .wrap { position:relative; z-index:1; max-width:1200px; margin:0 auto; padding:48px 24px 80px; }
+
+  /* ── 헤더 ── */
+  header {
+    text-align: center;
+    margin-bottom: 64px;
+  }
+  .badge {
+    display: inline-block;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: var(--accent);
+    border: 1px solid var(--border2);
+    padding: 4px 14px;
+    border-radius: 100px;
+    margin-bottom: 20px;
+    background: rgba(232,85,85,0.08);
+    animation: pulse-border 3s ease-in-out infinite;
+  }
+  @keyframes pulse-border {
+    0%,100% { border-color: rgba(255,100,100,0.35); box-shadow: none; }
+    50% { border-color: rgba(255,100,100,0.7); box-shadow: 0 0 12px rgba(232,85,85,0.2); }
+  }
+  h1 {
+    font-size: clamp(32px,5vw,52px);
+    font-weight: 900;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    background: linear-gradient(135deg, #ffdede 0%, #e85555 50%, #b42828 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 12px;
+  }
+  .subtitle {
+    color: var(--t3);
+    font-size: 15px;
+    font-weight: 300;
+    letter-spacing: 0.05em;
+  }
+
+  /* ── 섹션 제목 ── */
+  .section-title {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, var(--border2), transparent);
+  }
+
+  /* ── 궤도 다이어그램 ── */
+  .orbit-section {
+    margin-bottom: 80px;
+  }
+  .orbit-wrap {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1/0.75;
+    max-width: 700px;
+    margin: 0 auto;
+  }
+  .orbit-svg {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+
+  /* ── 에이전트 카드 그리드 ── */
+  .agents-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    margin-bottom: 80px;
+  }
+
+  .agent-card {
+    background: var(--card);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+    position: relative;
+    overflow: hidden;
+  }
+  .agent-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, transparent 0%, rgba(255,100,100,0.04) 100%);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .agent-card:hover {
+    border-color: var(--border2);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 32px rgba(180,40,40,0.2), 0 0 0 1px rgba(255,100,100,0.1);
+  }
+  .agent-card:hover::before { opacity: 1; }
+
+  .agent-card.mission {
+    border-style: dashed;
+    border-color: rgba(255,100,100,0.25);
+  }
+  .agent-card.mission::after {
+    content: '미션별';
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    color: var(--t3);
+    border: 1px solid rgba(255,100,100,0.2);
+    padding: 2px 7px;
+    border-radius: 100px;
+  }
+
+  .agent-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    margin-bottom: 14px;
+    position: relative;
+  }
+  .agent-icon::after {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: 11px;
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .agent-name {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--accent2);
+    margin-bottom: 6px;
+    letter-spacing: 0.02em;
+  }
+  .agent-role {
+    font-size: 13px;
+    color: var(--t2);
+    font-weight: 500;
+    margin-bottom: 10px;
+    line-height: 1.4;
+  }
+  .agent-owns {
+    font-size: 11px;
+    color: var(--t3);
+    line-height: 1.6;
+  }
+  .agent-owns code {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    background: rgba(255,100,100,0.08);
+    border: 1px solid rgba(255,100,100,0.15);
+    padding: 1px 5px;
+    border-radius: 4px;
+    color: var(--p1);
+  }
+
+  .model-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.05em;
+    padding: 3px 8px;
+    border-radius: 100px;
+    margin-top: 12px;
+    border: 1px solid;
+  }
+  .model-sonnet { color: #ff9f9f; border-color: rgba(255,159,159,0.3); background: rgba(255,100,100,0.08); }
+  .model-haiku  { color: #ffcf9f; border-color: rgba(255,207,159,0.3); background: rgba(255,160,100,0.08); }
+
+  /* ── 통신 흐름 ── */
+  .flow-section { margin-bottom: 80px; }
+  .flow-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 16px;
+  }
+  .flow-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+  .flow-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+  .flow-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .flow-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--t1);
+  }
+  .flow-code {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    line-height: 1.8;
+    color: var(--t3);
+    border-left: 2px solid rgba(255,100,100,0.2);
+    padding-left: 12px;
+  }
+  .flow-code .from { color: var(--accent2); }
+  .flow-code .arrow { color: var(--t3); }
+  .flow-code .to { color: var(--p1); }
+  .flow-code .msg { color: var(--t2); font-size: 10px; }
+
+  /* ── 미션 프리셋 ── */
+  .missions-section { margin-bottom: 80px; }
+  .missions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 14px;
+  }
+  .mission-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 18px 20px;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    transition: all 0.25s;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .mission-card:hover {
+    border-color: var(--border2);
+    box-shadow: 0 4px 20px rgba(180,40,40,0.15);
+  }
+  .mission-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--t3);
+    margin-bottom: 8px;
+    letter-spacing: 0.1em;
+  }
+  .mission-name {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--t1);
+    margin-bottom: 8px;
+  }
+  .mission-members {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+  .member-chip {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    padding: 3px 8px;
+    border-radius: 100px;
+    border: 1px solid;
+  }
+
+  /* ── 훅 체인 ── */
+  .hooks-section { margin-bottom: 80px; }
+  .hook-chain {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    flex-wrap: wrap;
+  }
+  .hook-step {
+    flex: 1;
+    min-width: 180px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 0;
+    padding: 20px;
+    position: relative;
+    backdrop-filter: blur(20px);
+  }
+  .hook-step:first-child { border-radius: 14px 0 0 14px; }
+  .hook-step:last-child { border-radius: 0 14px 14px 0; }
+  .hook-step + .hook-step { border-left: none; }
+  .hook-step::after {
+    content: '→';
+    position: absolute;
+    right: -14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--accent);
+    font-size: 18px;
+    font-weight: 700;
+    z-index: 2;
+  }
+  .hook-step:last-child::after { display: none; }
+  .hook-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--accent);
+    letter-spacing: 0.15em;
+    margin-bottom: 8px;
+  }
+  .hook-name {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--t1);
+    margin-bottom: 6px;
+  }
+  .hook-cmd {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--t3);
+    line-height: 1.5;
+  }
+
+  /* ── 자가치유 흐름 ── */
+  .heal-section { margin-bottom: 80px; }
+  .heal-flow {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  .heal-step {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 20px;
+    backdrop-filter: blur(20px);
+    position: relative;
+    margin-bottom: 8px;
+  }
+  .heal-step::before {
+    content: attr(data-num);
+    position: absolute;
+    left: -36px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: rgba(180,40,40,0.4);
+    border: 1px solid var(--border2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--accent2);
+  }
+  .heal-step-title { font-size: 13px; font-weight: 700; color: var(--t1); margin-bottom: 4px; }
+  .heal-step-desc { font-size: 12px; color: var(--t3); line-height: 1.5; }
+  .heal-wrap { padding-left: 48px; }
+  .heal-divider {
+    text-align: center;
+    color: var(--accent);
+    font-size: 18px;
+    margin: 0 0 8px 48px;
+    opacity: 0.6;
+  }
+  .heal-step.danger {
+    border-color: rgba(255,80,80,0.4);
+    background: rgba(255,80,80,0.07);
+  }
+
+  /* ── 비용 효율 ── */
+  .cost-section { margin-bottom: 80px; }
+  .cost-bars {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .cost-row {
+    display: grid;
+    grid-template-columns: 140px 1fr 60px;
+    align-items: center;
+    gap: 14px;
+    font-size: 13px;
+  }
+  .cost-label { color: var(--t2); font-weight: 500; }
+  .cost-bar-wrap {
+    height: 8px;
+    background: rgba(255,100,100,0.08);
+    border-radius: 100px;
+    border: 1px solid rgba(255,100,100,0.1);
+    overflow: hidden;
+  }
+  .cost-bar {
+    height: 100%;
+    border-radius: 100px;
+    transition: width 1.5s cubic-bezier(0.4,0,0.2,1);
+    animation: grow-bar 1.5s cubic-bezier(0.4,0,0.2,1) forwards;
+  }
+  @keyframes grow-bar {
+    from { width: 0% !important; }
+  }
+  .cost-pct {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    color: var(--accent);
+    text-align: right;
+  }
+
+  /* ── 빠른 사용법 ── */
+  .usage-section { margin-bottom: 40px; }
+  .usage-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+  }
+  .usage-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 24px;
+    backdrop-filter: blur(20px);
+  }
+  .usage-step-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 28px;
+    font-weight: 700;
+    color: rgba(232,85,85,0.3);
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+  .usage-title { font-size: 15px; font-weight: 700; color: var(--t1); margin-bottom: 10px; }
+  .usage-desc { font-size: 13px; color: var(--t3); line-height: 1.7; }
+  .usage-code {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    background: rgba(180,40,40,0.15);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 14px;
+    color: var(--p1);
+    margin-top: 12px;
+    line-height: 1.6;
+    overflow-x: auto;
+    white-space: pre;
+  }
+
+  /* ── 푸터 ── */
+  footer {
+    text-align: center;
+    padding-top: 40px;
+    border-top: 1px solid var(--border);
+    color: var(--t3);
+    font-size: 12px;
+    font-family: 'Space Mono', monospace;
+    letter-spacing: 0.1em;
+  }
+
+  /* ── 입장 애니메이션 ── */
+  .fade-in { animation: fade-in 0.6s ease both; }
+  @keyframes fade-in {
+    from { opacity:0; transform:translateY(16px); }
+    to   { opacity:1; transform:translateY(0); }
+  }
+  .agent-card:nth-child(1){animation:fade-in 0.5s 0.1s ease both}
+  .agent-card:nth-child(2){animation:fade-in 0.5s 0.18s ease both}
+  .agent-card:nth-child(3){animation:fade-in 0.5s 0.26s ease both}
+  .agent-card:nth-child(4){animation:fade-in 0.5s 0.34s ease both}
+  .agent-card:nth-child(5){animation:fade-in 0.5s 0.42s ease both}
+  .agent-card:nth-child(6){animation:fade-in 0.5s 0.5s ease both}
+  .agent-card:nth-child(7){animation:fade-in 0.5s 0.58s ease both}
+  .agent-card:nth-child(8){animation:fade-in 0.5s 0.66s ease both}
+  .agent-card:nth-child(9){animation:fade-in 0.5s 0.74s ease both}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- 헤더 -->
+  <header class="fade-in">
+    <div class="badge">KAS AGENT TEAMS v3.1 · 완전 자동화</div>
+    <h1>Knowledge Animation Studio<br>Agent Teams</h1>
+    <p class="subtitle">상시 5명 코어 + 미션별 4명 확장 · 사람 개입은 최종 PR 승인만</p>
+  </header>
+
+  <!-- 팀 구성 -->
+  <section class="orbit-section">
+    <div class="section-title">팀 구성 — 9명</div>
+    <div class="agents-grid">
+
+      <!-- backend-dev -->
+      <div class="agent-card">
+        <div class="agent-icon" style="background:rgba(220,60,60,0.15)">🔴</div>
+        <div class="agent-name">backend-dev</div>
+        <div class="agent-role">백엔드 전담 개발자</div>
+        <div class="agent-owns">
+          소유: <code>src/</code> 전체<br>
+          기여: <code>tests/test_step*.py</code><br>
+          MCP: <code>context7</code><br>
+          maxTurns: <strong style="color:var(--t2)">40</strong>
+        </div>
+        <div class="model-tag model-sonnet">● Sonnet</div>
+      </div>
+
+      <!-- frontend-dev -->
+      <div class="agent-card">
+        <div class="agent-icon" style="background:rgba(60,100,220,0.15)">🔵</div>
+        <div class="agent-name">frontend-dev</div>
+        <div class="agent-role">프론트엔드 전담 개발자</div>
+        <div class="agent-owns">
+          소유: <code>web/</code> 전체<br>
+          기여: <code>tests/test_web*.py</code><br>
+          MCP: <code>playwright</code> <code>context7</code><br>
+          maxTurns: <strong style="color:var(--t2)">40</strong>
+        </div>
+        <div class="model-tag model-sonnet">● Sonnet</div>
+      </div>
+
+      <!-- test-engineer -->
+      <div class="agent-card">
+        <div class="agent-icon" style="background:rgba(60,180,80,0.15)">🟢</div>
+        <div class="agent-name">test-engineer</div>
+        <div class="agent-role">테스트 전담 엔지니어</div>
+        <div class="agent-owns">
+          소유: <code>tests/</code> 전체<br>
+          단독: <code>conftest.py</code><br>
+          역할: TDD 주도 + 커버리지 추적<br>
+          maxTurns: <strong style="color:var(--t2)">35</strong>
+        </div>
+        <div class="model-tag model-sonnet">● Sonnet</div>
+      </div>
+
+      <!-- quality-reviewer -->
+      <div class="agent-card">
+        <div class="agent-icon" style="background:rgba(220,140,40,0.15)">🟠</div>
+        <div class="agent-name">quality-reviewer</div>
+        <div class="agent-role">코드 품질 전문가</div>
+        <div class="agent-owns">
+          권한: Read-only (plan mode)<br>
+          집중: 아키텍처 + 성능 + 규칙<br>
+          금지: Write / Edit<br>
+          maxTurns: <strong style="color:var(--t2)">25</strong>
+        </div>
+        <div class="model-tag model-sonnet">● Sonnet</div>
+      </div>
+
+      <!-- infra-ops -->
+      <div class="agent-card">
+        <div class="agent-icon" style="background:rgba(40,180,200,0.15)">🔷</div>
+        <div class="agent-name">infra-ops</div>
+        <div class="agent-role">인프라 / 운영 전담</div>
+        <div class="agent-owns">
+          소유: <code>scripts/</code> <code>.github/</code><br>
+          관리: 쿼터 + 환경변수 + CI<br>
+          memory: <code>project</code><br>
+          maxTurns: <strong style="color:var(--t2)">20</strong>
+        </div>
+        <div class="model-tag model-haiku">● Haiku</div>
+      </div>
+
+      <!-- security-auditor -->
+      <div class="agent-card mission">
+        <div class="agent-icon" style="background:rgba(140,60,200,0.15)">🟣</div>
+        <div class="agent-name">security-auditor</div>
+        <div class="agent-role">보안 감사 전문가</div>
+        <div class="agent-owns">
+          권한: Read-only (plan mode)<br>
+          검사: OWASP + pip-audit + npm audit<br>
+          금지: Write / Edit<br>
+          maxTurns: <strong style="color:var(--t2)">25</strong>
+        </div>
+        <div class="model-tag model-sonnet">● Sonnet</div>
+      </div>
+
+      <!-- doc-keeper -->
+      <div class="agent-card mission">
+        <div class="agent-icon" style="background:rgba(200,180,40,0.15)">🟡</div>
+        <div class="agent-name">doc-keeper</div>
+        <div class="agent-role">문서 관리 전문가</div>
+        <div class="agent-owns">
+          소유: <code>CLAUDE.md</code> <code>AGENTS.md</code> <code>docs/</code><br>
+          역할: 문서 자동 동기화<br>
+          금지: 소스코드 수정<br>
+          maxTurns: <strong style="color:var(--t2)">15</strong>
+        </div>
+        <div class="model-tag model-haiku">● Haiku</div>
+      </div>
+
+      <!-- ui-designer -->
+      <div class="agent-card mission">
+        <div class="agent-icon" style="background:rgba(220,100,160,0.15)">🩷</div>
+        <div class="agent-name">ui-designer</div>
+        <div class="agent-role">UI 디자인 전문가</div>
+        <div class="agent-owns">
+          소유: <code>globals.css</code> <code>web/public/</code><br>
+          공유: <code>web/components/</code> (스타일링)<br>
+          MCP: <code>playwright</code> <code>figma</code><br>
+          maxTurns: <strong style="color:var(--t2)">30</strong>
+        </div>
+        <div class="model-tag model-sonnet">● Sonnet</div>
+      </div>
+
+      <!-- ux-reviewer -->
+      <div class="agent-card mission">
+        <div class="agent-icon" style="background:rgba(60,180,160,0.15)">🩵</div>
+        <div class="agent-name">ux-reviewer</div>
+        <div class="agent-role">UX 리뷰 전문가</div>
+        <div class="agent-owns">
+          권한: Read-only (plan mode)<br>
+          검사: WCAG + 사용자흐름 + 인터랙션<br>
+          MCP: <code>playwright</code><br>
+          maxTurns: <strong style="color:var(--t2)">20</strong>
+        </div>
+        <div class="model-tag model-sonnet">● Sonnet</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 파일 소유권 맵 -->
+  <section style="margin-bottom:80px">
+    <div class="section-title">파일 소유권 맵</div>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:28px;backdrop-filter:blur(20px)">
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px">
+        <div>
+          <div style="font-family:'Space Mono',monospace;font-size:10px;color:var(--accent);letter-spacing:0.15em;margin-bottom:12px">SRC/</div>
+          <div style="font-size:12px;color:var(--t3);line-height:2">
+            <span style="color:#ff8080">●</span> src/pipeline.py<br>
+            <span style="color:#ff8080">●</span> src/step*/<br>
+            <span style="color:#ff8080">●</span> src/agents/<br>
+            <span style="color:#ff8080">●</span> src/core/<br>
+            <span style="color:#ff8080">●</span> src/quota/<br>
+            <span style="color:#ff8080">●</span> src/cache/<br>
+            <span style="font-size:10px;color:var(--t3)">→ backend-dev</span>
+          </div>
+        </div>
+        <div>
+          <div style="font-family:'Space Mono',monospace;font-size:10px;color:var(--accent);letter-spacing:0.15em;margin-bottom:12px">WEB/</div>
+          <div style="font-size:12px;color:var(--t3);line-height:2">
+            <span style="color:#8080ff">●</span> web/app/<br>
+            <span style="color:#8080ff">●</span> web/components/ <em style="font-size:10px">(로직: frontend-dev, 스타일: ui-designer)</em><br>
+            <span style="color:#8080ff">●</span> web/lib/<br>
+            <span style="color:#8080ff">●</span> web/hooks/<br>
+            <span style="color:#dc64a0">●</span> web/app/globals.css <em style="font-size:10px">(ui-designer 소유)</em><br>
+            <span style="color:#dc64a0">●</span> web/public/ <em style="font-size:10px">(ui-designer 소유)</em><br>
+            <span style="font-size:10px;color:var(--t3)">→ frontend-dev / ui-designer</span>
+          </div>
+        </div>
+        <div>
+          <div style="font-family:'Space Mono',monospace;font-size:10px;color:var(--accent);letter-spacing:0.15em;margin-bottom:12px">TESTS/</div>
+          <div style="font-size:12px;color:var(--t3);line-height:2">
+            <span style="color:#80ff80">●</span> tests/conftest.py <em style="font-size:10px">(단독)</em><br>
+            <span style="color:#80ff80">●</span> tests/test_*.py<br>
+            <span style="color:#ff8080">○</span> test_step*.py <em style="font-size:10px">(기여)</em><br>
+            <span style="color:#8080ff">○</span> test_web*.py <em style="font-size:10px">(기여)</em><br>
+            <br>
+            <span style="font-size:10px;color:var(--t3)">→ test-engineer (+ 기여)</span>
+          </div>
+        </div>
+        <div>
+          <div style="font-family:'Space Mono',monospace;font-size:10px;color:var(--accent);letter-spacing:0.15em;margin-bottom:12px">인프라 / 문서</div>
+          <div style="font-size:12px;color:var(--t3);line-height:2">
+            <span style="color:#80d0ff">●</span> scripts/<br>
+            <span style="color:#80d0ff">●</span> .github/workflows/<br>
+            <span style="color:#80d0ff">●</span> data/global/quota/<br>
+            <span style="color:#ffee80">●</span> CLAUDE.md<br>
+            <span style="color:#ffee80">●</span> AGENTS.md<br>
+            <span style="color:#ffee80">●</span> docs/<br>
+            <span style="font-size:10px;color:var(--t3)">→ infra-ops / doc-keeper</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 통신 프로토콜 -->
+  <section class="flow-section">
+    <div class="section-title">팀원 간 통신 프로토콜</div>
+    <div class="flow-grid">
+      <div class="flow-card">
+        <div class="flow-header">
+          <div class="flow-dot" style="background:#ff8080"></div>
+          <div class="flow-title">API 계약 변경</div>
+        </div>
+        <div class="flow-code">
+          <span class="from">backend-dev</span> <span class="arrow">→</span> <span class="to">frontend-dev</span><br>
+          <span class="msg">"API /api/X 응답 포맷 변경<br>Before: {'{'}status: string{'}'}<br>After: {'{'}status, run_id, dry_run{'}'}<br>대응 수정 필요"</span>
+        </div>
+      </div>
+      <div class="flow-card">
+        <div class="flow-header">
+          <div class="flow-dot" style="background:#80ff80"></div>
+          <div class="flow-title">소스 변경 → 테스트 알림</div>
+        </div>
+        <div class="flow-code">
+          <span class="from">backend-dev</span> <span class="arrow">→</span> <span class="to">test-engineer</span><br>
+          <span class="msg">"src/step05/ 변경 완료<br>tests/test_step05_*.py<br>업데이트 확인 부탁드립니다"</span>
+        </div>
+      </div>
+      <div class="flow-card">
+        <div class="flow-header">
+          <div class="flow-dot" style="background:#ffaa80"></div>
+          <div class="flow-title">품질 이슈 발견</div>
+        </div>
+        <div class="flow-code">
+          <span class="from">quality-reviewer</span> <span class="arrow">→</span> <span class="to">backend-dev</span><br>
+          <span class="msg">"src/pipeline.py:390<br>time.sleep(2) 하드코딩 발견<br>설정 파일 분리 요청"</span>
+        </div>
+      </div>
+      <div class="flow-card">
+        <div class="flow-header">
+          <div class="flow-dot" style="background:#cc80ff"></div>
+          <div class="flow-title">보안 취약점 발견</div>
+        </div>
+        <div class="flow-code">
+          <span class="from">security-auditor</span> <span class="arrow">→</span> <span class="to">frontend-dev</span><br>
+          <span class="msg">"🔴 CRITICAL<br>route.ts:23 경로 트래버설<br>validateChannelPath() 사용 필요"</span>
+        </div>
+      </div>
+      <div class="flow-card">
+        <div class="flow-header">
+          <div class="flow-dot" style="background:#ffee80"></div>
+          <div class="flow-title">문서 드리프트 감지</div>
+        </div>
+        <div class="flow-code">
+          <span class="from">doc-keeper</span> <span class="arrow">→</span> <span class="to">backend-dev</span><br>
+          <span class="msg">"CLAUDE.md Sub-Agent 섹션<br>ScriptQualityAgent 누락<br>동기화 예정"</span>
+        </div>
+      </div>
+      <div class="flow-card">
+        <div class="flow-header">
+          <div class="flow-dot" style="background:#ff5555"></div>
+          <div class="flow-title">자가치유 실패 에스컬레이션</div>
+        </div>
+        <div class="flow-code">
+          <span class="from">backend-dev</span> <span class="arrow">→</span> <span class="to">리드</span><br>
+          <span class="msg">"3회 수정 실패. git stash 보존<br>시도: 캐시초기화/mock재등록/import선점<br>리드 확인 필요"</span>
+        </div>
+      </div>
+      <div class="flow-card">
+        <div class="flow-header">
+          <div class="flow-dot" style="background:#dc64a0"></div>
+          <div class="flow-title">디자인 토큰 변경 브로드캐스트</div>
+        </div>
+        <div class="flow-code">
+          <span class="from">ui-designer</span> <span class="arrow">→</span> <span class="to">[broadcast]</span><br>
+          <span class="msg">"globals.css의 --card 변수가 변경됩니다.<br>모든 카드 컴포넌트에 시각적 영향이<br>있을 수 있습니다."</span>
+        </div>
+      </div>
+      <div class="flow-card">
+        <div class="flow-header">
+          <div class="flow-dot" style="background:#3cb4a0"></div>
+          <div class="flow-title">UX 이슈 리포트</div>
+        </div>
+        <div class="flow-code">
+          <span class="from">ux-reviewer</span> <span class="arrow">→</span> <span class="to">frontend-dev</span><br>
+          <span class="msg">"파이프라인 실행 후 완료 피드백이<br>없습니다. 토스트 알림 추가를<br>요청합니다."</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TaskCompleted 훅 체인 -->
+  <section class="hooks-section">
+    <div class="section-title">자동 품질 게이트 — TaskCompleted 훅</div>
+    <div class="hook-chain">
+      <div class="hook-step">
+        <div class="hook-num">STEP 01</div>
+        <div class="hook-name">Python 테스트</div>
+        <div class="hook-cmd">pytest tests/ -x -q --timeout=60</div>
+      </div>
+      <div class="hook-step">
+        <div class="hook-num">STEP 02</div>
+        <div class="hook-name">TypeScript 빌드</div>
+        <div class="hook-cmd">cd web && npm run build</div>
+      </div>
+      <div class="hook-step">
+        <div class="hook-num">STEP 03</div>
+        <div class="hook-name">보안 스캔 (미션별)</div>
+        <div class="hook-cmd">pip-audit + npm audit<br>security-auditor 소환 시</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 자가 치유 프로토콜 -->
+  <section class="heal-section">
+    <div class="section-title">자가 치유(Self-Healing) 프로토콜</div>
+    <div class="heal-wrap">
+      <div class="heal-flow">
+        <div class="heal-step" data-num="1">
+          <div class="heal-step-title">코드 수정 완료</div>
+          <div class="heal-step-desc">TaskCompleted 훅 자동 실행 (pytest + npm build)</div>
+        </div>
+        <div class="heal-divider">↓ 실패 시</div>
+        <div class="heal-step" data-num="2">
+          <div class="heal-step-title">실패 로그 분석</div>
+          <div class="heal-step-desc">에러 메시지 파싱 → 원인 파악 → 1차 수정 시도</div>
+        </div>
+        <div class="heal-divider">↓ 재실패 시</div>
+        <div class="heal-step" data-num="3">
+          <div class="heal-step-title">2차 / 3차 재시도</div>
+          <div class="heal-step-desc">매 시도마다 다른 접근법 사용 (캐시 초기화 → mock 재등록 → import 선점)</div>
+        </div>
+        <div class="heal-divider">↓ 3회 모두 실패 시</div>
+        <div class="heal-step danger" data-num="!">
+          <div class="heal-step-title">에스컬레이션</div>
+          <div class="heal-step-desc">git stash로 변경사항 보존 → 리드에게 상세 보고 → 필요시 다른 팀원 협력 요청</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 미션 프리셋 9종 -->
+  <section class="missions-section">
+    <div class="section-title">미션 프리셋 11종</div>
+    <div class="missions-grid">
+      <div class="mission-card">
+        <div class="mission-num">MISSION · 01</div>
+        <div class="mission-name">풀스택 Feature 개발</div>
+        <div class="mission-members">
+          <span class="member-chip" style="color:#ff8080;border-color:rgba(255,128,128,0.3)">backend-dev</span>
+          <span class="member-chip" style="color:#8080ff;border-color:rgba(128,128,255,0.3)">frontend-dev</span>
+          <span class="member-chip" style="color:#80ff80;border-color:rgba(128,255,128,0.3)">test-engineer</span>
+          <span class="member-chip" style="color:#ffaa80;border-color:rgba(255,170,128,0.3)">quality-reviewer</span>
+        </div>
+      </div>
+      <div class="mission-card">
+        <div class="mission-num">MISSION · 02</div>
+        <div class="mission-name">3각 코드 리뷰</div>
+        <div class="mission-members">
+          <span class="member-chip" style="color:#ffaa80;border-color:rgba(255,170,128,0.3)">security-reviewer</span>
+          <span class="member-chip" style="color:#ffaa80;border-color:rgba(255,170,128,0.3)">performance-reviewer</span>
+          <span class="member-chip" style="color:#ffaa80;border-color:rgba(255,170,128,0.3)">test-reviewer</span>
+        </div>
+      </div>
+      <div class="mission-card">
+        <div class="mission-num">MISSION · 03</div>
+        <div class="mission-name">경쟁 가설 디버깅</div>
+        <div class="mission-members">
+          <span class="member-chip" style="color:#ff8080;border-color:rgba(255,128,128,0.3)">backend-dev ×3~5</span>
+        </div>
+      </div>
+      <div class="mission-card">
+        <div class="mission-num">MISSION · 04</div>
+        <div class="mission-name">파이프라인 안정화</div>
+        <div class="mission-members">
+          <span class="member-chip" style="color:#ff8080;border-color:rgba(255,128,128,0.3)">backend-dev</span>
+          <span class="member-chip" style="color:#80ff80;border-color:rgba(128,255,128,0.3)">test-engineer</span>
+          <span class="member-chip" style="color:#ffaa80;border-color:rgba(255,170,128,0.3)">quality-reviewer</span>
+          <span class="member-chip" style="color:#80d0ff;border-color:rgba(128,208,255,0.3)">infra-ops</span>
+        </div>
+      </div>
+      <div class="mission-card">
+        <div class="mission-num">MISSION · 05</div>
+        <div class="mission-name">대시보드 리디자인</div>
+        <div class="mission-members">
+          <span class="member-chip" style="color:#8080ff;border-color:rgba(128,128,255,0.3)">frontend-dev</span>
+          <span class="member-chip" style="color:#ffaa80;border-color:rgba(255,170,128,0.3)">quality-reviewer</span>
+        </div>
+      </div>
+      <div class="mission-card">
+        <div class="mission-num">MISSION · 06</div>
+        <div class="mission-name">런타임 에이전트 확장</div>
+        <div class="mission-members">
+          <span class="member-chip" style="color:#ff8080;border-color:rgba(255,128,128,0.3)">backend-dev</span>
+          <span class="member-chip" style="color:#80ff80;border-color:rgba(128,255,128,0.3)">test-engineer</span>
+          <span class="member-chip" style="color:#ffaa80;border-color:rgba(255,170,128,0.3)">quality-reviewer</span>
+        </div>
+      </div>
+      <div class="mission-card" style="border-color:rgba(200,100,255,0.3)">
+        <div class="mission-num" style="color:#cc80ff">MISSION · 07 (보안)</div>
+        <div class="mission-name">보안 감사</div>
+        <div class="mission-members">
+          <span class="member-chip" style="color:#cc80ff;border-color:rgba(204,128,255,0.3)">security-auditor</span>
+          <span class="member-chip" style="color:#ffaa80;border-color:rgba(255,170,128,0.3)">quality-reviewer</span>
+          <span class="member-chip" style="color:#ff8080;border-color:rgba(255,128,128,0.3)">backend-dev</span>
+          <span class="member-chip" style="color:#8080ff;border-color:rgba(128,128,255,0.3)">frontend-dev</span>
+        </div>
+      </div>
+      <div class="mission-card" style="border-color:rgba(128,255,128,0.3)">
+        <div class="mission-num" style="color:#80ff80">MISSION · 08 (테스트)</div>
+        <div class="mission-name">커버리지 스프린트</div>
+        <div class="mission-members">
+          <span class="member-chip" style="color:#80ff80;border-color:rgba(128,255,128,0.3)">test-engineer</span>
+          <span class="member-chip" style="color:#ff8080;border-color:rgba(255,128,128,0.3)">backend-dev</span>
+          <span class="member-chip" style="color:#8080ff;border-color:rgba(128,128,255,0.3)">frontend-dev</span>
+        </div>
+      </div>
+      <div class="mission-card" style="border-color:rgba(255,238,128,0.3)">
+        <div class="mission-num" style="color:#ffee80">MISSION · 09 (문서)</div>
+        <div class="mission-name">문서 동기화</div>
+        <div class="mission-members">
+          <span class="member-chip" style="color:#ffee80;border-color:rgba(255,238,128,0.3)">doc-keeper</span>
+          <span class="member-chip" style="color:#ffaa80;border-color:rgba(255,170,128,0.3)">quality-reviewer</span>
+        </div>
+      </div>
+      <div class="mission-card" style="border-color:rgba(220,100,160,0.3)">
+        <div class="mission-num" style="color:#dc64a0">MISSION · 10 (UI)</div>
+        <div class="mission-name">kas-ui-pro (UI 리디자인 강화)</div>
+        <div class="mission-members">
+          <span class="member-chip" style="color:#dc64a0;border-color:rgba(220,100,160,0.3)">ui-designer</span>
+          <span class="member-chip" style="color:#8080ff;border-color:rgba(128,128,255,0.3)">frontend-dev</span>
+          <span class="member-chip" style="color:#3cb4a0;border-color:rgba(60,180,160,0.3)">ux-reviewer</span>
+          <span class="member-chip" style="color:#ffaa80;border-color:rgba(255,170,128,0.3)">quality-reviewer</span>
+        </div>
+      </div>
+      <div class="mission-card" style="border-color:rgba(60,180,160,0.3)">
+        <div class="mission-num" style="color:#3cb4a0">MISSION · 11 (UX)</div>
+        <div class="mission-name">kas-ux-audit (UX 감사)</div>
+        <div class="mission-members">
+          <span class="member-chip" style="color:#3cb4a0;border-color:rgba(60,180,160,0.3)">ux-reviewer</span>
+          <span class="member-chip" style="color:#dc64a0;border-color:rgba(220,100,160,0.3)">ui-designer</span>
+          <span class="member-chip" style="color:#8080ff;border-color:rgba(128,128,255,0.3)">frontend-dev</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 비용 효율 -->
+  <section class="cost-section">
+    <div class="section-title">토큰 비용 효율</div>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:28px;backdrop-filter:blur(20px)">
+      <div class="cost-bars">
+        <div class="cost-row">
+          <div class="cost-label">v2 기준 (4명)</div>
+          <div class="cost-bar-wrap"><div class="cost-bar" style="width:57%;background:linear-gradient(90deg,#b42828,#e85555)"></div></div>
+          <div class="cost-pct">100%</div>
+        </div>
+        <div class="cost-row">
+          <div class="cost-label">평시 (5명)</div>
+          <div class="cost-bar-wrap"><div class="cost-bar" style="width:71%;background:linear-gradient(90deg,#b42828,#e85555)"></div></div>
+          <div class="cost-pct">~125%</div>
+        </div>
+        <div class="cost-row">
+          <div class="cost-label">보안 감사 (+1)</div>
+          <div class="cost-bar-wrap"><div class="cost-bar" style="width:86%;background:linear-gradient(90deg,#942080,#cc55cc)"></div></div>
+          <div class="cost-pct">~150%</div>
+        </div>
+        <div class="cost-row">
+          <div class="cost-label">풀 스펙트럼 (7명)</div>
+          <div class="cost-bar-wrap"><div class="cost-bar" style="width:91%;background:linear-gradient(90deg,#804020,#e07030)"></div></div>
+          <div class="cost-pct">~160%</div>
+        </div>
+        <div class="cost-row">
+          <div class="cost-label">UX 리디자인 (+2)</div>
+          <div class="cost-bar-wrap"><div class="cost-bar" style="width:97%;background:linear-gradient(90deg,#2080a0,#40c0c0)"></div></div>
+          <div class="cost-pct">~170%</div>
+        </div>
+        <div class="cost-row">
+          <div class="cost-label" style="font-size:11px;color:var(--t3)">풀 스펙트럼 (9명)</div>
+          <div class="cost-bar-wrap"><div class="cost-bar" style="width:100%;background:linear-gradient(90deg,#602020,#903030);opacity:0.5"></div></div>
+          <div class="cost-pct" style="color:var(--t3)">~200%</div>
+        </div>
+      </div>
+      <div style="margin-top:20px;font-size:12px;color:var(--t3);line-height:1.8">
+        💡 <strong style="color:var(--t2)">절감 전략</strong>: security-auditor · doc-keeper · ui-designer · ux-reviewer는 미션 완료 시에만 소환. 평시 5명으로 운영 시 상시 9명 대비 ~45% 절약.
+      </div>
+    </div>
+  </section>
+
+  <!-- 빠른 시작 가이드 -->
+  <section class="usage-section">
+    <div class="section-title">빠른 시작 — 4단계</div>
+    <div class="usage-cards">
+      <div class="usage-card">
+        <div class="usage-step-num">01</div>
+        <div class="usage-title">팀 활성화 확인</div>
+        <div class="usage-desc">Claude Code를 열고 에이전트 목록을 확인합니다. 9개가 표시되어야 합니다.</div>
+        <div class="usage-code">claude agents
+# 기대 출력:
+# backend-dev
+# frontend-dev
+# test-engineer
+# quality-reviewer
+# security-auditor
+# infra-ops
+# doc-keeper
+# ui-designer
+# ux-reviewer</div>
+      </div>
+      <div class="usage-card">
+        <div class="usage-step-num">02</div>
+        <div class="usage-title">미션 프리셋으로 팀 소환</div>
+        <div class="usage-desc">AGENTS.md의 프리셋 문장을 Claude에게 그대로 입력합니다.</div>
+        <div class="usage-code">kas-feature 팀을 생성해줘.
+- backend-dev: API 로직 담당
+- frontend-dev: UI 담당
+- test-engineer: TDD 주도
+- quality-reviewer: plan 모드 리뷰
+작업: [요구사항 작성]</div>
+      </div>
+      <div class="usage-card">
+        <div class="usage-step-num">03</div>
+        <div class="usage-title">팀원과 직접 대화</div>
+        <div class="usage-desc">Shift+Down으로 팀원을 순환하며 개별 지시를 줄 수 있습니다.</div>
+        <div class="usage-code"># in-process 모드
+Shift+Down  → 팀원 간 이동
+Ctrl+T      → 태스크 목록 열기
+Enter       → 팀원 세션 진입
+Escape      → 현재 작업 중단</div>
+      </div>
+      <div class="usage-card">
+        <div class="usage-step-num">04</div>
+        <div class="usage-title">자동 품질 게이트 확인</div>
+        <div class="usage-desc">팀원이 태스크를 완료할 때마다 pytest + npm build가 자동 실행됩니다.</div>
+        <div class="usage-code"># TaskCompleted 시 자동 실행:
+1. pytest tests/ -x -q --timeout=60
+2. cd web && npm run build
+
+# 실패 시: 에이전트가 최대 3회
+# 자가 치유 시도 → 실패 시 리드 보고</div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    KAS Agent Teams v3.1 · 상시 5명 + 미션별 4명 · 완전 자동화 파이프라인
+  </footer>
+
+</div>
+</body>
+</html>

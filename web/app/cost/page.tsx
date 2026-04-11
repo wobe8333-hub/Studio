@@ -195,7 +195,7 @@ export default function CostPage() {
       </div>
 
       {/* 탭 바 */}
-      <div className="flex gap-1 p-1 rounded-xl w-fit" style={{ background: 'rgba(255,255,255,0.4)', border: '1px solid rgba(238,36,0,0.1)' }}>
+      <div className="flex gap-1 p-1 rounded-xl w-fit" style={{ background: 'var(--tab-bg)', border: '1px solid var(--tab-border)' }}>
         {COST_TABS.map(t => (
           <button
             key={t.id}

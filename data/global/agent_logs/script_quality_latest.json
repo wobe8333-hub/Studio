@@ -1,0 +1,32 @@
+{
+  "evaluated": 2,
+  "total_issues": 3,
+  "channel_averages": {
+    "CH2": 77.5
+  },
+  "details": [
+    {
+      "channel_id": "CH2",
+      "run_id": "run_CH2_1775173531",
+      "score": 85,
+      "issues": [
+        "씬 수 부족 (0개 < 3개)"
+      ],
+      "hook_length": 308,
+      "scene_count": 0,
+      "total_chars": 308
+    },
+    {
+      "channel_id": "CH2",
+      "run_id": "run_CH2_1775143845",
+      "score": 70,
+      "issues": [
+        "씬 수 부족 (0개 < 3개)",
+        "스크립트 총 텍스트 부족 (266자 < 300자)"
+      ],
+      "hook_length": 266,
+      "scene_count": 0,
+      "total_chars": 266
+    }
+  ]
+}

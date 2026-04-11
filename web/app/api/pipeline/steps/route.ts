@@ -9,6 +9,22 @@ function getKasRoot(): string {
 // DRY RUN 단계별 시뮬레이션 소요 시간 (ms)
 const STEP_DURATIONS = [4000, 2000, 2000, 6000, 3000, 3000, 3000, 2000]
 
+/** DELETE /api/pipeline/steps — step_progress.json 초기화 (모든 스텝 idle로 리셋) */
+export async function DELETE() {
+  const kasRoot = getKasRoot()
+  const progressFile = path.join(kasRoot, 'data', 'global', 'step_progress.json')
+  try {
+    fs.writeFileSync(
+      progressFile,
+      JSON.stringify({ active: false, dry_run: false, steps: [], channel_id: null, run_id: null, updated_at: new Date().toISOString() }, null, 2),
+      'utf-8'
+    )
+    return NextResponse.json({ ok: true })
+  } catch {
+    return NextResponse.json({ error: '초기화 실패' }, { status: 500 })
+  }
+}
+
 export async function GET() {
   const kasRoot = getKasRoot()
   const progressFile = path.join(kasRoot, 'data', 'global', 'step_progress.json')
@@ -55,6 +71,20 @@ export async function GET() {
               }
             } else {
               data.active = false
+              // manifest.json run_state → COMPLETED 업데이트
+              if (data.run_id && data.channel_id) {
+                try {
+                  const manifestPath = path.join(kasRoot, 'runs', data.channel_id, data.run_id, 'manifest.json')
+                  if (fs.existsSync(manifestPath)) {
+                    const mRaw = fs.readFileSync(manifestPath, 'utf-8').replace(/^\uFEFF/, '')
+                    const m = JSON.parse(mRaw)
+                    m.run_state = 'COMPLETED'
+                    m.completed_at = now.toISOString()
+                    m.updated_at = now.toISOString()
+                    fs.writeFileSync(manifestPath, JSON.stringify(m, null, 2), 'utf-8')
+                  }
+                } catch { /* manifest 업데이트 실패는 무시 */ }
+              }
             }
             data.updated_at = now.toISOString()
             changed = true

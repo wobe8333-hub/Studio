@@ -1,17 +1,17 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useParams } from 'next/navigation'
 import Link from 'next/link'
-import { ArrowLeft, CheckCircle2, XCircle, Loader2, Clock, PlayCircle } from 'lucide-react'
+import { ArrowLeft, CheckCircle2, XCircle, Loader2, Clock, PlayCircle, RefreshCw, FlaskConical } from 'lucide-react'
 import type { RunSummary } from '@/app/api/runs/[channelId]/route'
 
 const G = {
   card: {
-    background: 'rgba(255,255,255,0.55)',
+    background: 'var(--card)',
     backdropFilter: 'blur(20px)',
     WebkitBackdropFilter: 'blur(20px)',
-    border: '1px solid rgba(238,36,0,0.12)',
+    border: '1px solid var(--border)',
     borderRadius: '1rem',
     boxShadow: '0 8px 32px rgba(144,0,0,0.08)',
   } as React.CSSProperties,
@@ -22,6 +22,7 @@ function StateIcon({ state }: { state: string }) {
   if (state === 'COMPLETED') return <CheckCircle2 size={16} style={{ color: '#16a34a' }} />
   if (state === 'FAILED') return <XCircle size={16} style={{ color: '#dc2626' }} />
   if (state === 'RUNNING') return <Loader2 size={16} style={{ color: '#ca8a04' }} className="animate-spin" />
+  if (state === 'TEST') return <FlaskConical size={16} style={{ color: '#7c3aed' }} />
   return <Clock size={16} style={{ color: G.text.muted }} />
 }
 
@@ -36,18 +37,32 @@ export default function ChannelRunsPage() {
   const channelId = params.channelId as string
   const [runs, setRuns] = useState<RunSummary[]>([])
   const [loading, setLoading] = useState(true)
+  const [refreshing, setRefreshing] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [lastUpdated, setLastUpdated] = useState<Date | null>(null)
 
-  useEffect(() => {
-    fetch(`/api/runs/${channelId}`)
-      .then(r => r.json())
-      .then(data => {
-        if (data.error) throw new Error(data.error)
-        setRuns(data.runs ?? [])
-      })
-      .catch(e => setError(e.message))
-      .finally(() => setLoading(false))
+  const fetchRuns = useCallback(async (isManual = false) => {
+    if (isManual) setRefreshing(true)
+    try {
+      const data = await fetch(`/api/runs/${channelId}`).then(r => r.json())
+      if (data.error) throw new Error(data.error)
+      setRuns(data.runs ?? [])
+      setLastUpdated(new Date())
+      setError(null)
+    } catch (e) {
+      setError((e as Error).message)
+    } finally {
+      setLoading(false)
+      if (isManual) setRefreshing(false)
+    }
   }, [channelId])
+
+  // 최초 로드 + 5초 폴링 (파이프라인 실행 중 신규 Run 자동 감지)
+  useEffect(() => {
+    fetchRuns()
+    const interval = setInterval(() => fetchRuns(), 5000)
+    return () => clearInterval(interval)
+  }, [fetchRuns])
 
   return (
     <div style={{ padding: '2rem', maxWidth: '900px', margin: '0 auto' }}>
@@ -57,9 +72,30 @@ export default function ChannelRunsPage() {
           <ArrowLeft size={16} />
           <span style={{ fontSize: '0.875rem' }}>홈</span>
         </Link>
-        <h1 style={{ margin: 0, color: G.text.primary, fontSize: '1.5rem', fontFamily: 'var(--font-baskerville)' }}>
+        <h1 style={{ margin: 0, color: G.text.primary, fontSize: '1.5rem', fontFamily: 'var(--font-baskerville)', flex: 1 }}>
           {channelId} 실행 이력
         </h1>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+          {lastUpdated && (
+            <span style={{ fontSize: '0.7rem', color: G.text.muted }}>
+              {lastUpdated.toLocaleTimeString('ko-KR')} 갱신
+            </span>
+          )}
+          <button
+            onClick={() => fetchRuns(true)}
+            disabled={refreshing}
+            style={{
+              display: 'flex', alignItems: 'center', gap: '0.375rem',
+              padding: '0.375rem 0.75rem', borderRadius: '0.5rem',
+              border: '1px solid rgba(180,40,40,0.25)', background: 'transparent',
+              color: '#7a3030', fontSize: '0.75rem', fontWeight: 600,
+              cursor: refreshing ? 'not-allowed' : 'pointer',
+            }}
+          >
+            <RefreshCw size={12} style={{ animation: refreshing ? 'spin 1s linear infinite' : 'none' }} />
+            새로고침
+          </button>
+        </div>
       </div>
 
       {/* 로딩 */}

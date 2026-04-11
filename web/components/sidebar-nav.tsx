@@ -13,15 +13,17 @@ import {
   Tv,
   Settings,
   ChevronsRight,
+  BookOpen,
 } from 'lucide-react'
 
 const NAV_GROUPS = [
   {
     label: '경영',
     items: [
-      { title: 'KPI 대시보드', url: '/',        icon: LayoutDashboard },
-      { title: '트렌드 관리',  url: '/trends',  icon: TrendingUp },
-      { title: '수익 추적',   url: '/revenue', icon: BarChart2 },
+      { title: 'KPI 대시보드', url: '/',          icon: LayoutDashboard },
+      { title: '트렌드 관리',  url: '/trends',    icon: TrendingUp },
+      { title: '지식 수집',    url: '/knowledge', icon: BookOpen },
+      { title: '수익 추적',   url: '/revenue',   icon: BarChart2 },
     ],
   },
   {

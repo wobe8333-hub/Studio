@@ -4,7 +4,7 @@
 버그 수정(BUG-6): STEP 13 pending 메커니즘 연결 (48h 후 자동 실행).
 python -m src.pipeline {month_number} 으로 실행.
 """
-import time, sys
+import time, sys, json
 from datetime import datetime, timedelta
 from loguru import logger
 import sentry_sdk
@@ -38,6 +38,69 @@ logger.add(
 # Sentry 에러 추적 초기화
 if SENTRY_DSN:
     sentry_sdk.init(dsn=SENTRY_DSN, traces_sample_rate=0.1)
+
+# ── 대시보드 실시간 진행 상태 추적 ────────────────────────────────────────────
+_PROGRESS_FILE = KAS_ROOT / "data" / "global" / "step_progress.json"
+_STEP_NAMES = [
+    "Step05 트렌드+지식 수집",
+    "Step06 시나리오 정책",
+    "Step07 알고리즘 정책",
+    "Step08 영상 생성",
+    "Step09 BGM",
+    "Step10 제목+썸네일",
+    "Step11 QA 검수",
+    "Step12 업로드",
+]
+
+def _progress_init(channel_id: str, run_id: str) -> None:
+    """파이프라인 시작 시 step_progress.json 초기화"""
+    data = {
+        "active": True,
+        "dry_run": False,
+        "channel_id": channel_id,
+        "run_id": run_id,
+        "month_number": 1,
+        "steps": [
+            {"index": i, "name": name, "status": "idle",
+             "started_at": None, "completed_at": None, "elapsed_ms": None}
+            for i, name in enumerate(_STEP_NAMES)
+        ],
+        "updated_at": datetime.utcnow().isoformat() + "Z",
+    }
+    try:
+        _PROGRESS_FILE.parent.mkdir(parents=True, exist_ok=True)
+        _PROGRESS_FILE.write_text(json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8")
+    except Exception as e:
+        logger.warning(f"[PROGRESS] 초기화 실패: {e}")
+
+def _progress_step(index: int, status: str, started_at: str | None = None) -> None:
+    """특정 Step 상태를 업데이트 (running / done / error)"""
+    try:
+        raw = _PROGRESS_FILE.read_text(encoding="utf-8")
+        data = json.loads(raw)
+        now = datetime.utcnow().isoformat() + "Z"
+        steps = data.get("steps", [])
+        for s in steps:
+            if s.get("index") == index:
+                s["status"] = status
+                if status == "running":
+                    s["started_at"] = now
+                elif status in ("done", "error"):
+                    s["completed_at"] = now
+                    if s.get("started_at"):
+                        try:
+                            start = datetime.fromisoformat(s["started_at"].replace("Z", ""))
+                            s["elapsed_ms"] = int((datetime.utcnow() - start).total_seconds() * 1000)
+                        except Exception:
+                            pass
+                break
+        # 마지막 step 완료 시 active=False
+        if status == "done" and index == len(_STEP_NAMES) - 1:
+            data["active"] = False
+        data["updated_at"] = now
+        _PROGRESS_FILE.write_text(json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8")
+    except Exception as e:
+        logger.warning(f"[PROGRESS] step{index} 업데이트 실패: {e}")
 
 def _mark_pending_step13(channel_id: str, run_id: str, video_id: str) -> None:
     from src.core.ssot import write_json, now_iso
@@ -207,9 +270,13 @@ def run_monthly_pipeline(month_number: int) -> dict:
         category = CHANNEL_CATEGORIES[channel_id]
         logger.info(f"--- {channel_id} ({category}) 처리 시작 ---")
 
+        # Step05: 트렌드+지식 수집
+        _progress_init(channel_id, f"run_{channel_id}_{int(time.time())}")  # 임시 run_id (Step08 전)
+        _progress_step(0, "running")
         trends = collect_trends(channel_id, category, limit=5)
         topics = [reinterpret_trend(t, category, channel_id) for t in trends[:3]]
         save_knowledge(channel_id, topics)
+        _progress_step(0, "done")
 
         channel_results = []
         for topic in topics:
@@ -223,51 +290,76 @@ def run_monthly_pipeline(month_number: int) -> dict:
             run_id = None
             qa = {"overall_pass": False}
             try:
-                style_policy     = build_style_policy(channel_id, topic, month_number)
+                # Step06: 시나리오 정책
+                _progress_step(1, "running")
+                style_policy = build_style_policy(channel_id, topic, month_number)
+                _progress_step(1, "done")
+
+                # Step07: 알고리즘/수익 정책
+                _progress_step(2, "running")
                 revenue_policy   = get_revenue_policy(channel_id)
                 algorithm_policy = get_algorithm_policy(channel_id)
+                _progress_step(2, "done")
 
                 # Step08: 영상 생성 (run_id 반환)
+                _progress_step(3, "running")
                 run_id = run_step08(channel_id, topic, style_policy,
                                     revenue_policy, algorithm_policy)
+                # run_id 확정 → progress 파일에 run_id 갱신
+                _progress_init(channel_id, run_id)
+                for i in range(3): _progress_step(i, "done")  # 0~2 다시 done 표시
+                _progress_step(3, "running")
                 mark_step_done(channel_id, run_id, "step08")  # C-2
+                _progress_step(3, "done")
 
                 # Step09: BGM 오버레이
+                _progress_step(4, "running")
                 try:
                     run_step09(channel_id, run_id)
                     mark_step_done(channel_id, run_id, "step09")
+                    _progress_step(4, "done")
                 except Exception as e9:
                     mark_step_failed(channel_id, run_id, "step09", "STEP09_FAIL", str(e9)[:200])
+                    _progress_step(4, "error")
                     logger.warning(f"[PIPELINE] Step09 실패 (계속): {e9}")
 
                 # Step10: 제목/썸네일 배리언트
+                _progress_step(5, "running")
                 try:
                     run_step10(channel_id, run_id)
                     mark_step_done(channel_id, run_id, "step10")
+                    _progress_step(5, "done")
                 except Exception as e10:
                     mark_step_failed(channel_id, run_id, "step10", "STEP10_FAIL", str(e10)[:200])
+                    _progress_step(5, "error")
                     logger.warning(f"[PIPELINE] Step10 실패 (계속): {e10}")
 
                 # Step11: QA 게이트
+                _progress_step(6, "running")
                 try:
                     qa = run_step11(channel_id, run_id,
                                     human_review_completed=(channel_id not in {"CH1","CH2","CH4"}))
                     mark_step_done(channel_id, run_id, "step11")
+                    _progress_step(6, "done")
                 except Exception as e11:
                     mark_step_failed(channel_id, run_id, "step11", "STEP11_FAIL", str(e11)[:200])
+                    _progress_step(6, "error")
                     logger.error(f"[PIPELINE] Step11 실패: {e11}")
                     qa = {"overall_pass": False}
 
                 # Step12: 업로드 (QA 통과 + 수동 검수 불필요 채널)
+                _progress_step(7, "running")
                 if qa.get("overall_pass") and channel_id not in {"CH1","CH2","CH4"}:
                     try:
                         from src.step12.uploader import upload_video
                         receipt = upload_video(channel_id, run_id)
                         mark_step_done(channel_id, run_id, "step12")
                         _mark_pending_step13(channel_id, run_id, receipt.get("video_id",""))
+                        _progress_step(7, "done")
                     except Exception as upload_err:
                         mark_step_failed(channel_id, run_id, "step12",
                                          "STEP12_FAIL", str(upload_err)[:200])
+                        _progress_step(7, "error")
                         logger.error(f"[PIPELINE] STEP12 실패 {channel_id}/{run_id}: {upload_err}")
 
                     # Shorts 파이프라인
