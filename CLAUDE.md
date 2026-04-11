@@ -47,10 +47,17 @@ pytest tests/test_agents/ -q
 # GPU 패키지 설치 (GPU 환경 한정 — CPU-only/CI 환경에서는 실행 금지)
 pip install torch diffusers transformers accelerate safetensors
 
+# ── 코드 품질 ─────────────────────────────────────
+ruff check src/                                          # Python 린팅
+ruff check src/ --fix --select=E,W,F,I                  # 자동 수정
+cd web && npx prettier --check "app/**/*.{ts,tsx}"       # TS 포맷 체크
+cd web && npx prettier --write "app/**/*.{ts,tsx}"       # TS 포맷 적용
+
 # ── 웹 프론트엔드 (web/) ───────────────────────────
 cd web
 npm run dev          # 개발 서버 (localhost:7002)
 npm run build        # 프로덕션 빌드 (TypeScript 타입 검사 포함)
+npm run lint         # ESLint
 
 # ── ngrok 외부 공개 ────────────────────────────────
 # 고정 도메인: https://cwstudio.ngrok.app → localhost:7002
@@ -247,6 +254,8 @@ class MyAgent(BaseAgent):
 **주의**: `src/quota/__init__.py`는 23KB 레거시 파일로, yt-dlp 채널 수집 로직이 포함되어 있다. 일반적인 패키지 init이 아님.
 
 ### 웹 대시보드 (`web/`)
+
+> **`web/CLAUDE.md`** — 웹 전용 상세 가이드. Route Handler params 패턴, TypeScript null 좁히기, Supabase fallback, Docker/Capacitor 빌드, 미들웨어 제약 등이 기록돼 있다. 웹 작업 시 반드시 읽을 것.
 
 **스택**: Next.js 16.2.2 + React 19 + **Tailwind CSS v4** + shadcn/ui v4 (base-nova) + Recharts 3 + Supabase + **motion** + **next-themes** + **react-intersection-observer**
 
