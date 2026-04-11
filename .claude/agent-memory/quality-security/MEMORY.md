@@ -1,3 +1,15 @@
+# security-sentinel Memory
+
+> 세션 간 학습 이력 저장. 에이전트가 자동 업데이트.
+
+## 반복 패턴
+_아직 없음_
+
+## 주의사항
+_아직 없음_
+
+## 성공 패턴
+_아직 없음_
 ---
 name: security-auditor-memory
 description: KAS security-auditor 에이전트 작업 이력 — 발견 취약점 패턴, 수정 이력
