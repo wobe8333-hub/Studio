@@ -1,4 +1,4 @@
-# KAS Agent Teams v3 — 운영 가이드
+# KAS Agent Teams v3.1 — 운영 가이드
 
 > Claude Code Agent Teams 설정 파일. CLAUDE.md와 함께 모든 팀원이 자동으로 로드한다.
 
@@ -21,6 +21,7 @@ Lead (사용자) — 최종 머지 승인만 담당
       performance-profiler · a11y-expert · docs-architect · db-architect
       refactoring-surgeon · pipeline-debugger · video-qa-specialist · trend-analyst
       api-designer · release-manager · e2e-playwright · cost-optimizer-agent
+      ui-designer · ux-reviewer · doc-keeper · security-auditor
 ```
 
 ---
@@ -30,7 +31,11 @@ Lead (사용자) — 최종 머지 승인만 담당
 | 디렉토리/파일 | 소유자 | 비고 |
 |--------------|--------|------|
 | `src/` | backend-dev | frontend-dev 진입 금지 |
-| `web/` | frontend-dev | backend-dev 진입 금지 |
+| `web/app/` | frontend-dev | backend-dev 진입 금지 |
+| `web/components/` | frontend-dev(로직) + ui-designer(스타일) | 공유 — 동시 수정 시 SendMessage 조율 필수 |
+| `web/app/globals.css` | ui-designer | frontend-dev 직접 수정 금지 |
+| `web/public/` | ui-designer | |
+| `web/lib/`, `web/hooks/` | frontend-dev | |
 | `tests/` | test-engineer | backend-dev/frontend-dev 기여 가능 (리뷰 필수) |
 | `scripts/` | infra-ops | |
 | `.github/workflows/` | infra-ops + devops-automation | 공동 (infra-ops: 인프라 변경, devops-automation: CI/CD 도구) |
@@ -38,10 +43,29 @@ Lead (사용자) — 최종 머지 승인만 담당
 | `.claude/settings.local.json` | devops-automation | |
 | `ruff.toml`, `.prettierrc` | devops-automation | |
 | `scripts/supabase_schema.sql` | db-architect | |
+| `CLAUDE.md`, `AGENTS.md`, `README.md` | doc-keeper | 소스코드 수정 금지 |
 
 ---
 
-## 미션 프리셋 (12가지)
+## web/components/ 공유 규칙
+
+| 수정 유형 | 담당 |
+|-----------|------|
+| onClick, onChange 핸들러 | **frontend-dev** |
+| useState, useEffect | **frontend-dev** |
+| API 호출, 데이터 바인딩 | **frontend-dev** |
+| JSX 구조 변경 (새 요소 추가) | **frontend-dev** |
+| 조건부 렌더링 | **frontend-dev** |
+| className, style 속성 | **ui-designer** |
+| Tailwind 클래스, 애니메이션 | **ui-designer** |
+| CSS 변수 참조 변경 | **ui-designer** |
+
+**동일 파일 동시 수정 시**: SendMessage로 작업 범위 합의 후 순차 작업.
+**globals.css 변경 필요 시**: ui-designer에게 SendMessage로 요청. frontend-dev 직접 수정 금지.
+
+---
+
+## 미션 프리셋 (14가지)
 
 ### 1. 풀스택 Feature 개발
 ```
@@ -86,6 +110,27 @@ kas-ui 팀:
 - frontend-dev: 구현 + Playwright 시각 검증
 - a11y-expert: 접근성 속성 보강
 - e2e-playwright: E2E 회귀 테스트
+```
+
+### 5-A. UI 리디자인 강화 (v3.1 신규)
+```
+kas-ui-pro 팀:
+- ui-designer: 디자인 시스템 관리 + Figma→코드 변환 + 컴포넌트 스타일링
+- frontend-dev: 컴포넌트 로직 + 상태 관리 + API 연동
+- ux-reviewer: 접근성(WCAG) + 사용자 흐름 + 인터랙션 패턴 리뷰 (plan 모드)
+- quality-reviewer: 코드 품질 + 아키텍처 검증 (plan 모드)
+ui-designer와 frontend-dev에게 plan approval 요구
+작업: [리디자인 요구사항]
+```
+
+### 5-B. UX 감사 (v3.1 신규)
+```
+kas-ux-audit 팀:
+- ux-reviewer: WCAG 2.1 접근성 감사 + 사용자 흐름 + 모바일 사용성 (plan 모드, Read-only)
+- ui-designer: ux-reviewer 발견 스타일/일관성 이슈 즉시 수정
+- frontend-dev: ux-reviewer 발견 로직/흐름 이슈 즉시 수정
+ux-reviewer는 이슈를 SendMessage로 전달. 직접 수정 불가.
+작업: [감사 범위]
 ```
 
 ### 6. 런타임 에이전트 확장
@@ -186,6 +231,31 @@ validateChannelPath() 적용 필요. 담당: frontend-dev"
 다음 PR부터 ruff check src/ 통과 필요."
 ```
 
+### 스타일 변경 알림 (ui-designer → frontend-dev)
+```
+"web/components/kpi-banner.tsx의 className 변경 예정.
+카드 레이아웃 grid → flex 전환. 로직 측 영향 없음."
+```
+
+### 디자인 토큰 변경 알림 (ui-designer → broadcast)
+```
+"globals.css의 --card 변수 값 변경.
+변경 전: rgba(255,255,255,0.60)
+변경 후: rgba(255,255,255,0.65)
+모든 카드 컴포넌트에 시각적 영향 있을 수 있음."
+```
+
+### UX 이슈 전달 (ux-reviewer → frontend-dev / ui-designer)
+```
+ux-reviewer → frontend-dev:
+"home-ops-tab.tsx에서 파이프라인 실행 완료 후 피드백 없음.
+토스트 알림 또는 상태 변경 UI 추가 요청."
+
+ux-reviewer → ui-designer:
+"sidebar-nav.tsx 활성 메뉴 색상 대비 WCAG 4.5:1 미달.
+색상 강화 요청."
+```
+
 ---
 
 ## 멀티모델 전략
@@ -193,8 +263,8 @@ validateChannelPath() 적용 필요. 담당: frontend-dev"
 | 모델 | 에이전트 | 언제 사용 |
 |------|---------|----------|
 | **Opus** | mission-controller, security-sentinel, quality-reviewer | 판단/리뷰/감사 (정확도 최우선) |
-| **Sonnet** | backend-dev, frontend-dev, test-engineer, infra-ops, devops-automation + 8 specialists | 구현/분석 (비용-성능 균형) |
-| **Haiku** | docs-architect, trend-analyst, release-manager, cost-optimizer-agent | 단순 집계/문서 (비용 절감) |
+| **Sonnet** | backend-dev, frontend-dev, test-engineer, infra-ops, devops-automation, ui-designer, ux-reviewer, security-auditor + 7 specialists | 구현/분석/디자인 (비용-성능 균형) |
+| **Haiku** | docs-architect, trend-analyst, release-manager, cost-optimizer-agent, doc-keeper | 단순 집계/문서 (비용 절감) |
 
 **동시 Opus 제한**: 같은 미션에 Opus 에이전트 4명 이상 소환 금지.
 
@@ -208,6 +278,12 @@ validateChannelPath() 적용 필요. 담당: frontend-dev"
 - ❌ 같은 미션에 Opus 4명 이상 소환 (비용 폭주)
 - ❌ tests/ 파일 test-engineer 리뷰 없이 병합
 - ❌ 전문가 풀 에이전트가 소환 없이 상시 운영팀처럼 자주 활성화
+- ❌ ui-designer가 web/components/에서 이벤트 핸들러/상태 로직 수정 (frontend-dev 영역)
+- ❌ frontend-dev가 globals.css 직접 수정 (ui-designer 소유)
+- ❌ ux-reviewer/security-auditor가 코드 직접 수정 (Read-only 전용 — 이슈는 SendMessage로 전달)
+- ❌ UI 리디자인 시 ui-designer와 frontend-dev가 web/components/ 동일 파일 동시 수정 (SendMessage 조율 필수)
+- ❌ Layer 3 스페셜리스트 6명 초과 동시 소환 (비용 폭주 — 미션당 최대 5명 권장)
+- ❌ doc-keeper가 src/, web/, tests/ 소스코드 직접 수정 (문서 파일만 허용)
 
 ---
 

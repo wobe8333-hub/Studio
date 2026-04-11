@@ -497,6 +497,7 @@ setattr(_google_pkg, "generativeai", _genai_mock)
 - **Run 이미지 경로**: `RunArtifacts.step08.image_paths`의 항목은 step08 디렉토리 기준 상대경로(`images/assets_ai/xxx.png`)다. `/api/artifacts/{ch}/{run}/step08/` prefix를 붙여 URL을 조합한다.
 - **DRY RUN 런 식별**: `manifest.json`의 `dry_run: true` 필드로 구분. Run 상세 페이지에서 DRY RUN 배너 표시. `test_run_*` prefix + `dry_run: true` 조합.
 - **웹 RUN_ID_RE 허용 패턴**: `run_CH[1-7]_\d{7,13}` (실제 실행) + `test_run_\d{1,16}` + `test_run_\d{3}` (테스트/DRY RUN). 새 run 유형 추가 시 `web/lib/fs-helpers.ts`의 `RUN_ID_RE` 업데이트 필수.
+- **대용량 파일 쓰기**: 한국어 비율이 높거나 300줄 이상인 파일(AGENTS.md, CLAUDE.md 등)에 Write 도구를 쓰면 변경이 묵묵히 되돌아갈 수 있음. 이 경우 Bash heredoc 사용: `cat > 파일경로 << 'EOF' ... EOF`. 성공 여부는 `grep` 또는 `wc -l`로 즉시 검증.
 
 ## 환경 변수
 
@@ -526,26 +527,75 @@ setattr(_google_pkg, "generativeai", _genai_mock)
 
 ## Agent Teams 설정
 
-Claude Code Agent Teams 기능이 활성화되어 있다. 팀 운영 가이드는 `AGENTS.md` 참고.
+Claude Code Agent Teams v3.1이 활성화되어 있다. 팀 운영 가이드는 `AGENTS.md` 참고.
 
-### 코어팀 구성 (4명)
+### Layer 1 — Command (1명)
 
-| 팀원 | 파일 | 소유 영역 |
-|------|------|-----------|
-| `backend-dev` | `.claude/agents/backend-dev.md` | `src/` 전체 |
-| `frontend-dev` | `.claude/agents/frontend-dev.md` | `web/` 전체 |
-| `quality-reviewer` | `.claude/agents/quality-reviewer.md` | Read-only, `tests/` |
-| `infra-ops` | `.claude/agents/infra-ops.md` | `scripts/`, 쿼터, 환경변수 |
+| 팀원 | 모델 | 역할 |
+|------|------|------|
+| `mission-controller` | Opus | 자율 이슈 감지 + 팀 편성 + 진행 조율 |
+
+### Layer 2 — Standing 상시팀 (7명)
+
+| 팀원 | 파일 | 모델 | 소유 영역 |
+|------|------|------|-----------|
+| `backend-dev` | `.claude/agents/backend-dev.md` | Sonnet | `src/` 전체 + context7 MCP |
+| `frontend-dev` | `.claude/agents/frontend-dev.md` | Sonnet | `web/app/`, `web/lib/`, `web/hooks/`, `web/components/`(로직) |
+| `test-engineer` | `.claude/agents/test-engineer.md` | Sonnet | `tests/` 전체 (conftest 단독 소유) |
+| `security-sentinel` | `.claude/agents/security-sentinel.md` | Opus | 보안 상시 감시 Read-only |
+| `quality-reviewer` | `.claude/agents/quality-reviewer.md` | Sonnet | 코드품질+아키텍처 Read-only |
+| `infra-ops` | `.claude/agents/infra-ops.md` | Sonnet | `scripts/`, `.github/`, 쿼터, 환경변수 |
+| `devops-automation` | `.claude/agents/devops-automation.md` | Sonnet | Hooks, ruff, prettier, CI/CD |
+
+### Layer 3 — Specialists (소환 시에만, 16명)
+
+| 팀원 | 모델 | 소환 시점 |
+|------|------|----------|
+| `performance-profiler` | Sonnet | 성능 병목 분석 |
+| `a11y-expert` | Sonnet | 접근성 개선 |
+| `docs-architect` | Haiku | 문서 작성 |
+| `db-architect` | Sonnet | DB 스키마/마이그레이션 |
+| `refactoring-surgeon` | Sonnet | God Module 분해 |
+| `pipeline-debugger` | Sonnet | 파이프라인 장애 디버깅 |
+| `video-qa-specialist` | Sonnet | 영상 QA 검증 |
+| `trend-analyst` | Haiku | 트렌드 데이터 분석 |
+| `api-designer` | Sonnet | API 계약 설계 |
+| `release-manager` | Haiku | 릴리스 관리 |
+| `e2e-playwright` | Sonnet | E2E 테스트 |
+| `cost-optimizer-agent` | Haiku | 비용/쿼터 최적화 |
+| `ui-designer` | Sonnet | UI 디자인 + Figma (globals.css/web/public/ 소유) |
+| `ux-reviewer` | Sonnet | UX/접근성 감사 Read-only |
+| `security-auditor` | Sonnet | 보안 감사 Read-only |
+| `doc-keeper` | Haiku | CLAUDE.md/AGENTS.md 문서 동기화 |
 
 ### Agent Teams 핵심 규칙
 - **파일 교차 수정 금지**: `backend-dev`는 `web/` 금지, `frontend-dev`는 `src/` 금지
-- **quality-reviewer**는 코드를 직접 수정하지 않음. 발견 이슈는 해당 팀원에게 메시지 전달
+- **tests/conftest.py**: `test-engineer` 단독 소유. 다른 팀원 수정 금지
+- **테스트 공동 작성**: backend-dev는 `tests/test_step*.py`, frontend-dev는 `tests/test_web*.py`에 직접 기여 가능 (test-engineer 리뷰)
+- **Read-only 에이전트**: `security-sentinel`, `quality-reviewer`, `security-auditor`, `ux-reviewer`는 코드 직접 수정 불가. 발견 이슈는 SendMessage로 전달
+- **보안 역할 분리**: 상시 감시 `security-sentinel` (Ops) / 심층 감사 `security-auditor` (PR 전)
+- **UI/UX 역할 분리**: `ui-designer`(스타일링/디자인 시스템), `ux-reviewer`(WCAG/사용성 리뷰). `web/components/` 공유 — frontend-dev(로직) + ui-designer(스타일)
+- **globals.css / web/public/ 소유**: `ui-designer` 전용. `frontend-dev` 직접 수정 금지
 - **API 계약 변경**: `backend-dev`가 API 응답 포맷 변경 시 `frontend-dev`에게 사전 메시지 필수
-- **팀 규모**: 코어 4명. 미션별 추가 소환 최대 3명 (총 7명 이내)
+- **자가 치유**: 구현 팀원(backend/frontend/test/ui-designer)은 테스트 실패 시 최대 3회 자동 수정 → 실패 시 리드 에스컬레이션
+- **Specialist 제한**: Layer 3 에이전트 미션당 최대 5명 동시 소환 권장
 - **plan approval**: 코드 수정을 수반하는 모든 미션에서 팀원에게 plan approval 요구 권장
 - **maxTurns**: 각 에이전트는 maxTurns 내에서 작업 완료. 초과 시 현재 상태를 리드에게 보고
 
+### TaskCompleted 훅 (자동 품질 게이트)
+태스크 완료 시마다 자동 실행:
+1. `pytest tests/ -x -q` — Python 백엔드 테스트
+2. `cd web && npm run build` — TypeScript 타입 체크 + Next.js 빌드 검증
+
 ### 활성화 확인
 ```bash
-claude agents  # 4개 subagent 목록 확인
+claude agents  # 24개 subagent 목록 확인
+# Layer 1: mission-controller
+# Layer 2: backend-dev, frontend-dev, test-engineer, security-sentinel,
+#           quality-reviewer, infra-ops, devops-automation
+# Layer 3: performance-profiler, a11y-expert, docs-architect, db-architect,
+#           refactoring-surgeon, pipeline-debugger, video-qa-specialist,
+#           trend-analyst, api-designer, release-manager, e2e-playwright,
+#           cost-optimizer-agent, ui-designer, ux-reviewer,
+#           security-auditor, doc-keeper
 ```
