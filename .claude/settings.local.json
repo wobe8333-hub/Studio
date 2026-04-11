@@ -9,7 +9,15 @@
         "hooks": [
           {
             "type": "command",
-            "command": "cd \"C:/Users/조찬우/Desktop/ai_stuidio_claude\" && python -m pytest tests/ -x -q --timeout=60 2>&1 | tail -15 && ruff check src/ --exit-zero 2>&1 | tail -5 && cd web && npm run build 2>&1 | tail -10"
+            "command": "cd \"C:/Users/조찬우/Desktop/ai_stuidio_claude\" && python -m pytest tests/ -x -q --timeout=60 2>&1 | tail -15"
+          },
+          {
+            "type": "command",
+            "command": "cd \"C:/Users/조찬우/Desktop/ai_stuidio_claude\" && ruff check src/ --select=E,F 2>&1 | tail -5"
+          },
+          {
+            "type": "command",
+            "command": "cd \"C:/Users/조찬우/Desktop/ai_stuidio_claude/web\" && npm run build 2>&1 | tail -10"
           }
         ]
       }
@@ -24,6 +32,61 @@
           }
         ]
       }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "prompt",
+            "prompt": "파일 경로를 확인하라. 다음 중 해당하면 차단:\n1. credentials/ 또는 .env 파일 수정\n2. src/step08/__init__.py (KAS-PROTECTED) 수정\n3. API 키가 문자열 리터럴로 하드코딩된 코드\n해당 시 {\"decision\":\"block\",\"reason\":\"보안 규칙 위반: [구체적 사유]\"} 반환. 아니면 {\"decision\":\"allow\"} 반환."
+          }
+        ]
+      }
+    ],
+    "SubagentStop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cd \"C:/Users/조찬우/Desktop/ai_stuidio_claude\" && python -m pytest tests/ -x -q --timeout=30 2>&1 | tail -5 && cd \"C:/Users/조찬우/Desktop/ai_stuidio_claude/web\" && npm run build 2>&1 | tail -3"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cd \"C:/Users/조찬우/Desktop/ai_stuidio_claude\" && echo \"=== 세션 종료 상태 ===\" && python -m pytest tests/ -x -q --timeout=30 2>&1 | tail -3 && echo \"=== ruff ===\" && ruff check src/ --select=E,F --statistics 2>&1 | tail -3"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cd \"C:/Users/조찬우/Desktop/ai_stuidio_claude\" && git diff --stat HEAD 2>/dev/null | tail -5"
+          }
+        ]
+      }
+    ],
+    "TaskCreated": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo \"[TASK] $(date +%%Y-%%m-%%dT%%H:%%M:%%S)\" >> \"C:/Users/조찬우/Desktop/ai_stuidio_claude/logs/agent_audit.log\" 2>/dev/null || true"
+          }
+        ]
+      }
     ]
   },
   "permissions": {
@@ -33,24 +96,13 @@
       "WebFetch",
       "WebSearch",
       "WebBrowse",
-      "Bash(grep -rl \"import pandas\\\\|from pandas\" backend/ --include=*.py)",
-      "Bash(grep -rl urllib backend/ --include=*.py)",
-      "Bash(find backend/ -name \"__init__.py\" -exec wc -l {} +)",
       "Bash(pip install:*)",
       "Bash(python:*)",
-      "Bash(pre-commit --version)",
-      "Bash(python -c \":*)",
-      "Bash(python -c \"import inspect; from src.step05.sources.google_trends import fetch_trends_scores; print\\(inspect.signature\\(fetch_trends_scores\\)\\)\")",
-      "Bash(for f:*)",
-      "Read(//c/Users/조찬우/Desktop/ai_stuidio_claude/**)",
-      "Bash(grep:*)",
       "Bash(python3:*)",
-      "Bash(cmd /c \"cd /d C:\\\\Users\\\\조찬우\\\\Desktop\\\\ai_stuidio_claude && python -m pytest tests\\\\test_step08_sd.py tests\\\\test_step12.py tests\\\\test_e2e.py -q --tb=line 2>&1\")",
-      "Bash(echo \"EXIT_CODE:$?\")",
-      "Bash(echo \"EXIT:$?\")",
-      "Bash(del:*)",
+      "Bash(grep:*)",
       "Bash(pip freeze:*)",
       "Bash(ffmpeg -version)",
+      "Read(//c/Users/조찬우/Desktop/ai_stuidio_claude/**)",
       "mcp__context7__resolve-library-id",
       "mcp__context7__query-docs",
       "Skill(update-config)",
@@ -63,8 +115,8 @@
       "mcp__playwright__browser_tabs",
       "mcp__playwright__browser_close",
       "mcp__playwright__browser_console_messages",
-      "mcp__figma__whoami",
       "mcp__playwright__browser_run_code",
+      "mcp__figma__whoami",
       "mcp__plugin_github_github__create_repository"
     ]
   }
