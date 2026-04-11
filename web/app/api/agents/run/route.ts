@@ -1,18 +1,27 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { spawn } from 'child_process'
-import { getKasRoot } from '@/lib/fs-helpers'
+import { getKasRoot, getPythonExecutable } from '@/lib/fs-helpers'
 
 const AGENT_MAP: Record<string, string> = {
+  // 기존 4개
   dev_maintenance:    'from src.agents.dev_maintenance import DevMaintenanceAgent; import json; print(json.dumps(DevMaintenanceAgent().run()))',
   analytics_learning: 'from src.agents.analytics_learning import AnalyticsLearningAgent; import json; print(json.dumps(AnalyticsLearningAgent().run()))',
   ui_ux:             'from src.agents.ui_ux import UiUxAgent; import json; print(json.dumps(UiUxAgent().run()))',
   video_style:       'from src.agents.video_style import VideoStyleAgent; import json; print(json.dumps(VideoStyleAgent().run()))',
+  // 신규 2개
+  script_quality:    'from src.agents.script_quality import ScriptQualityAgent; import json; print(json.dumps(ScriptQualityAgent().run()))',
+  cost_optimizer:    'from src.agents.cost_optimizer import CostOptimizerAgent; import json; print(json.dumps(CostOptimizerAgent().run()))',
 }
 
 /** subprocess 실행 후 stdout/stderr/code를 항상 반환 (non-zero exit 무시) */
 function runPython(script: string, cwd: string): Promise<{ stdout: string; stderr: string; code: number }> {
   return new Promise((resolve) => {
-    const proc = spawn('python', ['-c', script], { cwd, env: process.env })
+    // getPythonExecutable() — Windows Store 스텁 대신 py 런처 사용 (0xC0000142 방지)
+    const proc = spawn(getPythonExecutable(), ['-c', script], {
+      cwd,
+      shell: true,
+      env: { ...process.env, PYTHONIOENCODING: 'utf-8', PYTHONUTF8: '1' },
+    })
     let stdout = ''
     let stderr = ''
     proc.stdout.on('data', (d: Buffer) => { stdout += d.toString() })

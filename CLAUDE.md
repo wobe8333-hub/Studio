@@ -87,6 +87,11 @@ ngrok start kas-studio
 
 **에러 전략**: fail-and-continue. Step09/10/11 실패는 경고 후 진행. Step08 실패만 해당 주제를 건너뜀.
 
+**실시간 진행 추적** — 대시보드(운영 탭) 3초 폴링을 위해 두 가지 헬퍼를 사용한다:
+- `_progress_init(channel_id, run_id)` — 파이프라인 시작 시 호출. `data/global/step_progress.json`에 전체 Step 목록(idle)과 `active: true` 기록.
+- `_progress_step(index, status, started_at?)` — 각 Step 전/후에 호출. 단일 Step의 `status` + 타임스탬프를 업데이트. 마지막 Step(index=7) done 시 `active: false` 설정.
+- 상태 파일: `data/global/step_progress.json` — `{ active, dry_run, channel_id, run_id, steps: [{index, name, status, started_at, done_at, elapsed_ms}] }`
+
 ### Step08 — 핵심 영상 생성 오케스트레이터
 
 `src/step08/__init__.py`의 `run_step08()`이 하나의 영상을 처음부터 끝까지 생성:
@@ -151,9 +156,11 @@ python scripts/sync_to_supabase.py
 ```
 data/global/                        — 채널 레지스트리, 쿼터 정책, 메모리 스토어
 data/global/notifications/          — Sub-Agent 알림 (notifications.json, hitl_signals.json)
+data/global/step_progress.json      — 파이프라인 실시간 진행 상태 (웹 3초 폴링 대상)
 data/channels/CH*/                  — 채널별 algorithm/revenue/style 정책 JSON
 data/knowledge_store/               — KnowledgePackage JSON
-runs/CH*/run_*/                     — 실행별 결과물 (manifest.json, step08/, step09/ 등)
+runs/CH*/run_*/                     — 실제 파이프라인 실행 결과물 (manifest.json, step08/, step09/ 등)
+runs/CH*/test_run_*/                — DRY RUN 결과물 (manifest.json만 생성, dry_run: true)
 logs/                               — pipeline.log (loguru, 50MB rotation)
 ```
 
@@ -272,19 +279,36 @@ class MyAgent(BaseAgent):
 폰트: **Noto Sans KR** (400/500/600/700/800) — Google Fonts.
 페이지 배경: `linear-gradient(135deg, #fff0f0 0%, #ffe0e0 40%, #f8f4f4 100%)`.
 
-클라이언트 컴포넌트에서는 `tailwind` 클래스 대신 인라인 `style` + `CARD_BASE` 상수를 사용한다:
+클라이언트 컴포넌트에서는 `tailwind` 클래스 대신 인라인 `style` + `CARD_BASE` 상수를 사용한다. **반드시 CSS 변수를 사용**해야 다크모드가 자동 적용된다:
 ```tsx
 const CARD_BASE: React.CSSProperties = {
-  background: 'rgba(255,255,255,0.60)',
+  background: 'var(--card)',            // 라이트: rgba(255,255,255,0.60) / 다크: rgba(42,16,16,0.80)
   backdropFilter: 'blur(20px)',
   WebkitBackdropFilter: 'blur(20px)',
-  border: '1px solid rgba(220,80,80,0.18)',
+  border: '1px solid var(--border)',    // 라이트: rgba(220,80,80,0.18) / 다크: rgba(255,100,100,0.20)
   borderRadius: '0.75rem',
   boxShadow: '0 4px 16px rgba(180,40,40,0.07)',
 }
 ```
-사이드바/탑바: `background: rgba(180,40,40,0.82/0.92)` + `backdropFilter: blur(20px)`.
+탭/필터 컨테이너 배경: `background: 'var(--tab-bg)', border: '1px solid var(--tab-border)'` 사용.
+사이드바/탑바: `background: var(--sidebar)` + `backdropFilter: blur(20px)`. 탑바 텍스트/배지: `color: var(--sidebar-foreground/primary)`.
 탭 버튼 활성: `rgba(180,40,40,0.88)` 배경 + 흰 텍스트 / 비활성: `transparent`, `#9b4040`.
+
+#### 다크모드 — Crimson Night 팔레트
+
+`ThemeProvider`는 `defaultTheme="light"`, `enableSystem={false}`. 헤더 우측 `<ThemeToggle />` 버튼으로 전환.
+
+`.dark` 주요 변수 (Crimson Night):
+```css
+--background: #1a0808;           /* 딥레드 블랙 배경 */
+--foreground: #ffdede;           /* 연핑크 텍스트 */
+--card:        rgba(42,16,16,0.80);  /* 글래스카드 */
+--primary:     #e85555;          /* 버튼/강조 */
+--sidebar:     rgba(61,15,15,0.95);  /* 사이드바/탑바 */
+--tab-bg:      rgba(42,16,16,0.55);  /* 탭 컨테이너 */
+--tab-border:  rgba(255,100,100,0.15);
+```
+body 다크 그라디언트: `.dark body { background: linear-gradient(135deg, #1a0808 0%, #250d0d 40%, #1e0a0a 100%); }`
 
 #### 모바일 반응형
 
@@ -306,7 +330,7 @@ const CARD_BASE: React.CSSProperties = {
 ```
 web/
 ├── app/
-│   ├── layout.tsx          — CollapsibleSidebar + 탑바(딥레드 glass) + BottomNav + ThemeProvider
+│   ├── layout.tsx          — CollapsibleSidebar + 탑바(var(--sidebar) glass) + ThemeToggle + BottomNav + ThemeProvider
 │   ├── page.tsx            — 서버 컴포넌트: KpiBanner + HomeExecTab(경영/운영 탭 컨트롤러)
 │   ├── home-exec-tab.tsx   — 경영 탭 (KPI 카드 4개, 채널 목표 진행 바, 6개월 차트, 채널 카드 7개)
 │   ├── home-ops-tab.tsx    — 운영 탭 (파이프라인 스텝 현황, HITL 신호, 파이프라인 제어 버튼)
@@ -339,13 +363,29 @@ web/
     │   ├── client.ts         — 브라우저용 (createBrowserClient)
     │   ├── server.ts         — 서버용 (createServerClient + cookies)
     │   └── server-admin.ts   — service_role 전용 (RLS 우회, 서버에서만 사용)
-    ├── fs-helpers.ts         — 경로 보안 유틸리티: validateRunPath / validateChannelPath / getKasRoot / readKasJson / writeKasJson
+    ├── fs-helpers.ts         — 경로 보안 유틸리티: validateRunPath / validateChannelPath / getKasRoot / readKasJson / writeKasJson. `RUN_ID_RE`는 `run_CH[1-7]_\d{7,13}` 및 `test_run_\d{1,16}|test_run_\d{3}` 패턴 허용.
     └── types.ts              — Supabase DB 전체 타입 (Database, Channel, PipelineRun 등)
 ```
 
 **홈 페이지 구조**: `page.tsx`(서버) → `KpiBanner`(항상 고정) + `HomeExecTab`(탭 컨트롤러). `HomeExecTab`은 활성 탭에 따라 자체 콘텐츠(경영) 또는 `<HomeOpsTab />`(운영)을 렌더링.
 
-**운영 탭 API 형식**: `/api/pipeline/steps`는 `{ steps: [{ index: 0, name: string, status: 'idle'|'running'|'done'|'error'|'skipped', elapsed_ms?: number }] }` 반환. `index` 0~7이 Step05~12에 대응.
+**운영 탭 API 형식**: `/api/pipeline/steps`는 `{ active: boolean, steps: [{ index: 0, name: string, status: 'idle'|'running'|'done'|'error'|'skipped', elapsed_ms?: number }] }` 반환. `index` 0~7이 Step05~12에 대응.
+
+**운영 탭 파이프라인 제어 버튼** (`home-ops-tab.tsx`):
+- 🟢 **실제 파이프라인 실행** (`dry_run: false`) — `window.confirm()` 경고 후 실행. `python -m src.pipeline 1`과 동일하며 Gemini API 크레딧 소모.
+- 🔴 **DRY RUN** (`dry_run: true`) — 시뮬레이션. 실제 API 호출 없이 스텝 시뮬레이션. `runs/{chId}/{runId}/manifest.json` 생성 → 런 목록에 즉시 표시됨.
+- **스텝 초기화** — `DELETE /api/pipeline/steps` → `step_progress.json` 초기화 + frozen 해제.
+
+**DRY RUN 트리거 동작** (`/api/pipeline/trigger`): `dry_run: true` 요청 시 `runs/{chId}/{runId}/manifest.json` 파일을 실제로 생성한다(run_state: RUNNING). Step 완료 시 run_state가 COMPLETED로 갱신됨. 덕분에 런 목록 API에서 즉시 조회 가능.
+
+**Run 상세 `RunArtifacts` 인터페이스** (`/api/runs/[ch]/[id]`):
+- `manifest.dry_run?: boolean` — DRY RUN 여부
+- `step08.hook_text: string | null` — `script.json`의 `hook` 필드. 문자열 또는 `{text: string}` 객체 모두 파싱.
+- `step08.narration_ext: 'wav' | 'mp3'` — `.wav` 우선, 없으면 `.mp3` 폴백.
+- `step08.video_filename: string` — 우선순위: `video_narr.mp4 > video.mp4 > video_subs.mp4`. `final.mp4`는 존재하지 않음.
+- `step08.image_paths: string[]` — **step08 디렉토리 기준 상대경로** (`images/assets_ai/xxx.png`). 프론트엔드에서 `/api/artifacts/{ch}/{run}/step08/${img}` 형태로 조합.
+
+**채널별 Run 목록 API** (`/api/runs/[channelId]`): `run_*` 및 `test_run_*` 두 패턴 모두 포함. `manifest.json`이 없는 `test_run_*`은 `qa_result.json` 타임스탬프 또는 디렉토리 생성 시간을 `created_at`으로 사용.
 
 **API 라우트** (`app/api/`): `artifacts/[...path]`(파일 서빙), `agents/status`, `agents/run`, `cost/projection`, `deferred-jobs`, `hitl-signals`, `knowledge`, `learning/algorithm|kpi`, `pipeline/logs|preflight|preview|status|steps|trigger`, `qa-data`, `runs/[ch]`(채널별 Run 목록), `runs/[ch]/[id]`, `runs/[ch]/[id]/bgm|seo|shorts`, `sustainability`
 
@@ -436,7 +476,7 @@ setattr(_google_pkg, "generativeai", _genai_mock)
 - **웹 채널 데이터**: 웹에서 채널 정보 하드코딩 금지. 항상 Supabase `channels` 테이블 또는 fallback 상수 사용.
 - **웹 Recharts**: `page.tsx`는 서버 컴포넌트이므로 Recharts 직접 사용 불가. `home-charts.tsx` 또는 별도 `'use client'` 파일에 격리.
 - **웹 다크모드**: `document.documentElement.classList`를 직접 조작하지 말 것. `next-themes`의 `useTheme`/`ThemeProvider` 사용.
-- **웹 인라인 스타일**: 클라이언트 컴포넌트에서 색상은 Tailwind 클래스 대신 `CARD_BASE` 상수(각 파일 상단 정의) + CSS 변수(`--p1~4`, `--t1~3`)로 표현. 새 홈 탭 컴포넌트 작성 시 `home-exec-tab.tsx`의 `CARD_BASE` 패턴을 복사한다.
+- **웹 인라인 스타일**: 클라이언트 컴포넌트에서 색상은 Tailwind 클래스 대신 `CARD_BASE` 상수(각 파일 상단 정의) + CSS 변수(`--p1~4`, `--t1~3`)로 표현. `CARD_BASE`의 `background`는 반드시 `var(--card)`, `border`는 `var(--border)` 사용. 탭 컨테이너는 `var(--tab-bg)` / `var(--tab-border)`. 하드코딩된 `rgba(255,255,255,...)` 사용 금지 — 다크모드에서 흰색 박스가 나타난다. 새 홈 탭 컴포넌트 작성 시 `home-exec-tab.tsx`의 `CARD_BASE` 패턴을 복사한다.
 - **웹 모바일 반응형**: 레이아웃 수준 변경은 `globals.css` 미디어 쿼리(`kas-sidebar`, `kas-bottom-nav`, `kas-content` 클래스)로 처리. 컴포넌트 내부 그리드/폰트 분기는 `hooks/use-is-mobile.ts`의 `useIsMobile()` 훅 사용.
 - **웹 파일 서빙**: `runs/` 결과물은 반드시 `/api/artifacts/[channelId]/[runId]/...` 경로 사용. `/api/files/` 경로는 존재하지 않는다.
 - **Supabase 쓰기 작업**: anon key + RLS가 아닌 `createAdminClient()` (service_role) 사용. `web/app/trends/actions.ts`가 참조 구현이다.
@@ -452,6 +492,11 @@ setattr(_google_pkg, "generativeai", _genai_mock)
 - **웹 Next.js 16 params**: Route handler의 params는 `Promise<{...}>` 타입이므로 반드시 `await params`로 구조분해해야 한다. `{ params }: { params: Promise<{ channelId: string }> }` 패턴.
 - **chapter_markers 형식**: `step10/metadata.json`의 `chapter_markers` 키 값은 `[{"time": "00:00", "title": "인트로"}, ...]` 배열. `metadata_generator.py`가 description에 자동 삽입하며 `time` 필드는 `MM:SS` 또는 `H:MM:SS` 형식.
 - **FFmpeg 인코딩 표준**: `ffmpeg_composer.py`의 모든 영상 인코딩은 `-crf 22 -preset medium`을 기본값으로 사용. YouTube 권장(18-20)과 처리 속도의 절충점.
+- **영상 파일 우선순위**: Step08 결과 영상은 `video_narr.mp4 > video.mp4 > video_subs.mp4` 순으로 탐색. `final.mp4`는 존재하지 않으므로 하드코딩 금지.
+- **나레이션 파일 확장자**: `narration.wav` 우선, 없으면 `narration.mp3` 폴백. `.mp3` 고정 하드코딩 금지 — `.wav`가 생성될 경우 오디오 재생 불가.
+- **Run 이미지 경로**: `RunArtifacts.step08.image_paths`의 항목은 step08 디렉토리 기준 상대경로(`images/assets_ai/xxx.png`)다. `/api/artifacts/{ch}/{run}/step08/` prefix를 붙여 URL을 조합한다.
+- **DRY RUN 런 식별**: `manifest.json`의 `dry_run: true` 필드로 구분. Run 상세 페이지에서 DRY RUN 배너 표시. `test_run_*` prefix + `dry_run: true` 조합.
+- **웹 RUN_ID_RE 허용 패턴**: `run_CH[1-7]_\d{7,13}` (실제 실행) + `test_run_\d{1,16}` + `test_run_\d{3}` (테스트/DRY RUN). 새 run 유형 추가 시 `web/lib/fs-helpers.ts`의 `RUN_ID_RE` 업데이트 필수.
 
 ## 환경 변수
 
@@ -476,3 +521,31 @@ setattr(_google_pkg, "generativeai", _genai_mock)
 - `DASHBOARD_PASSWORD` — 웹 대시보드 비밀번호. 미설정 시 인증 자동 통과 (개발 환경)
 
 **YouTube OAuth 토큰**: 업로드/KPI 수집은 API 키가 아닌 OAuth2 인증이 필요하다. `credentials/{CH}_token.json`이 채널당 존재해야 한다. 만료 토큰은 자동 갱신 후 파일에 저장된다. 초기 발급: `python scripts/generate_oauth_token.py --channel CH1`.
+
+---
+
+## Agent Teams 설정
+
+Claude Code Agent Teams 기능이 활성화되어 있다. 팀 운영 가이드는 `AGENTS.md` 참고.
+
+### 코어팀 구성 (4명)
+
+| 팀원 | 파일 | 소유 영역 |
+|------|------|-----------|
+| `backend-dev` | `.claude/agents/backend-dev.md` | `src/` 전체 |
+| `frontend-dev` | `.claude/agents/frontend-dev.md` | `web/` 전체 |
+| `quality-reviewer` | `.claude/agents/quality-reviewer.md` | Read-only, `tests/` |
+| `infra-ops` | `.claude/agents/infra-ops.md` | `scripts/`, 쿼터, 환경변수 |
+
+### Agent Teams 핵심 규칙
+- **파일 교차 수정 금지**: `backend-dev`는 `web/` 금지, `frontend-dev`는 `src/` 금지
+- **quality-reviewer**는 코드를 직접 수정하지 않음. 발견 이슈는 해당 팀원에게 메시지 전달
+- **API 계약 변경**: `backend-dev`가 API 응답 포맷 변경 시 `frontend-dev`에게 사전 메시지 필수
+- **팀 규모**: 코어 4명. 미션별 추가 소환 최대 3명 (총 7명 이내)
+- **plan approval**: 코드 수정을 수반하는 모든 미션에서 팀원에게 plan approval 요구 권장
+- **maxTurns**: 각 에이전트는 maxTurns 내에서 작업 완료. 초과 시 현재 상태를 리드에게 보고
+
+### 활성화 확인
+```bash
+claude agents  # 4개 subagent 목록 확인
+```
