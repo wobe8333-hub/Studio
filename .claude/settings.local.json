@@ -9,7 +9,18 @@
         "hooks": [
           {
             "type": "command",
-            "command": "cd \"C:/Users/조찬우/Desktop/ai_stuidio_claude\" && python -m pytest tests/ -x -q --timeout=60 2>&1 | tail -10"
+            "command": "cd \"C:/Users/조찬우/Desktop/ai_stuidio_claude\" && python -m pytest tests/ -x -q --timeout=60 2>&1 | tail -15 && ruff check src/ --exit-zero 2>&1 | tail -5 && cd web && npm run build 2>&1 | tail -10"
+          }
+        ]
+      }
+    ],
+    "TeammateIdle": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cd \"C:/Users/조찬우/Desktop/ai_stuidio_claude\" && echo \"=== 마지막 커밋 변경 파일 ===\" && git diff HEAD~1 --name-only 2>/dev/null | head -20"
           }
         ]
       }
