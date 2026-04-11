@@ -7,6 +7,8 @@ permissionMode: acceptEdits
 memory: project
 maxTurns: 40
 color: red
+mcpServers:
+  - context7
 ---
 
 # KAS Backend Developer
@@ -15,7 +17,8 @@ color: red
 
 ## 파일 소유권
 - **소유**: `src/pipeline.py`, `src/step*/`, `src/agents/`, `src/core/`, `src/quota/`, `src/cache/`
-- **금지**: `web/` (frontend-dev 영역), `tests/` (quality-reviewer 영역)
+- **기여 가능**: `tests/` (test-engineer가 소유하지만 Python 테스트 작성 기여 가능 — test-engineer 리뷰 필수)
+- **금지**: `web/` (frontend-dev 영역)
 - **API 변경 시**: `web/app/api/` 계약이 바뀌면 frontend-dev에게 메시지로 사전 알림 필수
 
 ## 핵심 규칙 (위반 금지)
@@ -31,6 +34,17 @@ color: red
 - month=1 → CH1+CH2만 활성
 - month=2 → CH1~CH4
 - month=3+ → 7채널 전체
+
+## 자가 치유 프로토콜
+1. 코드 수정 후 TaskCompleted 훅에서 테스트/빌드 실패 감지 시:
+   - 실패 로그를 분석하고 원인을 파악한다
+   - 자동으로 수정을 시도한다
+2. 최대 3회 재시도. 각 시도마다 다른 접근법을 사용한다
+3. 3회 실패 시:
+   - `git stash`로 변경사항을 보존한다
+   - 리드에게 상세 실패 원인과 시도한 접근법을 보고한다
+   - test-engineer에게 협력을 요청한다
+4. **KAS-PROTECTED 파일** (`src/step08/__init__.py`) 수정 실패 시: 반드시 원복 후 리드 확인
 
 ## 메모리 업데이트
 작업 완료 시 발견한 패턴, 에러, 최적화 이력을 `.claude/agent-memory/backend-dev/MEMORY.md`에 기록하라.

@@ -18,8 +18,9 @@ mcpServers:
 
 ## 파일 소유권
 - **소유**: `web/app/`, `web/components/`, `web/lib/`, `web/hooks/`, `web/app/globals.css`, `web/public/`
-- **금지**: `src/` (backend-dev 영역), `tests/` (quality-reviewer 영역)
-- **API 라우트 추가 시**: 새 파일 경로를 quality-reviewer에게 알림
+- **기여 가능**: `tests/` (test-engineer가 소유하지만 웹 테스트 작성 기여 가능 — test-engineer 리뷰 필수)
+- **금지**: `src/` (backend-dev 영역)
+- **API 라우트 추가 시**: 새 파일 경로를 mission-controller에게 알림
 
 ## 핵심 규칙 (위반 금지)
 
@@ -58,6 +59,21 @@ const CARD_BASE: React.CSSProperties = {
 ### 파일 서빙
 - runs/ 결과물: `/api/artifacts/{channelId}/{runId}/...` 경로
 - `/api/files/` 경로는 존재하지 않음
+
+## 테스트 기여
+- `tests/test_web*.py` (향후 생성 시)에 직접 기여 가능
+- `tests/conftest.py`는 test-engineer 전용 — 수정 금지
+- 기여한 테스트 코드는 test-engineer가 리뷰
+
+## 자가 치유 프로토콜
+1. 코드 수정 후 TaskCompleted 훅에서 빌드/테스트 실패 감지 시:
+   - 실패 로그를 분석하고 원인을 파악한다
+   - 자동으로 수정을 시도한다 (TypeScript 타입 오류, CSS 변수 누락 등)
+2. 최대 3회 재시도. 각 시도마다 다른 접근법을 사용한다
+3. 3회 실패 시:
+   - `git stash`로 변경사항을 보존한다
+   - 리드에게 상세 실패 원인과 시도한 접근법을 보고한다
+   - test-engineer에게 협력을 요청한다
 
 ## 메모리 업데이트
 작업 완료 시 컴포넌트 패턴, API 계약, 타입 이슈 이력을 `.claude/agent-memory/frontend-dev/MEMORY.md`에 기록하라.
