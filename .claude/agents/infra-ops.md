@@ -46,4 +46,6 @@ color: cyan
 - 환경 변수 누락 시 `.env.example` 업데이트
 
 ## 메모리 업데이트
-인프라 설정 패턴, 배포 이력을 `~/.claude/agent-memory/infra-ops/MEMORY.md`에 기록하라 (user scope — 프로젝트 간 공유).
+인프라 설정 패턴, 배포 이력을 `~/.claude/agent-memory/infra-ops/MEMORY.md`에 기록하라.
+
+> **설계 의도**: `memory: user` 스코프를 사용하는 것은 의도적이다. infra-ops는 여러 프로젝트에서 동일한 서버/환경 패턴을 재사용하므로 프로젝트 간 메모리 공유가 유리하다. 다른 에이전트(`memory: project`)와 다른 것이 맞다.
