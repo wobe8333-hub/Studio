@@ -522,6 +522,8 @@ setattr(_google_pkg, "generativeai", _genai_mock)
 - **DRY RUN 런 식별**: `manifest.json`의 `dry_run: true` 필드로 구분. Run 상세 페이지에서 DRY RUN 배너 표시. `test_run_*` prefix + `dry_run: true` 조합.
 - **웹 RUN_ID_RE 허용 패턴**: `run_CH[1-7]_\d{7,13}` (실제 실행) + `test_run_\d{1,16}` + `test_run_\d{3}` (테스트/DRY RUN). 새 run 유형 추가 시 `web/lib/fs-helpers.ts`의 `RUN_ID_RE` 업데이트 필수.
 - **대용량 파일 쓰기**: 한국어 비율이 높거나 300줄 이상인 파일(AGENTS.md, CLAUDE.md 등)에 Write 도구를 쓰면 변경이 묵묵히 되돌아갈 수 있음. 이 경우 Bash heredoc 사용: `cat > 파일경로 << 'EOF' ... EOF`. 성공 여부는 `grep` 또는 `wc -l`로 즉시 검증.
+- **settings.local.json Write 주의**: 이 파일을 수정할 때 직전 Bash 실행이 훅을 트리거해 파일이 변경될 수 있음. Write/Edit 전 반드시 Read를 먼저 실행할 것.
+- **CronCreate 세션 한계**: `durable: true` 설정해도 Windows에서 `.claude/scheduled_tasks.json`이 생성되지 않음 — cron은 항상 세션 한정. 매 Claude Code 세션 시작 시 재등록 필요. 대안: Windows 작업 스케줄러로 `claude --print '/mission'` 등록.
 
 ## 환경 변수
 
