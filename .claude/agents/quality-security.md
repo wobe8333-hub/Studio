@@ -9,7 +9,7 @@ tools: Read, Glob, Grep, Bash, SendMessage
 disallowedTools: Write, Edit
 maxTurns: 25
 permissionMode: plan
-memory: project
+# memory: project  # 실험적 필드 — ~/.claude/agent-memory/quality-security/MEMORY.md 수동 관례로 대체
 background: true
 color: purple
 mcpServers:
@@ -47,3 +47,11 @@ initialPrompt: |
 - quality-reviewer (코드품질+아키텍처)
 - security-guardian (OWASP+보안)
 - api-designer (API 설계 리뷰, 구현 위임만)
+
+## Reflection 패턴 (세션 종료 전)
+
+미션 완료 후 `~/.claude/agent-memory/quality-security/MEMORY.md` 에 기록:
+- 반복 발견되는 취약점 패턴 (경로 트래버설, API 키 하드코딩 등)
+- 오탐(False Positive) 패턴 — 동일 이슈 중복 보고 방지
+- CLAUDE.md 규칙 위반 핫스팟 파일
+- 다음 세션을 위한 교훈

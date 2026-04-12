@@ -583,3 +583,33 @@ Claude Code Agent Teams v5가 활성화되어 있다. 팀 운영 가이드는 `A
 ```bash
 claude agents  # 13개 subagent 목록 확인
 ```
+
+---
+
+## Agent Team 한계 대응 (공식 agent-teams 문서 기반)
+
+> **주의**: `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1` 환경에서 teammate로 실행되는 subagent definition의 `skills`, `mcpServers` frontmatter 필드는 **무시됨** (공식 문서 명시). Teammate는 프로젝트/사용자 세션 설정의 skills와 MCP를 그대로 로드한다.
+
+### 우회 정책
+- `.claude/agents/*.md` 의 `skills:`, `mcpServers:` 는 **subagent 단독 호출 시에만 유효**
+- Agent Team teammate 호출 시 필요한 스킬은 본 CLAUDE.md의 아래 표를 참조
+- MCP 서버(context7, playwright, figma)는 프로젝트 루트 `.claude/settings.local.json` MCP 설정으로 전역 로드
+
+### 에이전트별 필수 스킬 (teammate 모드용 참조)
+
+| 에이전트 | 필수 스킬 | 필수 MCP |
+|---|---|---|
+| mission-controller | superpowers:brainstorming, superpowers:writing-plans, superpowers:dispatching-parallel-agents | context7 |
+| python-dev | superpowers:test-driven-development, superpowers:systematic-debugging | context7 |
+| web-dev | superpowers:test-driven-development, frontend-design:frontend-design | context7, playwright |
+| design-dev | frontend-design:frontend-design, ui-ux-pro-max:ui-ux-pro-max | figma, playwright |
+| quality-security | superpowers:requesting-code-review | context7 |
+| ops-monitor | claude-md-management:revise-claude-md | context7 |
+| refactoring-surgeon | superpowers:systematic-debugging | context7 |
+| pipeline-debugger | superpowers:systematic-debugging | — |
+| video-specialist | superpowers:requesting-code-review | playwright |
+
+### CLI 버전 요구사항
+
+Agent Teams는 **Claude Code v2.1.32+** 필요.
+**검증 완료**: 2026-04-12 기준 v2.1.104 (확인 명령: `claude --version`)

@@ -91,8 +91,19 @@ L3: db-architect | refactoring-surgeon | pipeline-debugger |
 ## 자주 쓰는 커맨드
 
 ```bash
-claude agents                                    # 12개 에이전트 목록
+claude agents                                    # 13개 에이전트 목록 확인
 pytest tests/ -x -q --ignore=tests/test_step08_integration.py  # 테스트
 ruff check src/ --fix --select=E,W,F,I          # 린팅
 cd web && npm run build                          # 빌드 검증
 ```
+
+## Slash Commands (`.claude/commands/`)
+
+| 커맨드 | 설명 |
+|---|---|
+| `/mission [설명]` | mission-controller 소환 — HITL/실패 자동 감지 + 팀 편성 |
+| `/audit [범위]` | quality-security + performance-profiler 병렬 감사 |
+| `/release [버전]` | release-manager 소환 — CHANGELOG + tag + PR |
+| `/kpi [채널]` | AnalyticsLearningAgent KPI 수집 및 Phase 분석 |
+| `/debug-pipeline [step]` | pipeline-debugger 소환 — Step 실패 분석 |
+| `/verify [범위]` | 완료 전 검증 — pytest + ruff + build 통과 확인 |

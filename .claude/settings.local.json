@@ -32,7 +32,11 @@
       "mcp__figma__whoami",
       "mcp__plugin_github_github__create_repository",
       "Bash(cat)",
-      "Bash(echo \"exit: $?\")"
+      "Bash(echo \"exit: $?\")",
+      "Bash(mkdir -p .claude/agent-logs)",
+      "Bash(touch .claude/agent-logs/.gitkeep)",
+      "Bash(rm -rf \"/c/Users/조찬우/.claude/agent-memory/infra-ops\")",
+      "Read(//c/Users/조찬우/.claude/agent-memory//**)"
     ]
   },
   "hooks": {
@@ -42,15 +46,18 @@
         "hooks": [
           {
             "type": "command",
-            "command": "cd \"C:/Users/조찬우/Desktop/ai_stuidio_claude\" && python -m pytest tests/ -x -q --ignore=tests/test_step08_integration.py 2>&1 | tail -10"
+            "command": "cd \"C:/Users/조찬우/Desktop/ai_stuidio_claude\" && python -m pytest tests/ -x -q --ignore=tests/test_step08_integration.py 2>&1 | tail -10",
+            "async": true
           },
           {
             "type": "command",
-            "command": "cd \"C:/Users/조찬우/Desktop/ai_stuidio_claude\" && ruff check src/ --fix --select=E,W,F,I 2>&1 | tail -5"
+            "command": "cd \"C:/Users/조찬우/Desktop/ai_stuidio_claude\" && ruff check src/ --fix --select=E,W,F,I 2>&1 | tail -5",
+            "async": true
           },
           {
             "type": "command",
-            "command": "cd \"C:/Users/조찬우/Desktop/ai_stuidio_claude/web\" && npm run build 2>&1 | tail -10"
+            "command": "cd \"C:/Users/조찬우/Desktop/ai_stuidio_claude/web\" && npm run build 2>&1 | tail -10",
+            "async": true
           }
         ]
       }
@@ -61,7 +68,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "echo \"[v5:TaskCreated] $(date +%H:%M:%S)\" >> \"C:/Users/조찬우/Desktop/ai_stuidio_claude/.claude/agent-logs/hooks.log\" 2>/dev/null || true"
+            "command": "echo \"[v5:TaskCreated] $(date +%H:%M:%S)\" >> \"C:/Users/조찬우/Desktop/ai_stuidio_claude/.claude/agent-logs/hooks.log\" 2>/dev/null || true",
+            "async": true
           }
         ]
       }
@@ -72,7 +80,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "cd \"C:/Users/조찬우/Desktop/ai_stuidio_claude\" && echo \"=== 마지막 커밋 변경 파일 ===\" && git diff HEAD~1 --name-only 2>/dev/null | head -20"
+            "command": "cd \"C:/Users/조찬우/Desktop/ai_stuidio_claude\" && echo \"=== 마지막 커밋 변경 파일 ===\" && git diff HEAD~1 --name-only 2>/dev/null | head -20",
+            "async": true
           }
         ]
       }
@@ -83,7 +92,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "echo \"[v5:SubagentStart] $(date +%H:%M:%S)\" >> \"C:/Users/조찬우/Desktop/ai_stuidio_claude/.claude/agent-logs/hooks.log\" 2>/dev/null || true"
+            "command": "echo \"[v5:SubagentStart] $(date +%H:%M:%S)\" >> \"C:/Users/조찬우/Desktop/ai_stuidio_claude/.claude/agent-logs/hooks.log\" 2>/dev/null || true",
+            "async": true
           }
         ]
       }
@@ -94,7 +104,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "echo \"[v5:SubagentStop] $(date +%H:%M:%S)\" >> \"C:/Users/조찬우/Desktop/ai_stuidio_claude/.claude/agent-logs/hooks.log\" 2>/dev/null || true"
+            "command": "echo \"[v5:SubagentStop] $(date +%H:%M:%S)\" >> \"C:/Users/조찬우/Desktop/ai_stuidio_claude/.claude/agent-logs/hooks.log\" 2>/dev/null || true",
+            "async": true
           }
         ]
       }
@@ -127,7 +138,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "cd \"C:/Users/조찬우/Desktop/ai_stuidio_claude\" && git diff --stat HEAD 2>/dev/null | tail -5"
+            "command": "cd \"C:/Users/조찬우/Desktop/ai_stuidio_claude\" && git diff --stat HEAD 2>/dev/null | tail -5",
+            "async": true
           }
         ]
       }
@@ -138,7 +150,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "cd \"C:/Users/조찬우/Desktop/ai_stuidio_claude\" && echo \"=== v5 세션 종료 상태 ===\" && python -m pytest tests/ -x -q --ignore=tests/test_step08_integration.py 2>&1 | tail -3 && echo \"=== ruff ===\" && ruff check src/ --select=E,F --statistics 2>&1 | tail -3"
+            "command": "echo \"[v5:Stop] $(date +%H:%M:%S)\" >> \"C:/Users/조찬우/Desktop/ai_stuidio_claude/.claude/agent-logs/hooks.log\" 2>/dev/null || true",
+            "async": true
           }
         ]
       }

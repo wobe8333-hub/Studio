@@ -9,7 +9,7 @@ tools: Read, Glob, Grep, Bash, SendMessage
 disallowedTools: Write, Edit
 maxTurns: 20
 permissionMode: plan
-memory: local
+# memory: local  # 실험적 필드 — ~/.claude/agent-memory/ux-a11y/MEMORY.md 수동 관례로 대체
 color: teal
 mcpServers:
   - playwright
@@ -42,3 +42,11 @@ initialPrompt: |
 ## 통합 대상 (v3.1 → v5)
 - ux-reviewer (UX 감사)
 - a11y-expert (WCAG 접근성, 단 수정은 web-dev/design-dev에게 위임)
+
+## Reflection 패턴 (세션 종료 전)
+
+미션 완료 후 `~/.claude/agent-memory/ux-a11y/MEMORY.md` 에 기록:
+- 반복 발견되는 접근성 이슈 (aria 누락, 탭 순서 등)
+- 다크모드 전환 시 색상 대비 위반 핫스팟
+- Playwright 검증에서 발견한 반응형 엣지 케이스
+- 다음 세션을 위한 교훈

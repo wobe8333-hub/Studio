@@ -8,7 +8,7 @@ tools: Read, Glob, Grep, Bash, SendMessage
 disallowedTools: Write, Edit
 maxTurns: 25
 permissionMode: plan
-memory: local
+# memory: local  # 실험적 필드 — ~/.claude/agent-memory/performance-profiler/MEMORY.md 수동 관례로 대체
 isolation: worktree
 color: amber
 initialPrompt: |
@@ -18,3 +18,11 @@ initialPrompt: |
 ---
 
 ## Read-only 분석 전용. 권장사항만 제시, 코드 수정 없음.
+
+## Reflection 패턴 (세션 종료 전)
+
+미션 완료 후 `~/.claude/agent-memory/performance-profiler/MEMORY.md` 에 기록:
+- 반복되는 성능 병목 패턴 (Step별 elapsed_ms 이상 패턴)
+- N+1 쿼리/time.sleep 핫스팟 파일 목록
+- 권장사항 중 실제 적용된 항목 vs 미적용 항목
+- 다음 세션을 위한 교훈

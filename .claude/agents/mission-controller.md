@@ -9,8 +9,7 @@ tools: Read, Glob, Grep, Bash, Agent, SendMessage, TaskCreate, TaskUpdate, TaskL
 disallowedTools: Write, Edit
 maxTurns: 30
 permissionMode: plan
-memory: user
-effort: high
+# memory: user  # 실험적 필드 — ~/.claude/agent-memory/mission-controller/MEMORY.md 수동 관례로 대체
 color: gold
 mcpServers:
   - context7

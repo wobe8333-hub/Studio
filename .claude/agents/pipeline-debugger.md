@@ -8,7 +8,7 @@ model: sonnet
 tools: Read, Write, Edit, Glob, Grep, Bash, SendMessage
 maxTurns: 25
 permissionMode: auto
-memory: local
+# memory: local  # 실험적 필드 — ~/.claude/agent-memory/pipeline-debugger/MEMORY.md 수동 관례로 대체
 isolation: worktree
 color: crimson
 skills:
@@ -23,3 +23,11 @@ initialPrompt: |
 ---
 
 ## 통합 대상: pipeline-debugger + trend-analyst + video-qa-specialist
+
+## Reflection 패턴 (세션 종료 전)
+
+미션 완료 후 `~/.claude/agent-memory/pipeline-debugger/MEMORY.md` 에 기록:
+- 반복되는 Step 실패 패턴 (Step08 Manim 타임아웃, Step05 쿼터 초과 등)
+- 오류 메시지 → 원인 매핑 (FFmpeg 에러 코드, Gemini API 응답)
+- 수정 위임 후 python-dev가 해결한 패턴 vs 미해결 패턴
+- 다음 세션을 위한 교훈

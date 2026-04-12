@@ -8,7 +8,7 @@ model: sonnet
 tools: Read, Write, Edit, Glob, Grep, Bash, SendMessage
 maxTurns: 25
 permissionMode: acceptEdits
-memory: user
+# memory: user  # 실험적 필드 — ~/.claude/agent-memory/ops-monitor/MEMORY.md 수동 관례로 대체
 color: green
 mcpServers:
   - context7
@@ -49,3 +49,11 @@ initialPrompt: |
 ## 통합 대상 (v3.1 → v5)
 - platform-ops (infra-ops + devops-automation + cost-optimizer)
 - docs-manager (doc-keeper + docs-architect)
+
+## Reflection 패턴 (세션 종료 전)
+
+미션 완료 후 `~/.claude/agent-memory/ops-monitor/MEMORY.md` 에 기록:
+- 훅 설정에서 발견한 비효율 패턴
+- CLAUDE.md/AGENTS.md 업데이트 시 놓친 동기화 항목
+- 쿼터 초과 패턴 및 비용 절감 실적
+- 다음 세션을 위한 교훈

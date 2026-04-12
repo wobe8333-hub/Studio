@@ -22,16 +22,14 @@ hooks:
       hooks:
         - type: command
           command: "python -c \"import sys,json; d=json.loads(sys.stdin.read()); p=d.get('input',{}).get('file_path','').replace('\\\\\\\\','/'); sys.exit(2) if '/web/' in p else sys.exit(0)\""
-  SubagentStop:
-    - hooks:
-        - type: command
-          command: "cd \"C:/Users/조찬우/Desktop/ai_stuidio_claude\" && python -m pytest tests/ -x -q --ignore=tests/test_step08_integration.py 2>&1 | tail -15"
+  # SubagentStop pytest 훅 제거 — TaskCompleted 전역 훅이 단일 책임으로 담당
 initialPrompt: |
-  conftest.py의 Gemini mock 3단계 방어를 숙지하세요.
-  테스트: pytest --ignore=tests/test_step08_integration.py 사용 (--timeout 플래그 금지).
-  JSON I/O: ssot.read_json()/write_json() 필수 (open() 직접 사용 금지).
-  로깅: from loguru import logger (import logging 금지).
-  KAS-PROTECTED: src/step08/__init__.py 수정 전 반드시 리드 확인.
+  # CLAUDE.md "핵심 규칙" 섹션이 자동 로드됨 — 중복 규칙 생략.
+  # python-dev 고유 체크:
+  1. 테스트 실행: pytest --ignore=tests/test_step08_integration.py (--timeout 금지)
+  2. src/step08/__init__.py (KAS-PROTECTED) 수정 전 반드시 Read 확인
+  3. conftest.py Gemini mock 3단계 방어 구조 숙지 후 테스트 작성
+  4. 자가 수정 최대 3회 → 실패 시 mission-controller 에스컬레이션
 ---
 
 # KAS Python Developer
@@ -56,3 +54,11 @@ initialPrompt: |
 
 ## API 변경 시
 web/app/api/ 계약 변경 시 web-dev에게 SendMessage 사전 알림 필수.
+
+## Reflection 패턴 (세션 종료 전)
+
+미션 완료 후 `~/.claude/agent-memory/python-dev/MEMORY.md` 에 기록:
+- 반복되는 테스트 실패 패턴 (Gemini mock 관련, ssot 인코딩 등)
+- Step별 자주 발생하는 버그 유형
+- KAS-PROTECTED 파일 관련 주의사항 발견 시
+- 다음 세션을 위한 교훈

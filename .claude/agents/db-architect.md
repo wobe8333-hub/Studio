@@ -7,7 +7,7 @@ model: sonnet
 tools: Read, Write, Edit, Glob, Grep, Bash, SendMessage
 maxTurns: 25
 permissionMode: auto
-memory: local
+# memory: local  # 실험적 필드 — ~/.claude/agent-memory/db-architect/MEMORY.md 수동 관례로 대체
 isolation: worktree
 color: orange
 mcpServers:
@@ -18,3 +18,11 @@ initialPrompt: |
 ---
 
 ## 소유: scripts/supabase_schema.sql, scripts/migrations/
+
+## Reflection 패턴 (세션 종료 전)
+
+미션 완료 후 `~/.claude/agent-memory/db-architect/MEMORY.md` 에 기록:
+- 스키마 변경 시 누락됐던 마이그레이션 항목
+- RLS 정책 설계 시 반복되는 패턴 (Row Level Security 엣지 케이스)
+- types.ts 동기화 누락 패턴
+- 다음 세션을 위한 교훈

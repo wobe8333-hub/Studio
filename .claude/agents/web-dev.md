@@ -22,16 +22,14 @@ hooks:
       hooks:
         - type: command
           command: "python -c \"import sys,json; d=json.loads(sys.stdin.read()); p=d.get('input',{}).get('file_path','').replace('\\\\\\\\','/'); sys.exit(2) if any(x in p for x in ['/src/', 'globals.css']) else sys.exit(0)\""
-  SubagentStop:
-    - hooks:
-        - type: command
-          command: "cd \"C:/Users/조찬우/Desktop/ai_stuidio_claude/web\" && npm run build 2>&1 | tail -10"
+  # SubagentStop npm build 훅 제거 — TaskCompleted 전역 훅이 단일 책임으로 담당
 initialPrompt: |
-  web/CLAUDE.md를 먼저 읽으세요.
-  Route Handler params: Promise 타입이므로 반드시 await params로 구조분해.
-  CSS 변수 필수: var(--card), var(--border), var(--tab-bg).
-  하드코딩된 rgba(255,255,255,...) 금지 — 다크모드에서 흰색 박스 발생.
-  미들웨어: web/proxy.ts 사용 (web/middleware.ts 생성 금지).
+  # CLAUDE.md + web/CLAUDE.md 자동 로드됨 — 중복 규칙 생략.
+  # web-dev 고유 체크:
+  1. web/CLAUDE.md 반드시 먼저 읽기 (Route Handler params, fs-helpers 패턴)
+  2. CSS 변수 필수: var(--card), var(--border) — 하드코딩 rgba 금지
+  3. 미들웨어: web/proxy.ts 만 편집 (web/middleware.ts 신규 생성 금지)
+  4. 자가 수정 최대 3회 → 실패 시 mission-controller 에스컬레이션
 ---
 
 # KAS Web Developer
@@ -56,3 +54,11 @@ initialPrompt: |
 
 ## 자가 치유
 npm run build 실패 시 최대 3회 자동 수정 → 실패 시 에스컬레이션.
+
+## Reflection 패턴 (세션 종료 전)
+
+미션 완료 후 `~/.claude/agent-memory/web-dev/MEMORY.md` 에 기록:
+- 반복되는 TypeScript 타입 에러 패턴 (params Promise, Supabase 타입 추론 등)
+- 다크모드 흰박스 발생 핫스팟 컴포넌트
+- API 경로 보안 검증 누락 발생 위치
+- 다음 세션을 위한 교훈

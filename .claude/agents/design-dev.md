@@ -8,7 +8,7 @@ model: sonnet
 tools: Read, Write, Edit, Glob, Grep, Bash, SendMessage
 maxTurns: 25
 permissionMode: acceptEdits
-memory: project
+# memory: project  # 실험적 필드 — ~/.claude/agent-memory/design-dev/MEMORY.md 수동 관례로 대체
 color: pink
 mcpServers:
   - figma
@@ -49,3 +49,11 @@ initialPrompt: |
 ## 시각적 검증
 Playwright로 스크린샷 캡처 후 변경 전/후 비교 필수.
 라이트/다크 모드 모두 확인 필수.
+
+## Reflection 패턴 (세션 종료 전)
+
+미션 완료 후 `~/.claude/agent-memory/design-dev/MEMORY.md` 에 기록:
+- 효과적이었던 디자인 패턴 (CSS 변수, 레이아웃 구조)
+- 다크모드/반응형 관련 반복 실수
+- Playwright 시각 검증에서 발견한 엣지 케이스
+- 다음 세션을 위한 교훈

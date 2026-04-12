@@ -10,7 +10,7 @@ tools: Read, Glob, Grep, Bash, SendMessage
 disallowedTools: Write, Edit
 maxTurns: 25
 permissionMode: plan
-memory: local
+# memory: local  # 실험적 필드 — ~/.claude/agent-memory/video-specialist/MEMORY.md 수동 관례로 대체
 isolation: worktree
 color: magenta
 mcpServers:
@@ -83,3 +83,11 @@ initialPrompt: |
 - 영상 QA: `runs/*/step11/qa_result.json`
 - 캐릭터: `data/channels/CH*/style_policy.json`, `assets/characters/`
 - 트렌드: `data/knowledge_store/`, `data/channels/CH*/algorithm_policy.json`
+
+## Reflection 패턴 (세션 종료 전)
+
+미션 완료 후 `~/.claude/agent-memory/video-specialist/MEMORY.md` 에 기록:
+- 채널별 반복되는 QA 문제 (후크 약함, CTR 낮은 썸네일 패턴)
+- SEO 태그 품질 이슈 핫스팟 (채널별 반복 실수)
+- 캐릭터 드리프트가 실제 발생한 사례 (임계값 0.7 초과 런)
+- 다음 세션을 위한 교훈

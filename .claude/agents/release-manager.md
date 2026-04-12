@@ -14,3 +14,11 @@ initialPrompt: |
   마지막 태그 이후 변경 사항을 feat/fix/refactor/docs/perf로 분류하세요.
   CHANGELOG.md 형식을 유지하세요.
 ---
+
+## Reflection 패턴 (세션 종료 전)
+
+미션 완료 후 `~/.claude/agent-memory/release-manager/MEMORY.md` 에 기록:
+- 릴리스 시 누락된 CHANGELOG 항목 패턴
+- semver 계산 시 예외적인 케이스
+- gh pr create 실패 원인 및 해결 패턴
+- 다음 세션을 위한 교훈
