@@ -547,7 +547,7 @@ setattr(_google_pkg, "generativeai", _genai_mock)
 
 Claude Code Agent Teams v5가 활성화되어 있다. 팀 운영 가이드는 `AGENTS.md` 참고.
 
-### 4-Layer 구조 (12개)
+### 4-Layer 구조 (13개)
 
 | Layer | 팀원 | 모델 | maxTurns | 역할 |
 |-------|------|------|:--------:|------|
@@ -567,8 +567,8 @@ Claude Code Agent Teams v5가 활성화되어 있다. 팀 운영 가이드는 `A
 
 ### Agent Teams 핵심 규칙
 - **파일 교차 수정 금지**: python-dev는 web/ 금지, web-dev는 src/ 금지 (per-agent hook 물리적 차단)
-- **Read-only 에이전트**: quality-security, performance-profiler, ux-a11y는 Write/Edit 금지
-- **worktree 에이전트**: python-dev, web-dev, db-architect, refactoring-surgeon, pipeline-debugger, performance-profiler
+- **Read-only 에이전트**: quality-security, performance-profiler, ux-a11y, video-specialist는 Write/Edit 금지
+- **worktree 에이전트**: python-dev, web-dev, db-architect, refactoring-surgeon, pipeline-debugger, performance-profiler, video-specialist
 - **background**: quality-security (자동 시작, maxTurns 25로 제한)
 - **Opus 사용**: mission-controller 1개만 (effort:high)
 - **평시**: L0 + L2 = 3개 / **미션**: +L1 2~3개 + L3 2~3개 = 최대 8~9개
@@ -581,5 +581,5 @@ Claude Code Agent Teams v5가 활성화되어 있다. 팀 운영 가이드는 `A
 
 ### 활성화 확인
 ```bash
-claude agents  # 12개 subagent 목록 확인
+claude agents  # 13개 subagent 목록 확인
 ```
