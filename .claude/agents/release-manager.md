@@ -9,6 +9,12 @@ maxTurns: 15
 permissionMode: auto
 memory: local
 color: silver
+hooks:
+  PreToolUse:
+    - matcher: "Write|Edit"
+      hooks:
+        - type: command
+          command: "python -c \"import sys,json; d=json.loads(sys.stdin.read()); p=d.get('input',{}).get('file_path','').replace('\\\\\\\\','/'); sys.exit(2) if any(x in p for x in ['/src/step', '/web/app/', '/web/components/', 'step08/__init__.py']) else sys.exit(0)\""
 initialPrompt: |
   git log --oneline -20으로 최근 커밋을 확인하고,
   마지막 태그 이후 변경 사항을 feat/fix/refactor/docs/perf로 분류하세요.

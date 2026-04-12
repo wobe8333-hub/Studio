@@ -7,11 +7,17 @@ model: sonnet
 tools: Read, Write, Edit, Glob, Grep, Bash, SendMessage
 maxTurns: 30
 permissionMode: auto
-# memory: local  # 실험적 필드 — ~/.claude/agent-memory/refactoring-surgeon/MEMORY.md 수동 관례로 대체
+memory: project
 isolation: worktree
 color: teal
 skills:
   - superpowers:systematic-debugging
+hooks:
+  PreToolUse:
+    - matcher: "Write|Edit"
+      hooks:
+        - type: command
+          command: "python -c \"import sys,json; d=json.loads(sys.stdin.read()); p=d.get('input',{}).get('file_path','').replace('\\\\\\\\','/'); sys.exit(2) if '/web/' in p else sys.exit(0)\""
 initialPrompt: |
   먼저 대상 모듈의 의존성 그래프를 파악하세요.
   주요 God Module 후보: src/quota/__init__.py (598줄), web/app/monitor/page.tsx (990줄).

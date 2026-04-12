@@ -116,7 +116,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "cp \"C:/Users/조찬우/Desktop/ai_stuidio_claude/.env\" \"$WORKTREE_PATH/.env\" 2>/dev/null; cp \"C:/Users/조찬우/Desktop/ai_stuidio_claude/web/.env.local\" \"$WORKTREE_PATH/web/.env.local\" 2>/dev/null; echo \"[v5:WorktreeCreate] env copied\" >> \"C:/Users/조찬우/Desktop/ai_stuidio_claude/.claude/agent-logs/hooks.log\" 2>/dev/null || true"
+            "command": "cp \"C:/Users/조찬우/Desktop/ai_stuidio_claude/.env\" \"$WORKTREE_PATH/.env\" 2>/dev/null; cp \"C:/Users/조찬우/Desktop/ai_stuidio_claude/web/.env.local\" \"$WORKTREE_PATH/web/.env.local\" 2>/dev/null; echo \"[v5:WorktreeCreate] env copied\" >> \"C:/Users/조찬우/Desktop/ai_stuidio_claude/.claude/agent-logs/hooks.log\" 2>/dev/null || true",
+            "async": true
           }
         ]
       }
@@ -139,6 +140,18 @@
           {
             "type": "command",
             "command": "cd \"C:/Users/조찬우/Desktop/ai_stuidio_claude\" && git diff --stat HEAD 2>/dev/null | tail -5",
+            "async": true
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cd \"C:/Users/조찬우/Desktop/ai_stuidio_claude\" && python scripts/mission_probe.py 2>&1 | tail -20",
             "async": true
           }
         ]

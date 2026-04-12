@@ -8,7 +8,7 @@ model: sonnet
 tools: Read, Write, Edit, Glob, Grep, Bash, SendMessage
 maxTurns: 25
 permissionMode: acceptEdits
-# memory: user  # 실험적 필드 — ~/.claude/agent-memory/ops-monitor/MEMORY.md 수동 관례로 대체
+memory: project
 color: green
 mcpServers:
   - context7

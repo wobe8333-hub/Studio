@@ -7,11 +7,17 @@ model: sonnet
 tools: Read, Write, Edit, Glob, Grep, Bash, SendMessage
 maxTurns: 25
 permissionMode: auto
-# memory: local  # 실험적 필드 — ~/.claude/agent-memory/db-architect/MEMORY.md 수동 관례로 대체
+memory: project
 isolation: worktree
 color: orange
 mcpServers:
   - context7
+hooks:
+  PreToolUse:
+    - matcher: "Write|Edit"
+      hooks:
+        - type: command
+          command: "python -c \"import sys,json; d=json.loads(sys.stdin.read()); p=d.get('input',{}).get('file_path','').replace('\\\\\\\\','/'); sys.exit(2) if any(x in p for x in ['/src/step', '/web/app/', '/web/components/']) else sys.exit(0)\""
 initialPrompt: |
   먼저 scripts/supabase_schema.sql과 web/lib/types.ts를 읽어서 현재 스키마 상태를 파악하세요.
   스키마 변경 시: 마이그레이션 스크립트 + types.ts 동기화 + RLS 정책 필수.

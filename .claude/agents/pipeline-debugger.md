@@ -8,11 +8,17 @@ model: sonnet
 tools: Read, Write, Edit, Glob, Grep, Bash, SendMessage
 maxTurns: 25
 permissionMode: auto
-# memory: local  # 실험적 필드 — ~/.claude/agent-memory/pipeline-debugger/MEMORY.md 수동 관례로 대체
+memory: project
 isolation: worktree
 color: crimson
 skills:
   - superpowers:systematic-debugging
+hooks:
+  PreToolUse:
+    - matcher: "Write|Edit"
+      hooks:
+        - type: command
+          command: "python -c \"import sys,json; d=json.loads(sys.stdin.read()); p=d.get('input',{}).get('file_path','').replace('\\\\\\\\','/'); sys.exit(2) if '/web/' in p else sys.exit(0)\""
 initialPrompt: |
   먼저 아래를 확인하세요:
   1. logs/pipeline.log의 최근 ERROR 로그 (tail -100)

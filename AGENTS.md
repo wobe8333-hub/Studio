@@ -1,6 +1,6 @@
 # KAS Agent Teams v5 운영 가이드
 
-> **버전**: v5.0 | **에이전트 수**: 12개 | **기준일**: 2026-04-11
+> **버전**: v5.1 | **에이전트 수**: 13개 | **기준일**: 2026-04-12
 
 ---
 
@@ -11,7 +11,7 @@ L0: mission-controller (Opus, 조율 전용)
 L1: python-dev | web-dev | design-dev (Builder, worktree)
 L2: quality-security | ops-monitor (Guardian, 상시)
 L3: db-architect | refactoring-surgeon | pipeline-debugger |
-    performance-profiler | ux-a11y | release-manager (온디맨드)
+    performance-profiler | ux-a11y | release-manager | video-specialist (온디맨드)
 ```
 
 ---
