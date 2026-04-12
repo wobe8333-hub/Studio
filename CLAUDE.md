@@ -334,6 +334,11 @@ body 다크 그라디언트: `.dark body { background: linear-gradient(135deg, #
 `web/components/bottom-nav.tsx` — 모바일 전용 하단 탭 바 (홈·트렌드·수익·QA·런 5개 항목).
 `web/capacitor.config.ts` — Capacitor 모바일 앱 설정 파일 존재. `appId: com.kas.studio`, `webDir: out`.
 
+**`web/next.config.ts` output 모드 전환**: 배포 대상에 따라 `output` 값이 달라진다.
+- `'standalone'` (현재 기본값) — Docker 배포용
+- 없음(삭제) — Vercel 배포용 (`web/vercel.json` regions: `icn1` 설정됨)
+- `'export'` — Capacitor 모바일 앱 빌드용 (`npx cap sync` 전 필수)
+
 #### 디렉토리 구조
 
 ```
@@ -364,6 +369,7 @@ web/
 │   ├── animated-sections.tsx — motion 래퍼: StaggerContainer/StaggerItem/ScrollReveal/AnimatedCard
 │   ├── home-charts.tsx       — Recharts 클라이언트 컴포넌트: Sparkline/RadialGauge/ChannelDots
 │   ├── theme-toggle.tsx      — next-themes useTheme (mounted 패턴으로 hydration mismatch 방지)
+│   ├── realtime-pipeline-status.tsx — Supabase Realtime 구독으로 파이프라인 상태 자동 갱신 (폴링 없음)
 │   └── ui/                   — shadcn/ui 컴포넌트 (16개)
 ├── hooks/
 │   └── use-is-mobile.ts      — useIsMobile(breakpoint=768): SSR-safe 모바일 감지 훅
@@ -538,6 +544,7 @@ setattr(_google_pkg, "generativeai", _genai_mock)
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY` — Supabase anon 공개 키
 - `SUPABASE_SERVICE_ROLE_KEY` — **서버 전용** service_role 키. 트렌드 주제 승인/거부 등 RLS를 우회하는 쓰기 작업에 필요. `web/lib/supabase/server-admin.ts`의 `createAdminClient()`에서만 사용.
 - `DASHBOARD_PASSWORD` — 웹 대시보드 비밀번호. 미설정 시 인증 자동 통과 (개발 환경)
+- `PYTHON_EXECUTABLE` — Python 실행 파일 경로. 미설정 시 Windows는 `py`, 기타 환경은 `python3` (preflight API 라우트에서 사용)
 
 **YouTube OAuth 토큰**: 업로드/KPI 수집은 API 키가 아닌 OAuth2 인증이 필요하다. `credentials/{CH}_token.json`이 채널당 존재해야 한다. 만료 토큰은 자동 갱신 후 파일에 저장된다. 초기 발급: `python scripts/generate_oauth_token.py --channel CH1`.
 
