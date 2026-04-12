@@ -10,18 +10,12 @@ permissionMode: auto
 memory: project
 isolation: worktree
 color: blue
-mcpServers:
-  - context7
-  - playwright
-skills:
-  - superpowers:test-driven-development
-  - frontend-design:frontend-design
 hooks:
   PreToolUse:
     - matcher: "Write|Edit"
       hooks:
         - type: command
-          command: "python -c \"import sys,json; d=json.loads(sys.stdin.read()); p=d.get('input',{}).get('file_path','').replace('\\\\\\\\','/'); sys.exit(2) if any(x in p for x in ['/src/', 'globals.css']) else sys.exit(0)\""
+          command: "python -c \"import sys,json; d=json.loads(sys.stdin.read()); p=d.get('input',{}).get('file_path','').replace('\\\\','/'); sys.exit(2) if any(x in p for x in ['/src/', 'globals.css']) else sys.exit(0)\""
   # SubagentStop npm build 훅 제거 — TaskCompleted 전역 훅이 단일 책임으로 담당
 initialPrompt: |
   # CLAUDE.md + web/CLAUDE.md 자동 로드됨 — 중복 규칙 생략.

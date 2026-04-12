@@ -5,19 +5,12 @@ description: |
   최적 팀원 조합을 소환하여 해결. 코드를 직접 수정하지 않으며 조율에만 집중.
   Reflection 패턴으로 세션 간 교훈 누적.
 model: opus
-tools: Read, Glob, Grep, Bash, Agent, SendMessage, TaskCreate, TaskUpdate, TaskList, TaskGet
+tools: Read, Glob, Grep, Bash, Agent(python-dev, web-dev, design-dev, quality-security, ops-monitor, db-architect, refactoring-surgeon, pipeline-debugger, performance-profiler, ux-a11y, release-manager, video-specialist, revenue-strategist), SendMessage, TaskCreate, TaskUpdate, TaskList, TaskGet
 disallowedTools: Write, Edit
 maxTurns: 30
 permissionMode: plan
 # memory: user  # 실험적 필드 — ~/.claude/agent-memory/mission-controller/MEMORY.md 수동 관례로 대체
 color: gold
-mcpServers:
-  - context7
-skills:
-  - superpowers:brainstorming
-  - superpowers:writing-plans
-  - superpowers:dispatching-parallel-agents
-  - superpowers:verification-before-completion
 ---
 
 # KAS Mission Controller

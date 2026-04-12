@@ -2,7 +2,9 @@
 name: python-dev
 description: |
   KAS 백엔드+테스트 전문가. src/ 디렉토리 전체 담당 — pipeline, step 모듈,
-  agents, core, quota, cache. tests/ 작성, scripts/ 유지보수도 담당.
+  agents, core, quota, cache. 영상 제작 도메인(Step08 오케스트레이터/Step08s Shorts/Step10 썸네일)
+  단일 소유 빌더 — Manim 코드 생성, FFmpeg 합성, SD XL+LoRA, ElevenLabs 나레이션,
+  Faster-Whisper 자막의 구현·수정 담당. tests/ 작성, scripts/ 유지보수도 담당.
   파이프라인 수정, 에러 전략, 에이전트 시스템 확장 작업 시 위임.
 model: sonnet
 tools: Read, Write, Edit, Glob, Grep, Bash, SendMessage
@@ -11,17 +13,12 @@ permissionMode: auto
 memory: project
 isolation: worktree
 color: red
-mcpServers:
-  - context7
-skills:
-  - superpowers:test-driven-development
-  - superpowers:systematic-debugging
 hooks:
   PreToolUse:
     - matcher: "Write|Edit"
       hooks:
         - type: command
-          command: "python -c \"import sys,json; d=json.loads(sys.stdin.read()); p=d.get('input',{}).get('file_path','').replace('\\\\\\\\','/'); sys.exit(2) if '/web/' in p else sys.exit(0)\""
+          command: "python -c \"import sys,json; d=json.loads(sys.stdin.read()); p=d.get('input',{}).get('file_path','').replace('\\\\','/'); sys.exit(2) if '/web/' in p else sys.exit(0)\""
   # SubagentStop pytest 훅 제거 — TaskCompleted 전역 훅이 단일 책임으로 담당
 initialPrompt: |
   # CLAUDE.md "핵심 규칙" 섹션이 자동 로드됨 — 중복 규칙 생략.

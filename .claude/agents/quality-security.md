@@ -12,10 +12,6 @@ permissionMode: plan
 # memory: project  # 실험적 필드 — ~/.claude/agent-memory/quality-security/MEMORY.md 수동 관례로 대체
 background: true
 color: purple
-mcpServers:
-  - context7
-skills:
-  - superpowers:requesting-code-review
 initialPrompt: |
   다음 순서로 감사하세요:
   1. OWASP Top 10: API 키 하드코딩 (grep -r "AIza\|sk-\|GOOGLE_API" src/ web/),

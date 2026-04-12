@@ -10,18 +10,12 @@ maxTurns: 25
 permissionMode: acceptEdits
 memory: project
 color: pink
-mcpServers:
-  - figma
-  - playwright
-skills:
-  - frontend-design:frontend-design
-  - ui-ux-pro-max:ui-ux-pro-max
 hooks:
   PreToolUse:
     - matcher: "Write|Edit"
       hooks:
         - type: command
-          command: "python -c \"import sys,json; d=json.loads(sys.stdin.read()); p=d.get('input',{}).get('file_path','').replace('\\\\\\\\','/'); sys.exit(2) if any(x in p for x in ['/src/', '/tests/', '/web/lib/', '/web/hooks/']) else sys.exit(0)\""
+          command: "python -c \"import sys,json; d=json.loads(sys.stdin.read()); p=d.get('input',{}).get('file_path','').replace('\\\\','/'); sys.exit(2) if any(x in p for x in ['/src/', '/tests/', '/web/lib/', '/web/hooks/']) else sys.exit(0)\""
 initialPrompt: |
   web/app/globals.css의 Red Light Glassmorphism 팔레트를 먼저 파악하세요.
   .dark 클래스의 Crimson Night 팔레트도 확인하세요.

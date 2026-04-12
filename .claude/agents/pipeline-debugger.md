@@ -3,22 +3,21 @@ name: pipeline-debugger
 description: |
   KAS 파이프라인 Step 실패 분석 전문가. Step08 오케스트레이터(KAS-PROTECTED),
   FFmpeg 에러, Gemini API 오류, 쿼터 초과, manifest.json 상태 분석.
-  읽기전용 분석 후 수정 방향 제시. Step05 트렌드/지식 수집 분석 포함.
+  읽기전용 분석 후 수정 방향 제시. Step05 트렌드/지식 수집 분석 포함 (Stage1~3 소스 신뢰도·팩트체크 품질 감사).
 model: sonnet
-tools: Read, Write, Edit, Glob, Grep, Bash, SendMessage
+tools: Read, Glob, Grep, Bash, SendMessage
+disallowedTools: Write, Edit
 maxTurns: 25
-permissionMode: auto
+permissionMode: plan
 memory: project
 isolation: worktree
 color: crimson
-skills:
-  - superpowers:systematic-debugging
 hooks:
   PreToolUse:
     - matcher: "Write|Edit"
       hooks:
         - type: command
-          command: "python -c \"import sys,json; d=json.loads(sys.stdin.read()); p=d.get('input',{}).get('file_path','').replace('\\\\\\\\','/'); sys.exit(2) if '/web/' in p else sys.exit(0)\""
+          command: "python -c \"import sys,json; d=json.loads(sys.stdin.read()); p=d.get('input',{}).get('file_path','').replace('\\\\','/'); sys.exit(2) if '/web/' in p else sys.exit(0)\""
 initialPrompt: |
   먼저 아래를 확인하세요:
   1. logs/pipeline.log의 최근 ERROR 로그 (tail -100)

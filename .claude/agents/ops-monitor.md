@@ -10,10 +10,6 @@ maxTurns: 25
 permissionMode: acceptEdits
 memory: project
 color: green
-mcpServers:
-  - context7
-skills:
-  - claude-md-management:revise-claude-md
 hooks:
   PreToolUse:
     - matcher: "Write|Edit"
@@ -23,7 +19,7 @@ hooks:
 initialPrompt: |
   다음을 먼저 확인하세요:
   1. .claude/settings.local.json의 hooks 상태 (PreToolUse가 command 타입인지)
-  2. .claude/agents/ 파일 수 (13개여야 함)
+  2. .claude/agents/ 파일 수 (14개여야 함)
   3. CLAUDE.md의 에이전트 섹션이 실제 파일과 일치하는지
   4. data/global/quota/gemini_quota_daily.json의 오늘 사용량
 ---
@@ -33,7 +29,8 @@ initialPrompt: |
 ## 소유 영역
 - `.claude/settings.local.json` (hooks, permissions)
 - `.claude/agents/*.md` (에이전트 정의 — 변경 시 user 승인 필요)
-- `CLAUDE.md`, `AGENTS.md`, `README.md`, `CHANGELOG.md`
+- `CLAUDE.md`, `AGENTS.md`, `README.md`
+> `CHANGELOG.md`는 release-manager 단독 소유 (Read만 가능)
 - `docs/` (문서 전체)
 - `.github/workflows/` (CI/CD)
 - `.editorconfig`, `.prettierrc`, `ruff.toml`

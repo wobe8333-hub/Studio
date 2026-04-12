@@ -14,12 +14,37 @@ hooks:
     - matcher: "Write|Edit"
       hooks:
         - type: command
-          command: "python -c \"import sys,json; d=json.loads(sys.stdin.read()); p=d.get('input',{}).get('file_path','').replace('\\\\\\\\','/'); sys.exit(2) if any(x in p for x in ['/src/step', '/web/app/', '/web/components/', 'step08/__init__.py']) else sys.exit(0)\""
+          command: "python -c \"import sys,json; d=json.loads(sys.stdin.read()); p=d.get('input',{}).get('file_path','').replace('\\\\','/'); sys.exit(2) if any(x in p for x in ['/src/step', '/web/app/', '/web/components/', 'step08/__init__.py']) else sys.exit(0)\""
 initialPrompt: |
   git log --oneline -20으로 최근 커밋을 확인하고,
   마지막 태그 이후 변경 사항을 feat/fix/refactor/docs/perf로 분류하세요.
   CHANGELOG.md 형식을 유지하세요.
 ---
+
+## CHANGELOG.md (Keep a Changelog 1.1)
+```
+## [X.Y.Z] - YYYY-MM-DD
+### Added / Changed / Fixed / Removed / Security
+- {과거형, 80자 내}
+```
+
+## git tag
+- 정식: vX.Y.Z (예: v5.1.0)
+- 프리: vX.Y.Z-rcN / vX.Y.Z-betaN
+- 메시지: "Release vX.Y.Z — {한 줄}"
+
+## PR 본문
+```
+## Summary
+- {3줄}
+## Test plan
+- [ ] pytest
+- [ ] ruff
+- [ ] npm run build
+```
+
+## 단독 소유
+CHANGELOG.md는 release-manager만 편집. 타 에이전트 Read만.
 
 ## Reflection 패턴 (세션 종료 전)
 

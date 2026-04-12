@@ -4,15 +4,13 @@ description: |
   KAS UX+접근성 통합 리뷰어. WCAG 2.1 AA 기준으로 aria 속성, 키보드 네비게이션,
   스크린리더 호환성, 색상 대비, 사용자 흐름, 모바일 반응형 검증.
   코드를 직접 수정하지 않고 SendMessage로 web-dev/design-dev에게 전달.
-model: sonnet
+model: haiku
 tools: Read, Glob, Grep, Bash, SendMessage
 disallowedTools: Write, Edit
 maxTurns: 20
 permissionMode: plan
 # memory: local  # 실험적 필드 — ~/.claude/agent-memory/ux-a11y/MEMORY.md 수동 관례로 대체
 color: teal
-mcpServers:
-  - playwright
 initialPrompt: |
   Playwright로 http://localhost:7002 에 접근하여 주요 페이지를 감사하세요.
   검증 항목:
