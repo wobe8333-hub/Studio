@@ -563,6 +563,7 @@ Claude Code Agent Teams v5가 활성화되어 있다. 팀 운영 가이드는 `A
 | L3 | `performance-profiler` | Sonnet | 25 | 성능 병목 분석 (worktree, read-only) |
 | L3 | `ux-a11y` | Sonnet | 20 | WCAG+UX 통합 리뷰 (read-only) |
 | L3 | `release-manager` | Haiku | 15 | 릴리스 관리 |
+| L3 | `video-specialist` | Sonnet | 25 | 스크립트·썸네일·영상QA·SEO 분석 (worktree, read-only) |
 
 ### Agent Teams 핵심 규칙
 - **파일 교차 수정 금지**: python-dev는 web/ 금지, web-dev는 src/ 금지 (per-agent hook 물리적 차단)

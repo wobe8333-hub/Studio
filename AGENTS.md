@@ -26,6 +26,7 @@ L3: db-architect | refactoring-surgeon | pipeline-debugger |
 | ops-monitor | .claude/, CLAUDE.md, AGENTS.md, docs/, .github/ | src/step*, web/app/, web/components/ |
 | quality-security | Read-only 감사 전용 | Write, Edit 금지 |
 | ux-a11y | Read-only 감사 전용 | Write, Edit 금지 |
+| video-specialist | Read-only 영상 콘텐츠 감사 | Write, Edit 금지 |
 | performance-profiler | Read-only 분석 전용 | Write, Edit 금지 |
 
 ---
@@ -44,6 +45,7 @@ L3: db-architect | refactoring-surgeon | pipeline-debugger |
 | 대규모 리팩토링 | refactoring-surgeon + python-dev |
 | 릴리스 배포 | release-manager + python-dev |
 | UX/접근성 감사 | ux-a11y → web-dev/design-dev |
+| 영상 콘텐츠 감사 | video-specialist → python-dev/design-dev |
 
 ---
 
