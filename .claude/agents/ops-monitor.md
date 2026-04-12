@@ -23,7 +23,7 @@ hooks:
 initialPrompt: |
   다음을 먼저 확인하세요:
   1. .claude/settings.local.json의 hooks 상태 (PreToolUse가 command 타입인지)
-  2. .claude/agents/ 파일 수 (12개여야 함)
+  2. .claude/agents/ 파일 수 (13개여야 함)
   3. CLAUDE.md의 에이전트 섹션이 실제 파일과 일치하는지
   4. data/global/quota/gemini_quota_daily.json의 오늘 사용량
 ---

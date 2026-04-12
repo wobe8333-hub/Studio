@@ -551,7 +551,7 @@ Claude Code Agent Teams v5가 활성화되어 있다. 팀 운영 가이드는 `A
 
 | Layer | 팀원 | 모델 | maxTurns | 역할 |
 |-------|------|------|:--------:|------|
-| L0 | `mission-controller` | Opus | 30 | 자율 이슈 감지 + 팀 편성 (effort:high) |
+| L0 | `mission-controller` | Opus | 30 | 자율 이슈 감지 + 팀 편성 |
 | L1 | `python-dev` | Sonnet | 30 | src/+tests/+scripts/ (worktree) |
 | L1 | `web-dev` | Sonnet | 30 | web/ (globals.css 제외, worktree) |
 | L1 | `design-dev` | Sonnet | 25 | globals.css+public/+thumbnails/ |
@@ -570,14 +570,17 @@ Claude Code Agent Teams v5가 활성화되어 있다. 팀 운영 가이드는 `A
 - **Read-only 에이전트**: quality-security, performance-profiler, ux-a11y, video-specialist는 Write/Edit 금지
 - **worktree 에이전트**: python-dev, web-dev, db-architect, refactoring-surgeon, pipeline-debugger, performance-profiler, video-specialist
 - **background**: quality-security (자동 시작, maxTurns 25로 제한)
-- **Opus 사용**: mission-controller 1개만 (effort:high)
+- **Opus 사용**: mission-controller 1개만
 - **평시**: L0 + L2 = 3개 / **미션**: +L1 2~3개 + L3 2~3개 = 최대 8~9개
 
 ### TaskCompleted 훅 (자동 품질 게이트)
-태스크 완료 시마다 자동 실행:
-1. `pytest tests/ -x -q --ignore=tests/test_step08_integration.py`
-2. `ruff check src/ --fix --select=E,W,F,I`
-3. `cd web && npm run build`
+태스크 완료 시마다 **비차단(async)** 으로 자동 실행 — 에이전트 응답을 블로킹하지 않음:
+1. `pytest tests/ -x -q --ignore=tests/test_step08_integration.py` (async)
+2. `ruff check src/ --fix --select=E,W,F,I` (async)
+3. `cd web && npm run build` (async)
+
+> **단일 책임 원칙**: pytest/ruff/build는 TaskCompleted 훅 **한 곳에서만** 실행됨.
+> python-dev·web-dev의 SubagentStop 훅에서는 중복 실행하지 않음.
 
 ### 활성화 확인
 ```bash
