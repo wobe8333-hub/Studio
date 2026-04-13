@@ -60,7 +60,35 @@ body {
 </style>
 </head>
 <body>
-  <!-- 이후 Task에서 채워 넣음 -->
-  <p style="color:var(--text-muted)">scaffold ok</p>
+  <!-- 다크 모드 토글 -->
+  <div style="position:fixed;top:16px;right:16px;z-index:100;">
+    <button id="theme-toggle"
+      style="background:var(--surface);border:1px solid var(--border);
+             border-radius:20px;padding:6px 14px;cursor:pointer;
+             font-family:'Courier New',monospace;font-size:12px;
+             color:var(--text-muted);box-shadow:var(--shadow-sm);
+             transition:all 0.2s;">
+      ☾ dark
+    </button>
+  </div>
+
+<script>
+(function() {
+  // localStorage 복원 → 없으면 시스템 선호도
+  const saved = localStorage.getItem('loomix-theme');
+  const sys = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  const initial = saved || sys;
+  document.documentElement.dataset.theme = initial;
+  document.getElementById('theme-toggle').textContent =
+    initial === 'dark' ? '☀ light' : '☾ dark';
+})();
+
+document.getElementById('theme-toggle').addEventListener('click', function() {
+  const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+  document.documentElement.dataset.theme = next;
+  localStorage.setItem('loomix-theme', next);
+  this.textContent = next === 'dark' ? '☀ light' : '☾ dark';
+});
+</script>
 </body>
 </html>
