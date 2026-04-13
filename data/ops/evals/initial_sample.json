@@ -1,0 +1,60 @@
+{
+  "schema_version": "1.0",
+  "description": "초기 eval 결과 샘플 — agent-evaluator SubagentStop 훅 참조용",
+  "generated_at": "2026-04-13T00:00:00Z",
+  "results": [
+    {
+      "agent": "backend-engineer",
+      "test_id": "be-001",
+      "session_id": "sample-session-001",
+      "score": 8.5,
+      "max_score": 10,
+      "judge_model": "claude-sonnet-4-6",
+      "input": "src/step08/orchestrator.py에서 FFmpeg 타임아웃 발생",
+      "evaluation": {
+        "tool_use_correct": true,
+        "output_pattern_matched": true,
+        "criteria_met": true,
+        "notes": "오류 원인 정확히 파악, 수정안 명확"
+      },
+      "evaluated_at": "2026-04-13T00:00:00Z"
+    },
+    {
+      "agent": "db-architect",
+      "test_id": "dba-001",
+      "session_id": "sample-session-002",
+      "score": 9.0,
+      "max_score": 10,
+      "judge_model": "claude-sonnet-4-6",
+      "input": "videos 테이블에 duration_seconds 컬럼 추가 요청",
+      "evaluation": {
+        "tool_use_correct": true,
+        "output_pattern_matched": true,
+        "criteria_met": true,
+        "notes": "마이그레이션 + RLS + types.ts 동시 처리"
+      },
+      "evaluated_at": "2026-04-13T00:00:00Z"
+    },
+    {
+      "agent": "qa-auditor",
+      "test_id": "qa-001",
+      "session_id": "sample-session-003",
+      "score": 7.5,
+      "max_score": 10,
+      "judge_model": "claude-sonnet-4-6",
+      "input": "Step11 최종 QA 실패 원인 분석",
+      "evaluation": {
+        "tool_use_correct": true,
+        "output_pattern_matched": true,
+        "criteria_met": true,
+        "notes": "직접 수정 없이 backend-engineer에게 SendMessage"
+      },
+      "evaluated_at": "2026-04-13T00:00:00Z"
+    }
+  ],
+  "summary": {
+    "total_evals": 3,
+    "average_score": 8.33,
+    "agents_below_threshold": []
+  }
+}

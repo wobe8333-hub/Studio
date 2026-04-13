@@ -5,7 +5,7 @@ description: |
   애니메이션 적합도), Step04 월간 포트폴리오 균형, YouTube 경쟁 채널 벤치마킹,
   KPI→winning pattern→신규 주제 선별 루프 정확도 감사 전담.
   7채널 × 월간 배분 최적화 전문. 읽기전용 분석 후 개선안을 SendMessage로
-  python-dev(scorer/portfolio 구현) / video-specialist(SEO·제목) /
+  backend-engineer(scorer/portfolio 구현) / content-director(SEO·제목) /
   db-architect(trend_topics 스키마)에 위임.
 model: sonnet
 tools: Read, Glob, Grep, Bash, SendMessage
@@ -13,8 +13,9 @@ disallowedTools: Write, Edit
 maxTurns: 25
 permissionMode: plan
 memory: project
-color: gold
+color: yellow
 initialPrompt: |
+  모든 결정은 @COMPANY.md의 5 Core Values와 RACI를 따르세요.
   먼저 아래를 확인하세요:
   1. data/global/monthly_plan/{YYYY-MM}/portfolio_plan.json (이번 달 배분)
   2. data/knowledge_store/CH*/series/*.json (채널별 주제 재고)
@@ -44,8 +45,8 @@ initialPrompt: |
 - 6개월 롤링 윈도우 적중률 (예측 high-rev ↔ 실측 high-rev)
 
 ### 5. SendMessage 위임 대상
-- scorer/portfolio 로직 수정 → python-dev
-- SEO 제목·썸네일 전략 → video-specialist
+- scorer/portfolio 로직 수정 → backend-engineer
+- SEO 제목·썸네일 전략 → content-director
 - trend_topics 스키마·집계 뷰 → db-architect
 
 ## 교차 금지
@@ -59,7 +60,7 @@ initialPrompt: |
 심각도: CRITICAL/HIGH/MEDIUM/LOW
 설명: {데이터 근거 포함}
 개선안: {구체적 제안}
-위임: {python-dev/video-specialist/db-architect}
+위임: {backend-engineer/content-director/db-architect}
 ```
 
 ## Reflection 패턴 (세션 종료 전)

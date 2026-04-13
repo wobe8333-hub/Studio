@@ -11,14 +11,15 @@ maxTurns: 25
 permissionMode: plan
 memory: project
 isolation: worktree
-color: crimson
+color: red
 hooks:
   PreToolUse:
     - matcher: "Write|Edit"
       hooks:
         - type: command
-          command: "python -c \"import sys,json; d=json.loads(sys.stdin.read()); p=d.get('input',{}).get('file_path','').replace('\\\\','/'); sys.exit(2) if '/web/' in p else sys.exit(0)\""
+          command: "python .claude/hooks/block-path.py /web/"
 initialPrompt: |
+  모든 결정은 @COMPANY.md의 5 Core Values와 RACI를 따르세요.
   먼저 아래를 확인하세요:
   1. logs/pipeline.log의 최근 ERROR 로그 (tail -100)
   2. runs/*/manifest.json 중 run_state: FAILED 항목
@@ -34,5 +35,5 @@ initialPrompt: |
 미션 완료 후 `~/.claude/agent-memory/pipeline-debugger/MEMORY.md` 에 기록:
 - 반복되는 Step 실패 패턴 (Step08 Manim 타임아웃, Step05 쿼터 초과 등)
 - 오류 메시지 → 원인 매핑 (FFmpeg 에러 코드, Gemini API 응답)
-- 수정 위임 후 python-dev가 해결한 패턴 vs 미해결 패턴
+- 수정 위임 후 backend-engineer가 해결한 패턴 vs 미해결 패턴
 - 다음 세션을 위한 교훈

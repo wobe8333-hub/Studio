@@ -1,0 +1,22 @@
+﻿{
+  "generated_at": "2026-04-13T00:07:28.417665+00:00",
+  "month": "2026-04",
+  "kas_channel_kpi": {},
+  "sales_pipeline": {
+    "new_leads": 0,
+    "contracts": 0,
+    "total_contracted_krw": 0
+  },
+  "revenue": {
+    "kas_adsense_krw": 0,
+    "client_projects_krw": 0,
+    "total_krw": 0
+  },
+  "cost": {
+    "api_cost_usd": 0.0,
+    "api_cost_krw": 0
+  },
+  "net_profit_krw": 0,
+  "profit_margin_pct": 0.0,
+  "next_month_strategy": ""
+}

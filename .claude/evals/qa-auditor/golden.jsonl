@@ -1,0 +1,5 @@
+{"id": "qa-001", "input": "src/core/oauth_setup.py OWASP Top10 감사", "expected_tools": ["Read", "Grep"], "judge_criteria": "취약점 분류 + 심각도 + 수정 담당자 명시"}
+{"id": "qa-aud-t02", "input": "qa-auditor 핵심 역할 과업 #2", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}
+{"id": "qa-aud-t03", "input": "qa-auditor 핵심 역할 과업 #3", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}
+{"id": "qa-aud-t04", "input": "qa-auditor 핵심 역할 과업 #4", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}
+{"id": "qa-aud-t05", "input": "qa-auditor 핵심 역할 과업 #5", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}

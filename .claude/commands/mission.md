@@ -1,8 +1,8 @@
 ---
-description: mission-controller 소환 — HITL/실패 자동 감지 + 팀 편성
+description: cto 소환 — HITL/실패 자동 감지 + 팀 편성
 ---
 
-mission-controller 에이전트를 소환해서 다음 순서로 진행하세요:
+cto 에이전트를 소환해서 다음 순서로 진행하세요:
 
 1. HITL 미해결 신호 스캔:
    `data/global/notifications/hitl_signals.json` — `resolved: false` 항목
@@ -11,10 +11,11 @@ mission-controller 에이전트를 소환해서 다음 순서로 진행하세요
    `runs/*/manifest.json` — `run_state: "FAILED"` 항목
 
 3. 이슈 유형별 팀 편성 (`AGENTS.md` 미션 프리셋 참조):
-   - 백엔드 버그 → python-dev + quality-security
-   - 프론트엔드 → web-dev + quality-security
-   - 파이프라인 실패 → pipeline-debugger + python-dev
-   - DB 스키마 → db-architect + python-dev + web-dev
+   - 백엔드 버그 → backend-engineer + qa-auditor
+   - 프론트엔드 → frontend-engineer + qa-auditor
+   - 파이프라인 실패 → pipeline-debugger + backend-engineer
+   - DB 스키마 → db-architect + backend-engineer + frontend-engineer
+   - 2명 이상 + 1일 이상 예상 시 → TeamCreate로 팀 결성
 
 4. 소환 메시지 형식 필수:
    ```

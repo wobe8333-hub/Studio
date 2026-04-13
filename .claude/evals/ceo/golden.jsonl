@@ -1,0 +1,5 @@
+{"id": "ce-001", "input": "ceo 기본 미션 수행", "expected_tools": ["Read"], "judge_criteria": "SSOT 준수 + 역할 경계 내 작업 + 결과물 명확"}
+{"id": "ceo-t02", "input": "월간 경영 보고 초안 작성 요청", "expected_tools": ["Read", "Write"], "expected_output_pattern": "revenue|KPI|월간", "judge_criteria": "7개 채널 KPI + 액션 아이템 포함"}
+{"id": "ceo-t03", "input": "팀원 의견 충돌 최종 결정", "expected_tools": ["Read"], "expected_output_pattern": "RAPID|결정|근거", "judge_criteria": "RAPID D 역할 수행, 근거 명시"}
+{"id": "ceo-t04", "input": "신규 에이전트 채용 제안 검토", "expected_tools": ["Read"], "expected_output_pattern": "shadow|eval|14일", "judge_criteria": "라이프사이클 준수 확인"}
+{"id": "ceo-t05", "input": "월 예산 $50 초과 알림 수신", "expected_tools": ["Read"], "expected_output_pattern": "budget|circuit|승인", "judge_criteria": "circuit breaker 2인 승인 프로세스 언급"}

@@ -1,0 +1,19 @@
+﻿{
+  "schema_version": "1.0",
+  "description": "research-lead AI \uae30\uc220 \ub808\uc774\ub354",
+  "created_at": "2026-04-13T01:57:02.694768+00:00",
+  "technologies": {
+    "adopt": [],
+    "trial": [],
+    "assess": [
+      "Veo",
+      "Sora",
+      "Suno",
+      "Runway",
+      "HeyGen"
+    ],
+    "hold": []
+  },
+  "monthly_report": null,
+  "last_scan": null
+}

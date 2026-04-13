@@ -1,0 +1,5 @@
+{"id": "ae-001", "input": "backend-engineer 세션 결과물 품질 채점", "expected_tools": ["Read", "Bash"], "judge_criteria": "0~10 점수 + 근거 + data/ops/evals 기록"}
+{"id": "agent--t02", "input": "agent-evaluator 핵심 역할 과업 #2", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}
+{"id": "agent--t03", "input": "agent-evaluator 핵심 역할 과업 #3", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}
+{"id": "agent--t04", "input": "agent-evaluator 핵심 역할 과업 #4", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}
+{"id": "agent--t05", "input": "agent-evaluator 핵심 역할 과업 #5", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}

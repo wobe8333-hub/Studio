@@ -1,0 +1,153 @@
+{
+  "env": {
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
+  },
+  "permissions": {
+    "allow": [
+      "Bash",
+      "Bash(ls:*)",
+      "WebFetch",
+      "WebSearch",
+      "WebBrowse",
+      "Bash(pip install:*)",
+      "Bash(python:*)",
+      "Bash(python3:*)",
+      "Bash(grep:*)",
+      "Bash(pip freeze:*)",
+      "Bash(ffmpeg -version)",
+      "Read(//c/Users/조찬우/Desktop/ai_stuidio_claude/**)",
+      "mcp__context7__resolve-library-id",
+      "mcp__context7__query-docs",
+      "Skill(update-config)",
+      "mcp__playwright__browser_navigate",
+      "mcp__playwright__browser_take_screenshot",
+      "mcp__playwright__browser_snapshot",
+      "mcp__playwright__browser_click",
+      "mcp__playwright__browser_resize",
+      "mcp__playwright__browser_evaluate",
+      "mcp__playwright__browser_tabs",
+      "mcp__playwright__browser_close",
+      "mcp__playwright__browser_console_messages",
+      "mcp__playwright__browser_run_code",
+      "mcp__figma__whoami",
+      "mcp__plugin_github_github__create_repository",
+      "Bash(cat)",
+      "Bash(echo \"exit: $?\")",
+      "Bash(mkdir -p .claude/agent-logs)",
+      "Bash(touch .claude/agent-logs/.gitkeep)",
+      "Bash(rm -rf \"/c/Users/조찬우/.claude/agent-memory/infra-ops\")",
+      "Read(//c/Users/조찬우/.claude/agent-memory//**)",
+      "Bash(cp \"C:/Users/조찬우/Desktop/ai_stuidio_claude/.claude/settings.local.json\" \"C:/Users/조찬우/Desktop/ai_stuidio_claude/.claude/settings.local.json.backup_$\\(date +%Y%m%d_%H%M%S\\)\")",
+      "Bash(claude --version)"
+    ]
+  },
+  "hooks": {
+    "TaskCompleted": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cd \"C:/Users/조찬우/Desktop/ai_stuidio_claude\" && python -m pytest tests/ -x -q --ignore=tests/test_step08_integration.py 2>&1 | tail -10"
+          },
+          {
+            "type": "command",
+            "command": "cd \"C:/Users/조찬우/Desktop/ai_stuidio_claude\" && ruff check src/ --fix --select=E,W,F,I 2>&1 | tail -5"
+          },
+          {
+            "type": "command",
+            "command": "cd \"C:/Users/조찬우/Desktop/ai_stuidio_claude/web\" && npm run build 2>&1 | tail -10"
+          }
+        ]
+      }
+    ],
+    "TaskCreated": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo \"[v5:TaskCreated] $(date +%H:%M:%S)\" >> \"C:/Users/조찬우/Desktop/ai_stuidio_claude/.claude/agent-logs/hooks.log\" 2>/dev/null || true"
+          }
+        ]
+      }
+    ],
+    "TeammateIdle": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cd \"C:/Users/조찬우/Desktop/ai_stuidio_claude\" && echo \"=== 마지막 커밋 변경 파일 ===\" && git diff HEAD~1 --name-only 2>/dev/null | head -20"
+          }
+        ]
+      }
+    ],
+    "SubagentStart": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo \"[v5:SubagentStart] $(date +%H:%M:%S)\" >> \"C:/Users/조찬우/Desktop/ai_stuidio_claude/.claude/agent-logs/hooks.log\" 2>/dev/null || true"
+          }
+        ]
+      }
+    ],
+    "SubagentStop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo \"[v5:SubagentStop] $(date +%H:%M:%S)\" >> \"C:/Users/조찬우/Desktop/ai_stuidio_claude/.claude/agent-logs/hooks.log\" 2>/dev/null || true"
+          }
+        ]
+      }
+    ],
+    "WorktreeCreate": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cp \"C:/Users/조찬우/Desktop/ai_stuidio_claude/.env\" \"$WORKTREE_PATH/.env\" 2>/dev/null; cp \"C:/Users/조찬우/Desktop/ai_stuidio_claude/web/.env.local\" \"$WORKTREE_PATH/web/.env.local\" 2>/dev/null; echo \"[v5:WorktreeCreate] env copied\" >> \"C:/Users/조찬우/Desktop/ai_stuidio_claude/.claude/agent-logs/hooks.log\" 2>/dev/null || true"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python -c \"import sys,json; d=json.loads(sys.stdin.read()); p=d.get('input',{}).get('file_path','').replace('\\\\','/'); blocked=['.env','credentials/','_token.json','step08/__init__.py']; sys.exit(2) if any(b in p for b in blocked) else sys.exit(0)\""
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cd \"C:/Users/조찬우/Desktop/ai_stuidio_claude\" && git diff --stat HEAD 2>/dev/null | tail -5"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cd \"C:/Users/조찬우/Desktop/ai_stuidio_claude\" && echo \"=== v5 세션 종료 상태 ===\" && python -m pytest tests/ -x -q --ignore=tests/test_step08_integration.py 2>&1 | tail -3 && echo \"=== ruff ===\" && ruff check src/ --select=E,F --statistics 2>&1 | tail -3"
+          }
+        ]
+      }
+    ]
+  }
+}

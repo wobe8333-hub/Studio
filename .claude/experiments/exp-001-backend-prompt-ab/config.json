@@ -1,0 +1,9 @@
+{
+  "exp_id": "exp-001-backend-prompt-ab",
+  "agent": "backend-engineer",
+  "traffic_split": 50,
+  "start_date": "2026-04-13",
+  "eval_metric": "test_pass_rate",
+  "active": true,
+  "description": "backend-engineer initialPrompt A/B: 자가 수정 3회 vs 2회 제한"
+}

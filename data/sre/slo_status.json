@@ -1,0 +1,9 @@
+﻿{
+  "schema_version": "1.0",
+  "description": "sre-engineer SLO \uc0c1\ud0dc \ub300\uc2dc\ubcf4\ub4dc",
+  "updated_at": null,
+  "pipeline_error_rate_pct": 0.0,
+  "consecutive_failures": 0,
+  "hitl_escalations": [],
+  "sentry_dsn_configured": false
+}

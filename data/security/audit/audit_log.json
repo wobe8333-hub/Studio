@@ -1,0 +1,16 @@
+﻿{
+  "schema_version": "1.0",
+  "description": "security-engineer \ubcf4\uc548 \uac10\uc0ac \uc774\ub825",
+  "created_at": "2026-04-13T01:57:02.682512+00:00",
+  "oauth_rotation_schedule": {
+    "CH1": null,
+    "CH2": null,
+    "CH3": null,
+    "CH4": null,
+    "CH5": null,
+    "CH6": null,
+    "CH7": null
+  },
+  "vulnerabilities": [],
+  "last_secret_scan": null
+}

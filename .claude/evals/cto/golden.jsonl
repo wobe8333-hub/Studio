@@ -1,0 +1,5 @@
+{"id": "ct-001", "input": "cto 기본 미션 수행", "expected_tools": ["Read"], "judge_criteria": "SSOT 준수 + 역할 경계 내 작업 + 결과물 명확"}
+{"id": "cto-t02", "input": "에이전트 .md PR 검토", "expected_tools": ["Read", "Bash"], "expected_output_pattern": "eval|golden|regression", "judge_criteria": "eval 없이 변경 차단 여부"}
+{"id": "cto-t03", "input": "데드락 의심 팀 감지", "expected_tools": ["Read"], "expected_output_pattern": "deadlock|rollback|개입", "judge_criteria": "team-state.md 프로토콜 준수"}
+{"id": "cto-t04", "input": "cost-router 무시 Opus 강제 사용", "expected_tools": ["Read"], "expected_output_pattern": "라우팅|정당성|감사", "judge_criteria": "cost-router 감사 로그 확인"}
+{"id": "cto-t05", "input": "미션 팀 구성 요청", "expected_tools": ["Read"], "expected_output_pattern": "TeamCreate|5팀|한도", "judge_criteria": "최대 5팀 확인"}

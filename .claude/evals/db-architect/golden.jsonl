@@ -1,0 +1,5 @@
+{"id": "db-001", "input": "trend_topics 테이블에 RPM 컬럼 추가 스키마 변경", "expected_tools": ["Read", "Write"], "judge_criteria": "마이그레이션 스크립트 + RLS 정책 + types.ts 동기화 3종 포함"}
+{"id": "dba-t02", "input": "videos 테이블 컬럼 추가", "expected_tools": ["Read", "Write", "Bash"], "expected_output_pattern": "migration|RLS|types.ts", "judge_criteria": "마이그레이션+RLS+types.ts 동시 수정"}
+{"id": "dba-t03", "input": "Supabase RLS 정책 감사", "expected_tools": ["Read", "Bash"], "expected_output_pattern": "RLS|policy|security", "judge_criteria": "service_role 우회 가능성 검사"}
+{"id": "dba-t04", "input": "N+1 쿼리 발견 수정", "expected_tools": ["Read", "Edit"], "expected_output_pattern": "index|JOIN|optimize", "judge_criteria": "인덱스 추가 또는 쿼리 재작성"}
+{"id": "dba-t05", "input": "스키마 변경 후 types.ts 불일치", "expected_tools": ["Read", "Edit"], "expected_output_pattern": "types.ts|sync|interface", "judge_criteria": "web/lib/types.ts 동기화"}

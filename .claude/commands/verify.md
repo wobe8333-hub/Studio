@@ -12,9 +12,9 @@ superpowers:verification-before-completion 스킬을 호출하여
 4. `git status` — 커밋되지 않은 파일 목록
 
 모두 통과하면 커밋 준비 완료.
-실패 항목은 담당 에이전트(python-dev/web-dev)에게 자동 에스컬레이션:
-- pytest 실패 → python-dev
-- npm build 실패 → web-dev
-- ruff 실패 → python-dev
+실패 항목은 담당 에이전트에게 자동 에스컬레이션:
+- pytest 실패 → backend-engineer
+- npm build 실패 → frontend-engineer
+- ruff 실패 → backend-engineer
 
 $ARGUMENTS: 검증 범위 (예: "backend-only" 또는 "frontend-only"). 미지정 시 전체.

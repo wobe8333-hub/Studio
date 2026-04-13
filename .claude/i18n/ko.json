@@ -1,0 +1,55 @@
+{
+  "_schema": "Loomix i18n v1.0 — ko-KR",
+  "_note": "I18N_LOCALE=ko 시 이 파일 사용. 에이전트 메시지·UI 레이블·알림 문자열 정의.",
+
+  "pipeline": {
+    "step_start": "Step{step} 시작 — {channel}",
+    "step_complete": "Step{step} 완료 ({duration}초)",
+    "step_failed": "Step{step} 실패: {reason}",
+    "dry_run_label": "[DRY RUN]",
+    "pending_kpi": "KPI 수집 대기 중 (업로드 후 {hours}시간 경과 필요)"
+  },
+
+  "agents": {
+    "hitl_required": "HITL 필요: {reason}",
+    "team_created": "팀 생성됨: {team_name} ({members}명)",
+    "team_deleted": "팀 종료: {team_name}",
+    "mission_start": "미션 시작: {mission_type}",
+    "mission_complete": "미션 완료: {mission_type} ({duration}분)",
+    "eval_score": "Eval 점수: {agent} = {score}/10",
+    "eval_regression": "⚠️ Eval 회귀 감지: {agent} 3연속 7점 미만",
+    "shadow_mode": "{agent}은 Shadow 모드 (첫 14일). cto에게 보고만 가능.",
+    "budget_blocked": "예산 한도($50) 초과 — {agent} 차단됨. HIGH 에이전트만 허용.",
+    "debate_started": "Debate 시작: {hitl_type} (3명 패널: {panelists})"
+  },
+
+  "channels": {
+    "CH1": "경제",
+    "CH2": "부동산",
+    "CH3": "심리",
+    "CH4": "미스터리",
+    "CH5": "전쟁사",
+    "CH6": "과학",
+    "CH7": "역사"
+  },
+
+  "quota": {
+    "gemini_warning": "Gemini 쿼터 {pct}% 사용 — 잔여 {remaining}회",
+    "youtube_warning": "YouTube 쿼터 {pct}% 사용 — 잔여 {remaining} 단위",
+    "quota_exceeded": "쿼터 초과: {service}. 다음 갱신: {reset_time}"
+  },
+
+  "errors": {
+    "ffmpeg_timeout": "FFmpeg 타임아웃 ({seconds}초 초과)",
+    "manim_timeout": "Manim 렌더 타임아웃 (120초 초과) — 해당 씬 건너뜀",
+    "oauth_expired": "OAuth 토큰 만료: {channel}. scripts/generate_oauth_token.py 실행 필요",
+    "ssot_violation": "SSOT 위반: {agent}이 {path} 직접 open() 사용 금지"
+  },
+
+  "notifications": {
+    "daily_digest_title": "Loomix 일일 다이제스트 — {date}",
+    "monthly_report_title": "Loomix 월간 리포트 — {year}년 {month}월",
+    "chaos_day_notice": "Chaos Day 시작: {agent} offline ({duration}분)",
+    "okr_review_due": "분기 OKR 검토 예정: {quarter}"
+  }
+}

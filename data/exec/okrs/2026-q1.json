@@ -1,0 +1,42 @@
+{
+  "schema_version": "1.0",
+  "quarter": "2026-Q1",
+  "period": "2026-01-01 ~ 2026-03-31",
+  "status": "completed",
+  "owner": "ceo",
+  "created_at": "2026-01-01T09:00:00Z",
+  "reviewed_at": "2026-03-31T11:00:00Z",
+  "objectives": [
+    {
+      "id": "O1",
+      "title": "7채널 파이프라인 완전 자동화",
+      "key_results": [
+        {"id": "KR1.1", "description": "Step00~17 전 Step 자동화 완료", "target": 17, "actual": 17, "unit": "Step", "status": "achieved"},
+        {"id": "KR1.2", "description": "월간 영상 편수 채널당 4편 이상", "target": 4, "actual": 3.8, "unit": "편/월/채널", "status": "partial"},
+        {"id": "KR1.3", "description": "QA 자동 통과율 90% 이상", "target": 90, "actual": 87, "unit": "%", "status": "partial"}
+      ]
+    },
+    {
+      "id": "O2",
+      "title": "AI 에이전트 팀 v8.0 완성",
+      "key_results": [
+        {"id": "KR2.1", "description": "에이전트 수 29명 달성", "target": 29, "actual": 29, "unit": "명", "status": "achieved"},
+        {"id": "KR2.2", "description": "HITL 대응 시간 30분 이내", "target": 30, "actual": 45, "unit": "분", "status": "partial"},
+        {"id": "KR2.3", "description": "월간 API 비용 $50 이하 유지", "target": 50, "actual": 42, "unit": "USD", "status": "achieved"}
+      ]
+    },
+    {
+      "id": "O3",
+      "title": "수익화 기반 구축",
+      "key_results": [
+        {"id": "KR3.1", "description": "7채널 YouTube 수익화 승인", "target": 7, "actual": 4, "unit": "채널", "status": "partial"},
+        {"id": "KR3.2", "description": "월 수익 100만원 달성", "target": 100, "actual": 38, "unit": "만원", "status": "partial"}
+      ]
+    }
+  ],
+  "retrospective": {
+    "went_well": ["파이프라인 자동화 완성", "에이전트 팀 구조화"],
+    "needs_improvement": ["HITL 대응 속도", "수익화 채널 확대"],
+    "q2_focus": "v10.0 에이전트 팀 + 7채널 전원 수익화"
+  }
+}

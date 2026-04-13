@@ -1,0 +1,11 @@
+{
+  "monthly_stats": {
+    "202604": {
+      "haiku_calls": 0,
+      "sonnet_calls": 0,
+      "opus_calls": 0,
+      "estimated_savings_usd": 0.0
+    }
+  },
+  "last_updated": "2026-04-13"
+}

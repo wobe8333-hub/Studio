@@ -1,192 +1,158 @@
-# KAS Agent Teams v5.2 운영 가이드
+# Loomix Agent Teams v10.0 운영 가이드
 
-> **버전**: v5.2 | **에이전트 수**: 14개 | **기준일**: 2026-04-12
-
----
-
-## 4-Layer 구조
-
-```
-L0: mission-controller (Opus, 조율 전용)
-L1: python-dev | web-dev | design-dev (Builder, worktree)
-L2: quality-security | ops-monitor (Guardian, 상시)
-L3: db-architect | refactoring-surgeon | pipeline-debugger |
-    performance-profiler | ux-a11y | release-manager | video-specialist |
-    revenue-strategist (온디맨드)
-```
+> **브랜드**: Loomix (AI 콘텐츠 에이전시) · **내부 코드명**: KAS
+> **버전**: v10.0 | **에이전트 수**: 37개 (+ Meta 3) | **기준일**: 2026-04-13
+> **공식 Claude Code 문서 준수**: 100% (v10.0 재감사 기반)
 
 ---
 
-## 파일 소유권
+## 조직도 — 9 부서 × 34명 + Meta 3명
 
-| 에이전트 | 소유 경로 | 금지 경로 |
-|----------|----------|---------|
-| python-dev | src/, tests/, scripts/ | web/ |
-| web-dev | web/app/, web/lib/, web/hooks/, web/components/(로직) | src/, globals.css |
-| design-dev | web/app/globals.css, web/public/, assets/thumbnails/, web/components/(스타일) | src/, tests/ |
-| ops-monitor | .claude/, CLAUDE.md, AGENTS.md, docs/, .github/ | src/step*, web/app/, web/components/ |
-| quality-security | Read-only 감사 전용 | Write, Edit 금지 |
-| ux-a11y | Read-only 감사 전용 | Write, Edit 금지 |
-| video-specialist | Read-only 영상 콘텐츠 감사 | Write, Edit 금지 |
-| performance-profiler | Read-only 분석 전용 | Write, Edit 금지 |
-| pipeline-debugger | Read-only 파이프라인 분석 | Write, Edit 금지 |
-| revenue-strategist | Read-only 수익 전략 감사 | Write, Edit 전면 금지 |
-| mission-controller | 조율 전용 (파일 편집 불가) | Write, Edit 전면 금지 |
-| db-architect | scripts/supabase_schema.sql, scripts/migrations/, web/lib/types.ts (스키마 한정) | src/, web/app/, web/components/ |
-| refactoring-surgeon | src/ 리팩토링 전용 (worktree) | web/, tests/ 삭제, src/step08/__init__.py |
-| release-manager | CHANGELOG.md (단독), git tag | src/step*, web/app/, src/step08/__init__.py |
+```
+                    ceo (Sonnet) — Executive 부서장
+                        |
+    +------+--------+-------+-----+-------+--------+--------+------+------+
+    v      v        v       v     v       v        v        v      v
+  Exec    Eng     Ops    QA   Creat  Sales  Growth   Fin   Data   Meta
+  (5명)  (6명)   (6명)  (4명)  (2명)  (3명)  (4명)   (1명)  (3명)  (3명)
+
+  ceo    db-arch  devops  qa-aud  content  sales   marketing  finance  data-anal  eval
+  cto    backend  sre     perf-a  revenue  project customer            data-eng   router
+  legal  frontend code-r  ux-aud           partner community           prompt-e  debate
+  res-l  ui-des   pipel   security          moderator
+ complian mlops   release
+         media   doc-wri
+```
+
+**모델 분포**: Opus 2 (cto, db-architect) · Sonnet 22 · Haiku 13
+**부서장 9명**: ceo · db-architect · devops-engineer · qa-auditor · content-director · sales-manager · marketing-manager · finance-manager · data-analyst
 
 ---
 
-## 미션 프리셋
+## 부서별 정의
 
-| 미션 유형 | 소환 조합 |
-|-----------|-----------|
-| 백엔드 기능/버그 | python-dev + quality-security |
-| 프론트엔드 기능 | web-dev + quality-security |
-| UI/디자인 변경 | design-dev + ux-a11y |
-| 보안 취약점 수정 | quality-security → python-dev/web-dev |
-| 성능 최적화 | performance-profiler + python-dev/web-dev |
-| DB 스키마 변경 | db-architect + python-dev + web-dev |
-| 파이프라인 장애 | pipeline-debugger + python-dev |
-| 대규모 리팩토링 | refactoring-surgeon + python-dev |
-| 릴리스 배포 | release-manager + python-dev |
-| UX/접근성 감사 | ux-a11y → web-dev/design-dev |
-| 영상 콘텐츠 감사 | video-specialist → python-dev/design-dev |
-| 수익 전략 감사 | revenue-strategist → python-dev (scorer/portfolio) + video-specialist (SEO) |
-| 월간 주제 포트폴리오 | revenue-strategist + pipeline-debugger (트렌드 품질) → python-dev |
+### Executive Office — 5명
+| 에이전트 | 모델 | 역할 |
+|---|:-:|---|
+| **ceo** | Sonnet | **부서장** · HITL 판단 · Debate 최종 결정 · 월간 경영보고 |
+| **cto** | Opus | 기술 조율 · 에이전트 라이프사이클 관리 · ultrathink |
+| **legal-counsel** | Haiku | 계약서·NDA·저작권 검토 (read-only) |
+| **research-lead** | Sonnet | AI 신기술 탐색·POC (read-only, plan) |
+| **compliance-officer** | Sonnet | YouTube 정책·GDPR·Content ID (read-only, ultrathink) |
+
+### Engineering Division — 6명
+| 에이전트 | 모델 | 역할 |
+|---|:-:|---|
+| **db-architect** | Opus | **부서장** · DB 스키마 · RLS · types.ts (ultrathink) |
+| **backend-engineer** | Sonnet | src/ · 파이프라인 · 테스트 (worktree) |
+| **frontend-engineer** | Sonnet | web/ · Next.js · E2E |
+| **ui-designer** | Sonnet | globals.css · 디자인 시스템 · 썸네일 |
+| **mlops-engineer** | Sonnet | SD XL/LoRA/ElevenLabs/Whisper (worktree, DRIFT_THRESHOLD) |
+| **media-engineer** | Sonnet | FFmpeg CRF/preset · EBU R128 오디오 · HLS |
+
+### Platform Operations — 6명
+| 에이전트 | 모델 | 역할 |
+|---|:-:|---|
+| **devops-engineer** | Sonnet | **부서장** · 인프라 · hooks · CLAUDE.md |
+| **sre-engineer** | Sonnet | Sentry 알람 · SLO · 런타임 대응 (read-only) |
+| **code-refactorer** | Sonnet | God Module 분해 (worktree) |
+| **pipeline-debugger** | Sonnet | Step 실패 원인 분석 (read-only) |
+| **release-manager** | Haiku | CHANGELOG · git tag · PR |
+| **documentation-writer** | Haiku | docs/ ADR·API·온보딩 (docs/ 단독) |
+
+### Quality Assurance — 4명
+| 에이전트 | 모델 | 역할 |
+|---|:-:|---|
+| **qa-auditor** | Sonnet | **부서장** · OWASP 감사 · 감사팀 결성 (ultrathink) |
+| **performance-analyst** | Haiku | N+1·메모리·번들 분석 (read-only) |
+| **ux-auditor** | Haiku | WCAG 2.1 AA · UX 감사 (read-only) |
+| **security-engineer** | Sonnet | OAuth·RLS 런타임 (read-only, ultrathink) |
+
+### Creative Studio — 2명
+| 에이전트 | 모델 | 역할 |
+|---|:-:|---|
+| **content-director** | Sonnet | **부서장** · 스크립트·썸네일·SEO (read-only) |
+| **revenue-strategist** | Sonnet | 수익 주제 선별 · scorer · 포트폴리오 (read-only) |
+
+### Sales & Delivery — 3명
+| 에이전트 | 모델 | 역할 |
+|---|:-:|---|
+| **sales-manager** | Sonnet | **부서장** · 리드·제안서·계약 |
+| **project-manager** | Haiku | 수주 프로젝트 딜리버리 |
+| **partnerships-manager** | Sonnet | 브랜드 콜라보·스폰서십 |
+
+### Growth & Brand — 4명
+| 에이전트 | 모델 | 역할 |
+|---|:-:|---|
+| **marketing-manager** | Sonnet | **부서장** · 브랜드 성장 · 인바운드 마케팅 |
+| **customer-support** | Haiku | 외주 클라이언트 B2B CS |
+| **community-manager** | Haiku | 7채널 시청자 소통 (read-only) |
+| **content-moderator** | Haiku | 댓글 악플·위기 대응 (read-only) |
+
+### Finance Operations — 1명
+| 에이전트 | 모델 | 역할 |
+|---|:-:|---|
+| **finance-manager** | Haiku | **부서장** · 청구서 · P&L · API 비용 (BUDGET_LIMIT_USD=$50) |
+
+### Data Intelligence — 3명
+| 에이전트 | 모델 | 역할 |
+|---|:-:|---|
+| **data-analyst** | Haiku | **부서장** · Supabase BI · 주간 대시보드 |
+| **data-engineer** | Sonnet | Step05 ETL·Supabase idempotency (worktree) |
+| **prompt-engineer** | Sonnet | Gemini/ElevenLabs 프롬프트 A/B · 토큰 절감 |
+
+### Meta (부서 소속 없음 — ceo/cto 공동 관리) — 3명
+| 에이전트 | 모델 | 역할 | 트리거 |
+|---|:-:|---|---|
+| **agent-evaluator** | Sonnet | Golden test 채점 · LLM-as-judge · eval regression | SubagentStop 자동 |
+| **cost-router** | Haiku | 과업 복잡도 → 모델 선택 (Haiku/Sonnet/Opus) | 미션 시작 시 |
+| **debate-facilitator** | Sonnet | 3명 병렬 의견 → Constitutional synthesis | ceo HITL 이전 |
+
+> 파일 소유권 상세 → `.claude/rules/agent-teams.md` | 미션 프리셋 + 통신 → `.claude/rules/team-protocol.md`
 
 ---
 
-## 통신 프로토콜
+## 부서간 협업 — TeamCreate
 
-**mission-controller → 팀원 소환**:
-```
-[미션 ID: YYYY-MM-DD-{유형}]
-목표: {한 줄}
-범위: {파일/모듈}
-제약조건: {금지 사항}
-완료 기준: {구체적 조건}
-```
+**권한 3명만**: ceo · cto · qa-auditor | 최대 동시 활성: 5팀
 
-**Guardian → Builder (이슈 전달)**:
-```
-[이슈 유형: 보안/품질/UX/수익]
-파일: {경로:줄번호}
-심각도: CRITICAL/HIGH/MEDIUM/LOW
-설명: {문제와 영향}
-수정 담당: {python-dev/web-dev/design-dev}
-```
+실전 시나리오 → `docs/playbooks/` | 상세 흐름 → `.claude/rules/team-protocol.md`
 
 ---
 
 ## Anti-Patterns
 
-- `python-dev`가 `web/` 수정 시도 — per-agent hook이 차단
-- `quality-security`가 코드 직접 수정 — disallowedTools로 차단
-- Opus 에이전트 동시 2명 초과 소환 — 비용 폭주
-- L3 동시 5명 초과 소환 — 조율 오버헤드
-- `CHANGELOG.md`를 release-manager 외 에이전트가 편집 — 릴리스 이력 충돌
-- db-architect 없이 src/에서 스키마 변경 — RLS/types.ts 동기화 누락
+### 기본
+- **backend-engineer가 web/ 수정** — PreToolUse hook 차단
+- **qa-auditor 코드 직접 수정** — disallowedTools 차단
+- **Opus 동시 2명 초과** — cto+db-architect 동시 시 cto 먼저 종료
+- **db-architect 없이 스키마 변경** — RLS/types.ts 누락
+
+### TeamCreate
+- TeamCreate 권한 3명 제한 · 고아 팀 금지(TeamDelete 필수) · 동시 5개 초과 금지 · SSOT 교차쓰기 금지
+
+### v8.0
+- 비표준 hook 이벤트 재도입 금지 · frontmatter memory/permissionMode 누락 금지
+- read-only 에이전트 disallowedTools: Write, Edit 필수 · ultrathink 고위험 결정에만
+
+### v10.0 신규
+- **Meta-agent 자체 TeamCreate 금지** — agent-evaluator/cost-router/debate-facilitator는 ceo/cto만 호출
+- **Eval 없는 에이전트 .md 변경 금지** — CI gate 차단
+- **Shadow 14일 단축 금지** — ceo HITL 예외 승인 시 eval 소급 필수
+- **Debate 스킵 금지** — HITL 9종 중 계약서·수주·정책 이슈는 필수
+- **Circuit breaker 우회 금지** — 2인 승인(ceo + finance-manager) 필요
+- **Cron job ceo/cto 실행 금지** — 자율성은 중간 관리자에게
+- **compliance↔legal, moderator↔community, media↔backend 경계 혼용 금지**
 
 ---
 
-## Playwright 사용 우선순위
+## 진단 에이전트 경계 (4축)
 
-1. web-dev — E2E 테스트 작성·실행 (1차 소유)
-2. ux-a11y — WCAG/반응형 감사 (read-only, Haiku)
-3. design-dev — 시각 검증 스크린샷 비교
-4. video-specialist — /runs 썸네일 검토
+- **pipeline-debugger**: Step 실패 "원인" | **performance-analyst**: "최적화"
+- **revenue-strategist**: "수익성" | **data-analyst**: BI "현황"
 
-충돌 시 web-dev 우선, 감사 에이전트는 read-only 모드 유지.
+동일 이슈 둘 이상 소환 금지 — cto가 1개 선택.
 
 ---
 
-## 진단 에이전트 경계 (3축)
-
-- **pipeline-debugger** (Sonnet): Step 실패 "원인" (로그·manifest·quota·지식 품질·Stage1~3 팩트체크)
-- **performance-profiler** (Haiku): 성공 런의 "최적화" (N+1·메모리·번들·time.sleep 하드코딩)
-- **revenue-strategist** (Sonnet): 주제 선별 "수익성" (scorer·portfolio·winning pattern 적중률)
-
-동일 이슈에 둘 이상 소환 금지 — mission-controller가 1개 선택.
-
----
-
-## Supabase RLS 경계
-
-- **db-architect** (Opus): RLS 정책 1차 설계 + 마이그레이션 + types.ts 동기화 (3종 세트 동시)
-- **quality-security** (Sonnet): RLS 감사만 (설계 변경 금지)
-- 이슈 발견 시 SendMessage로 db-architect에 전달
-- 파괴적 변경(DROP, 타입 축소) 시 백필 스크립트 필수
-
----
-
-## teammate 모드 동작 (공식문서 § Agent Teams)
-
-- 모든 14개 agent는 teammate 모드(`CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`)로 운영.
-- `skills`·`mcpServers`는 teammate 모드에서 무시됨 (공식 문서 명시) — agent frontmatter에 선언하지 않음.
-- context7·playwright·figma MCP는 `.claude/settings.local.json`에서 전역 로드.
-
-| 에이전트 | 권장 skill (프로젝트 세션 전역) |
-|---|---|
-| mission-controller | superpowers:brainstorming, superpowers:writing-plans |
-| python-dev | superpowers:test-driven-development, superpowers:systematic-debugging |
-| web-dev | superpowers:test-driven-development, frontend-design:frontend-design |
-| design-dev | frontend-design:frontend-design, ui-ux-pro-max:ui-ux-pro-max |
-| quality-security | superpowers:requesting-code-review |
-| ops-monitor | claude-md-management:revise-claude-md |
-
----
-
-## 실전 협업 시나리오 (공식 § Use case examples 패턴)
-
-### 시나리오 1: 파이프라인 장애 (Step08 FFmpeg 실패)
-```
-/mission "Step08 FFmpeg 에러 조사 — runs/CH1/*/step08/ 최근 3건 FAILED"
-→ mission-controller spawn:
-  1) pipeline-debugger: 로그·manifest·쿼터 분석 (read-only)
-  2) python-dev: 수정 구현 (worktree, src/step08/ffmpeg_composer.py)
-→ pipeline-debugger SendMessage로 python-dev에 근본 원인 전달 → 수정 → pytest → 완료
-```
-
-### 시나리오 2: UI 리디자인 (접근성 강화)
-```
-/mission "홈 탭 글래스모피즘 대비 강화 + 접근성 WCAG AA"
-→ mission-controller spawn:
-  1) design-dev: globals.css + 컴포넌트 스타일 (worktree)
-  2) ux-a11y: WCAG 감사 (read-only, Haiku)
-→ ux-a11y가 design-dev에 색 대비 이슈 전달 → design-dev 수정 → npm run build 통과
-```
-
-### 시나리오 3: Supabase 스키마 + 타입 동기화
-```
-/mission "trend_topics에 is_approved_by 컬럼 추가"
-→ mission-controller spawn:
-  1) db-architect: SQL 마이그레이션 + RLS (Opus, worktree)
-  2) python-dev: src/agents/ui_ux/ 동기화 로직 (worktree)
-  3) web-dev: web/lib/types.ts 재생성 (worktree)
-→ db-architect가 나머지 2명에 API 변경 알림 → 병렬 구현 → 통합
-```
-
----
-
-## 자주 쓰는 커맨드
-
-```bash
-claude agents                                    # 14개 에이전트 목록 확인
-pytest tests/ -x -q --ignore=tests/test_step08_integration.py  # 테스트
-ruff check src/ --fix --select=E,W,F,I          # 린팅
-cd web && npm run build                          # 빌드 검증
-```
-
-## Slash Commands (`.claude/commands/`)
-
-| 커맨드 | 설명 |
-|---|---|
-| `/mission [설명]` | mission-controller 소환 — HITL/실패 자동 감지 + 팀 편성 |
-| `/audit [범위]` | quality-security + performance-profiler 병렬 감사 |
-| `/release [버전]` | release-manager 소환 — CHANGELOG + tag + PR |
-| `/kpi [채널]` | AnalyticsLearningAgent KPI 수집 및 Phase 분석 |
-| `/debug-pipeline [step]` | pipeline-debugger 소환 — Step 실패 분석 |
-| `/verify [범위]` | 완료 전 검증 — pytest + ruff + build 통과 확인 |
-| `/revenue-audit` | revenue-strategist 소환 — scorer/portfolio/winning pattern 감사 |
+> 커맨드 → `CLAUDE.md` | 미션 프리셋·통신 프로토콜 → `.claude/rules/team-protocol.md`

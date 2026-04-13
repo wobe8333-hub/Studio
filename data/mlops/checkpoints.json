@@ -1,0 +1,22 @@
+﻿{
+  "schema_version": "1.0",
+  "description": "mlops-engineer \ubaa8\ub378 \ubc84\uc804 \uc774\ub825",
+  "created_at": "2026-04-13T01:57:02.679033+00:00",
+  "sd_xl": {
+    "current_version": null,
+    "history": [],
+    "drift_threshold": 0.7
+  },
+  "lora": {
+    "channels": {},
+    "last_drift_check": null
+  },
+  "elevenlabs": {
+    "ab_tests": [],
+    "active_voices": {}
+  },
+  "faster_whisper": {
+    "current_model": null,
+    "accuracy_history": []
+  }
+}

@@ -1,0 +1,5 @@
+{"id": "de-001", "input": "devops-engineer 기본 미션 수행", "expected_tools": ["Read"], "judge_criteria": "SSOT 준수 + 역할 경계 내 작업 + 결과물 명확"}
+{"id": "devops-t02", "input": "PreToolUse 훅 미작동", "expected_tools": ["Read", "Bash"], "expected_output_pattern": "hook|settings|trigger", "judge_criteria": "hooks 설정 확인 및 수정"}
+{"id": "devops-t03", "input": "CLAUDE.md 토큰 초과 경고", "expected_tools": ["Read", "Edit"], "expected_output_pattern": "token|on-demand|paths", "judge_criteria": "paths frontmatter on-demand 이동"}
+{"id": "devops-t04", "input": "신규 에이전트 .md CI 차단", "expected_tools": ["Read", "Bash"], "expected_output_pattern": "eval|golden.jsonl|CI", "judge_criteria": "golden.jsonl 5건 추가 안내"}
+{"id": "devops-t05", "input": "ngrok 터널 단절 복구", "expected_tools": ["Bash"], "expected_output_pattern": "ngrok|restart|cwstudio", "judge_criteria": "ngrok start kas-studio 실행"}

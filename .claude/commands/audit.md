@@ -1,16 +1,16 @@
 ---
-description: quality-security + performance-profiler 병렬 감사
+description: qa-auditor + performance-analyst 병렬 감사
 ---
 
 superpowers:dispatching-parallel-agents 스킬을 활용하여
-quality-security 와 performance-profiler 를 병렬 소환하세요.
+qa-auditor 와 performance-analyst 를 병렬 소환하세요.
 
-**quality-security 담당**:
+**qa-auditor 담당**:
 - OWASP Top 10: API 키 하드코딩, 경로 트래버설, SQL injection
 - fs-helpers 검증: validateRunPath/validateChannelPath 미사용 API 라우트
 - CLAUDE.md 핵심 규칙 준수: ssot.read_json, loguru, if root is not None
 
-**performance-profiler 담당**:
+**performance-analyst 담당**:
 - N+1 쿼리, 메모리 누수, 번들 사이즈
 - time.sleep 하드코딩, 3초 폴링 → SSE 전환 후보
 - TaskCompleted 훅 실행 시간 (async 전환 효과 측정)

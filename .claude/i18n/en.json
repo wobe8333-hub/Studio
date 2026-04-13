@@ -1,0 +1,55 @@
+{
+  "_schema": "Loomix i18n v1.0 — en-US",
+  "_note": "Used when I18N_LOCALE=en. Agent messages, UI labels, notification strings.",
+
+  "pipeline": {
+    "step_start": "Step{step} starting — {channel}",
+    "step_complete": "Step{step} completed ({duration}s)",
+    "step_failed": "Step{step} failed: {reason}",
+    "dry_run_label": "[DRY RUN]",
+    "pending_kpi": "KPI collection pending ({hours}h post-upload required)"
+  },
+
+  "agents": {
+    "hitl_required": "HITL required: {reason}",
+    "team_created": "Team created: {team_name} ({members} members)",
+    "team_deleted": "Team closed: {team_name}",
+    "mission_start": "Mission start: {mission_type}",
+    "mission_complete": "Mission complete: {mission_type} ({duration}min)",
+    "eval_score": "Eval score: {agent} = {score}/10",
+    "eval_regression": "⚠️ Eval regression: {agent} below 7 for 3 consecutive sessions",
+    "shadow_mode": "{agent} is in Shadow mode (first 14 days). Report to cto only.",
+    "budget_blocked": "Budget limit ($50) exceeded — {agent} blocked. HIGH-priority agents only.",
+    "debate_started": "Debate started: {hitl_type} (3-panel: {panelists})"
+  },
+
+  "channels": {
+    "CH1": "Economy",
+    "CH2": "Real Estate",
+    "CH3": "Psychology",
+    "CH4": "Mystery",
+    "CH5": "War History",
+    "CH6": "Science",
+    "CH7": "History"
+  },
+
+  "quota": {
+    "gemini_warning": "Gemini quota {pct}% used — {remaining} calls remaining",
+    "youtube_warning": "YouTube quota {pct}% used — {remaining} units remaining",
+    "quota_exceeded": "Quota exceeded: {service}. Next reset: {reset_time}"
+  },
+
+  "errors": {
+    "ffmpeg_timeout": "FFmpeg timeout ({seconds}s exceeded)",
+    "manim_timeout": "Manim render timeout (120s exceeded) — scene skipped",
+    "oauth_expired": "OAuth token expired: {channel}. Run scripts/generate_oauth_token.py",
+    "ssot_violation": "SSOT violation: {agent} used direct open() on {path}"
+  },
+
+  "notifications": {
+    "daily_digest_title": "Loomix Daily Digest — {date}",
+    "monthly_report_title": "Loomix Monthly Report — {year}-{month}",
+    "chaos_day_notice": "Chaos Day started: {agent} offline ({duration}min)",
+    "okr_review_due": "Quarterly OKR review due: {quarter}"
+  }
+}

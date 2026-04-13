@@ -1,0 +1,5 @@
+{"id": "cr-001", "input": "뉴스 기사 300자 요약 과업 모델 선택", "expected_tools": [], "judge_criteria": "haiku 권장 + 복잡도 1~3 + 이유"}
+{"id": "cr-002", "input": "src/ 전체 OWASP 정적 분석 과업 모델 선택", "expected_tools": [], "judge_criteria": "sonnet 이상 권장 + 복잡도 7+"}
+{"id": "cost-r-t03", "input": "cost-router 핵심 역할 과업 #3", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}
+{"id": "cost-r-t04", "input": "cost-router 핵심 역할 과업 #4", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}
+{"id": "cost-r-t05", "input": "cost-router 핵심 역할 과업 #5", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}

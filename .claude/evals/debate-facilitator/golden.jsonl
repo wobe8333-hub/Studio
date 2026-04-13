@@ -1,0 +1,5 @@
+{"id": "df-001", "input": "수주 150만원 계약 HITL 토론 진행", "expected_tools": ["SendMessage"], "judge_criteria": "패널 3명 식별 + synthesis + COMPANY.md 준수 여부 체크"}
+{"id": "debate-t02", "input": "debate-facilitator 핵심 역할 과업 #2", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}
+{"id": "debate-t03", "input": "debate-facilitator 핵심 역할 과업 #3", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}
+{"id": "debate-t04", "input": "debate-facilitator 핵심 역할 과업 #4", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}
+{"id": "debate-t05", "input": "debate-facilitator 핵심 역할 과업 #5", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}

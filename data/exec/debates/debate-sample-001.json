@@ -1,0 +1,27 @@
+{
+  "debate_id": "debate-sample-001",
+  "hitl_type": "contract_approval",
+  "question": "신규 클라이언트 계약 150만원 수주 승인 여부",
+  "panel": [
+    "cto",
+    "revenue-strategist",
+    "legal-counsel"
+  ],
+  "opinions": {
+    "cto": {
+      "stance": "approve",
+      "reason": "기술적으로 실행 가능"
+    },
+    "revenue-strategist": {
+      "stance": "approve",
+      "reason": "수익성 양호"
+    },
+    "legal-counsel": {
+      "stance": "review",
+      "reason": "계약서 조항 추가 검토 필요"
+    }
+  },
+  "synthesis": "2:1 승인 우세. 계약서 검토 후 최종 수주. Safety-first 원칙: legal-counsel 검토 완료 조건부.",
+  "ceo_decision": null,
+  "created_at": "2026-04-13T14:27:26.155167"
+}

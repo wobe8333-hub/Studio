@@ -1,0 +1,11 @@
+{
+  "current": {
+    "crf": 23,
+    "preset": "slow",
+    "audio_target_lufs": -14.0,
+    "video_codec": "libx264",
+    "audio_codec": "aac"
+  },
+  "history": [],
+  "last_updated": "2026-04-13"
+}

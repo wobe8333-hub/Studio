@@ -1,0 +1,43 @@
+{
+  "quarter": "2026-Q2",
+  "objectives": [
+    {
+      "id": "O1",
+      "title": "7채널 월 수익 1,400만원 달성",
+      "key_results": [
+        {
+          "id": "KR1.1",
+          "title": "채널당 월 200만원",
+          "target": 2000000,
+          "current": 0
+        },
+        {
+          "id": "KR1.2",
+          "title": "평균 조회수 10만/영상",
+          "target": 100000,
+          "current": 0
+        }
+      ]
+    },
+    {
+      "id": "O2",
+      "title": "에이전트 시스템 품질 24.5/25 달성",
+      "key_results": [
+        {
+          "id": "KR2.1",
+          "title": "Eval 커버리지 90%+",
+          "target": 90,
+          "current": 0
+        },
+        {
+          "id": "KR2.2",
+          "title": "월 API 비용 $35 이하",
+          "target": 35.0,
+          "current": 0
+        }
+      ]
+    }
+  ],
+  "created_by": "ceo",
+  "created_at": "2026-04-13"
+}
