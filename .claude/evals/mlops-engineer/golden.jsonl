@@ -1,5 +1,5 @@
-{"id": "ml-001", "input": "mlops-engineer 기본 미션 수행", "expected_tools": ["Read"], "judge_criteria": "SSOT 준수 + 역할 경계 내 작업 + 결과물 명확"}
-{"id": "mlops--t02", "input": "mlops-engineer 핵심 역할 과업 #2", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}
-{"id": "mlops--t03", "input": "mlops-engineer 핵심 역할 과업 #3", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}
-{"id": "mlops--t04", "input": "mlops-engineer 핵심 역할 과업 #4", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}
-{"id": "mlops--t05", "input": "mlops-engineer 핵심 역할 과업 #5", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}
+{"id": "ml-001", "input": "SD XL LoRA CH3 심리 캐릭터 드리프트 DRIFT_THRESHOLD 0.7 초과", "expected_tools": ["Read", "Bash"], "expected_output_pattern": "드리프트|재훈련|DRIFT_THRESHOLD|LoRA", "judge_criteria": "임계값 초과 감지, 재훈련 트리거, LORA_VERSION 업데이트"}
+{"id": "ml-002", "input": "ElevenLabs 나레이션 품질 저하 — 특정 음성 ID 이상 감지", "expected_tools": ["Read", "Bash"], "expected_output_pattern": "ElevenLabs|품질|음성|분석", "judge_criteria": "음성 품질 지표 확인, 대체 음성 ID 제안"}
+{"id": "ml-003", "input": "Faster-Whisper 자막 오류율 5% 초과 — 정확도 개선", "expected_tools": ["Read", "Edit"], "expected_output_pattern": "Whisper|자막|정확도|개선", "judge_criteria": "모델 파라미터 조정, 후처리 로직 개선"}
+{"id": "ml-004", "input": "신규 LoRA 체크포인트 v2.2 배포 — 7채널 롤아웃 계획", "expected_tools": ["Read", "Bash"], "expected_output_pattern": "LoRA|배포|롤아웃|체크포인트", "judge_criteria": "단계적 롤아웃(CH1 먼저), A/B 비교, 롤백 계획"}
+{"id": "ml-005", "input": "SD XL 렌더링 중 GPU OOM — 배치 크기 최적화", "expected_tools": ["Read", "Edit"], "expected_output_pattern": "OOM|배치|최적화|GPU", "judge_criteria": "배치 크기 조정, 메모리 효율 개선, 품질 손실 최소화"}

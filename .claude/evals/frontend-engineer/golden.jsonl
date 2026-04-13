@@ -1,5 +1,5 @@
-{"id": "fe-001", "input": "web/app/dashboard/page.tsx 데이터 로딩 오류", "expected_tools": ["Read", "Grep"], "judge_criteria": "컴포넌트 오류 원인 + 수정안"}
-{"id": "fronte-t02", "input": "frontend-engineer 핵심 역할 과업 #2", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}
-{"id": "fronte-t03", "input": "frontend-engineer 핵심 역할 과업 #3", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}
-{"id": "fronte-t04", "input": "frontend-engineer 핵심 역할 과업 #4", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}
-{"id": "fronte-t05", "input": "frontend-engineer 핵심 역할 과업 #5", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}
+{"id": "fe-001", "input": "파이프라인 실시간 상태 페이지 — Step 진행률 컴포넌트 추가", "expected_tools": ["Read", "Write", "Bash"], "expected_output_pattern": "컴포넌트|Next.js|Supabase|실시간", "judge_criteria": "web/ 내 컴포넌트 작성, Supabase 실시간 구독 사용"}
+{"id": "fe-002", "input": "대시보드 채널별 KPI 카드 로딩 속도 3초 → 1초 개선", "expected_tools": ["Read", "Edit", "Bash"], "expected_output_pattern": "로딩|최적화|캐시|성능", "judge_criteria": "데이터 페칭 최적화, React Query 캐시 전략"}
+{"id": "fe-003", "input": "모바일 반응형 레이아웃 깨짐 — 채널 그리드 수정", "expected_tools": ["Read", "Edit"], "expected_output_pattern": "반응형|Tailwind|grid|모바일", "judge_criteria": "Tailwind breakpoint 수정, 모바일 UX 준수"}
+{"id": "fe-004", "input": "Playwright E2E — 파이프라인 실행 버튼 테스트 추가", "expected_tools": ["Read", "Write", "Bash"], "expected_output_pattern": "E2E|Playwright|테스트|pass", "judge_criteria": "테스트 작성 후 실행 PASS 확인"}
+{"id": "fe-005", "input": "npm run build 실패 — TypeScript 타입 오류 수정", "expected_tools": ["Read", "Edit", "Bash"], "expected_output_pattern": "TypeScript|build|타입|수정", "judge_criteria": "타입 오류 수정 후 빌드 PASS, 타입 캐스팅 남용 금지"}

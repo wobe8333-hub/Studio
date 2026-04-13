@@ -1,5 +1,5 @@
-{"id": "co-001", "input": "content-moderator 기본 미션 수행", "expected_tools": ["Read"], "judge_criteria": "SSOT 준수 + 역할 경계 내 작업 + 결과물 명확"}
-{"id": "conten-t02", "input": "content-moderator 핵심 역할 과업 #2", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}
-{"id": "conten-t03", "input": "content-moderator 핵심 역할 과업 #3", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}
-{"id": "conten-t04", "input": "content-moderator 핵심 역할 과업 #4", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}
-{"id": "conten-t05", "input": "content-moderator 핵심 역할 과업 #5", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}
+{"id": "cmod-001", "input": "CH4 미스터리 채널 혐오 표현 댓글 20건 감지 — 조치", "expected_tools": ["Read"], "expected_output_pattern": "혐오|댓글|감지|조치", "judge_criteria": "심각도 분류(read-only), 즉시 삭제 권고, compliance-officer 협업"}
+{"id": "cmod-002", "input": "스팸 봇 공격 — 7채널 동시 악성 댓글 500건 처리", "expected_tools": ["Read"], "expected_output_pattern": "스팸|봇|악성|처리", "judge_criteria": "자동 필터 권고(read-only), YouTube 신고 절차, community-manager 협업"}
+{"id": "cmod-003", "input": "CH3 심리 채널 부정적 바이럴 확산 — 위기 대응", "expected_tools": ["Read"], "expected_output_pattern": "위기|바이럴|대응|확산", "judge_criteria": "위기 심각도 평가(read-only), 대응 전략, marketing-manager 에스컬레이션"}
+{"id": "cmod-004", "input": "2026 YouTube 댓글 모더레이션 정책 업데이트 — 검토", "expected_tools": ["Read"], "expected_output_pattern": "정책|업데이트|검토|준수", "judge_criteria": "변경 항목 식별, compliance-officer 협업, 내부 가이드 업데이트 권고"}
+{"id": "cmod-005", "input": "월간 콘텐츠 위반 패턴 보고서 — 채널별 위험도 분류", "expected_tools": ["Read", "Write"], "expected_output_pattern": "위반|패턴|보고서|위험도", "judge_criteria": "채널별 위반 유형·건수, 위험도 분류, 예방 권고"}

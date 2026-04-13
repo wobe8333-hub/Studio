@@ -1,5 +1,5 @@
-{"id": "re-001", "input": "research-lead 기본 미션 수행", "expected_tools": ["Read"], "judge_criteria": "SSOT 준수 + 역할 경계 내 작업 + 결과물 명확"}
-{"id": "resear-t02", "input": "research-lead 핵심 역할 과업 #2", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}
-{"id": "resear-t03", "input": "research-lead 핵심 역할 과업 #3", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}
-{"id": "resear-t04", "input": "research-lead 핵심 역할 과업 #4", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}
-{"id": "resear-t05", "input": "research-lead 핵심 역할 과업 #5", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}
+{"id": "rl-001", "input": "Google Gemini 3.0 발표 — Loomix 파이프라인 영향 분석", "expected_tools": ["Read"], "expected_output_pattern": "영향|마이그레이션|POC|분석", "judge_criteria": "현행 Gemini 2.5-flash 대비 성능·비용 분석, POC 제안"}
+{"id": "rl-002", "input": "ElevenLabs v3 TTS — 현행 나레이션 품질 대비 POC 요청", "expected_tools": ["Read"], "expected_output_pattern": "POC|품질|비교|테스트", "judge_criteria": "A/B 테스트 설계, mlops-engineer 협업 제안"}
+{"id": "rl-003", "input": "Manim CE 0.20 → 0.21 마이그레이션 호환성 검토", "expected_tools": ["Read", "Bash"], "expected_output_pattern": "마이그레이션|호환성|API|변경", "judge_criteria": "Breaking change 식별, 영향 범위 파악"}
+{"id": "rl-004", "input": "경쟁 YouTube AI 채널 도구 스택 벤치마킹 요청", "expected_tools": ["Read"], "expected_output_pattern": "벤치마킹|경쟁|도구|분석", "judge_criteria": "3개 이상 경쟁 채널 비교, Loomix 우위/열위 식별"}
+{"id": "rl-005", "input": "채널별 LoRA fine-tuning 로드맵 2026 H2 초안", "expected_tools": ["Read", "Write"], "expected_output_pattern": "fine-tuning|로드맵|일정|우선순위", "judge_criteria": "7채널별 우선순위, mlops-engineer 협업 포함"}

@@ -1,5 +1,5 @@
-{"id": "re-001", "input": "release-manager 기본 미션 수행", "expected_tools": ["Read"], "judge_criteria": "SSOT 준수 + 역할 경계 내 작업 + 결과물 명확"}
-{"id": "releas-t02", "input": "release-manager 핵심 역할 과업 #2", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}
-{"id": "releas-t03", "input": "release-manager 핵심 역할 과업 #3", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}
-{"id": "releas-t04", "input": "release-manager 핵심 역할 과업 #4", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}
-{"id": "releas-t05", "input": "release-manager 핵심 역할 과업 #5", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}
+{"id": "rm-001", "input": "v10.0 릴리스 CHANGELOG 작성 요청", "expected_tools": ["Read", "Write", "Bash"], "expected_output_pattern": "CHANGELOG|v10.0|Keep-a-Changelog|릴리스", "judge_criteria": "Keep-a-Changelog 형식 준수, 모든 Phase 포함"}
+{"id": "rm-002", "input": "git tag v10.0 + GitHub Release 노트 생성", "expected_tools": ["Read", "Bash"], "expected_output_pattern": "tag|release|GitHub|v10.0", "judge_criteria": "annotated tag 생성, release notes 자동 생성"}
+{"id": "rm-003", "input": "PR 머지 후 pyproject.toml 버전 범프 자동화", "expected_tools": ["Read", "Edit", "Bash"], "expected_output_pattern": "버전|범프|pyproject|자동화", "judge_criteria": "semantic versioning 준수, CHANGELOG 동기화"}
+{"id": "rm-004", "input": "핫픽스 v10.0.1 — Step08 크리티컬 버그 긴급 패치 배포", "expected_tools": ["Read", "Bash"], "expected_output_pattern": "핫픽스|hotfix|패치|배포", "judge_criteria": "hotfix 브랜치 전략, 패치 노트 작성, 빠른 릴리스"}
+{"id": "rm-005", "input": "릴리스 브랜치 보호 규칙 설정 — main 직접 push 차단", "expected_tools": ["Read", "Bash"], "expected_output_pattern": "보호|branch|main|규칙", "judge_criteria": "GitHub 브랜치 보호 규칙, PR 필수 리뷰 설정"}

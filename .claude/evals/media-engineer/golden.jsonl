@@ -1,5 +1,5 @@
-{"id": "me-001", "input": "media-engineer 기본 미션 수행", "expected_tools": ["Read"], "judge_criteria": "SSOT 준수 + 역할 경계 내 작업 + 결과물 명확"}
-{"id": "media--t02", "input": "media-engineer 핵심 역할 과업 #2", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}
-{"id": "media--t03", "input": "media-engineer 핵심 역할 과업 #3", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}
-{"id": "media--t04", "input": "media-engineer 핵심 역할 과업 #4", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}
-{"id": "media--t05", "input": "media-engineer 핵심 역할 과업 #5", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}
+{"id": "me-001", "input": "Step10 FFmpeg 인코딩 타임아웃 — CRF/preset 설정 조정 요청", "expected_tools": ["Read", "Edit"], "expected_output_pattern": "FFmpeg|CRF|preset|타임아웃", "judge_criteria": "CRF 값과 preset 조합 최적화, 인코딩 시간 단축"}
+{"id": "me-002", "input": "CH1 영상 EBU R128 라우드니스 -11 LUFS — -14 기준 미달", "expected_tools": ["Read", "Edit"], "expected_output_pattern": "EBU R128|라우드니스|LUFS|필터", "judge_criteria": "loudnorm 필터 파라미터 조정, target LUFS 준수"}
+{"id": "me-003", "input": "HLS 스트리밍 세그먼트 길이 불일치 — 재생 끊김 수정", "expected_tools": ["Read", "Edit"], "expected_output_pattern": "HLS|세그먼트|스트리밍|수정", "judge_criteria": "hls_time 파라미터 조정, 세그먼트 일관성 확보"}
+{"id": "me-004", "input": "4K 소스 → 1080p 트랜스코딩 속도 최적화 요청", "expected_tools": ["Read", "Edit"], "expected_output_pattern": "트랜스코딩|1080p|최적화|속도", "judge_criteria": "하드웨어 가속(nvenc/vaapi) 활용 여부 검토, 품질 유지"}
+{"id": "me-005", "input": "배경 음악 오디오 노이즈 — afftdn 필터 체인 구성", "expected_tools": ["Read", "Edit"], "expected_output_pattern": "노이즈|필터|afftdn|오디오", "judge_criteria": "FFmpeg 필터 체인 구성, SNR 개선, 음질 유지"}

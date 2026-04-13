@@ -1,5 +1,5 @@
-{"id": "se-001", "input": "security-engineer 기본 미션 수행", "expected_tools": ["Read"], "judge_criteria": "SSOT 준수 + 역할 경계 내 작업 + 결과물 명확"}
-{"id": "securi-t02", "input": "security-engineer 핵심 역할 과업 #2", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}
-{"id": "securi-t03", "input": "security-engineer 핵심 역할 과업 #3", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}
-{"id": "securi-t04", "input": "security-engineer 핵심 역할 과업 #4", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}
-{"id": "securi-t05", "input": "security-engineer 핵심 역할 과업 #5", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}
+{"id": "sec-001", "input": "CH1 OAuth 액세스 토큰 만료 갱신 실패 — 런타임 원인 분석", "expected_tools": ["Read", "Bash"], "expected_output_pattern": "OAuth|토큰|만료|분석", "judge_criteria": "refresh 흐름 분석(read-only), 갱신 실패 원인 특정, backend-engineer 협업"}
+{"id": "sec-002", "input": "Supabase RLS service_role 우회 — 보안 취약점 긴급 분석", "expected_tools": ["Read", "Bash"], "expected_output_pattern": "RLS|service_role|취약점|분석", "judge_criteria": "우회 경로 분석(read-only), 즉시 조치 권고, db-architect 에스컬레이션"}
+{"id": "sec-003", "input": "로그에서 API 키 노출 감지 — 즉시 대응 분석", "expected_tools": ["Read", "Bash"], "expected_output_pattern": "API키|노출|대응|분석", "judge_criteria": "노출 범위 분석, 키 교체 절차, 로그 마스킹 권고"}
+{"id": "sec-004", "input": "외부 URL 직접 호출 패턴 — SSRF 취약점 가능성 분석", "expected_tools": ["Read", "Grep", "Bash"], "expected_output_pattern": "SSRF|외부URL|취약점|분석", "judge_criteria": "SSRF 가능 경로 특정(read-only), 화이트리스트 검증 권고"}
+{"id": "sec-005", "input": "Python pickle 사용 발견 — 역직렬화 공격 위험 분석", "expected_tools": ["Read", "Grep"], "expected_output_pattern": "pickle|역직렬화|위험|분석", "judge_criteria": "pickle 사용 위치 전수 조사, json 대체 권고, 위험도 평가"}

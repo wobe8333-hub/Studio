@@ -1,5 +1,5 @@
-{"id": "pr-001", "input": "prompt-engineer 기본 미션 수행", "expected_tools": ["Read"], "judge_criteria": "SSOT 준수 + 역할 경계 내 작업 + 결과물 명확"}
-{"id": "prompt-t02", "input": "prompt-engineer 핵심 역할 과업 #2", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}
-{"id": "prompt-t03", "input": "prompt-engineer 핵심 역할 과업 #3", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}
-{"id": "prompt-t04", "input": "prompt-engineer 핵심 역할 과업 #4", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}
-{"id": "prompt-t05", "input": "prompt-engineer 핵심 역할 과업 #5", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}
+{"id": "pe-001", "input": "Gemini 스크립트 생성 프롬프트 A/B 테스트 설계 — CH1 경제", "expected_tools": ["Read", "Write"], "expected_output_pattern": "A/B|프롬프트|테스트|설계", "judge_criteria": "variant A/B 차이 명확, 평가 메트릭 정의, 실험 기간 설정"}
+{"id": "pe-002", "input": "ElevenLabs 나레이션 프롬프트 토큰 사용량 30% 절감", "expected_tools": ["Read", "Edit"], "expected_output_pattern": "토큰|절감|프롬프트|최적화", "judge_criteria": "토큰 줄이기 기법 적용, 품질 유지 확인, data/prompts/ 저장"}
+{"id": "pe-003", "input": "CH1~CH7 채널별 톤/스타일 프롬프트 변형 최적화", "expected_tools": ["Read", "Write"], "expected_output_pattern": "채널별|톤|스타일|변형", "judge_criteria": "7채널 각각의 특성 반영, 프롬프트 버전 관리"}
+{"id": "pe-004", "input": "Gemini 출력 불일치 20% — 프롬프트 안정화 방안", "expected_tools": ["Read", "Edit"], "expected_output_pattern": "안정화|불일치|프롬프트|개선", "judge_criteria": "불일치 원인 분석, Few-shot 예제 추가, 온도 조정"}
+{"id": "pe-005", "input": "Gemini 2.5 Pro → 2.5 Flash 마이그레이션 — 품질 비교 테스트", "expected_tools": ["Read", "Write", "Bash"], "expected_output_pattern": "마이그레이션|Flash|품질|비교", "judge_criteria": "10개 샘플 비교, 품질·비용 트레이드오프, 마이그레이션 권고"}

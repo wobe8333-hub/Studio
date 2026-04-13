@@ -1,5 +1,5 @@
-{"id": "do-001", "input": "documentation-writer 기본 미션 수행", "expected_tools": ["Read"], "judge_criteria": "SSOT 준수 + 역할 경계 내 작업 + 결과물 명확"}
-{"id": "docume-t02", "input": "documentation-writer 핵심 역할 과업 #2", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}
-{"id": "docume-t03", "input": "documentation-writer 핵심 역할 과업 #3", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}
-{"id": "docume-t04", "input": "documentation-writer 핵심 역할 과업 #4", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}
-{"id": "docume-t05", "input": "documentation-writer 핵심 역할 과업 #5", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}
+{"id": "dw-001", "input": "Step08 오케스트레이터 API 문서 작성 — 함수 레퍼런스 포함", "expected_tools": ["Read", "Write"], "expected_output_pattern": "API|문서|레퍼런스|Step08", "judge_criteria": "docs/ 에만 작성, 함수 시그니처·파라미터·반환값 포함"}
+{"id": "dw-002", "input": "신규 에이전트 온보딩 가이드 ADR 작성", "expected_tools": ["Read", "Write"], "expected_output_pattern": "ADR|온보딩|가이드|에이전트", "judge_criteria": "ADR 형식 준수(Context/Decision/Consequences), docs/ 저장"}
+{"id": "dw-003", "input": "CLAUDE.md 누락 실행 명령어 3개 보완 요청", "expected_tools": ["Read", "Edit"], "expected_output_pattern": "CLAUDE.md|명령어|보완|추가", "judge_criteria": "실제 동작하는 명령어만 추가, 240줄 한도 유지"}
+{"id": "dw-004", "input": "DB 스키마 변경 결정 ADR 양식 — db-architect 협업", "expected_tools": ["Read", "Write"], "expected_output_pattern": "ADR|스키마|결정|기록", "judge_criteria": "ADR 양식 작성, docs/adr/ 저장, db-architect 검토 요청"}
+{"id": "dw-005", "input": "파이프라인 Step00~17 운영 매뉴얼 초안 작성", "expected_tools": ["Read", "Write"], "expected_output_pattern": "매뉴얼|Step|운영|가이드", "judge_criteria": "각 Step 입력/출력/실패 대응 포함, docs/ 저장"}

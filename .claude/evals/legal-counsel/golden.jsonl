@@ -1,5 +1,5 @@
-{"id": "le-001", "input": "legal-counsel 기본 미션 수행", "expected_tools": ["Read"], "judge_criteria": "SSOT 준수 + 역할 경계 내 작업 + 결과물 명확"}
-{"id": "legal--t02", "input": "legal-counsel 핵심 역할 과업 #2", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}
-{"id": "legal--t03", "input": "legal-counsel 핵심 역할 과업 #3", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}
-{"id": "legal--t04", "input": "legal-counsel 핵심 역할 과업 #4", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}
-{"id": "legal--t05", "input": "legal-counsel 핵심 역할 과업 #5", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}
+{"id": "lc-001", "input": "브랜드 콜라보 NDA 계약서 검토 요청", "expected_tools": ["Read"], "expected_output_pattern": "NDA|조항|법적|검토", "judge_criteria": "불공정 조항 식별, 수정 제안, data/legal/ 저장"}
+{"id": "lc-002", "input": "CH6 과학 채널 YouTube Content ID 저작권 클레임 법적 조치", "expected_tools": ["Read"], "expected_output_pattern": "Content ID|저작권|반박|절차", "judge_criteria": "클레임 반박 절차 안내, 증거 보존 지침"}
+{"id": "lc-003", "input": "GDPR 사용자 데이터 수집 동의서 양식 검토", "expected_tools": ["Read"], "expected_output_pattern": "GDPR|동의|개인정보|규정", "judge_criteria": "GDPR Article 7 준수 여부, 필수 항목 확인"}
+{"id": "lc-004", "input": "외주 계약서에 무제한 수정 의무 조항 발견", "expected_tools": ["Read"], "expected_output_pattern": "불공정|수정|조항|법적", "judge_criteria": "불공정 조항 명시, 재협상 권고, sales-manager 에스컬레이션"}
+{"id": "lc-005", "input": "크리에이터 영상 라이선스 — 독점 vs 비독점 계약 분석", "expected_tools": ["Read"], "expected_output_pattern": "독점|라이선스|분석|권고", "judge_criteria": "두 옵션 트레이드오프 분석, 비용 대비 리스크 비교"}

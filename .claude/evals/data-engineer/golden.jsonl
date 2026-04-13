@@ -1,5 +1,5 @@
-{"id": "da-001", "input": "data-engineer 기본 미션 수행", "expected_tools": ["Read"], "judge_criteria": "SSOT 준수 + 역할 경계 내 작업 + 결과물 명확"}
-{"id": "data-e-t02", "input": "data-engineer 핵심 역할 과업 #2", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}
-{"id": "data-e-t03", "input": "data-engineer 핵심 역할 과업 #3", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}
-{"id": "data-e-t04", "input": "data-engineer 핵심 역할 과업 #4", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}
-{"id": "data-e-t05", "input": "data-engineer 핵심 역할 과업 #5", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}
+{"id": "de-001", "input": "Step05 ETL idempotency 위반 — 동일 트렌드 데이터 중복 수집", "expected_tools": ["Read", "Grep", "Edit"], "expected_output_pattern": "idempotency|중복|ETL|수정", "judge_criteria": "중복 원인 파악, upsert 키 수정, worktree 사용"}
+{"id": "de-002", "input": "Supabase 배치 upsert 1,000행 → 10,000행 성능 최적화", "expected_tools": ["Read", "Edit"], "expected_output_pattern": "배치|upsert|성능|최적화", "judge_criteria": "배치 크기 조정, 인덱스 활용, 성능 개선 측정"}
+{"id": "de-003", "input": "지식 저장소 수집 파이프라인 오류 — 부분 실패 복구", "expected_tools": ["Read", "Bash", "Edit"], "expected_output_pattern": "수집|파이프라인|복구|실패", "judge_criteria": "체크포인트 기반 재시작, 데이터 일관성 보장"}
+{"id": "de-004", "input": "새 채널 CH8 데이터 파이프라인 추가 — Step05 ETL 확장", "expected_tools": ["Read", "Edit"], "expected_output_pattern": "CH8|파이프라인|추가|ETL", "judge_criteria": "config.py 채널 추가 후 ETL 확장, worktree 격리"}
+{"id": "de-005", "input": "Step05 ETL 모듈 리팩토링 — worktree 격리 PR 준비", "expected_tools": ["Read", "Bash", "Edit"], "expected_output_pattern": "리팩토링|worktree|PR|ETL", "judge_criteria": "worktree 생성, 리팩토링 완료, 테스트 PASS, PR 브랜치"}

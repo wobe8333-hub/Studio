@@ -1,5 +1,5 @@
-{"id": "ui-001", "input": "ui-designer 기본 미션 수행", "expected_tools": ["Read"], "judge_criteria": "SSOT 준수 + 역할 경계 내 작업 + 결과물 명확"}
-{"id": "ui-des-t02", "input": "ui-designer 핵심 역할 과업 #2", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}
-{"id": "ui-des-t03", "input": "ui-designer 핵심 역할 과업 #3", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}
-{"id": "ui-des-t04", "input": "ui-designer 핵심 역할 과업 #4", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}
-{"id": "ui-des-t05", "input": "ui-designer 핵심 역할 과업 #5", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}
+{"id": "uid-001", "input": "CH1 경제 채널 썸네일 디자인 시스템 리뉴얼 — 색상 코딩 개선", "expected_tools": ["Read", "Edit"], "expected_output_pattern": "썸네일|색상|디자인|시스템", "judge_criteria": "globals.css 토큰 수정, 채널별 색상 일관성"}
+{"id": "uid-002", "input": "globals.css Tailwind CSS v4 마이그레이션 — v3 유틸리티 제거", "expected_tools": ["Read", "Edit"], "expected_output_pattern": "Tailwind|v4|마이그레이션|CSS", "judge_criteria": "v3 deprecated 유틸리티 교체, 디자인 토큰 유지"}
+{"id": "uid-003", "input": "LoRA 캐릭터 드리프트 비주얼 QA — 7채널 캐릭터 일관성 점검", "expected_tools": ["Read"], "expected_output_pattern": "드리프트|캐릭터|일관성|QA", "judge_criteria": "채널별 기준 시각 대비 현재 출력 비교 분석"}
+{"id": "uid-004", "input": "다크모드 색상 토큰 추가 — 모든 컴포넌트 지원", "expected_tools": ["Read", "Edit"], "expected_output_pattern": "다크모드|토큰|CSS|변수", "judge_criteria": "CSS custom property 추가, 기존 라이트모드 유지"}
+{"id": "uid-005", "input": "온보딩 페이지 UX 개선 — ux-auditor 리포트 반영", "expected_tools": ["Read", "Edit"], "expected_output_pattern": "온보딩|UX|개선|반영", "judge_criteria": "ux-auditor 지적 사항 수정, WCAG AA 준수"}

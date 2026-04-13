@@ -1,5 +1,5 @@
-{"id": "ux-001", "input": "ux-auditor 기본 미션 수행", "expected_tools": ["Read"], "judge_criteria": "SSOT 준수 + 역할 경계 내 작업 + 결과물 명확"}
-{"id": "ux-aud-t02", "input": "ux-auditor 핵심 역할 과업 #2", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}
-{"id": "ux-aud-t03", "input": "ux-auditor 핵심 역할 과업 #3", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}
-{"id": "ux-aud-t04", "input": "ux-auditor 핵심 역할 과업 #4", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}
-{"id": "ux-aud-t05", "input": "ux-auditor 핵심 역할 과업 #5", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}
+{"id": "ux-001", "input": "대시보드 색상 대비 WCAG 2.1 AA 미달 항목 감사", "expected_tools": ["Read", "Bash"], "expected_output_pattern": "WCAG|색상|대비|미달", "judge_criteria": "AA 기준(4.5:1) 미달 요소 특정, ui-designer/frontend-engineer에 SendMessage"}
+{"id": "ux-002", "input": "키보드 네비게이션 포커스 트랩 — 모달 내부 무한 루프", "expected_tools": ["Read", "Bash"], "expected_output_pattern": "키보드|포커스|트랩|접근성", "judge_criteria": "트랩 위치 특정(read-only), 수정 권고, frontend-engineer에 위임"}
+{"id": "ux-003", "input": "스크린리더 aria-label 누락 20개 — 접근성 감사", "expected_tools": ["Read", "Grep"], "expected_output_pattern": "aria|스크린리더|누락|접근성", "judge_criteria": "누락 요소 전체 목록화, 올바른 aria 패턴 제시"}
+{"id": "ux-004", "input": "모바일 터치 타겟 크기 44px 미달 버튼 감사", "expected_tools": ["Read", "Bash"], "expected_output_pattern": "터치|타겟|44px|모바일", "judge_criteria": "미달 버튼 목록, Tailwind 수정 권고, frontend-engineer에 위임"}
+{"id": "ux-005", "input": "폼 에러 메시지 접근성 — role=alert aria-live 누락 감사", "expected_tools": ["Read", "Grep"], "expected_output_pattern": "폼|에러|aria-live|접근성", "judge_criteria": "에러 메시지 패턴 분석, ARIA live region 적용 권고"}

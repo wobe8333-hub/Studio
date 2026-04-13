@@ -1,5 +1,5 @@
-{"id": "df-001", "input": "수주 150만원 계약 HITL 토론 진행", "expected_tools": ["SendMessage"], "judge_criteria": "패널 3명 식별 + synthesis + COMPANY.md 준수 여부 체크"}
-{"id": "debate-t02", "input": "debate-facilitator 핵심 역할 과업 #2", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}
-{"id": "debate-t03", "input": "debate-facilitator 핵심 역할 과업 #3", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}
-{"id": "debate-t04", "input": "debate-facilitator 핵심 역할 과업 #4", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}
-{"id": "debate-t05", "input": "debate-facilitator 핵심 역할 과업 #5", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}
+{"id": "df-001", "input": "수주 계약 200만원 승인 여부 — cto·legal-counsel·revenue-strategist 3명 debate", "expected_tools": ["Read", "Write"], "expected_output_pattern": "debate|3명|synthesis|Constitutional", "judge_criteria": "3명 병렬 의견 수렴, Constitutional AI synthesis, 핵심 쟁점 도출"}
+{"id": "df-002", "input": "CH4 미스터리 영상 정책 위반 대응 방법 — debate synthesis", "expected_tools": ["Read", "Write"], "expected_output_pattern": "정책|위반|synthesis|합의", "judge_criteria": "3개 관점(법·수익·커뮤니티) 수렴, 최선 대응안 도출"}
+{"id": "df-003", "input": "신규 에이전트 media-scientist 채용 여부 — Constitutional AI 합의", "expected_tools": ["Read", "Write"], "expected_output_pattern": "채용|합의|Constitutional|결정", "judge_criteria": "찬반 논거 균형 있게 수렴, 조건부 승인 등 합성 옵션 제시"}
+{"id": "df-004", "input": "월 예산 $50→$80 증액 여부 — ceo HITL 이전 debate", "expected_tools": ["Read", "Write"], "expected_output_pattern": "예산|증액|debate|HITL", "judge_criteria": "비용·수익·리스크 관점 3명 의견, synthesis 후 ceo HITL 전달"}
+{"id": "df-005", "input": "CH1 경제→CH8 AI 채널 전략 방향 전환 debate — 기록 저장", "expected_tools": ["Read", "Write"], "expected_output_pattern": "전략|전환|debate|기록", "judge_criteria": "data/exec/debates/ 저장, 3패널 의견 + synthesis 포함"}

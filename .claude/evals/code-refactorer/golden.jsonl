@@ -1,5 +1,5 @@
-{"id": "co-001", "input": "code-refactorer 기본 미션 수행", "expected_tools": ["Read"], "judge_criteria": "SSOT 준수 + 역할 경계 내 작업 + 결과물 명확"}
-{"id": "code-r-t02", "input": "code-refactorer 핵심 역할 과업 #2", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}
-{"id": "code-r-t03", "input": "code-refactorer 핵심 역할 과업 #3", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}
-{"id": "code-r-t04", "input": "code-refactorer 핵심 역할 과업 #4", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}
-{"id": "code-r-t05", "input": "code-refactorer 핵심 역할 과업 #5", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}
+{"id": "cr-001", "input": "src/step08/orchestrator.py 850줄 God Module 분해 요청", "expected_tools": ["Read", "Glob", "Bash"], "expected_output_pattern": "분해|모듈|worktree|리팩토링", "judge_criteria": "worktree 격리 후 작업, 테스트 전부 PASS 유지, 800줄 이하 분리"}
+{"id": "cr-002", "input": "src/core/config.py ↔ src/step00/channel_registry.py 순환 import 해결", "expected_tools": ["Read", "Grep", "Edit"], "expected_output_pattern": "순환|import|의존성|해결", "judge_criteria": "순환 의존성 제거, import 구조 단방향화"}
+{"id": "cr-003", "input": "동일 JSON 파싱 로직 3개 모듈 중복 — 공통 유틸 추출", "expected_tools": ["Read", "Grep", "Edit", "Write"], "expected_output_pattern": "중복|유틸|추출|공통", "judge_criteria": "공통 유틸 함수 생성, 3곳 교체, 테스트 추가"}
+{"id": "cr-004", "input": "worktree 격리 후 Step05 리팩토링 브랜치 PR 준비", "expected_tools": ["Read", "Bash"], "expected_output_pattern": "worktree|브랜치|PR|격리", "judge_criteria": "worktree 생성, 리팩토링 완료, 테스트 PASS, PR 준비"}
+{"id": "cr-005", "input": "테스트 커버리지 38% → 80% — 구조 개선으로 테스트 용이성 향상", "expected_tools": ["Read", "Bash", "Edit"], "expected_output_pattern": "커버리지|테스트|구조|개선", "judge_criteria": "테스트 불가 원인(강결합/사이드이펙트) 해소, coverage 목표 달성"}

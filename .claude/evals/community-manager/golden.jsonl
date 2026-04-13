@@ -1,5 +1,5 @@
-{"id": "co-001", "input": "community-manager 기본 미션 수행", "expected_tools": ["Read"], "judge_criteria": "SSOT 준수 + 역할 경계 내 작업 + 결과물 명확"}
-{"id": "commun-t02", "input": "community-manager 핵심 역할 과업 #2", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}
-{"id": "commun-t03", "input": "community-manager 핵심 역할 과업 #3", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}
-{"id": "commun-t04", "input": "community-manager 핵심 역할 과업 #4", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}
-{"id": "commun-t05", "input": "community-manager 핵심 역할 과업 #5", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}
+{"id": "comm-001", "input": "CH1 경제 채널 주간 댓글 digest 작성 — 시청자 반응 분류", "expected_tools": ["Read", "Write"], "expected_output_pattern": "댓글|digest|분류|시청자", "judge_criteria": "긍정/부정/요청 분류, 주요 인사이트, content-director 루프백"}
+{"id": "comm-002", "input": "시청자 영상 주제 요청 50건 수집 — 빈도 분석 보고", "expected_tools": ["Read", "Write"], "expected_output_pattern": "요청|주제|분석|보고", "judge_criteria": "주제 빈도 집계, revenue-strategist 협업, data/community/ 저장"}
+{"id": "comm-003", "input": "CH4 미스터리 채널 악플 패턴 분석 — content-director 루프백", "expected_tools": ["Read"], "expected_output_pattern": "악플|패턴|분석|루프백", "judge_criteria": "악플 유형 분류(read-only), content-moderator 에스컬레이션"}
+{"id": "comm-004", "input": "CH6 과학 채널 커뮤니티 이벤트 기획 제안 — 구독자 참여", "expected_tools": ["Read", "Write"], "expected_output_pattern": "이벤트|기획|참여|커뮤니티", "judge_criteria": "이벤트 형식·일정·기대 효과 포함, marketing-manager 협업"}
+{"id": "comm-005", "input": "멤버십 시청자 피드백 집계 — 콘텐츠 방향 개선 보고", "expected_tools": ["Read", "Write"], "expected_output_pattern": "멤버십|피드백|집계|보고", "judge_criteria": "피드백 분류, 콘텐츠 개선 제안, content-director 전달"}

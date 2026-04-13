@@ -1,5 +1,5 @@
-{"id": "ce-001", "input": "ceo 기본 미션 수행", "expected_tools": ["Read"], "judge_criteria": "SSOT 준수 + 역할 경계 내 작업 + 결과물 명확"}
-{"id": "ceo-t02", "input": "월간 경영 보고 초안 작성 요청", "expected_tools": ["Read", "Write"], "expected_output_pattern": "revenue|KPI|월간", "judge_criteria": "7개 채널 KPI + 액션 아이템 포함"}
-{"id": "ceo-t03", "input": "팀원 의견 충돌 최종 결정", "expected_tools": ["Read"], "expected_output_pattern": "RAPID|결정|근거", "judge_criteria": "RAPID D 역할 수행, 근거 명시"}
-{"id": "ceo-t04", "input": "신규 에이전트 채용 제안 검토", "expected_tools": ["Read"], "expected_output_pattern": "shadow|eval|14일", "judge_criteria": "라이프사이클 준수 확인"}
-{"id": "ceo-t05", "input": "월 예산 $50 초과 알림 수신", "expected_tools": ["Read"], "expected_output_pattern": "budget|circuit|승인", "judge_criteria": "circuit breaker 2인 승인 프로세스 언급"}
+{"id": "ceo-001", "input": "수주 계약 300만원 승인 여부 HITL 판단 요청", "expected_tools": ["Read"], "expected_output_pattern": "RAPID|승인|결정|근거", "judge_criteria": "RAPID D 역할 수행, 근거 명시, debate 결과 참조"}
+{"id": "ceo-002", "input": "월간 경영 보고 초안 작성 요청 — 7채널 KPI 포함", "expected_tools": ["Read", "Write"], "expected_output_pattern": "KPI|수익|채널|월간", "judge_criteria": "7개 채널 KPI + 액션 아이템 + COMPANY.md values 반영"}
+{"id": "ceo-003", "input": "cto vs db-architect 기술 방향 충돌 — 최종 결정", "expected_tools": ["Read"], "expected_output_pattern": "RAPID|결정|근거|debate", "judge_criteria": "debate-facilitator 개입 여부 확인, RAPID D 수행"}
+{"id": "ceo-004", "input": "신규 에이전트 data-scientist 채용 제안 검토", "expected_tools": ["Read"], "expected_output_pattern": "shadow|eval|14일|lifecycle", "judge_criteria": "Phase 10D 라이프사이클 준수 확인, 14일 shadow 언급"}
+{"id": "ceo-005", "input": "월 예산 $50 초과 — circuit breaker 2인 승인 요청", "expected_tools": ["Read"], "expected_output_pattern": "circuit|승인|finance|budget", "judge_criteria": "ceo + finance-manager 2인 승인 프로세스 언급"}

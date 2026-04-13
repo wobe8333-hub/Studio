@@ -1,5 +1,5 @@
-{"id": "pe-001", "input": "performance-analyst 기본 미션 수행", "expected_tools": ["Read"], "judge_criteria": "SSOT 준수 + 역할 경계 내 작업 + 결과물 명확"}
-{"id": "perfor-t02", "input": "performance-analyst 핵심 역할 과업 #2", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}
-{"id": "perfor-t03", "input": "performance-analyst 핵심 역할 과업 #3", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}
-{"id": "perfor-t04", "input": "performance-analyst 핵심 역할 과업 #4", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}
-{"id": "perfor-t05", "input": "performance-analyst 핵심 역할 과업 #5", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}
+{"id": "perf-001", "input": "Step05 Supabase 쿼리 N+1 패턴 — 최적화 분석", "expected_tools": ["Read", "Bash"], "expected_output_pattern": "N+1|쿼리|분석|최적화", "judge_criteria": "N+1 위치 특정(read-only), 인덱스/JOIN 권고, db-architect에 SendMessage"}
+{"id": "perf-002", "input": "web/ 번들 사이즈 5.2MB — 3MB 목표 달성 분석", "expected_tools": ["Read", "Bash"], "expected_output_pattern": "번들|사이즈|분석|최적화", "judge_criteria": "번들 분석, 청크 분리 권고, frontend-engineer에 SendMessage"}
+{"id": "perf-003", "input": "Python 메모리 힙 프로파일 — Step08 장기 실행 누수 감지", "expected_tools": ["Read", "Bash"], "expected_output_pattern": "메모리|힙|누수|프로파일", "judge_criteria": "메모리 증가 패턴 식별(read-only), backend-engineer 권고"}
+{"id": "perf-004", "input": "src/ time.sleep 하드코딩 17곳 발견 — 영향 분석", "expected_tools": ["Read", "Bash", "Grep"], "expected_output_pattern": "time.sleep|하드코딩|영향|분석", "judge_criteria": "모든 위치 목록화, 각 위치 위험도, backend-engineer 수정 권고"}
+{"id": "perf-005", "input": "캐시 적중률 28% — Gemini 응답 캐시 전략 개선 분석", "expected_tools": ["Read", "Bash"], "expected_output_pattern": "캐시|적중률|전략|개선", "judge_criteria": "현재 캐시 전략 분석, TTL·키 전략 개선안, backend-engineer 위임"}

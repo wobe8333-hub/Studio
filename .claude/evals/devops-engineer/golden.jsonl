@@ -1,5 +1,5 @@
-{"id": "de-001", "input": "devops-engineer 기본 미션 수행", "expected_tools": ["Read"], "judge_criteria": "SSOT 준수 + 역할 경계 내 작업 + 결과물 명확"}
-{"id": "devops-t02", "input": "PreToolUse 훅 미작동", "expected_tools": ["Read", "Bash"], "expected_output_pattern": "hook|settings|trigger", "judge_criteria": "hooks 설정 확인 및 수정"}
-{"id": "devops-t03", "input": "CLAUDE.md 토큰 초과 경고", "expected_tools": ["Read", "Edit"], "expected_output_pattern": "token|on-demand|paths", "judge_criteria": "paths frontmatter on-demand 이동"}
-{"id": "devops-t04", "input": "신규 에이전트 .md CI 차단", "expected_tools": ["Read", "Bash"], "expected_output_pattern": "eval|golden.jsonl|CI", "judge_criteria": "golden.jsonl 5건 추가 안내"}
-{"id": "devops-t05", "input": "ngrok 터널 단절 복구", "expected_tools": ["Bash"], "expected_output_pattern": "ngrok|restart|cwstudio", "judge_criteria": "ngrok start kas-studio 실행"}
+{"id": "devops-001", "input": "PreToolUse 훅 미작동 — backend-engineer web/ 접근 차단 실패", "expected_tools": ["Read", "Bash"], "expected_output_pattern": "hook|settings|trigger|차단", "judge_criteria": "hooks 설정 확인 및 올바른 이벤트 재등록"}
+{"id": "devops-002", "input": "CLAUDE.md 토큰 250줄 초과 경고 — 최적화 요청", "expected_tools": ["Read", "Edit"], "expected_output_pattern": "token|on-demand|paths|줄", "judge_criteria": "paths frontmatter로 on-demand 이동, 240줄 이하 달성"}
+{"id": "devops-003", "input": "신규 에이전트 .md CI 빌드 차단 — golden.jsonl 누락", "expected_tools": ["Read", "Bash"], "expected_output_pattern": "eval|golden.jsonl|CI|5건", "judge_criteria": "golden.jsonl 5건 추가 안내, eval.yml 게이트 설명"}
+{"id": "devops-004", "input": "ngrok 터널 단절 — cwstudio.ngrok.app 응답 없음", "expected_tools": ["Bash"], "expected_output_pattern": "ngrok|restart|kas-studio|복구", "judge_criteria": "ngrok start kas-studio 실행, 터널 복구 확인"}
+{"id": "devops-005", "input": ".env.example 신규 환경변수 3개 추가 — 문서화 요청", "expected_tools": ["Read", "Edit"], "expected_output_pattern": ".env|환경변수|문서|추가", "judge_criteria": ".env.example 업데이트, CLAUDE.md 환경변수 테이블 반영"}

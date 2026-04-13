@@ -1,5 +1,5 @@
-{"id": "sa-001", "input": "sales-manager 기본 미션 수행", "expected_tools": ["Read"], "judge_criteria": "SSOT 준수 + 역할 경계 내 작업 + 결과물 명확"}
-{"id": "sales--t02", "input": "sales-manager 핵심 역할 과업 #2", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}
-{"id": "sales--t03", "input": "sales-manager 핵심 역할 과업 #3", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}
-{"id": "sales--t04", "input": "sales-manager 핵심 역할 과업 #4", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}
-{"id": "sales--t05", "input": "sales-manager 핵심 역할 과업 #5", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}
+{"id": "sales-001", "input": "기업 브랜드 콜라보 월 300만원 제안서 작성", "expected_tools": ["Read", "Write"], "expected_output_pattern": "제안서|콜라보|300만원|계약", "judge_criteria": "제안서 포함 항목(채널 실적·단가·일정), data/sales/ 저장"}
+{"id": "sales-002", "input": "스폰서십 단가 월 150만원 협상 — 거래처 반론 대응", "expected_tools": ["Read"], "expected_output_pattern": "협상|단가|반론|대응", "judge_criteria": "가치 기반 협상 전략, legal-counsel 검토 요청"}
+{"id": "sales-003", "input": "신규 클라이언트 온보딩 — 계약 체결 후 인수인계 프로세스", "expected_tools": ["Read", "Write"], "expected_output_pattern": "온보딩|프로세스|인수인계|클라이언트", "judge_criteria": "project-manager 협업, 온보딩 체크리스트 작성"}
+{"id": "sales-004", "input": "Q2 매출 파이프라인 현황 — 성사 확률별 가중 매출 집계", "expected_tools": ["Read", "Write"], "expected_output_pattern": "파이프라인|매출|Q2|현황", "judge_criteria": "확률 가중 집계, ceo 경영 보고 인풋, data/sales/ 저장"}
+{"id": "sales-005", "input": "계약 해지 요청 클라이언트 — 법적 해지 절차 검토 요청", "expected_tools": ["Read"], "expected_output_pattern": "해지|절차|법적|legal", "judge_criteria": "legal-counsel 에스컬레이션, 손해배상 리스크 분석"}

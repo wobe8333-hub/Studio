@@ -1,5 +1,5 @@
-{"id": "co-001", "input": "content-director 기본 미션 수행", "expected_tools": ["Read"], "judge_criteria": "SSOT 준수 + 역할 경계 내 작업 + 결과물 명확"}
-{"id": "conten-t02", "input": "content-director 핵심 역할 과업 #2", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}
-{"id": "conten-t03", "input": "content-director 핵심 역할 과업 #3", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}
-{"id": "conten-t04", "input": "content-director 핵심 역할 과업 #4", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}
-{"id": "conten-t05", "input": "content-director 핵심 역할 과업 #5", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}
+{"id": "cd-001", "input": "CH1 경제 채널 이번 달 스크립트 4편 품질 리뷰", "expected_tools": ["Read"], "expected_output_pattern": "스크립트|품질|리뷰|개선", "judge_criteria": "채널 톤 일관성, SEO 키워드 포함, 개선 피드백(read-only)"}
+{"id": "cd-002", "input": "CH1 경제 채널 썸네일 CTR 1.8% → 4% 개선 전략", "expected_tools": ["Read"], "expected_output_pattern": "CTR|썸네일|전략|개선", "judge_criteria": "CTR 저조 원인 분석, 제목·이미지 개선안, ui-designer 위임"}
+{"id": "cd-003", "input": "7채널 SEO 제목 최적화 — 인기 키워드 반영 가이드", "expected_tools": ["Read"], "expected_output_pattern": "SEO|키워드|제목|최적화", "judge_criteria": "채널별 타겟 키워드 선정, 제목 포맷 가이드"}
+{"id": "cd-004", "input": "2026 Q3 시즌 콘텐츠 캘린더 기획 — 7채널 통합", "expected_tools": ["Read", "Write"], "expected_output_pattern": "캘린더|콘텐츠|Q3|기획", "judge_criteria": "채널별 주제 배분, revenue-strategist 협업, data/creative/ 저장"}
+{"id": "cd-005", "input": "트렌드 바이럴 주제 긴급 영상 제작 — 48시간 내 납품", "expected_tools": ["Read"], "expected_output_pattern": "긴급|트렌드|바이럴|계획", "judge_criteria": "긴급 제작 가능 채널 선정, backend-engineer 파이프라인 우선순위 조정"}

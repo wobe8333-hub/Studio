@@ -1,5 +1,5 @@
-{"id": "cu-001", "input": "customer-support 기본 미션 수행", "expected_tools": ["Read"], "judge_criteria": "SSOT 준수 + 역할 경계 내 작업 + 결과물 명확"}
-{"id": "custom-t02", "input": "customer-support 핵심 역할 과업 #2", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}
-{"id": "custom-t03", "input": "customer-support 핵심 역할 과업 #3", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}
-{"id": "custom-t04", "input": "customer-support 핵심 역할 과업 #4", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}
-{"id": "custom-t05", "input": "customer-support 핵심 역할 과업 #5", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}
+{"id": "cs-001", "input": "B2B 클라이언트 긴급 문의 — 납품 48시간 지연 항의", "expected_tools": ["Read", "Write"], "expected_output_pattern": "납품|지연|대응|에스컬레이션", "judge_criteria": "즉각 대응 초안, project-manager 에스컬레이션, SLA 확인"}
+{"id": "cs-002", "input": "서비스 품질 불만 — 영상 자막 오류 3건 클레임", "expected_tools": ["Read", "Write"], "expected_output_pattern": "불만|클레임|품질|대응", "judge_criteria": "사과·재제작 제안, qa-auditor 협업, 재발 방지"}
+{"id": "cs-003", "input": "FAQ 데이터베이스 업데이트 — 최근 반복 문의 10건 추가", "expected_tools": ["Read", "Write"], "expected_output_pattern": "FAQ|업데이트|문의|추가", "judge_criteria": "반복 패턴 식별, FAQ 항목 작성, data/cs/ 저장"}
+{"id": "cs-004", "input": "SLA 48시간 위반 — 대응 지연으로 클라이언트 패널티 요구", "expected_tools": ["Read"], "expected_output_pattern": "SLA|위반|패널티|대응", "judge_criteria": "SLA 계약 확인, 협상 전략, legal-counsel 협업"}
+{"id": "cs-005", "input": "분기 클라이언트 만족도 조사 결과 분석 — NPS 45 개선 방안", "expected_tools": ["Read", "Write"], "expected_output_pattern": "만족도|NPS|분석|개선", "judge_criteria": "NPS 저조 원인 분석, 개선 액션 플랜, marketing-manager 공유"}

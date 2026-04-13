@@ -1,5 +1,5 @@
-{"id": "pa-001", "input": "partnerships-manager 기본 미션 수행", "expected_tools": ["Read"], "judge_criteria": "SSOT 준수 + 역할 경계 내 작업 + 결과물 명확"}
-{"id": "partne-t02", "input": "partnerships-manager 핵심 역할 과업 #2", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}
-{"id": "partne-t03", "input": "partnerships-manager 핵심 역할 과업 #3", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}
-{"id": "partne-t04", "input": "partnerships-manager 핵심 역할 과업 #4", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}
-{"id": "partne-t05", "input": "partnerships-manager 핵심 역할 과업 #5", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}
+{"id": "pt-001", "input": "화장품 브랜드 CH3 심리 채널 콜라보 계약 조건 검토", "expected_tools": ["Read"], "expected_output_pattern": "콜라보|계약|조건|검토", "judge_criteria": "채널 적합성 평가, 단가·조건 분석, legal-counsel 협업"}
+{"id": "pt-002", "input": "스폰서 콘텐츠 게시 가이드라인 — YouTube 정책 준수 수립", "expected_tools": ["Read", "Write"], "expected_output_pattern": "스폰서|가이드라인|정책|수립", "judge_criteria": "compliance-officer 확인, FTC 공시 요건 포함"}
+{"id": "pt-003", "input": "파트너십 KPI 월간 성과 — 노출·클릭·전환 보고", "expected_tools": ["Read", "Write"], "expected_output_pattern": "KPI|성과|월간|보고", "judge_criteria": "파트너별 KPI 집계, data/partnerships/ 저장, sales-manager 공유"}
+{"id": "pt-004", "input": "신규 파트너 후보 5개 기업 리서치 및 우선순위 평가", "expected_tools": ["Read", "Write"], "expected_output_pattern": "파트너|리서치|평가|우선순위", "judge_criteria": "채널 적합성·예산·성장성 기준 평가"}
+{"id": "pt-005", "input": "1년 파트너십 갱신 협상 — 단가 10% 인상 요청", "expected_tools": ["Read"], "expected_output_pattern": "갱신|협상|인상|전략", "judge_criteria": "채널 성장 데이터 기반 협상 전략, legal-counsel 검토"}

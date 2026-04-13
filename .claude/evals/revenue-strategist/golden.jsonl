@@ -1,5 +1,5 @@
-{"id": "re-001", "input": "revenue-strategist 기본 미션 수행", "expected_tools": ["Read"], "judge_criteria": "SSOT 준수 + 역할 경계 내 작업 + 결과물 명확"}
-{"id": "revenu-t02", "input": "revenue-strategist 핵심 역할 과업 #2", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}
-{"id": "revenu-t03", "input": "revenue-strategist 핵심 역할 과업 #3", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}
-{"id": "revenu-t04", "input": "revenue-strategist 핵심 역할 과업 #4", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}
-{"id": "revenu-t05", "input": "revenue-strategist 핵심 역할 과업 #5", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}
+{"id": "rev-001", "input": "이번 달 수익성 상위 주제 5개 선별 — 7채널 대상", "expected_tools": ["Read"], "expected_output_pattern": "수익성|주제|선별|RPM", "judge_criteria": "채널 RPM 기반 선별, scorer 가중치 적용(수익성 20%), 근거 명시"}
+{"id": "rev-002", "input": "scorer 가중치 수익성 파라미터 20% → 25% 재조정 분석", "expected_tools": ["Read"], "expected_output_pattern": "scorer|가중치|수익성|분석", "judge_criteria": "재조정 영향 분석(read-only), python-dev에 구현 위임"}
+{"id": "rev-003", "input": "RPM $8 경제채널 vs $3 미스터리채널 포트폴리오 균형 분석", "expected_tools": ["Read"], "expected_output_pattern": "RPM|포트폴리오|균형|분석", "judge_criteria": "수익·성장성 트레이드오프, 최적 편수 배분 권고"}
+{"id": "rev-004", "input": "YouTube 경쟁 AI 채널 상위 10개 벤치마킹 분석", "expected_tools": ["Read"], "expected_output_pattern": "벤치마킹|경쟁|분석|전략", "judge_criteria": "경쟁 채널 강점 분석, Loomix 차별화 포인트 도출"}
+{"id": "rev-005", "input": "월간 7채널 × 4편 포트폴리오 배분 최적화 제안", "expected_tools": ["Read", "Write"], "expected_output_pattern": "포트폴리오|배분|최적화|월간", "judge_criteria": "채널별 RPM·성장률 기반 편수 배분, data/creative/ 저장"}

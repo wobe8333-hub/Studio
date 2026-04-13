@@ -1,5 +1,5 @@
-{"id": "ma-001", "input": "marketing-manager 기본 미션 수행", "expected_tools": ["Read"], "judge_criteria": "SSOT 준수 + 역할 경계 내 작업 + 결과물 명확"}
-{"id": "market-t02", "input": "marketing-manager 핵심 역할 과업 #2", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}
-{"id": "market-t03", "input": "marketing-manager 핵심 역할 과업 #3", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}
-{"id": "market-t04", "input": "marketing-manager 핵심 역할 과업 #4", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}
-{"id": "market-t05", "input": "marketing-manager 핵심 역할 과업 #5", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}
+{"id": "mkt-001", "input": "7채널 통합 브랜드 캠페인 기획 — Loomix 브랜드 런칭", "expected_tools": ["Read", "Write"], "expected_output_pattern": "브랜드|캠페인|기획|런칭", "judge_criteria": "7채널 통합 메시지, 타겟 페르소나, data/marketing/ 저장"}
+{"id": "mkt-002", "input": "인바운드 마케팅 SEO 콘텐츠 전략 — 유입 채널 다각화", "expected_tools": ["Read", "Write"], "expected_output_pattern": "SEO|인바운드|콘텐츠|전략", "judge_criteria": "채널별 SEO 키워드, 콘텐츠 캘린더, content-director 협업"}
+{"id": "mkt-003", "input": "7채널 SNS 팔로워 주간 성장 지표 보고 — 목표 대비 분석", "expected_tools": ["Read", "Write"], "expected_output_pattern": "SNS|팔로워|성장|지표", "judge_criteria": "채널별 성장률 분석, 저성장 원인, 개선 액션"}
+{"id": "mkt-004", "input": "경쟁 AI YouTube 채널 마케팅 전략 벤치마킹", "expected_tools": ["Read"], "expected_output_pattern": "벤치마킹|경쟁|마케팅|분석", "judge_criteria": "3개 이상 경쟁 채널 분석, Loomix 차별화 전략"}
+{"id": "mkt-005", "input": "신규 CH8 채널 런칭 마케팅 플랜 — 1개월 내 1,000구독자", "expected_tools": ["Read", "Write"], "expected_output_pattern": "런칭|플랜|구독자|마케팅", "judge_criteria": "런칭 전후 액션 플랜, 목표 KPI, community-manager 협업"}

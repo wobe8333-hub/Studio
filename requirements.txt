@@ -55,6 +55,6 @@ faster-whisper>=1.0.0
 pytest>=8.0.0
 pytest-mock>=3.12.0
 
-# ─── 벡터 메모리 (v10.0 선택적) ───────────────────────────────
-# sqlite-vss>=0.1.2           # 벡터 검색 (설치 후 활성화)
-# sentence-transformers>=2.7.0  # 로컬 임베딩 모델
+# ─── 벡터 메모리 (v10.0) ────────────────────────────────────────
+sentence-transformers>=5.4.0   # 로컬 임베딩 모델 (numpy 코사인 유사도, Windows 지원)
+# sqlite-vss                   # Linux/macOS 전용 — Windows 미지원, numpy로 대체

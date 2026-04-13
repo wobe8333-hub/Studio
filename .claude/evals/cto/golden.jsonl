@@ -1,5 +1,5 @@
-{"id": "ct-001", "input": "cto 기본 미션 수행", "expected_tools": ["Read"], "judge_criteria": "SSOT 준수 + 역할 경계 내 작업 + 결과물 명확"}
-{"id": "cto-t02", "input": "에이전트 .md PR 검토", "expected_tools": ["Read", "Bash"], "expected_output_pattern": "eval|golden|regression", "judge_criteria": "eval 없이 변경 차단 여부"}
-{"id": "cto-t03", "input": "데드락 의심 팀 감지", "expected_tools": ["Read"], "expected_output_pattern": "deadlock|rollback|개입", "judge_criteria": "team-state.md 프로토콜 준수"}
-{"id": "cto-t04", "input": "cost-router 무시 Opus 강제 사용", "expected_tools": ["Read"], "expected_output_pattern": "라우팅|정당성|감사", "judge_criteria": "cost-router 감사 로그 확인"}
-{"id": "cto-t05", "input": "미션 팀 구성 요청", "expected_tools": ["Read"], "expected_output_pattern": "TeamCreate|5팀|한도", "judge_criteria": "최대 5팀 확인"}
+{"id": "cto-001", "input": "backend-engineer.md PR 검토 — eval 없이 변경 시도", "expected_tools": ["Read", "Bash"], "expected_output_pattern": "eval|golden|regression|차단", "judge_criteria": "golden.jsonl 없는 .md 변경 차단 여부 확인"}
+{"id": "cto-002", "input": "Team A와 Team B 동시 data/exec/ 쓰기 — 데드락 감지", "expected_tools": ["Read"], "expected_output_pattern": "deadlock|rollback|team-state|개입", "judge_criteria": "team-state.md 프로토콜 준수, 롤백 조치"}
+{"id": "cto-003", "input": "cost-router 무시하고 Opus 강제 사용 발견", "expected_tools": ["Read"], "expected_output_pattern": "라우팅|정당성|감사|cost-router", "judge_criteria": "cost-router 감사 로그 확인, 정당성 검증"}
+{"id": "cto-004", "input": "미션 팀 구성 요청 — 현재 4팀 활성 중", "expected_tools": ["Read"], "expected_output_pattern": "TeamCreate|5팀|한도|확인", "judge_criteria": "최대 5팀 한도 확인 후 1팀 여유 있음 판단"}
+{"id": "cto-005", "input": "에이전트 평균 eval 점수 5.8 — 3연속 미달 조치", "expected_tools": ["Read"], "expected_output_pattern": "eval|review|개선|알림", "judge_criteria": "Under Review 상태 전환, 개선 계획 수립"}

@@ -1,5 +1,5 @@
-{"id": "pr-001", "input": "project-manager 기본 미션 수행", "expected_tools": ["Read"], "judge_criteria": "SSOT 준수 + 역할 경계 내 작업 + 결과물 명확"}
-{"id": "projec-t02", "input": "project-manager 핵심 역할 과업 #2", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}
-{"id": "projec-t03", "input": "project-manager 핵심 역할 과업 #3", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}
-{"id": "projec-t04", "input": "project-manager 핵심 역할 과업 #4", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}
-{"id": "projec-t05", "input": "project-manager 핵심 역할 과업 #5", "expected_tools": ["Read"], "expected_output_pattern": "완료|결과|보고|분석", "judge_criteria": "역할 범위 내 처리 + SSOT 준수 + COMPANY.md values 반영"}
+{"id": "pm-001", "input": "수주 영상 제작 프로젝트 30편 — 6주 딜리버리 일정 수립", "expected_tools": ["Read", "Write"], "expected_output_pattern": "일정|마일스톤|딜리버리|30편", "judge_criteria": "WBS 작성, 리소스 배분, data/pm/ 저장"}
+{"id": "pm-002", "input": "backend-engineer 3개 프로젝트 동시 할당 — 과부하 조정", "expected_tools": ["Read"], "expected_output_pattern": "과부하|리소스|조정|우선순위", "judge_criteria": "우선순위 재조정, cto 협의, 일정 재협상 계획"}
+{"id": "pm-003", "input": "마일스톤 1주 지연 — 클라이언트 보고 초안 작성", "expected_tools": ["Read", "Write"], "expected_output_pattern": "지연|보고|클라이언트|대응", "judge_criteria": "지연 원인·복구 계획·영향 포함, 투명한 커뮤니케이션"}
+{"id": "pm-004", "input": "프로젝트 위험 요소 식별 — API 쿼터 고갈 리스크", "expected_tools": ["Read"], "expected_output_pattern": "위험|리스크|식별|완화", "judge_criteria": "리스크 매트릭스(확률×영향), 완화 계획, sre-engineer 협업"}
+{"id": "pm-005", "input": "30편 프로젝트 완료 후 회고 보고서 작성", "expected_tools": ["Read", "Write"], "expected_output_pattern": "회고|보고서|완료|교훈", "judge_criteria": "KPI 달성률, 교훈, 다음 프로젝트 개선사항 포함"}

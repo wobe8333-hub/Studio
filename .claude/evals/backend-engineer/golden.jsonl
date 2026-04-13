@@ -1,5 +1,5 @@
-{"id": "be-001", "input": "src/step08/orchestrator.py에서 FFmpeg 타임아웃 발생", "expected_tools": ["Read", "Grep", "Edit"], "judge_criteria": "오류 원인 파악 + 수정안 제시"}
-{"id": "be-002", "input": "pytest tests/unit/test_ssot.py 실패 원인 분석", "expected_tools": ["Read", "Bash"], "judge_criteria": "실패 원인 + 수정 계획"}
-{"id": "be-t03", "input": "SSOT 위반 - open() 직접 사용 발견", "expected_tools": ["Read", "Edit"], "expected_output_pattern": "ssot|read_json|fix", "judge_criteria": "ssot.read_json() 교체"}
-{"id": "be-t04", "input": "새 채널 CH8 추가 요청", "expected_tools": ["Read", "Edit"], "expected_output_pattern": "config.py|SSOT|채널", "judge_criteria": "src/core/config.py 수정, web/ 금지"}
-{"id": "be-t05", "input": "pytest 5개 실패 수정", "expected_tools": ["Bash", "Read", "Edit"], "expected_output_pattern": "fix|test|pass", "judge_criteria": "전부 PASS 복원"}
+{"id": "be-001", "input": "src/step08/orchestrator.py FFmpeg 타임아웃 발생 — 원인 수정", "expected_tools": ["Read", "Grep", "Edit"], "expected_output_pattern": "timeout|retry|exception|수정", "judge_criteria": "오류 원인 정확 파악 + 수정안 구현 + worktree 사용"}
+{"id": "be-002", "input": "SSOT 위반 — src/step05/dedup.py에서 open() 직접 사용 발견", "expected_tools": ["Read", "Edit"], "expected_output_pattern": "ssot|read_json|fix|open", "judge_criteria": "ssot.read_json() 교체, web/ 수정 없음"}
+{"id": "be-003", "input": "새 채널 CH8 추가 — 파이프라인 전체 등록", "expected_tools": ["Read", "Edit"], "expected_output_pattern": "config.py|SSOT|채널|CH8", "judge_criteria": "src/core/config.py 수정, web/ 직접 수정 금지"}
+{"id": "be-004", "input": "pytest tests/ -q — 5개 실패 수정 요청", "expected_tools": ["Bash", "Read", "Edit"], "expected_output_pattern": "fix|PASS|test|수정", "judge_criteria": "전부 PASS 복원, 테스트 로직 변경 없이 구현 수정"}
+{"id": "be-005", "input": "Step11 QA 자동 통과율 87% → 90% 개선 요청", "expected_tools": ["Read", "Grep", "Edit"], "expected_output_pattern": "QA|개선|통과율|수정", "judge_criteria": "실패 패턴 분석 후 구현 수정, 테스트 확인"}
