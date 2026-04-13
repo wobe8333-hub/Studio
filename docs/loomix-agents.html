@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Loomix HQ — Agent Building</title>
+<style>
+/* ── 테마 변수 ── */
+:root {
+  --bg:           #F0F4FF;
+  --surface:      #ffffff;
+  --surface2:     #f8fafc;
+  --border:       #e2e8f0;
+  --border2:      #f1f5f9;
+  --text:         #1e293b;
+  --text-muted:   #64748b;
+  --text-faint:   #94a3b8;
+  --penthouse-bg: #FEF3C7;
+  --penthouse-bdr:#F59E0B;
+  --ground-bg:    linear-gradient(to bottom,#f1f5f9,#e2e8f0);
+  --zone-bg:      #f8fafc;
+  --room-bg:      #fafbff;
+  --shadow-sm:    0 1px 4px rgba(0,0,0,0.06);
+  --shadow-md:    0 2px 12px rgba(0,0,0,0.06);
+  --shadow-bld:   drop-shadow(0 6px 20px rgba(0,0,0,0.12));
+}
+[data-theme="dark"] {
+  --bg:           #060a0f;
+  --surface:      #0f172a;
+  --surface2:     #060a0f;
+  --border:       #1e293b;
+  --border2:      #1a2234;
+  --text:         #e2e8f0;
+  --text-muted:   #64748b;
+  --text-faint:   #475569;
+  --penthouse-bg: #1a1200;
+  --penthouse-bdr:#D97706;
+  --ground-bg:    linear-gradient(to bottom,#0f172a,#060a0f);
+  --zone-bg:      #0a0f1a;
+  --room-bg:      #050810;
+  --shadow-sm:    0 1px 4px rgba(0,0,0,0.3);
+  --shadow-md:    0 2px 12px rgba(0,0,0,0.4);
+  --shadow-bld:   drop-shadow(0 6px 20px rgba(0,0,0,0.5));
+}
+
+/* ── 기본 리셋 ── */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Courier New', monospace;
+  padding: 24px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  transition: background 0.2s, color 0.2s;
+}
+</style>
+</head>
+<body>
+  <!-- 이후 Task에서 채워 넣음 -->
+  <p style="color:var(--text-muted)">scaffold ok</p>
+</body>
+</html>
