@@ -3,8 +3,6 @@
 import sys
 import io
 
-sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
-
 from pathlib import Path
 from loguru import logger
 
@@ -89,6 +87,8 @@ def generate_templates(ch_id: str) -> None:
 
 
 if __name__ == "__main__":
+    if hasattr(sys.stdout, "buffer"):
+        sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
     for ch_id in CHANNELS:
         generate_templates(ch_id)
     logger.info("7채널 템플릿 SVG 생성 완료")

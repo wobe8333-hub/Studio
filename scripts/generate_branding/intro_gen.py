@@ -3,8 +3,6 @@
 import sys
 import io
 
-sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
-
 from pathlib import Path
 from loguru import logger
 
