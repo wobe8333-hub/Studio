@@ -76,3 +76,35 @@ def test_ch1_post_policy_keys_consistent():
     assert set(CH1_CROP_REGIONS) == set(CH1_POST_POLICY), (
         f"key mismatch: {set(CH1_CROP_REGIONS) ^ set(CH1_POST_POLICY)}"
     )
+
+
+def test_ch1_cropper_pipeline(tmp_path):
+    """reference_cropper가 CH1 에셋 23개를 올바르게 생성하는지 검증."""
+    from PIL import Image
+    import sys
+    sys.path.insert(0, "scripts/generate_branding")
+    import reference_cropper
+    out = tmp_path / "CH1"
+    reference_cropper.crop_channel("CH1", out)
+
+    # 필수 파일 존재 확인
+    expected = list(reference_cropper._CH1_OUTPUT_MAP.values())
+    for rel in expected:
+        p = out / rel
+        assert p.exists(), f"missing: {rel}"
+        assert p.stat().st_size > 200, f"too small: {rel}"
+
+    # 로고·캐릭터는 RGBA (배경 투명)
+    for rel in [
+        "logo/logo.png",
+        "characters/character_explain.png",
+        "characters/character_rich.png",
+    ]:
+        img = Image.open(out / rel)
+        assert img.mode == "RGBA", f"{rel} mode={img.mode}"
+        assert img.size == (1024, 1024), f"{rel} size={img.size}"
+
+    # 썸네일은 1920×1080 RGB
+    for i in range(1, 4):
+        img = Image.open(out / f"templates/thumbnail_sample_{i}.png")
+        assert img.size == (1920, 1080), f"thumbnail_{i} size={img.size}"
