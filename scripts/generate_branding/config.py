@@ -141,3 +141,61 @@ CHANNELS = {
 }
 
 SUBDIRS = ["logo", "characters", "intro", "outro", "icons", "templates", "extras"]
+
+# ── CH1 에센셜 브랜딩 레퍼런스 Crop 설정 (essential_branding/CH1.png, 1379×752px) ──────
+CH1_CROP_REGIONS: dict[str, tuple[int, int, int, int]] = {
+    # 섹션 1: 비주얼 아이덴티티 (좌측)
+    "logo":               (22,  75, 238, 295),   # 원형 프레임 + 왕관 캐릭터 + 머니그래픽 텍스트
+    "character_explain":  (245, 65, 365, 195),   # 설명하는 (Explaining)
+    "character_rich":     (360, 65, 478, 195),   # 부자 (Rich Full of Coins)
+    "character_money":    (245, 200, 365, 360),  # 부자 돈많음 (Rich More Money)
+    "character_lucky":    (360, 200, 478, 360),  # 복권당첨 (Lottery Winner)
+    # 섹션 2: 영상 제작 에센셜 — 인트로 분해 요소
+    "intro_frame":        (490,  50, 660, 210),  # 인트로(3s) 박스 전체 (원형 프레임 포함)
+    "intro_text":         (505, 140, 650, 205),  # 머니그래픽 텍스트 부분
+    "intro_character":    (510,  58, 645, 150),  # 인트로 박스 내 캐릭터
+    "intro_sparkle":      (490,  50, 545, 105),  # 반짝이 요소
+    # 섹션 2: 영상 제작 에센셜 — 아웃트로 분해 요소
+    "outro_background":   (665,  50, 880, 210),  # 아웃트로(10s) 박스 전체 배경
+    "outro_bill":         (675,  55, 820, 140),  # 돈다발 요소
+    "outro_character":    (790,  60, 872, 205),  # 아웃트로 캐릭터
+    "outro_cta":          (665, 155, 880, 205),  # 구독좋아요 CTA 영역
+    # 섹션 2: 영상 스타일 예시 썸네일 3종
+    "thumbnail_sample_1": (885,  50, 1010, 210), # 코인 차트의 마법!
+    "thumbnail_sample_2": (1015, 50, 1145, 210), # 금리 인상, 내 지갑은?
+    "thumbnail_sample_3": (1150, 50, 1290, 210), # 주식 초보 이것만 알아!
+    # 섹션 2: 자막 Bar 3종
+    "subtitle_bar_key":    (490, 215, 870, 268), # Bar 1 Key 강조 (노란 하이라이트)
+    "subtitle_bar_dialog": (490, 270, 870, 328), # Bar 2 대사/해설
+    "subtitle_bar_info":   (490, 330, 870, 388), # Bar 3 정보 강조
+    # 섹션 2: 장면 전환 3종
+    "transition_paper":   (880, 215, 1010, 390), # 종이 넘기기
+    "transition_ink":     (1015, 215, 1145, 390), # 잉크 번지기
+    "transition_zoom":    (1150, 215, 1290, 390), # 확대/축소
+}
+
+# 후처리 정책: bg_remove=True → PIL 흰색 배경 알파 제거, target/longer_side → LANCZOS 업스케일
+CH1_POST_POLICY: dict[str, dict] = {
+    "logo":               {"bg_remove": True,  "target": (1024, 1024)},
+    "character_explain":  {"bg_remove": True,  "target": (1024, 1024)},
+    "character_rich":     {"bg_remove": True,  "target": (1024, 1024)},
+    "character_money":    {"bg_remove": True,  "target": (1024, 1024)},
+    "character_lucky":    {"bg_remove": True,  "target": (1024, 1024)},
+    "intro_frame":        {"bg_remove": True,  "longer_side": 512},
+    "intro_text":         {"bg_remove": True,  "longer_side": 512},
+    "intro_character":    {"bg_remove": True,  "longer_side": 512},
+    "intro_sparkle":      {"bg_remove": True,  "longer_side": 256},
+    "outro_background":   {"bg_remove": False, "target": (1280, 720)},
+    "outro_bill":         {"bg_remove": True,  "longer_side": 256},
+    "outro_character":    {"bg_remove": True,  "longer_side": 512},
+    "outro_cta":          {"bg_remove": True,  "longer_side": 512},
+    "thumbnail_sample_1": {"bg_remove": False, "target": (1920, 1080)},
+    "thumbnail_sample_2": {"bg_remove": False, "target": (1920, 1080)},
+    "thumbnail_sample_3": {"bg_remove": False, "target": (1920, 1080)},
+    "subtitle_bar_key":   {"bg_remove": False, "target": (1280, 120)},
+    "subtitle_bar_dialog":{"bg_remove": False, "target": (1280, 120)},
+    "subtitle_bar_info":  {"bg_remove": False, "target": (1280, 120)},
+    "transition_paper":   {"bg_remove": False, "target": (1920, 1080)},
+    "transition_ink":     {"bg_remove": False, "target": (1920, 1080)},
+    "transition_zoom":    {"bg_remove": False, "target": (1920, 1080)},
+}

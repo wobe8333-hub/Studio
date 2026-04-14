@@ -56,3 +56,23 @@ def test_extras_exist(ch_id):
     extras_dir = CHANNELS_DIR / ch_id / "extras"
     for f in ["channel_art.svg", "profile_banner.svg"]:
         assert (extras_dir / f).exists(), f"{ch_id}/extras/{f} 없음"
+
+
+# ── CH1 레퍼런스 Crop 유효성 검증 ─────────────────────────────────────────────
+def test_ch1_crop_regions_valid():
+    from PIL import Image
+    from config import CH1_CROP_REGIONS, CH1_POST_POLICY
+    img = Image.open("essential_branding/CH1.png")
+    W, H = img.size
+    for name, (l, t, r, b) in CH1_CROP_REGIONS.items():
+        assert 0 <= l < r <= W, f"{name}: bad x ({l},{r},W={W})"
+        assert 0 <= t < b <= H, f"{name}: bad y ({t},{b},H={H})"
+        assert (r - l) >= 30 and (b - t) >= 30, f"{name}: too small"
+        assert name in CH1_POST_POLICY, f"{name}: policy missing"
+
+
+def test_ch1_post_policy_keys_consistent():
+    from config import CH1_CROP_REGIONS, CH1_POST_POLICY
+    assert set(CH1_CROP_REGIONS) == set(CH1_POST_POLICY), (
+        f"key mismatch: {set(CH1_CROP_REGIONS) ^ set(CH1_POST_POLICY)}"
+    )
