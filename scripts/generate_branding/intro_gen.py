@@ -9,6 +9,77 @@ from loguru import logger
 sys.path.insert(0, str(Path(__file__).parent))
 from config import CHANNELS, CHANNELS_DIR
 
+# CH1 전용: 레퍼런스 crop PNG 분해 요소 기반 CSS keyframes 인트로
+CH1_TEMPLATE = """<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<style>
+:root {{ --dur: 3s; }}
+html, body {{ margin:0; height:100%; background:#FFFDF5; overflow:hidden; }}
+.stage {{
+  position: relative; width: 100vw; height: 100vh;
+  display: flex; align-items: center; justify-content: center;
+  animation: fade-out 0.3s calc(var(--dur) - 0.3s) ease-in forwards;
+}}
+.frame, .character, .text, .sparkle {{ position: absolute; }}
+.frame {{
+  width: 60vmin;
+  animation: zoom-in 0.6s ease-out backwards;
+}}
+.character {{
+  width: 42vmin;
+  animation: pop 0.7s 0.4s ease-out backwards;
+}}
+.text {{
+  width: 50vmin; bottom: 20vmin;
+  animation: slide-up 0.5s 1.0s ease-out backwards;
+}}
+.sparkle.s1 {{
+  width: 8vmin; top: 22vmin; left: 30vmin;
+  animation: twinkle 1.2s 1.2s ease-in-out infinite;
+}}
+.sparkle.s2 {{
+  width: 6vmin; top: 35vmin; right: 28vmin;
+  animation: twinkle 1.2s 1.5s ease-in-out infinite;
+}}
+.sparkle.s3 {{
+  width: 7vmin; bottom: 40vmin; left: 32vmin;
+  animation: twinkle 1.2s 1.8s ease-in-out infinite;
+}}
+@keyframes zoom-in {{
+  from {{ opacity: 0; transform: scale(0.2); }}
+  to   {{ opacity: 1; transform: scale(1); }}
+}}
+@keyframes pop {{
+  from {{ opacity: 0; transform: scale(0.4) translateY(10vh); }}
+  to   {{ opacity: 1; transform: scale(1) translateY(0); }}
+}}
+@keyframes slide-up {{
+  from {{ opacity: 0; transform: translateY(4vmin); }}
+  to   {{ opacity: 1; transform: translateY(0); }}
+}}
+@keyframes twinkle {{
+  0%, 100% {{ opacity: 0; transform: scale(0.3); }}
+  50%       {{ opacity: 1; transform: scale(1); }}
+}}
+@keyframes fade-out {{
+  to {{ opacity: 0; }}
+}}
+</style>
+</head>
+<body>
+<div class="stage">
+  <img class="frame"      src="intro_frame.png"     alt=""/>
+  <img class="character"  src="intro_character.png" alt=""/>
+  <img class="text"       src="intro_text.png"      alt="머니그래픽"/>
+  <img class="sparkle s1" src="intro_sparkle.png"   alt=""/>
+  <img class="sparkle s2" src="intro_sparkle.png"   alt=""/>
+  <img class="sparkle s3" src="intro_sparkle.png"   alt=""/>
+</div>
+</body>
+</html>"""
+
 TEMPLATE = """<!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -73,14 +144,18 @@ TEMPLATE = """<!DOCTYPE html>
 
 def generate_intro(ch_id: str) -> None:
     cfg = CHANNELS[ch_id]
-    html = TEMPLATE.format(
-        name=cfg["name"],
-        domain=cfg["domain"],
-        main_color=cfg["main_color"],
-        bg_color=cfg["bg_color"],
-        sub_color=cfg["sub_colors"][0],
-    )
     out = CHANNELS_DIR / ch_id / "intro" / "intro.html"
+    # CH1: 레퍼런스 crop PNG 분해 요소 기반 CSS keyframes 인트로
+    if ch_id == "CH1":
+        html = CH1_TEMPLATE
+    else:
+        html = TEMPLATE.format(
+            name=cfg["name"],
+            domain=cfg["domain"],
+            main_color=cfg["main_color"],
+            bg_color=cfg["bg_color"],
+            sub_color=cfg["sub_colors"][0],
+        )
     out.write_text(html, encoding="utf-8")
     logger.info(f"[OK] {ch_id} 인트로 → intro.html")
 
