@@ -14,7 +14,7 @@
 | CH | 브랜드명 | 도메인 | 메인 컬러 | HEX | 서브 컬러 |
 |----|---------|--------|-----------|-----|----------|
 | CH1 | 머니그래픽 | 경제 | 머니그린 | `#2ECC71` | `#3498DB` / `#F1C40F` / `#2C3E50` |
-| CH2 | 가설낙서 | 과학 | 사이언스그린 | `#5D8A3C` | `#A8C97F` / `#F5F0E0` / `#333333` |
+| CH2 | 가설낙서 | 과학 | 네온사이언스 | `#00E5FF` | `#1A1A2E` / `#00B8D4` / `#FFFFFF` |
 | CH3 | 홈팔레트 | 부동산 | 홈오렌지 | `#E67E22` | `#3498DB` / `#2ECC71` / `#F1C40F` |
 | CH4 | 오묘한심리 | 심리 | 마인드퍼플 | `#9B59B6` | `#2C3E50` / `#BDC3C7` / `#FFFFFF` |
 | CH5 | 검은물음표 | 미스터리 | 다크미스트 | `#1C2833` | `#2E4057` / `#AAAAAA` / `#FFFFFF` |
@@ -32,8 +32,8 @@
 - `character_money.png` — 부자 + 돈 (Rich More Money)
 - `character_lucky.png` — 복권 당첨 (Lottery Winner)
 
-### CH2 — 가설낙서 (과학)
-연구실 박사 캐릭터 (손글씨 과학 실험 초보)
+### CH2 — 가설낙서 (과학) · 메인 컬러 #00E5FF / 배경 #1A1A2E
+연구실 박사 캐릭터 (손글씨 과학 실험 초보) · 네온 사이언스 스타일
 - `character_curious.png` — 호기심 많은
 - `character_explain.png` — 설명하는
 - `character_research.png` — 연구하는
@@ -91,8 +91,8 @@
 |------|------|----------|------|
 | ① 채널 로고 | Figma MCP → Claude SVG 변환 | `logo/logo.svg` | 500×500px, 투명 배경 |
 | ② 채널 캐릭터 | Gemini API (imagen) | `characters/character_*.png` | 1024×1024px, 흰 배경 |
-| ③ 영상 인트로 | Claude HTML/CSS/JS | `intro/intro.html` | 3~5초, 채널 컬러 적용 |
-| ④ 영상 아웃트로 | Claude HTML/CSS/JS | `outro/outro.html` | 5~10초, 구독 CTA |
+| ③ 영상 인트로 | Claude HTML/CSS/JS | `intro/intro.html` | **3초 통일**, 채널 컬러 적용 |
+| ④ 영상 아웃트로 | Claude HTML/CSS/JS | `outro/outro.html` | **10초 통일**, 구독 CTA |
 | ⑤ 아이콘 세트 | Claude SVG | `icons/*.svg` | 도메인별 15~20종 |
 | ⑥ 영상 템플릿 | Figma MCP → Claude SVG 변환 | `templates/*.svg` | 자막바·썸네일·장면전환 |
 | ⑦ 채널 아트·배너 | Claude SVG | `extras/*.svg` | YouTube 규격 |
