@@ -29,7 +29,7 @@ def test_intro_html_exists(ch_id):
     intro = CHANNELS_DIR / ch_id / "intro" / "intro.html"
     assert intro.exists(), f"{ch_id}/intro/intro.html 없음"
     content = intro.read_text(encoding="utf-8")
-    assert "<!DOCTYPE html" in content or "<html" in content
+    assert "<!DOCTYPE html" in content or "<html" in content, f"{ch_id}/intro/intro.html이 유효한 HTML이 아님"
 
 @pytest.mark.parametrize("ch_id", list(CHANNELS.keys()))
 def test_outro_html_exists(ch_id):
