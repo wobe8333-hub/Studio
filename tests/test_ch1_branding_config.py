@@ -55,3 +55,62 @@ def test_ch1_prompts_all_contain_wonee_base():
 def test_subdirs_has_transitions():
     from config import SUBDIRS
     assert "transitions" in SUBDIRS, "SUBDIRS에 'transitions' 없음"
+
+
+def _ensure_google_genai_mocked():
+    """google.genai 및 google.genai.types를 테스트용으로 모킹한다."""
+    import sys, types as _types
+    import google as _g
+    if "google.genai" not in sys.modules:
+        _mock = _types.ModuleType("google.genai")
+        _mock.Client = object
+        _mock_types = _types.ModuleType("google.genai.types")
+        _mock.types = _mock_types
+        sys.modules["google.genai"] = _mock
+        sys.modules["google.genai.types"] = _mock_types
+        setattr(_g, "genai", _mock)
+
+
+def test_model_is_pro():
+    import sys
+    from pathlib import Path
+    import importlib
+    sys.path.insert(0, str(Path(__file__).parent.parent / "scripts" / "generate_branding"))
+    _ensure_google_genai_mocked()
+    # 모듈이 이미 캐시되어 있으면 reload, 아니면 새로 import
+    if "nano_banana_helper" in sys.modules:
+        nbh = sys.modules["nano_banana_helper"]
+    else:
+        nbh = importlib.import_module("nano_banana_helper")
+    assert nbh.MODEL_MULTIMODAL == "gemini-3-pro-image-preview", \
+        f"모델이 Pro가 아님: {nbh.MODEL_MULTIMODAL}"
+
+
+def test_budget_limit_is_sufficient():
+    import sys
+    from pathlib import Path
+    import importlib
+    sys.path.insert(0, str(Path(__file__).parent.parent / "scripts" / "generate_branding"))
+    _ensure_google_genai_mocked()
+    if "nano_banana_helper" in sys.modules:
+        nbh = sys.modules["nano_banana_helper"]
+    else:
+        nbh = importlib.import_module("nano_banana_helper")
+    assert nbh.BUDGET_LIMIT >= 200, f"예산 부족: {nbh.BUDGET_LIMIT}"
+
+
+def test_generate_character_sheet_callable():
+    import sys, types as _types
+    from pathlib import Path
+    import importlib
+    sys.path.insert(0, str(Path(__file__).parent.parent / "scripts" / "generate_branding"))
+    import google as _g
+    if "google.genai" not in sys.modules:
+        _mock = _types.ModuleType("google.genai")
+        _mock.Client = object
+        _mock.types = _types.ModuleType("google.genai.types")
+        sys.modules["google.genai"] = _mock
+        setattr(_g, "genai", _mock)
+    nbh = importlib.import_module("nano_banana_helper")
+    assert hasattr(nbh, "generate_character_sheet"), "generate_character_sheet 함수 없음"
+    assert callable(nbh.generate_character_sheet)

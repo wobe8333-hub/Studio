@@ -26,12 +26,12 @@ from google import genai
 from google.genai import types
 
 # ─── 모델 상수 ────────────────────────────────────────────────────────────────
-# gemini-3.1-flash-image-preview: 사용자 선택 확정 모델 (두들 스타일 재현 우수)
-MODEL_MULTIMODAL = "gemini-3.1-flash-image-preview"
+# gemini-3-pro-image-preview: Pro 품질 모델 (캐릭터 시트 + 포즈 생성)
+MODEL_MULTIMODAL = "gemini-3-pro-image-preview"
 
 # ─── 예산 하드스톱 ────────────────────────────────────────────────────────────
 _call_count = 0
-BUDGET_LIMIT = 30  # 프로세스 수명 기간 최대 API 호출 수
+BUDGET_LIMIT = 200  # 10포즈×3 + 5전환×3 + 캐릭터시트 + 여유분
 
 
 class BudgetExceededError(Exception):
@@ -83,9 +83,11 @@ def generate_with_reference(
         "pure white background (#FFFFFF), same wobbly hand-drawn lines, "
         "same flat coloring with NO gradients or shadows, NO shading, NO 3D effects. "
         f"Now generate: {prompt}. "
-        "IMPORTANT ANATOMY RULES: exactly 2 arms, exactly 2 hands, exactly 2 legs — "
-        "NO extra limbs, NO third arm, NO floating hands. "
-        "Output ONLY the character on pure white background, NO text, NO labels, NO hex codes."
+        "STRICT ANATOMY: exactly 2 arms, exactly 2 legs — NO extra limbs. "
+        "CRITICAL TEXT BAN: NO text, NO letters, NO numbers, NO labels, NO hex codes "
+        "anywhere in the image. The crown is a pure geometric SHAPE — "
+        "absolutely NO ₩ symbol written inside, NO Korean text, NO any character glyph. "
+        "Output ONLY the character on pure white background."
     )
 
     try:
@@ -173,3 +175,80 @@ def generate_best_of_n_with_reference(
             time.sleep(1.5)  # API rate limit 방지
 
     return saved
+
+
+def generate_character_sheet(
+    output_path: Path,
+    *,
+    client: Optional[genai.Client] = None,
+) -> bool:
+    """원이 캐릭터 시트를 생성한다 (3단계 파이프라인 Stage 1).
+
+    10개 포즈를 2×5 그리드로 한 장에 보여주는 캐릭터 디자인 시트를 생성한다.
+    이 시트를 이후 개별 포즈 생성의 레퍼런스로 사용한다.
+
+    Args:
+        output_path: 시트 PNG 저장 경로 (보통 essential_branding/CH1_wonee_sheet.png)
+        client: 재사용 클라이언트 (None이면 신규 생성)
+
+    Returns:
+        True if 성공, False if 실패
+
+    Raises:
+        BudgetExceededError: API 호출 상한 초과 시
+    """
+    global _call_count
+    if _call_count >= BUDGET_LIMIT:
+        raise BudgetExceededError(f"API 호출 {BUDGET_LIMIT}회 초과 — 하드스톱")
+
+    if client is None:
+        client = _make_client()
+
+    sheet_prompt = (
+        "Character design reference sheet for cute minimalist round doodle mascot '원이': "
+        "perfectly round white body, thin black outline 2px, "
+        "small gold crown with three rounded bumps and tiny green gem (NO letters in crown), "
+        "small oval black dot eyes with white highlight, tiny curved smile, "
+        "golden blush circles on cheeks, simple thin stick arms and legs. "
+        "Show exactly 10 poses arranged in a 2-column 5-row grid on white background: "
+        "(1) standing neutral, (2) pointing arm explain, (3) arms spread surprised, "
+        "(4) jumping V-arms happy, (5) drooping sad with teardrop, "
+        "(6) finger-to-cheek thinking, (7) thumbs-up victory, (8) palms-forward warning, "
+        "(9) sitting cross-legged, (10) running sideways sprint. "
+        "Each pose has a small numeral (1-10) beneath it for reference. "
+        "Flat 2D doodle style, pure white background, no shading, no gradients. "
+        "ABSOLUTELY NO written text other than small numbers 1-10. "
+        "Gold crown color #F4C420, black outline #333333."
+    )
+
+    try:
+        response = client.models.generate_content(
+            model=MODEL_MULTIMODAL,
+            contents=[sheet_prompt],
+            config=types.GenerateContentConfig(
+                response_modalities=["IMAGE"],
+            ),
+        )
+        _call_count += 1
+        logger.debug(f"generate_character_sheet 완료 (누적 호출: {_call_count}/{BUDGET_LIMIT})")
+
+        for part in response.candidates[0].content.parts:
+            if part.inline_data and part.inline_data.mime_type.startswith("image/"):
+                output_path.parent.mkdir(parents=True, exist_ok=True)
+                output_path.write_bytes(part.inline_data.data)
+                logger.info(
+                    f"[OK] 캐릭터 시트 생성: {output_path.name} ({len(part.inline_data.data):,} bytes)"
+                )
+                return True
+
+        text_parts = [
+            p.text for p in response.candidates[0].content.parts if hasattr(p, "text")
+        ]
+        logger.warning(f"[WARN] 시트 이미지 응답 없음. 텍스트: {' '.join(text_parts)[:200]}")
+        return False
+
+    except BudgetExceededError:
+        raise
+    except Exception as e:
+        logger.error(f"[ERR] generate_character_sheet: {e}")
+        return False
