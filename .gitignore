@@ -131,3 +131,4 @@ _task_dump.xml
 # Visual companion brainstorm sessions
 .superpowers/
 .claude/agent-logs/hooks.log
+.worktrees/
