@@ -204,6 +204,9 @@ def generate_character_sheet(
     if client is None:
         client = _make_client()
 
+    # NOTE: 이 시트 프롬프트는 레퍼런스 용도로 숫자(1-10)를 의도적으로 허용한다.
+    # generate_with_reference의 full_prompt "NO numbers" 규칙과 달리
+    # 포즈 번호는 시트를 레퍼런스로 쓸 때 AI가 구별하는 데 도움을 준다.
     sheet_prompt = (
         "Character design reference sheet for cute minimalist round doodle mascot '원이': "
         "perfectly round white body, thin black outline 2px, "

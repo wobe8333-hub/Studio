@@ -100,17 +100,15 @@ def test_budget_limit_is_sufficient():
 
 
 def test_generate_character_sheet_callable():
-    import sys, types as _types
+    """generate_character_sheet 함수가 존재하고 호출 가능한지 확인."""
+    import sys
     from pathlib import Path
     import importlib
     sys.path.insert(0, str(Path(__file__).parent.parent / "scripts" / "generate_branding"))
-    import google as _g
-    if "google.genai" not in sys.modules:
-        _mock = _types.ModuleType("google.genai")
-        _mock.Client = object
-        _mock.types = _types.ModuleType("google.genai.types")
-        sys.modules["google.genai"] = _mock
-        setattr(_g, "genai", _mock)
-    nbh = importlib.import_module("nano_banana_helper")
+    _ensure_google_genai_mocked()
+    if "nano_banana_helper" in sys.modules:
+        nbh = sys.modules["nano_banana_helper"]
+    else:
+        nbh = importlib.import_module("nano_banana_helper")
     assert hasattr(nbh, "generate_character_sheet"), "generate_character_sheet 함수 없음"
     assert callable(nbh.generate_character_sheet)
