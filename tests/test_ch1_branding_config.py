@@ -38,11 +38,18 @@ def test_ch1_has_10_poses():
     assert set(ch1["character_prompts"].keys()) == expected
 
 
-def test_ch1_prompts_have_no_text_rules():
-    from config import CHANNELS
+def test_wonee_base_has_no_text_constraint():
+    """_WONEE_BASE 공유 베이스에 NO text 규칙 직접 확인."""
+    from config import _WONEE_BASE
+    assert "NO text" in _WONEE_BASE, "_WONEE_BASE에 'NO text' 규칙 없음"
+
+
+def test_ch1_prompts_all_contain_wonee_base():
+    """각 포즈 프롬프트가 _WONEE_BASE 핵심 문구를 포함하는지 확인."""
+    from config import CHANNELS, _WONEE_BASE
+    fragment = "minimalist cute round character"
     for pose, prompt in CHANNELS["CH1"]["character_prompts"].items():
-        assert "NO text" in prompt or "no text" in prompt.lower(), \
-            f"포즈 '{pose}' 프롬프트에 NO text 규칙 없음"
+        assert fragment in prompt, f"포즈 '{pose}' 프롬프트가 _WONEE_BASE를 포함하지 않음"
 
 
 def test_subdirs_has_transitions():
