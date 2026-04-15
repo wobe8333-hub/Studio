@@ -7,6 +7,7 @@ Phase 5 추가:
 
 from pathlib import Path
 from typing import Dict, Optional
+
 from loguru import logger
 
 from src.core.config import KAS_ROOT
@@ -14,13 +15,19 @@ from src.core.config import KAS_ROOT
 # 채널별 캐릭터 기본 설정
 CHARACTER_PROFILES: Dict[str, Dict] = {
     "CH1": {
-        "name": "경제요정 까미",
-        "gender": "female",
-        "style": "cute_simple",
-        "base_prompt": "cute chibi female character, short bob hair, business casual outfit, big eyes, pastel colors",
-        "lora_name": "ch1_economy_character",
+        "name": "머니그래픽",
+        "gender": "neutral",
+        "style": "doodle_simple",
+        # 브랜딩 SSOT: scripts/generate_branding/config.py CH1 character_prompts와 동기화
+        # 기준 스타일 — 두들 왕관 캐릭터, 흰 배경, 심플 아웃라인
+        "base_prompt": (
+            "cute doodle style character with crown W on head, simple black outlines, "
+            "white background, Korean YouTube economics channel, consistent character design, "
+            "no text, no labels, isolated character"
+        ),
+        "lora_name": "ch1_moneygraphic",
         "seed": 42001,
-        "negative_prompt": "ugly, deformed, nsfw, violence, realistic",
+        "negative_prompt": "ugly, deformed, nsfw, violence, realistic, complex background, labels, text, watermark",
     },
     "CH2": {
         "name": "집찾기 도리",

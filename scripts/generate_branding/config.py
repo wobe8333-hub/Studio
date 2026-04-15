@@ -13,11 +13,37 @@ CHANNELS = {
         "sub_colors": ["#3498DB", "#F1C40F", "#2C3E50"],
         "stroke_color": "#2C3E50",
         "characters": ["explain", "rich", "money", "lucky"],
+        # 공통 스타일 앵커: 4종 모두 동일 캐릭터 기반으로 일관성 확보
+        # round black head · gold crown W · simple stick body · white dot eyes
         "character_prompts": {
-            "explain": "cute doodle style character with crown, pointing finger explaining, Korean YouTube economics channel, white background, simple black outlines, cheerful expression",
-            "rich": "cute doodle style character with crown, holding money bags, wealthy pose, Korean YouTube economics channel, white background, simple black outlines",
-            "money": "cute doodle style character with crown, surrounded by flying money bills, excited expression, Korean YouTube economics channel, white background",
-            "lucky": "cute doodle style character with crown, shocked happy expression, holding lottery ticket, Korean YouTube economics channel, white background",
+            "explain": (
+                "cute doodle style character: round black head, gold crown with W letter on top, "
+                "simple stick body with arms, big white dot eyes, cute small smile, "
+                "pointing finger explaining pose, cheerful confident expression, "
+                "Korean YouTube economics channel, white background, simple black outlines, "
+                "isolated character, no text, no labels, clean white background"
+            ),
+            "rich": (
+                "cute doodle style character: round black head, gold crown with W letter on top, "
+                "simple stick body with arms, big white dot eyes, cute small smile, "
+                "holding money bags in both hands, wealthy proud pose, "
+                "Korean YouTube economics channel, white background, simple black outlines, "
+                "isolated character, no text, no labels, clean white background"
+            ),
+            "money": (
+                "cute doodle style character: round black head, gold crown with W letter on top, "
+                "simple stick body with arms, big white dot eyes, cute small smile, "
+                "surrounded by flying money bills and coins, super excited arms-raised expression, "
+                "Korean YouTube economics channel, white background, simple black outlines, "
+                "isolated character, no text, no labels, clean white background"
+            ),
+            "lucky": (
+                "cute doodle style character: round black head, gold crown with W letter on top, "
+                "simple stick body with arms, big white dot eyes, shocked open mouth expression, "
+                "holding lottery ticket in one hand, sparkle stars around, happy surprised reaction, "
+                "Korean YouTube economics channel, white background, simple black outlines, "
+                "isolated character, no text, no labels, clean white background"
+            ),
         },
         "icons": ["money","coin","stock_up","stock_down","bank","interest",
                   "exchange","piggy","card","wallet","calculator",
@@ -141,63 +167,3 @@ CHANNELS = {
 }
 
 SUBDIRS = ["logo", "characters", "intro", "outro", "icons", "templates", "extras"]
-
-# ── CH1 에센셜 브랜딩 레퍼런스 Crop 설정 (essential_branding/CH1.png, 1379×752px) ──────
-# 실측 레이아웃: Section1(x=0~700) = 로고+캐릭터, Section2(x=700~1379) =
-#   인트로/아웃트로(y=135~310), 영상스타일(y=305~435), 자막/전환(y=440~565), 씸네일(y=570~752)
-CH1_CROP_REGIONS: dict[str, tuple[int, int, int, int]] = {
-    # 섹션 1: 비주얼 아이덴티티 (좌측 x=0~700)
-    "logo":               (30,  185, 375, 492),  # 원형 로고 + "머니그래픽" 텍스트 (라벨 제외)
-    "character_explain":  (378, 175, 476, 300),  # 설명하는 (상단 좌)
-    "character_rich":     (476, 175, 578, 300),  # 부자 (상단 중)
-    "character_money":    (578, 175, 695, 300),  # 부자 더 많은 돈 (상단 우)
-    "character_lucky":    (578, 335, 695, 492),  # 복권당첨 (하단 우, 상단 라벨 제외)
-    # 섹션 2: 영상 제작 에센셜 — 인트로 분해 요소 (x=700~960, y=135~310)
-    "intro_frame":        (700, 145, 958, 308),  # 인트로(3s) 박스 전체
-    "intro_text":         (705, 255, 870, 305),  # 머니그래픽 텍스트
-    "intro_character":    (820, 148, 952, 265),  # 인트로 박스 내 캐릭터
-    "intro_sparkle":      (818, 143, 878, 183),  # 반짝이 요소
-    # 섹션 2: 영상 제작 에센셜 — 아웃트로 분해 요소 (x=960~1175, y=135~310)
-    "outro_background":   (960, 145, 1175, 308), # 아웃트로(10s) 박스 전체 배경
-    "outro_bill":         (965, 152, 1095, 240), # 돈다발 요소
-    "outro_character":    (1088, 148, 1168, 308),# 아웃트로 캐릭터
-    "outro_cta":          (960, 260, 1172, 308), # 구독좋아요 CTA 영역
-    # 섹션 2: 영상 스타일 예시 썸네일 3종 (y=326~435, "영상 스타일 예시" 라벨 제외)
-    "thumbnail_sample_1": (700, 326, 926, 435),  # 코인 차트의 마법!
-    "thumbnail_sample_2": (926, 326, 1152, 435), # 금리 인상, 내 지갑은?
-    "thumbnail_sample_3": (1152, 326, 1379, 435),# 주식 초보 이것만 알아!
-    # 섹션 2: 자막 Bar 3종 (x=700~1095, y=505~601, 라벨 제외 · 각 32px)
-    "subtitle_bar_key":    (700, 505, 1095, 537),# Bar 1 자막 (캐릭터 & 이름)
-    "subtitle_bar_dialog": (700, 537, 1095, 569),# Bar 2 (하단 해설)
-    "subtitle_bar_info":   (700, 569, 1095, 601),# Bar 3 정보 강조
-    # 섹션 2: 장면 전환 3종 (x=1098~1379, y=460~575)
-    "transition_paper":   (1100, 460, 1193, 575),# 종이 넘기기
-    "transition_ink":     (1193, 460, 1290, 575),# 잉크 번지기
-    "transition_zoom":    (1290, 460, 1379, 575),# 확대/축소
-}
-
-# 후처리 정책: bg_remove=True → PIL 흰색 배경 알파 제거, target/longer_side → LANCZOS 업스케일
-CH1_POST_POLICY: dict[str, dict] = {
-    "logo":               {"bg_remove": True,  "target": (1024, 1024)},
-    "character_explain":  {"bg_remove": True,  "target": (1024, 1024)},
-    "character_rich":     {"bg_remove": True,  "target": (1024, 1024)},
-    "character_money":    {"bg_remove": True,  "target": (1024, 1024)},
-    "character_lucky":    {"bg_remove": True,  "target": (1024, 1024)},
-    "intro_frame":        {"bg_remove": True,  "longer_side": 512},
-    "intro_text":         {"bg_remove": True,  "longer_side": 512},
-    "intro_character":    {"bg_remove": True,  "longer_side": 512},
-    "intro_sparkle":      {"bg_remove": True,  "longer_side": 256},
-    "outro_background":   {"bg_remove": False, "target": (1280, 720)},
-    "outro_bill":         {"bg_remove": True,  "longer_side": 256},
-    "outro_character":    {"bg_remove": True,  "longer_side": 512},
-    "outro_cta":          {"bg_remove": True,  "longer_side": 512},
-    "thumbnail_sample_1": {"bg_remove": False, "target": (1920, 1080)},
-    "thumbnail_sample_2": {"bg_remove": False, "target": (1920, 1080)},
-    "thumbnail_sample_3": {"bg_remove": False, "target": (1920, 1080)},
-    "subtitle_bar_key":   {"bg_remove": False, "target": (1280, 120)},
-    "subtitle_bar_dialog":{"bg_remove": False, "target": (1280, 120)},
-    "subtitle_bar_info":  {"bg_remove": False, "target": (1280, 120)},
-    "transition_paper":   {"bg_remove": False, "target": (1920, 1080)},
-    "transition_ink":     {"bg_remove": False, "target": (1920, 1080)},
-    "transition_zoom":    {"bg_remove": False, "target": (1920, 1080)},
-}

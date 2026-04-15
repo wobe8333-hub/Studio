@@ -21,9 +21,7 @@ from outro_gen import generate_outro
 from icon_gen import generate_icons
 from template_gen import generate_templates
 from extras_gen import generate_extras
-from reference_cropper import crop_channel
-
-
+from ch1_asset_gen import generate_ch1_assets
 STEPS = [
     ("폴더 구조 생성", None, create_folder_structure, False),
     ("로고 SVG", "logo", generate_logo, True),
@@ -33,22 +31,6 @@ STEPS = [
     ("템플릿 SVG", "templates", generate_templates, True),
     ("채널 아트·배너", "extras", generate_extras, True),
 ]
-
-
-def _run_ch1() -> None:
-    """CH1: 레퍼런스 crop → CSS 인트로/아웃트로 → 아이콘/엑스트라 SVG."""
-    logger.info("=" * 60)
-    logger.info("CH1 브랜딩 에셋 생성 (레퍼런스 crop 파이프라인)")
-    logger.info("=" * 60)
-    create_folder_structure()
-    crop_channel("CH1", CHANNELS_DIR / "CH1")   # 22종 PNG 에셋
-    generate_intro("CH1")                        # CSS keyframes 인트로 HTML
-    generate_outro("CH1")                        # 지폐 20장 낙하 아웃트로 HTML
-    generate_icons("CH1")                        # 아이콘 20종 SVG (레퍼런스에 없음)
-    generate_extras("CH1")                       # 채널아트·배너 SVG
-    logger.info("=" * 60)
-    logger.info("[완료] CH1 파이프라인 완료")
-    logger.info("=" * 60)
 
 
 def run_all(channels: list[str] | None = None) -> None:
@@ -63,15 +45,15 @@ def run_all(channels: list[str] | None = None) -> None:
     logger.info("=" * 60)
 
     for ch_id in target:
+        logger.info(f"\n[{ch_id}] SVG/HTML 파이프라인 시작")
+        create_folder_structure()
+        for step_name, _, fn, _ in STEPS[1:]:  # 폴더 생성 제외
+            logger.info(f"  {step_name}")
+            fn(ch_id)
+        # CH1 전용: PIL 하이브리드 에셋 (인트로/아웃트로/자막바/썸네일/전환)
         if ch_id == "CH1":
-            _run_ch1()
-        else:
-            # CH2~7: 기존 SVG 기반 파이프라인
-            logger.info(f"\n[{ch_id}] SVG 파이프라인 시작")
-            create_folder_structure()
-            for step_name, _, fn, _ in STEPS[1:]:  # 폴더 생성 제외
-                logger.info(f"  {step_name}")
-                fn(ch_id)
+            logger.info("  CH1 PIL 하이브리드 에셋")
+            generate_ch1_assets()
 
     logger.info("\n" + "=" * 60)
     logger.info("[완료] 전체 파이프라인 완료")
