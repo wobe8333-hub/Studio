@@ -11,66 +11,85 @@ CANONICAL_BG_CREAM = "#FFFFFF"   # CH1 캔버스 기준 흰색 배경
 BEST_OF_N = 3                     # Imagen variant 생성 수 (Best-of-3)
 MAX_REPROMPT_ROUNDS = 3           # 프롬프트 반복 개선 최대 라운드 수
 
+# ─── 원이(₩) 캐릭터 프롬프트 기본 텍스트 ────────────────────────────────────
+_WONEE_BASE = (
+    "minimalist cute round character in flat 2D hand-drawn doodle illustration style: "
+    "perfectly round white (#FFFFFF) body with thin black (#333333) outline 2px, "
+    "small gold (#F4C420) crown on top of head with three rounded bumps and a tiny green circle gem in center "
+    "(ABSOLUTELY NO text inside crown, NO letters, NO symbols written in crown — crown is a pure geometric SHAPE only), "
+    "two small round black dot eyes with tiny white highlight dot, "
+    "small upward-curved smile line, "
+    "soft golden blush circles on both cheeks at low opacity, "
+    "simple thin stick arms with rounded ends (no hands, no feet), "
+    "simple thin stick legs, "
+    "pure white #FFFFFF background, "
+    "zero shading, zero gradients, zero 3D effects, zero drop shadows, "
+    "CRITICAL: NO text, NO numbers, NO labels, NO hex codes, NO writing of any kind anywhere"
+)
+
 CHANNELS = {
     "CH1": {
         "name": "머니그래픽", "domain": "경제",
-        "main_color": "#2ECC71", "bg_color": "#FFFDF5",
-        "sub_colors": ["#3498DB", "#F1C40F", "#2C3E50"],
-        "stroke_color": "#2C3E50",
-        "characters": ["explain", "rich", "money", "lucky"],
-        # 공통 스타일 앵커: 4종 모두 동일 캐릭터 기반으로 일관성 확보
-        # round white head with black outline · gold crown W · simple stick body · white dot eyes
+        "main_color": "#F4C420",
+        "secondary_color": "#333333",
+        "accent_red": "#DC2626",
+        "accent_green": "#16A34A",
+        "bg_color": "#FFFFFF",
+        "sub_colors": ["#DC2626", "#16A34A", "#333333"],
+        "stroke_color": "#333333",
+        "characters": ["default", "explain", "surprised", "happy", "sad",
+                       "think", "victory", "warn", "sit", "run"],
         "character_prompts": {
-            "explain": (
-                "cute doodle style character: round white head with black outline, gold crown with ₩ Korean Won symbol on the front, "
-                "simple stick body with arms, big black dot eyes, cute small smile, "
-                "pointing finger explaining pose, cheerful confident expression, "
-                "Korean YouTube economics channel '머니그래픽', "
-                "pure white #FFFFFF background, simple black outlines, "
-                "isolated character, no text, no labels, "
-                "hand-drawn Korean YouTube doodle reference style, "
-                "2K resolution, ultra-detailed, hand-drawn line quality, clean edges, print-quality"
+            "default": _WONEE_BASE + (
+                ", neutral standing pose: body centered, arms hanging naturally at sides, "
+                "gentle content closed smile, looking directly forward"
             ),
-            "rich": (
-                "cute doodle style character: round white head with black outline, gold crown with ₩ Korean Won symbol on the front, "
-                "simple stick body with arms, big black dot eyes, huge victorious grin, "
-                "dynamic leaping jump pose with one fist punching the air, "
-                "money bags flying and spinning around the body, tilted diagonal body angle, "
-                "speed lines behind for motion effect, "
-                "Korean YouTube economics channel '머니그래픽', "
-                "pure white #FFFFFF background, simple black outlines, "
-                "isolated character, no text, no labels, "
-                "hand-drawn Korean YouTube doodle reference style, "
-                "2K resolution, ultra-detailed, hand-drawn line quality, clean edges, print-quality"
+            "explain": _WONEE_BASE + (
+                ", right arm raised and index finger pointing forward/upward confidently, "
+                "left arm at side, mouth slightly open in explaining expression, "
+                "eyes wide and attentive"
             ),
-            "money": (
-                "cute doodle style character: round white head with black outline, gold crown with ₩ Korean Won symbol on the front, "
-                "simple stick body with arms, big black dot eyes, wild open-mouth excited expression, "
-                "sprinting forward at full speed with both arms stretched back, "
-                "a massive explosion of money bills and coins bursting out behind like a rocket, "
-                "body leaning far forward in fast run, extreme energy, "
-                "Korean YouTube economics channel '머니그래픽', "
-                "pure white #FFFFFF background, simple black outlines, "
-                "isolated character, no text, no labels, "
-                "hand-drawn Korean YouTube doodle reference style, "
-                "2K resolution, ultra-detailed, hand-drawn line quality, clean edges, print-quality"
+            "surprised": _WONEE_BASE + (
+                ", both arms spread wide to sides in shock, "
+                "mouth open in large O shape, eyes stretched wide, "
+                "small exclamation lines radiating outward around head"
             ),
-            "lucky": (
-                "cute doodle style character: round white head with black outline, gold crown with ₩ Korean Won symbol on the front, "
-                "simple stick body with arms, big black dot eyes, shocked jaw-drop expression with sparkle eyes, "
-                "jumping high in the air with both legs kicked up, lottery ticket raised triumphantly in one hand, "
-                "confetti and huge burst stars exploding all around, body twisted mid-air in celebration, "
-                "Korean YouTube economics channel '머니그래픽', "
-                "pure white #FFFFFF background, simple black outlines, "
-                "isolated character, no text, no labels, "
-                "hand-drawn Korean YouTube doodle reference style, "
-                "2K resolution, ultra-detailed, hand-drawn line quality, clean edges, print-quality"
+            "happy": _WONEE_BASE + (
+                ", jumping upward, both arms raised above head forming a V shape, "
+                "big wide arc smile, two small 4-pointed sparkle stars floating nearby"
+            ),
+            "sad": _WONEE_BASE + (
+                ", body slightly drooped forward, both arms hanging down limp, "
+                "downward curved sad mouth frown, single small teardrop beside one eye"
+            ),
+            "think": _WONEE_BASE + (
+                ", body tilted slightly to one side, one arm raised with index finger "
+                "touching cheek or chin, eyes looking upward thoughtfully, "
+                "three small thought ellipsis dots nearby"
+            ),
+            "victory": _WONEE_BASE + (
+                ", one arm raised with thumb pointing up (thumbs-up gesture), "
+                "one eye in a playful wink, confident wide grin"
+            ),
+            "warn": _WONEE_BASE + (
+                ", both arms stretched forward toward viewer with palms facing outward "
+                "in a stop/warning gesture, eyebrows furrowed downward, "
+                "firm closed straight-line mouth expression"
+            ),
+            "sit": _WONEE_BASE + (
+                ", seated cross-legged on the ground, arms resting relaxed on knees, "
+                "calm neutral expression with gentle small smile"
+            ),
+            "run": _WONEE_BASE + (
+                ", sideways profile view, body leaning forward in full sprint, "
+                "arms pumping alternating front and back, legs bent in running motion, "
+                "three short horizontal speed lines behind the body"
             ),
         },
-        "icons": ["money","coin","stock_up","stock_down","bank","interest",
-                  "exchange","piggy","card","wallet","calculator",
-                  "graph_up","graph_down","dollar","won","tax",
-                  "inflation","recession","growth","bond"],
+        "icons": ["money", "coin", "stock_up", "stock_down", "bank", "interest",
+                  "exchange", "piggy", "card", "wallet", "calculator",
+                  "graph_up", "graph_down", "dollar", "won", "tax",
+                  "inflation", "recession", "growth", "bond"],
         "intro_duration": 3, "outro_duration": 10,
     },
     "CH2": {
@@ -188,4 +207,4 @@ CHANNELS = {
     },
 }
 
-SUBDIRS = ["logo", "characters", "intro", "outro", "icons", "templates", "extras"]
+SUBDIRS = ["logo", "characters", "intro", "outro", "icons", "templates", "extras", "transitions"]
