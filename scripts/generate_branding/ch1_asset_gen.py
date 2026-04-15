@@ -33,7 +33,7 @@ DARK = (44, 62, 80)         # #2C3E50 — stroke / text
 GOLD = (241, 196, 15)       # #F1C40F — 왕관 / 별
 BLUE = (52, 152, 219)       # #3498DB — sub_color
 WHITE = (255, 255, 255)
-CREAM = (255, 253, 245)     # 인트로 배경 크림색
+CREAM = (255, 255, 255)     # 흰색 배경 (크림색에서 변경)
 
 
 # ── 유틸 ────────────────────────────────────────────────────────────────────
@@ -178,32 +178,37 @@ def gen_intro_sparkle() -> None:
 
 
 def gen_outro_background() -> None:
-    """아웃트로 배경: 민트 방사형 그라데이션 (1280×720, RGB)."""
+    """아웃트로 배경: 흰색 기반 민트 액센트 (1280×720, RGB)."""
     W, H = 1280, 720
-    img = Image.new("RGB", (W, H))
+    img = Image.new("RGB", (W, H), WHITE)
     draw = ImageDraw.Draw(img)
     cx, cy = W // 2, H // 2
 
-    # 수직 그라데이션 (다크 → 어두운 민트)
-    for y in range(H):
-        t = y / H
-        r = int(DARK[0] * (1 - t) + 26 * t)
-        g = int(DARK[1] * (1 - t) + 100 * t)
-        b = int(DARK[2] * (1 - t) + 70 * t)
+    # 연한 민트 방사형 후광 (흰 배경 위)
+    for i in range(14, 0, -1):
+        r_glow = 60 + i * 48
+        alpha_val = max(0, 30 - i * 2)
+        color = (
+            255 - alpha_val,
+            255 - alpha_val + min(alpha_val, MINT[1] - 200),
+            255 - alpha_val,
+        )
+        draw.ellipse([cx - r_glow, cy - r_glow, cx + r_glow, cy + r_glow],
+                     outline=(180, 230, 200), width=2)
+
+    # 하단 민트 그라데이션 바
+    for y in range(H - 120, H):
+        t = (y - (H - 120)) / 120
+        r = int(WHITE[0] * (1 - t) + MINT[0] * t)
+        g = int(WHITE[1] * (1 - t) + MINT[1] * t)
+        b = int(WHITE[2] * (1 - t) + MINT[2] * t)
         draw.line([(0, y), (W, y)], fill=(r, g, b))
 
-    # 중앙 동심원 후광
-    for i in range(12, 0, -1):
-        r_glow = 80 + i * 50
-        bright = max(0, MINT[1] - 80 + i * 4)
-        draw.ellipse([cx - r_glow, cy - r_glow, cx + r_glow, cy + r_glow],
-                     outline=(26, bright, 60), width=2)
-
-    # ₩ 장식 (배경용, 저채도)
-    font = get_font(32, bold=True)
-    for (x, y) in [(80, 60), (180, 600), (1100, 80), (1040, 560),
-                   (600, 30), (680, 660), (40, 360)]:
-        draw.text((x, y), "₩", fill=(60, 140, 80), font=font)
+    # ₩ 장식 (연한 민트, 배경용)
+    font = get_font(48, bold=True)
+    for (x, y) in [(60, 40), (160, 560), (1080, 60), (1020, 520),
+                   (580, 20), (660, 640), (30, 340)]:
+        draw.text((x, y), "₩", fill=(200, 235, 215), font=font)
 
     img.save(CH1_DIR / "outro" / "outro_background.png", "PNG")
     logger.info("[OK] outro_background.png (1280×720)")
@@ -379,55 +384,66 @@ def gen_thumbnail(
     idx: int,
     title_lines: list[str],
     char_name: str,
-    bg_c1: tuple,
-    bg_c2: tuple,
     accent: tuple,
 ) -> None:
-    """썸네일 1장 생성: 그라데이션 배경 + 캐릭터 + 타이포 (1920×1080, RGB)."""
+    """썸네일 1장 생성: Imagen 크림 배경 + 캐릭터 합성 + 타이포 (1920×1080, RGB).
+
+    배경: templates/_tmp/thumb{idx}_bg.png (Imagen 4.0 크림 일러스트, 좌측 비움)
+    캐릭터: 우측 합성 (알파 마스크)
+    타이포: 좌측 다크 텍스트 (크림 배경에 최적)
+    """
     W, H = 1920, 1080
 
-    # 그라데이션 배경
-    img = _make_gradient_bg(W, H, bg_c1, bg_c2, "lr")
+    # Imagen 크림 배경 로드 (없으면 크림 단색 폴백)
+    bg_path = CH1_DIR / "templates" / "_tmp" / f"thumb{idx}_bg.png"
+    if bg_path.exists():
+        img = Image.open(bg_path).convert("RGB")
+        img = img.resize((W, H), Image.LANCZOS)
+    else:
+        logger.warning(f"[WARN] {bg_path.name} 없음 — 크림 배경으로 대체")
+        img = Image.new("RGB", (W, H), CREAM)
+
+    # RGBA 합성 레이어 준비
+    overlay = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+    draw_ov = ImageDraw.Draw(overlay)
+
+    # 하단 액센트 바 (민트 반투명)
+    bar_y = H - 80
+    draw_ov.rectangle([0, bar_y, W, H], fill=(*accent[:3], 220))
+    img_rgba = img.convert("RGBA")
+    img = Image.alpha_composite(img_rgba, overlay).convert("RGB")
+
     draw = ImageDraw.Draw(img)
 
-    # 장식 원 (배경 depth 표현)
-    for (ox, oy, or_, a) in [(260, H // 2, 380, 20), (1650, 220, 220, 15), (1700, 900, 160, 12)]:
-        for stroke in range(3):
-            draw.ellipse(
-                [ox - or_ + stroke * 8, oy - or_ + stroke * 8,
-                 ox + or_ - stroke * 8, oy + or_ - stroke * 8],
-                outline=(*accent[:3], a),
-                width=2,
-            )
-
-    # 캐릭터 (우측 배치)
+    # 캐릭터 (우측 배치, 알파 합성)
     char_src = CH1_DIR / "characters" / f"character_{char_name}.png"
     if char_src.exists():
         char_img = Image.open(char_src).convert("RGBA")
-        char_size = 820
+        char_size = 860
         char_img = char_img.resize((char_size, char_size), Image.LANCZOS)
-        cx = W - char_size - 60
-        cy = (H - char_size) // 2
-        img.paste(char_img, (cx, cy), char_img)
+        cx = W - char_size - 40
+        cy = H - char_size - 60  # 하단 고정 (발이 바에 걸치도록)
+        base_rgba = img.convert("RGBA")
+        base_rgba.paste(char_img, (cx, cy), char_img)
+        img = base_rgba.convert("RGB")
+        draw = ImageDraw.Draw(img)
 
-    # 채널명 (상단)
-    font_ch = get_font(34, bold=True)
-    draw.text((80, 54), "머니그래픽", fill=(*accent[:3], 220), font=font_ch)
+    # 채널명 (좌상단, 액센트 색)
+    font_ch = get_font(32, bold=True)
+    draw.text((80, 52), "머니그래픽", fill=accent[:3], font=font_ch)
 
-    # 제목 (좌측, 굵은 흰색 + 그림자)
-    font_title = get_font(104, bold=True)
+    # 제목 (좌측, 다크 + 드롭 섀도우 4px)
+    font_title = get_font(108, bold=True)
     for i, line in enumerate(title_lines):
-        ty = 320 + i * 128
-        # 그림자
-        draw.text((84, ty + 5), line, fill=(0, 0, 0, 170), font=font_title)
-        # 메인 텍스트
-        draw.text((80, ty), line, fill=rgba(WHITE), font=font_title)
+        ty = 300 + i * 135
+        # 드롭 섀도우 (4px offset)
+        draw.text((84, ty + 4), line, fill=(0, 0, 0, 120), font=font_title)
+        # 메인 텍스트 (다크)
+        draw.text((80, ty), line, fill=DARK, font=font_title)
 
-    # 하단 민트 강조 바
-    bar_y = H - 74
-    draw.rectangle([0, bar_y, W, H], fill=(*accent[:3], 210))
-    font_sub = get_font(38, bold=True)
-    draw.text((80, bar_y + 16), "경제를 쉽게, 머니그래픽", fill=rgba(WHITE, 240), font=font_sub)
+    # 하단 바 서브타이틀
+    font_sub = get_font(36, bold=True)
+    draw.text((80, bar_y + 18), "경제를 쉽게, 머니그래픽", fill=rgba(WHITE, 240), font=font_sub)
 
     out = CH1_DIR / "templates" / f"thumbnail_sample_{idx}.png"
     img.save(out, "PNG")
@@ -435,14 +451,14 @@ def gen_thumbnail(
 
 
 def gen_thumbnails() -> None:
-    """CH1 썸네일 3종 생성."""
+    """CH1 썸네일 3종 생성 — Imagen 크림 배경 기반."""
     configs = [
-        (1, ["코인 차트의", "마법!"],     "explain", (26, 37, 47),  (44, 62, 80),   MINT),
-        (2, ["금리 인상,", "내 지갑은?"], "money",   (44, 62, 80),  (26, 58, 42),   GOLD),
-        (3, ["주식 초보,", "이것만 알아!"],"rich",    (13, 27, 42),  (30, 58, 95),   BLUE),
+        (1, ["코인 차트의", "마법!"],      "explain", MINT),
+        (2, ["금리 인상,", "내 지갑은?"],  "money",   GOLD),
+        (3, ["주식 초보,", "이것만 알아!"], "rich",    BLUE),
     ]
-    for idx, title_lines, char, bg_c1, bg_c2, accent in configs:
-        gen_thumbnail(idx, title_lines, char, bg_c1, bg_c2, accent)
+    for idx, title_lines, char, accent in configs:
+        gen_thumbnail(idx, title_lines, char, accent)
 
 
 # ── 전환 3종 ────────────────────────────────────────────────────────────────

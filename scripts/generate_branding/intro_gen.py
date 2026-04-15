@@ -1,9 +1,8 @@
 # scripts/generate_branding/intro_gen.py
 """영상 인트로 HTML 생성 — 3초, 채널 컬러 적용"""
 import sys
-import io
-
 from pathlib import Path
+
 from loguru import logger
 
 sys.path.insert(0, str(Path(__file__).parent))
@@ -16,7 +15,7 @@ CH1_TEMPLATE = """<!DOCTYPE html>
 <meta charset="utf-8">
 <style>
 :root {{ --dur: 3s; }}
-html, body {{ margin:0; height:100%; background:#FFFDF5; overflow:hidden; }}
+html, body {{ margin:0; height:100%; background:#FFFFFF; overflow:hidden; }}
 .stage {{
   position: relative; width: 100vw; height: 100vh;
   display: flex; align-items: center; justify-content: center;

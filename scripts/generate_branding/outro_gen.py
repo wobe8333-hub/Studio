@@ -1,9 +1,9 @@
 # scripts/generate_branding/outro_gen.py
 """영상 아웃트로 HTML — 10초, 구독·좋아요 CTA + 다음영상 카드"""
-import sys
 import io
-
+import sys
 from pathlib import Path
+
 from loguru import logger
 
 sys.path.insert(0, str(Path(__file__).parent))
@@ -30,7 +30,7 @@ def _build_ch1_outro() -> str:
 <meta charset="utf-8">
 <style>
 :root {{ --dur: 10s; }}
-html, body {{ margin: 0; height: 100%; background: #FFFDF5; overflow: hidden; }}
+html, body {{ margin: 0; height: 100%; background: #FFFFFF; overflow: hidden; }}
 .stage {{
   position: relative; width: 100vw; height: 100vh;
   animation: fade-out 0.4s calc(var(--dur) - 0.4s) ease-in forwards;
