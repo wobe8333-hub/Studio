@@ -6,43 +6,65 @@ KAS_ROOT = Path(__file__).parent.parent.parent
 CHANNELS_DIR = KAS_ROOT / "assets" / "channels"
 BRANDING_REF_DIR = KAS_ROOT / "essential_branding"
 
+# CH1 퀄리티 강화 상수 (Imagen Best-of-N + 2K 파이프라인)
+CANONICAL_BG_CREAM = "#FFFFFF"   # CH1 캔버스 기준 흰색 배경
+BEST_OF_N = 3                     # Imagen variant 생성 수 (Best-of-3)
+MAX_REPROMPT_ROUNDS = 3           # 프롬프트 반복 개선 최대 라운드 수
+
 CHANNELS = {
     "CH1": {
         "name": "머니그래픽", "domain": "경제",
-        "main_color": "#2ECC71", "bg_color": "#FFFFFF",
+        "main_color": "#2ECC71", "bg_color": "#FFFDF5",
         "sub_colors": ["#3498DB", "#F1C40F", "#2C3E50"],
         "stroke_color": "#2C3E50",
         "characters": ["explain", "rich", "money", "lucky"],
         # 공통 스타일 앵커: 4종 모두 동일 캐릭터 기반으로 일관성 확보
-        # round black head · gold crown W · simple stick body · white dot eyes
+        # round white head with black outline · gold crown W · simple stick body · white dot eyes
         "character_prompts": {
             "explain": (
-                "cute doodle style character: round black head, gold crown with W letter on top, "
-                "simple stick body with arms, big white dot eyes, cute small smile, "
+                "cute doodle style character: round white head with black outline, gold crown with ₩ Korean Won symbol on the front, "
+                "simple stick body with arms, big black dot eyes, cute small smile, "
                 "pointing finger explaining pose, cheerful confident expression, "
-                "Korean YouTube economics channel, white background, simple black outlines, "
-                "isolated character, no text, no labels, clean white background"
+                "Korean YouTube economics channel '머니그래픽', "
+                "pure white #FFFFFF background, simple black outlines, "
+                "isolated character, no text, no labels, "
+                "hand-drawn Korean YouTube doodle reference style, "
+                "2K resolution, ultra-detailed, hand-drawn line quality, clean edges, print-quality"
             ),
             "rich": (
-                "cute doodle style character: round black head, gold crown with W letter on top, "
-                "simple stick body with arms, big white dot eyes, cute small smile, "
-                "holding money bags in both hands, wealthy proud pose, "
-                "Korean YouTube economics channel, white background, simple black outlines, "
-                "isolated character, no text, no labels, clean white background"
+                "cute doodle style character: round white head with black outline, gold crown with ₩ Korean Won symbol on the front, "
+                "simple stick body with arms, big black dot eyes, huge victorious grin, "
+                "dynamic leaping jump pose with one fist punching the air, "
+                "money bags flying and spinning around the body, tilted diagonal body angle, "
+                "speed lines behind for motion effect, "
+                "Korean YouTube economics channel '머니그래픽', "
+                "pure white #FFFFFF background, simple black outlines, "
+                "isolated character, no text, no labels, "
+                "hand-drawn Korean YouTube doodle reference style, "
+                "2K resolution, ultra-detailed, hand-drawn line quality, clean edges, print-quality"
             ),
             "money": (
-                "cute doodle style character: round black head, gold crown with W letter on top, "
-                "simple stick body with arms, big white dot eyes, cute small smile, "
-                "surrounded by flying money bills and coins, super excited arms-raised expression, "
-                "Korean YouTube economics channel, white background, simple black outlines, "
-                "isolated character, no text, no labels, clean white background"
+                "cute doodle style character: round white head with black outline, gold crown with ₩ Korean Won symbol on the front, "
+                "simple stick body with arms, big black dot eyes, wild open-mouth excited expression, "
+                "sprinting forward at full speed with both arms stretched back, "
+                "a massive explosion of money bills and coins bursting out behind like a rocket, "
+                "body leaning far forward in fast run, extreme energy, "
+                "Korean YouTube economics channel '머니그래픽', "
+                "pure white #FFFFFF background, simple black outlines, "
+                "isolated character, no text, no labels, "
+                "hand-drawn Korean YouTube doodle reference style, "
+                "2K resolution, ultra-detailed, hand-drawn line quality, clean edges, print-quality"
             ),
             "lucky": (
-                "cute doodle style character: round black head, gold crown with W letter on top, "
-                "simple stick body with arms, big white dot eyes, shocked open mouth expression, "
-                "holding lottery ticket in one hand, sparkle stars around, happy surprised reaction, "
-                "Korean YouTube economics channel, white background, simple black outlines, "
-                "isolated character, no text, no labels, clean white background"
+                "cute doodle style character: round white head with black outline, gold crown with ₩ Korean Won symbol on the front, "
+                "simple stick body with arms, big black dot eyes, shocked jaw-drop expression with sparkle eyes, "
+                "jumping high in the air with both legs kicked up, lottery ticket raised triumphantly in one hand, "
+                "confetti and huge burst stars exploding all around, body twisted mid-air in celebration, "
+                "Korean YouTube economics channel '머니그래픽', "
+                "pure white #FFFFFF background, simple black outlines, "
+                "isolated character, no text, no labels, "
+                "hand-drawn Korean YouTube doodle reference style, "
+                "2K resolution, ultra-detailed, hand-drawn line quality, clean edges, print-quality"
             ),
         },
         "icons": ["money","coin","stock_up","stock_down","bank","interest",
