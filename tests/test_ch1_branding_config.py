@@ -133,3 +133,44 @@ def test_ch1_characters_are_10_poses():
     """config 기반 CH1 캐릭터 목록이 10개인지 재확인."""
     from config import CHANNELS
     assert len(CHANNELS["CH1"]["characters"]) == 10
+
+
+def test_ch1_template_svgs_generated(tmp_path):
+    """generate_templates(CH1) 실행 시 12개 SVG 생성 확인."""
+    import sys, shutil
+    from pathlib import Path
+    sys.path.insert(0, str(Path(__file__).parent.parent / "scripts" / "generate_branding"))
+    from config import CHANNELS
+    # tmp_path에 CH1/templates 폴더 생성
+    ch1_dir = tmp_path / "CH1"
+    (ch1_dir / "templates").mkdir(parents=True)
+    (ch1_dir / "transitions").mkdir(parents=True)
+
+    import importlib, unittest.mock as mock
+    # 모듈 캐시 제거 후 새로 임포트
+    sys.modules.pop("template_gen", None)
+    tg = importlib.import_module("template_gen")
+    with mock.patch("template_gen.CHANNELS_DIR", tmp_path):
+        tg.generate_templates("CH1")
+
+    svgs = list((ch1_dir / "templates").glob("*.svg"))
+    assert len(svgs) >= 12, f"CH1 템플릿 SVG 부족: {len(svgs)}"
+
+
+def test_ch1_transitions_generated(tmp_path):
+    """generate_transitions(CH1) 실행 시 5개 SVG 생성 확인."""
+    import sys
+    from pathlib import Path
+    sys.path.insert(0, str(Path(__file__).parent.parent / "scripts" / "generate_branding"))
+    ch1_dir = tmp_path / "CH1"
+    (ch1_dir / "transitions").mkdir(parents=True)
+
+    import importlib, unittest.mock as mock
+    # 모듈 캐시 제거 후 새로 임포트
+    sys.modules.pop("template_gen", None)
+    tg = importlib.import_module("template_gen")
+    with mock.patch("template_gen.CHANNELS_DIR", tmp_path):
+        tg.generate_transitions("CH1")
+
+    svgs = list((ch1_dir / "transitions").glob("*.svg"))
+    assert len(svgs) == 5, f"트랜지션 SVG 수 불일치: {len(svgs)}"
