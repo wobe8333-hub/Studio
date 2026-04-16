@@ -14,6 +14,7 @@ Imagen 4.0 (텍스트 전용) 대신 reference 이미지를 함께 전달해
 """
 import os
 import sys
+import time
 from pathlib import Path
 from typing import Optional
 
@@ -147,8 +148,6 @@ def generate_best_of_n_with_reference(
     Returns:
         저장된 variant Path 리스트 (성공한 것만 포함)
     """
-    import time
-
     if client is None:
         client = _make_client()
 
