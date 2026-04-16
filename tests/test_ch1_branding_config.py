@@ -41,13 +41,16 @@ def test_ch1_has_10_poses():
 def test_wonee_base_has_no_text_constraint():
     """_WONEE_BASE 공유 베이스에 NO text 규칙 직접 확인."""
     from config import _WONEE_BASE
-    assert "NO text" in _WONEE_BASE, "_WONEE_BASE에 'NO text' 규칙 없음"
+    # 새 캐릭터: "CRITICAL: NO other text, NO numbers, NO labels" 형태
+    assert "NO other text" in _WONEE_BASE or "NO text" in _WONEE_BASE, \
+        "_WONEE_BASE에 텍스트 금지 규칙 없음"
 
 
 def test_ch1_prompts_all_contain_wonee_base():
     """각 포즈 프롬프트가 _WONEE_BASE 핵심 문구를 포함하는지 확인."""
     from config import CHANNELS, _WONEE_BASE
-    fragment = "minimalist cute round character"
+    # 새 캐릭터 디자인: kawaii human doodle mascot + crown
+    fragment = "kawaii"
     for pose, prompt in CHANNELS["CH1"]["character_prompts"].items():
         assert fragment in prompt, f"포즈 '{pose}' 프롬프트가 _WONEE_BASE를 포함하지 않음"
 

@@ -10,9 +10,10 @@ Phase 5 추가:
 
 from pathlib import Path
 from typing import Any, List, Optional
+
 from loguru import logger
 
-from src.step08.character_manager import get_lora_path, build_character_prompt
+from src.step08.character_manager import build_character_prompt, get_lora_path
 
 _SD_PIPELINE: Optional[Any] = None  # SD XL 파이프라인 싱글턴 (최초 1회만 로드)
 
@@ -22,7 +23,8 @@ def _detect_gpu() -> bool:
     try:
         import torch
         return torch.cuda.is_available()
-    except ImportError:
+    except Exception:
+        # ImportError 외에도 OSError (WinError 1114 DLL 로드 실패) 등 처리
         return False
 
 
@@ -30,7 +32,6 @@ def _get_sd_pipeline(device: str, dtype: Any) -> Any:
     """SD XL 파이프라인 싱글턴 반환 — 최초 1회만 로드 후 재사용."""
     global _SD_PIPELINE
     if _SD_PIPELINE is None:
-        import torch
         from diffusers import StableDiffusionXLPipeline
         _SD_PIPELINE = StableDiffusionXLPipeline.from_pretrained(
             "stabilityai/stable-diffusion-xl-base-1.0",
@@ -96,9 +97,11 @@ def _generate_sd_image(
 def _generate_gemini_image(prompt: str, output_path: Path) -> bool:
     """Gemini 이미지 생성 폴백."""
     try:
-        from src.core.config import GEMINI_API_KEY, GEMINI_IMAGE_MODEL
-        import google.generativeai as genai
         import base64
+
+        import google.generativeai as genai
+
+        from src.core.config import GEMINI_API_KEY, GEMINI_IMAGE_MODEL
 
         genai.configure(api_key=GEMINI_API_KEY)
         model = genai.GenerativeModel(GEMINI_IMAGE_MODEL)
