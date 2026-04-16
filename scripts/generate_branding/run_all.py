@@ -52,20 +52,34 @@ def run_all(channels: list[str] | None = None) -> None:
         for step_name, _, fn, _ in STEPS[1:]:  # 폴더 생성 제외
             logger.info(f"  {step_name}")
             fn(ch_id)
-        # CH1 전용: 원이 캐릭터 시트 + PIL 하이브리드 에셋
+        # CH1 전용: Gemini Pro 전체 에셋 파이프라인
         if ch_id == "CH1":
-            # Stage 1: 원이 캐릭터 시트 생성 (없는 경우에만)
+            try:
+                from google import genai as _genai
+                _client = _genai.Client(api_key=os.environ["GEMINI_API_KEY"])
+            except Exception as e:
+                logger.error(f"  Gemini 클라이언트 생성 실패: {e}")
+                continue
+
+            # Stage 1: 원이 캐릭터 시트 생성
             logger.info("  [Stage 1] 원이 캐릭터 시트 생성")
             try:
                 from character_gen import generate_wonee_character_sheet
-                from google import genai as _genai
-                _client = _genai.Client(api_key=os.environ["GEMINI_API_KEY"])
                 generate_wonee_character_sheet(_client)
             except Exception as e:
                 logger.warning(f"  캐릭터 시트 생성 스킵: {e}")
-            # PIL 하이브리드 에셋
-            logger.info("  CH1 PIL 하이브리드 에셋")
-            generate_ch1_assets()
+
+            # Stage 2: 캐릭터 포즈 10종 생성
+            logger.info("  [Stage 2] 원이 캐릭터 포즈 10종 생성")
+            try:
+                from character_gen import generate_ch1_characters
+                generate_ch1_characters(_client)
+            except Exception as e:
+                logger.warning(f"  캐릭터 포즈 생성 스킵: {e}")
+
+            # Stage 3: Gemini Pro 전체 에셋 생성
+            logger.info("  [Stage 3] Gemini Pro 에셋 생성 (로고·인트로·아웃트로·자막바·썸네일·전환)")
+            generate_ch1_assets(_client)
 
     logger.info("\n" + "=" * 60)
     logger.info("[완료] 전체 파이프라인 완료")

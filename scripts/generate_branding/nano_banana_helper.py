@@ -176,6 +176,104 @@ def generate_best_of_n_with_reference(
     return saved
 
 
+def generate_image(
+    prompt: str,
+    output_path: Path,
+    *,
+    client: Optional[genai.Client] = None,
+) -> bool:
+    """레퍼런스 없이 텍스트 프롬프트만으로 이미지를 생성한다.
+
+    Args:
+        prompt: 생성할 이미지 설명
+        output_path: 저장 경로
+        client: 재사용 클라이언트 (None이면 신규 생성)
+
+    Returns:
+        True if 성공, False if 실패
+    """
+    global _call_count
+    if _call_count >= BUDGET_LIMIT:
+        raise BudgetExceededError(f"API 호출 {BUDGET_LIMIT}회 초과 — 하드스톱")
+
+    if client is None:
+        client = _make_client()
+
+    try:
+        response = client.models.generate_content(
+            model=MODEL_MULTIMODAL,
+            contents=[prompt],
+            config=types.GenerateContentConfig(
+                response_modalities=["IMAGE"],
+            ),
+        )
+        _call_count += 1
+        logger.debug(f"generate_image 완료 (누적 호출: {_call_count}/{BUDGET_LIMIT})")
+
+        for part in response.candidates[0].content.parts:
+            if part.inline_data and part.inline_data.mime_type.startswith("image/"):
+                output_path.parent.mkdir(parents=True, exist_ok=True)
+                output_path.write_bytes(part.inline_data.data)
+                logger.info(f"[OK] {output_path.name} ({len(part.inline_data.data):,} bytes)")
+                return True
+
+        text_parts = [
+            p.text for p in response.candidates[0].content.parts if hasattr(p, "text")
+        ]
+        logger.warning(f"[WARN] 이미지 응답 없음. 텍스트: {' '.join(text_parts)[:200]}")
+        return False
+
+    except BudgetExceededError:
+        raise
+    except Exception as e:
+        logger.error(f"[ERR] generate_image: {e}")
+        return False
+
+
+def generate_best_of_n(
+    prompt: str,
+    canonical_path: Path,
+    n: int = 3,
+    *,
+    client: Optional[genai.Client] = None,
+) -> list[Path]:
+    """레퍼런스 없이 Best-of-N 생성 → _candidates/ 폴더에 저장한다.
+
+    Args:
+        prompt: 생성할 이미지 설명
+        canonical_path: 최종 확정 파일 경로 (stem/parent 참조용)
+        n: 생성할 variant 수 (기본 3)
+        client: 재사용 클라이언트
+
+    Returns:
+        저장된 variant Path 리스트 (성공한 것만 포함)
+    """
+    if client is None:
+        client = _make_client()
+
+    candidates_dir = (
+        canonical_path.parent.parent / "_candidates" / canonical_path.stem
+    )
+    candidates_dir.mkdir(parents=True, exist_ok=True)
+
+    saved: list[Path] = []
+    for i in range(n):
+        variant_path = candidates_dir / f"variant_{i + 1}.png"
+        logger.info(f"[{i + 1}/{n}] variant 생성 중: {variant_path.name}")
+        try:
+            ok = generate_image(prompt, variant_path, client=client)
+            if ok:
+                saved.append(variant_path)
+        except BudgetExceededError:
+            logger.error("예산 초과로 Best-of-N 조기 종료.")
+            raise
+
+        if i < n - 1:
+            time.sleep(1.5)
+
+    return saved
+
+
 def generate_character_sheet(
     output_path: Path,
     *,

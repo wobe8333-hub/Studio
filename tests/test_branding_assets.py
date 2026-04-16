@@ -7,7 +7,7 @@ import sys
 sys.path.insert(0, str(Path(__file__).parent.parent / "scripts" / "generate_branding"))
 from config import CHANNELS, CHANNELS_DIR, SUBDIRS
 
-# CH1 PIL 전용 에셋 (Gemini API 불필요 — 항상 존재해야 함)
+# CH1 비캐릭터 에셋 (Gemini Pro 생성 — ch1_asset_gen.py 실행 후 존재)
 CH1_PIL_FILES = [
     "intro/intro.html",
     "intro/intro_frame.png",
@@ -93,7 +93,7 @@ def test_extras_exist(ch_id):
 
 @pytest.mark.parametrize("rel", CH1_PIL_FILES)
 def test_ch1_pil_asset_exists(rel):
-    """CH1 PIL 생성 에셋: 존재·최소 크기 확인 (Gemini API 불필요)."""
+    """CH1 비캐릭터 에셋: 존재·최소 크기 확인 (ch1_asset_gen 실행 후)."""
     from PIL import Image
     p = Path("assets/channels/CH1") / rel
     assert p.exists(), f"missing: {p}"
