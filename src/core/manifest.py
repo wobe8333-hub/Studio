@@ -1,7 +1,8 @@
 import uuid
-from pathlib import Path
-from src.core.ssot import read_json, write_json, now_iso, json_exists
+
 from src.core.config import RUNS_DIR
+from src.core.ssot import json_exists, now_iso, read_json, write_json
+
 
 def create_run_id() -> str:
     return now_iso()[:10].replace("-", "") + "_" + uuid.uuid4().hex[:8]
@@ -41,18 +42,21 @@ def update_manifest(channel_id: str, run_id: str, **kwargs) -> dict:
 
 def mark_step_done(channel_id: str, run_id: str, step: str) -> None:
     data = load_manifest(channel_id, run_id)
-    if step not in data["steps_completed"]:
-        data["steps_completed"].append(step)
-    update_manifest(channel_id, run_id, **data)
+    completed = data.get("steps_completed", [])
+    if step not in completed:
+        completed.append(step)
+    update_manifest(channel_id, run_id, steps_completed=completed)
 
 def mark_step_failed(channel_id: str, run_id: str,
                      step: str, failure_type: str, detail: str) -> None:
     data = load_manifest(channel_id, run_id)
-    if step not in data["steps_failed"]:
-        data["steps_failed"].append(step)
-    data["status"] = "FAILED"
-    data["failure_type"] = failure_type
-    data["failure_detail"] = detail
-    data["resume_from"] = step
-    update_manifest(channel_id, run_id, **data)
+    failed = data.get("steps_failed", [])
+    if step not in failed:
+        failed.append(step)
+    update_manifest(channel_id, run_id,
+                    steps_failed=failed,
+                    status="FAILED",
+                    failure_type=failure_type,
+                    failure_detail=detail,
+                    resume_from=step)
 
