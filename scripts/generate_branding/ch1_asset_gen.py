@@ -27,13 +27,27 @@ if hasattr(sys.stdout, "buffer"):
 KAS_ROOT = Path(__file__).parent.parent.parent
 CH1_DIR = KAS_ROOT / "assets" / "channels" / "CH1"
 
-# ── CH1 색상 팔레트 ──────────────────────────────────────────────────────────
-MINT = (46, 204, 113)       # #2ECC71 — main_color
-DARK = (44, 62, 80)         # #2C3E50 — stroke / text
-GOLD = (241, 196, 15)       # #F1C40F — 왕관 / 별
-BLUE = (52, 152, 219)       # #3498DB — sub_color
+# ── CH1 색상 팔레트 (config.py SSOT 기준) ────────────────────────────────────
+sys.path.insert(0, str(Path(__file__).parent))
+from config import CHANNELS as _CHANNELS  # noqa: E402
+
+_CH1_CFG = _CHANNELS["CH1"]
+
+
+def _hex_to_rgb(h: str) -> tuple:
+    h = h.lstrip("#")
+    return (int(h[0:2], 16), int(h[2:4], 16), int(h[4:6], 16))
+
+
+GOLD  = _hex_to_rgb(_CH1_CFG["main_color"])       # #F4C420 — 골드 (왕관/포인트)
+DARK  = _hex_to_rgb(_CH1_CFG["secondary_color"])  # #333333 — 검정 (스트로크/텍스트)
+GREEN = _hex_to_rgb(_CH1_CFG["accent_green"])     # #16A34A — 초록 악센트
+RED   = _hex_to_rgb(_CH1_CFG["accent_red"])       # #DC2626 — 빨강 악센트
 WHITE = (255, 255, 255)
-CREAM = (255, 255, 255)     # 흰색 배경 (크림색에서 변경)
+CREAM = (255, 255, 255)     # 흰색 배경
+# 구 변수명 호환성 (기존 함수에서 MINT/BLUE 참조 제거)
+MINT = GREEN   # 초록 계열 — 이제 CH1 accent_green #16A34A
+BLUE = (52, 152, 219)   # 외부 비CH1 색상 — 기존 로직 유지
 
 
 # ── 유틸 ────────────────────────────────────────────────────────────────────
@@ -245,10 +259,10 @@ def gen_outro_bill() -> None:
 
 
 def gen_outro_character() -> None:
-    """아웃트로 캐릭터: character_money.png 512×512 리사이즈."""
-    src = CH1_DIR / "characters" / "character_money.png"
+    """아웃트로 캐릭터: character_victory.png 512×512 리사이즈."""
+    src = CH1_DIR / "characters" / "character_victory.png"
     if not src.exists():
-        logger.warning("character_money.png 없음 — outro_character.png 스킵")
+        logger.warning("character_victory.png 없음 — outro_character.png 스킵")
         return
     img = Image.open(src).convert("RGBA").resize((512, 512), Image.LANCZOS)
     img.save(CH1_DIR / "outro" / "outro_character.png", "PNG")
@@ -453,9 +467,9 @@ def gen_thumbnail(
 def gen_thumbnails() -> None:
     """CH1 썸네일 3종 생성 — Imagen 크림 배경 기반."""
     configs = [
-        (1, ["코인 차트의", "마법!"],      "explain", MINT),
-        (2, ["금리 인상,", "내 지갑은?"],  "money",   GOLD),
-        (3, ["주식 초보,", "이것만 알아!"], "rich",    BLUE),
+        (1, ["코인 차트의", "마법!"],      "explain",  MINT),
+        (2, ["금리 인상,", "내 지갑은?"],  "victory",  GOLD),
+        (3, ["주식 초보,", "이것만 알아!"], "happy",    GREEN),
     ]
     for idx, title_lines, char, accent in configs:
         gen_thumbnail(idx, title_lines, char, accent)
@@ -586,14 +600,68 @@ def gen_transition_zoom() -> None:
     logger.info("[OK] transition_zoom.png (1920×1080)")
 
 
+# ── 로고 PNG ────────────────────────────────────────────────────────────────
+
+
+def gen_logo_png() -> None:
+    """CH1 로고 PNG: 금색 왕관 배지 스타일 (512×512, RGBA)."""
+    W = H = 512
+    img = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+    draw = ImageDraw.Draw(img)
+    cx, cy = W // 2, H // 2
+
+    # 흰 배경 원
+    R = 230
+    draw.ellipse([cx - R, cy - R, cx + R, cy + R], fill=rgba(WHITE))
+
+    # 금색 외곽 원 (두꺼운)
+    draw.ellipse([cx - R, cy - R, cx + R, cy + R],
+                 outline=rgba(GOLD), width=14)
+    # 내부 보조 원 (얇은)
+    draw.ellipse([cx - R + 20, cy - R + 20, cx + R - 20, cy + R - 20],
+                 outline=rgba(GOLD, 160), width=4)
+
+    # ₩ 왕관 심볼 (중앙 위쪽)
+    font_crown = get_font(160, bold=True)
+    crown_text = "₩"
+    bbox = draw.textbbox((0, 0), crown_text, font=font_crown)
+    tw = bbox[2] - bbox[0]
+    th = bbox[3] - bbox[1]
+    draw.text((cx - tw // 2, cy - th // 2 - 30), crown_text,
+              fill=rgba(DARK), font=font_crown)
+
+    # 채널명 텍스트 (하단)
+    font_name = get_font(36, bold=True)
+    name_text = "머니그래픽"
+    bbox2 = draw.textbbox((0, 0), name_text, font=font_name)
+    nw = bbox2[2] - bbox2[0]
+    draw.text((cx - nw // 2, cy + 100), name_text,
+              fill=rgba(DARK), font=font_name)
+
+    # 4방향 소별 장식 (원 가장자리)
+    for deg in (45, 135, 225, 315):
+        rad = math.radians(deg)
+        sx = cx + int((R - 18) * math.cos(rad))
+        sy = cy + int((R - 18) * math.sin(rad))
+        draw_star(draw, sx, sy, 12, rgba(GOLD), n_points=4)
+
+    out = CH1_DIR / "logo" / "logo.png"
+    out.parent.mkdir(parents=True, exist_ok=True)
+    img.save(out, "PNG")
+    logger.info("[OK] logo.png (512×512)")
+
+
 # ── 메인 ─────────────────────────────────────────────────────────────────────
 
 
 def generate_ch1_assets() -> None:
-    """CH1 PIL 에셋 전체 생성 (16종)."""
+    """CH1 PIL 에셋 전체 생성 (17종)."""
     logger.info("=" * 60)
-    logger.info("CH1 PIL 에셋 생성 시작 (16종)")
+    logger.info("CH1 PIL 에셋 생성 시작 (17종)")
     logger.info("=" * 60)
+
+    # 로고 PNG
+    gen_logo_png()
 
     # 인트로 분해 요소
     gen_intro_frame()
@@ -621,7 +689,7 @@ def generate_ch1_assets() -> None:
     gen_transition_zoom()
 
     logger.info("=" * 60)
-    logger.info("[완료] CH1 에셋 16종 생성 완료")
+    logger.info("[완료] CH1 에셋 17종 생성 완료")
     logger.info("=" * 60)
 
 
