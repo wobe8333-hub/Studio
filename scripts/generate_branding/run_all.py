@@ -19,7 +19,7 @@ from logo_gen import generate_logo
 from intro_gen import generate_intro
 from outro_gen import generate_outro
 from icon_gen import generate_icons
-from template_gen import generate_templates
+from template_gen import generate_templates, generate_transitions
 from extras_gen import generate_extras
 from ch1_asset_gen import generate_ch1_assets
 STEPS = [
@@ -29,6 +29,7 @@ STEPS = [
     ("아웃트로 HTML", "outro", generate_outro, True),
     ("아이콘 SVG", "icons", generate_icons, True),
     ("템플릿 SVG", "templates", generate_templates, True),
+    ("트랜지션 SVG", "transitions", generate_transitions, True),
     ("채널 아트·배너", "extras", generate_extras, True),
 ]
 
@@ -50,8 +51,19 @@ def run_all(channels: list[str] | None = None) -> None:
         for step_name, _, fn, _ in STEPS[1:]:  # 폴더 생성 제외
             logger.info(f"  {step_name}")
             fn(ch_id)
-        # CH1 전용: PIL 하이브리드 에셋 (인트로/아웃트로/자막바/썸네일/전환)
+        # CH1 전용: 원이 캐릭터 시트 + PIL 하이브리드 에셋
         if ch_id == "CH1":
+            # Stage 1: 원이 캐릭터 시트 생성 (없는 경우에만)
+            logger.info("  [Stage 1] 원이 캐릭터 시트 생성")
+            try:
+                from character_gen import generate_wonee_character_sheet
+                import os
+                from google import genai as _genai
+                _client = _genai.Client(api_key=os.environ["GEMINI_API_KEY"])
+                generate_wonee_character_sheet(_client)
+            except Exception as e:
+                logger.warning(f"  캐릭터 시트 생성 스킵: {e}")
+            # PIL 하이브리드 에셋
             logger.info("  CH1 PIL 하이브리드 에셋")
             generate_ch1_assets()
 
