@@ -28,7 +28,9 @@ if hasattr(sys.stdout, "buffer"):
 # ── 경로 ────────────────────────────────────────────────────────────────────
 KAS_ROOT = Path(__file__).parent.parent.parent
 CH1_DIR = KAS_ROOT / "assets" / "channels" / "CH1"
-WONEE_SHEET_PATH = KAS_ROOT / "essential_branding" / "CH1_wonee_sheet.png"
+WONEE_SHEET_PATH  = KAS_ROOT / "essential_branding" / "CH1_wonee_sheet.png"
+# 단일 캐릭터 canonical 레퍼런스 (로고·썸네일 일관성 보장용)
+WONEE_CHAR_REF    = KAS_ROOT / "essential_branding" / "CH1_character_ref.png"
 
 # ── 헬퍼 임포트 ─────────────────────────────────────────────────────────────
 sys.path.insert(0, str(Path(__file__).parent))
@@ -50,10 +52,13 @@ _DOODLE_BASE = (
 )
 
 _WONEE_DESC = (
-    "Character '원이': perfectly round white body with thin black outline 2px, "
-    "small gold crown with three rounded bumps on top (NO ₩ symbol, NO letters in crown), "
-    "small oval black dot eyes with white highlight, tiny curved smile, "
-    "golden blush circles on cheeks, simple thin stick arms and legs. "
+    "Character '원이': kawaii human doodle mascot — "
+    "large round circle head, short visible neck, "
+    "rectangular torso with shoulder line (white jacket style), "
+    "arms from shoulders with small hands and index finger, short legs with simple feet. "
+    "Gold crown on top of round head with small 'w' letter on crown front. "
+    "Round black dot eyes with white highlight, wide open smile, "
+    "golden blush circles on cheeks. Flat 2D hand-drawn doodle style, pure white background. "
 )
 
 
@@ -83,19 +88,25 @@ def _first_to_canonical(variants: list[Path], canonical_path: Path) -> bool:
 # ── 로고 ────────────────────────────────────────────────────────────────────
 
 def gen_logo(client) -> None:
-    """CH1 채널 로고 배지 (512×512) — Best-of-3."""
+    """CH1 채널 로고 배지 (512×512) — character_ref 레퍼런스 기반 Best-of-3."""
     prompt = (
-        _DOODLE_BASE + _WONEE_DESC
+        _WONEE_DESC
+        + "Replicate EXACTLY this character's style. "
         + "Circular channel logo badge design. "
         + "원이 character centered inside a hand-drawn double circle border. "
         + "'머니그래픽' in bold hand-lettered Korean text below character inside circle. "
         + "Small gold 4-pointed sparkle stars at diagonal corners outside the circle. "
         + "Decorative gold curved arrows around the border. "
-        + "Square 1:1 composition, pure white background."
+        + "Square 1:1 composition, pure white background. "
+        + _DOODLE_BASE
     )
     out = CH1_DIR / "logo" / "logo.png"
     out.parent.mkdir(parents=True, exist_ok=True)
-    variants = generate_best_of_n(prompt, out, n=3, client=client)
+    # character_ref가 있으면 레퍼런스 기반 생성 (스타일 고정)
+    if WONEE_CHAR_REF.exists():
+        variants = generate_best_of_n_with_reference(WONEE_CHAR_REF, prompt, out, n=3, client=client)
+    else:
+        variants = generate_best_of_n(prompt, out, n=3, client=client)
     if _first_to_canonical(variants, out):
         _resize_to(out, (512, 512))
 
@@ -292,9 +303,11 @@ def _gen_thumbnail(
     pose_desc: str,
     color_hint: str,
 ) -> None:
-    """썸네일 1장 — Best-of-3, 1920×1080."""
+    """썸네일 1장 — character_ref 레퍼런스 기반 Best-of-3, 1920×1080."""
     prompt = (
-        _DOODLE_BASE + _WONEE_DESC
+        _WONEE_DESC
+        + "Replicate EXACTLY this character's style for the thumbnail character. "
+        + _DOODLE_BASE
         + f"YouTube thumbnail for economics channel '머니그래픽', 16:9 landscape. "
         + f"Large bold Korean text '{title}' prominently on the LEFT half. "
         + f"원이 character ({pose_desc}) on the RIGHT side, full body visible. "
@@ -303,7 +316,11 @@ def _gen_thumbnail(
         + "High CTR YouTube thumbnail composition, doodle style, eye-catching."
     )
     out = CH1_DIR / "templates" / f"thumbnail_sample_{idx}.png"
-    variants = generate_best_of_n(prompt, out, n=3, client=client)
+    # character_ref가 있으면 레퍼런스 기반 생성 (스타일 고정)
+    if WONEE_CHAR_REF.exists():
+        variants = generate_best_of_n_with_reference(WONEE_CHAR_REF, prompt, out, n=3, client=client)
+    else:
+        variants = generate_best_of_n(prompt, out, n=3, client=client)
     if _first_to_canonical(variants, out):
         _resize_to(out, (1920, 1080))
 

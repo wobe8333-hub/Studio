@@ -13,18 +13,20 @@ MAX_REPROMPT_ROUNDS = 3           # 프롬프트 반복 개선 최대 라운드 
 
 # ─── 원이(₩) 캐릭터 프롬프트 기본 텍스트 ────────────────────────────────────
 _WONEE_BASE = (
-    "minimalist cute round character in flat 2D hand-drawn doodle illustration style: "
-    "perfectly round white (#FFFFFF) body with thin black (#333333) outline 2px, "
-    "small gold (#F4C420) crown on top of head with three rounded bumps and a tiny green circle gem in center "
-    "(ABSOLUTELY NO text inside crown, NO letters, NO symbols written in crown — crown is a pure geometric SHAPE only), "
-    "two small round black dot eyes with tiny white highlight dot, "
-    "small upward-curved smile line, "
-    "soft golden blush circles on both cheeks at low opacity, "
-    "simple thin stick arms with rounded ends (no hands, no feet), "
-    "simple thin stick legs, "
-    "pure white #FFFFFF background, "
-    "zero shading, zero gradients, zero 3D effects, zero drop shadows, "
-    "CRITICAL: NO text, NO numbers, NO labels, NO hex codes, NO writing of any kind anywhere"
+    "kawaii human doodle mascot in flat 2D hand-drawn illustration style, thin black (#333333) outline 2px: "
+    "STRUCTURE — large perfectly round circle head; short visible neck; "
+    "rectangular-ish torso body with rounded corners and clear shoulder line "
+    "(body is slightly wider than head at shoulder, like wearing a simple white jacket); "
+    "two arms extending from shoulders — upper arm and forearm with small rounded hand and index finger detail; "
+    "two short legs with small simple rounded feet at the bottom. "
+    "FACE on the round head — two small round black dot eyes with white highlight, "
+    "wide open upward-curved smile (happy expression), "
+    "soft golden blush circles on both cheeks. "
+    "CROWN — gold (#F4C420) crown sitting on top of the round head, "
+    "three rounded bumps on top edge, small lowercase letter 'w' written in dark on the front face of the crown. "
+    "Pure white #FFFFFF fill for head and body, pure white #FFFFFF background. "
+    "Flat coloring, zero shading, zero gradients, zero 3D effects. "
+    "CRITICAL: NO other text, NO numbers, NO labels anywhere except the 'w' on the crown."
 )
 
 CHANNELS = {
