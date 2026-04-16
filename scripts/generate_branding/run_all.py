@@ -5,6 +5,7 @@ Usage:
     python -m scripts.generate_branding.run_all              # 전체 7채널
     python -m scripts.generate_branding.run_all --channel CH1  # CH1만
 """
+import os
 import sys
 import io
 import argparse
@@ -57,7 +58,6 @@ def run_all(channels: list[str] | None = None) -> None:
             logger.info("  [Stage 1] 원이 캐릭터 시트 생성")
             try:
                 from character_gen import generate_wonee_character_sheet
-                import os
                 from google import genai as _genai
                 _client = _genai.Client(api_key=os.environ["GEMINI_API_KEY"])
                 generate_wonee_character_sheet(_client)

@@ -9,7 +9,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 from config import CHANNELS, CHANNELS_DIR
 
 # CH1 전용: 레퍼런스 crop PNG 분해 요소 기반 CSS keyframes 인트로
-CH1_TEMPLATE = """<!DOCTYPE html>
+CH1_TEMPLATE = f"""<!DOCTYPE html>
 <html lang="ko">
 <head>
 <meta charset="utf-8">
