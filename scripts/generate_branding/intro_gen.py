@@ -9,12 +9,12 @@ sys.path.insert(0, str(Path(__file__).parent))
 from config import CHANNELS, CHANNELS_DIR
 
 # CH1 전용: 레퍼런스 crop PNG 분해 요소 기반 CSS keyframes 인트로
-CH1_TEMPLATE = """<!DOCTYPE html>
+CH1_TEMPLATE = f"""<!DOCTYPE html>
 <html lang="ko">
 <head>
 <meta charset="utf-8">
 <style>
-:root {{ --dur: 3s; }}
+:root {{ --dur: 3s; --gold: #F4C420; --ink: #333333; }}
 html, body {{ margin:0; height:100%; background:#FFFFFF; overflow:hidden; }}
 .stage {{
   position: relative; width: 100vw; height: 100vh;

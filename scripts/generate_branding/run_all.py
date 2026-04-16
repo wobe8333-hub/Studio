@@ -5,6 +5,7 @@ Usage:
     python -m scripts.generate_branding.run_all              # 전체 7채널
     python -m scripts.generate_branding.run_all --channel CH1  # CH1만
 """
+import os
 import sys
 import io
 import argparse
@@ -13,15 +14,20 @@ from pathlib import Path
 from loguru import logger
 
 sys.path.insert(0, str(Path(__file__).parent))
-from config import CHANNELS, CHANNELS_DIR
+from config import CHANNELS, CHANNELS_DIR, KAS_ROOT
 from setup_folders import create_folder_structure
 from logo_gen import generate_logo
 from intro_gen import generate_intro
 from outro_gen import generate_outro
 from icon_gen import generate_icons
-from template_gen import generate_templates
+from template_gen import generate_templates, generate_transitions
 from extras_gen import generate_extras
 from ch1_asset_gen import generate_ch1_assets
+
+# CH1 레퍼런스 파일 경로
+_WONEE_SHEET_PATH   = KAS_ROOT / "essential_branding" / "CH1_wonee_sheet.png"
+_WONEE_CHAR_REF     = KAS_ROOT / "essential_branding" / "CH1_character_ref.png"
+_CH1_CHARS_DIR      = CHANNELS_DIR / "CH1" / "characters"
 STEPS = [
     ("폴더 구조 생성", None, create_folder_structure, False),
     ("로고 SVG", "logo", generate_logo, True),
@@ -29,6 +35,7 @@ STEPS = [
     ("아웃트로 HTML", "outro", generate_outro, True),
     ("아이콘 SVG", "icons", generate_icons, True),
     ("템플릿 SVG", "templates", generate_templates, True),
+    ("트랜지션 SVG", "transitions", generate_transitions, True),
     ("채널 아트·배너", "extras", generate_extras, True),
 ]
 
@@ -50,10 +57,47 @@ def run_all(channels: list[str] | None = None) -> None:
         for step_name, _, fn, _ in STEPS[1:]:  # 폴더 생성 제외
             logger.info(f"  {step_name}")
             fn(ch_id)
-        # CH1 전용: PIL 하이브리드 에셋 (인트로/아웃트로/자막바/썸네일/전환)
+        # CH1 전용: Gemini Pro 전체 에셋 파이프라인
         if ch_id == "CH1":
-            logger.info("  CH1 PIL 하이브리드 에셋")
-            generate_ch1_assets()
+            try:
+                from google import genai as _genai
+                _client = _genai.Client(api_key=os.environ["GEMINI_API_KEY"])
+            except Exception as e:
+                logger.error(f"  Gemini 클라이언트 생성 실패: {e}")
+                continue
+
+            # Stage 1: 캐릭터 시트 생성 — 이미 존재하면 재사용 (스타일 고정)
+            if _WONEE_SHEET_PATH.exists():
+                logger.info(f"  [Stage 1] 기존 캐릭터 시트 재사용: {_WONEE_SHEET_PATH.name}")
+            else:
+                logger.info("  [Stage 1] 캐릭터 시트 신규 생성")
+                try:
+                    from character_gen import generate_wonee_character_sheet
+                    generate_wonee_character_sheet(_client)
+                except Exception as e:
+                    logger.warning(f"  캐릭터 시트 생성 스킵: {e}")
+
+            # Stage 2: 캐릭터 포즈 10종 생성 — 이미 존재하면 재사용
+            existing_poses = list(_CH1_CHARS_DIR.glob("character_*.png")) if _CH1_CHARS_DIR.exists() else []
+            if len(existing_poses) >= 10:
+                logger.info(f"  [Stage 2] 기존 캐릭터 포즈 재사용 ({len(existing_poses)}종)")
+            else:
+                logger.info("  [Stage 2] 캐릭터 포즈 10종 생성")
+                try:
+                    from character_gen import generate_ch1_characters
+                    generate_ch1_characters(_client)
+                    # 생성 완료 후 character_ref 업데이트
+                    _default = _CH1_CHARS_DIR / "character_default.png"
+                    if _default.exists():
+                        import shutil
+                        shutil.copy2(_default, _WONEE_CHAR_REF)
+                        logger.info(f"  [Stage 2] canonical ref 갱신: {_WONEE_CHAR_REF.name}")
+                except Exception as e:
+                    logger.warning(f"  캐릭터 포즈 생성 스킵: {e}")
+
+            # Stage 3: Gemini Pro 전체 에셋 생성
+            logger.info("  [Stage 3] Gemini Pro 에셋 생성 (로고·인트로·아웃트로·자막바·썸네일·전환)")
+            generate_ch1_assets(_client)
 
     logger.info("\n" + "=" * 60)
     logger.info("[완료] 전체 파이프라인 완료")
