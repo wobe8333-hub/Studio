@@ -27,7 +27,14 @@ from ch1_asset_gen import generate_ch1_assets
 # CH1 레퍼런스 파일 경로
 _WONEE_SHEET_PATH   = KAS_ROOT / "essential_branding" / "CH1_wonee_sheet.png"
 _WONEE_CHAR_REF     = KAS_ROOT / "essential_branding" / "CH1_character_ref.png"
+_WONEE_POSES_DIR    = KAS_ROOT / "essential_branding" / "poses"   # 99% 일관성 보관소
 _CH1_CHARS_DIR      = CHANNELS_DIR / "CH1" / "characters"
+
+# 정식 캐릭터 포즈 10종
+_CH1_VALID_POSES = [
+    "default", "explain", "surprised", "happy", "sad",
+    "think", "victory", "warn", "sit", "run",
+]
 STEPS = [
     ("폴더 구조 생성", None, create_folder_structure, False),
     ("로고 SVG", "logo", generate_logo, True),
@@ -77,23 +84,39 @@ def run_all(channels: list[str] | None = None) -> None:
                 except Exception as e:
                     logger.warning(f"  캐릭터 시트 생성 스킵: {e}")
 
-            # Stage 2: 캐릭터 포즈 10종 생성 — 이미 존재하면 재사용
-            existing_poses = list(_CH1_CHARS_DIR.glob("character_*.png")) if _CH1_CHARS_DIR.exists() else []
-            if len(existing_poses) >= 10:
-                logger.info(f"  [Stage 2] 기존 캐릭터 포즈 재사용 ({len(existing_poses)}종)")
+            # Stage 2: 캐릭터 포즈 10종 — essential_branding/poses/ 우선 복사 (99% 일관성)
+            import shutil as _shutil
+            _CH1_CHARS_DIR.mkdir(parents=True, exist_ok=True)
+            _pose_refs = [_WONEE_POSES_DIR / f"character_{p}.png" for p in _CH1_VALID_POSES]
+            _all_refs_exist = all(p.exists() for p in _pose_refs)
+
+            if _all_refs_exist:
+                # 보관된 canonical PNG를 그대로 복사 — API 0회 호출
+                for ref in _pose_refs:
+                    _shutil.copy2(ref, _CH1_CHARS_DIR / ref.name)
+                logger.info("  [Stage 2] essential_branding/poses/ 에서 캐릭터 복사 (99% 일관성)")
             else:
-                logger.info("  [Stage 2] 캐릭터 포즈 10종 생성")
-                try:
-                    from character_gen import generate_ch1_characters
-                    generate_ch1_characters(_client)
-                    # 생성 완료 후 character_ref 업데이트
-                    _default = _CH1_CHARS_DIR / "character_default.png"
-                    if _default.exists():
-                        import shutil
-                        shutil.copy2(_default, _WONEE_CHAR_REF)
-                        logger.info(f"  [Stage 2] canonical ref 갱신: {_WONEE_CHAR_REF.name}")
-                except Exception as e:
-                    logger.warning(f"  캐릭터 포즈 생성 스킵: {e}")
+                # 보관본 없으면 Gemini로 신규 생성 후 poses/ 에 저장
+                existing = list(_CH1_CHARS_DIR.glob("character_*.png"))
+                if len(existing) >= 10:
+                    logger.info(f"  [Stage 2] 기존 캐릭터 포즈 재사용 ({len(existing)}종)")
+                else:
+                    logger.info("  [Stage 2] 캐릭터 포즈 신규 생성 후 poses/ 보관")
+                    try:
+                        from character_gen import generate_ch1_characters
+                        generate_ch1_characters(_client)
+                        # 생성 완료 후 poses/ 와 character_ref 갱신
+                        _WONEE_POSES_DIR.mkdir(parents=True, exist_ok=True)
+                        for pose in _CH1_VALID_POSES:
+                            _src = _CH1_CHARS_DIR / f"character_{pose}.png"
+                            if _src.exists():
+                                _shutil.copy2(_src, _WONEE_POSES_DIR / _src.name)
+                        _default = _CH1_CHARS_DIR / "character_default.png"
+                        if _default.exists():
+                            _shutil.copy2(_default, _WONEE_CHAR_REF)
+                        logger.info("  [Stage 2] poses/ 보관 완료")
+                    except Exception as e:
+                        logger.warning(f"  캐릭터 포즈 생성 스킵: {e}")
 
             # Stage 3: Gemini Pro 전체 에셋 생성
             logger.info("  [Stage 3] Gemini Pro 에셋 생성 (로고·인트로·아웃트로·자막바·썸네일·전환)")
