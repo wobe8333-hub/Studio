@@ -372,4 +372,5 @@ if __name__ == "__main__":
         sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
     for ch_id in CHANNELS:
         generate_templates(ch_id)
+        generate_transitions(ch_id)
     logger.info("7채널 템플릿 SVG 생성 완료")
