@@ -3,31 +3,41 @@
 # 절대 빈 파일로 교체하거나 내용을 삭제하지 않는다.
 # 정리 스크립트(__init__.py 일괄 초기화 등) 적용 대상에서 반드시 제외한다.
 
-from loguru import logger
-import time
 import shutil
+import time
 from pathlib import Path
-from src.core.ssot import (write_json, read_json, json_exists, sha256_file,
-                             sha256_dict, now_iso, get_run_dir)
-from src.core.config import CHANNELS_DIR, CHANNEL_CATEGORY_KO
+
+from loguru import logger
+
+from src.core.config import CHANNEL_CATEGORY_KO, CHANNELS_DIR
 from src.core.decision_trace import append_trace
+from src.core.ssot import (
+    get_run_dir,
+    json_exists,
+    now_iso,
+    read_json,
+    sha256_dict,
+    sha256_file,
+    write_json,
+)
 from src.step00.channel_registry import get_channel
-from src.step08.script_generator import generate_script
+from src.step08.ffmpeg_composer import add_narration, add_subtitles, concat_clips, image_to_clip
 from src.step08.image_generator import generate_batch as gen_images
-from src.step08.sd_generator import generate_scene_images as gen_sd_images
 from src.step08.manim_generator import generate_and_run as manim_run
-from src.step08.narration_generator import generate_narration
-from src.step08.subtitle_generator import generate_subtitles
-from src.step08.ffmpeg_composer import (image_to_clip, concat_clips,
-                                         add_narration, add_subtitles)
-from src.step08.motion_engine import batch_create_motion_clips, create_motion_clip
-from src.step08.scene_composer import compose_all_scenes
 from src.step08.metadata_generator import generate_metadata
+from src.step08.motion_engine import batch_create_motion_clips, create_motion_clip
+from src.step08.narration_generator import generate_narration
+from src.step08.scene_composer import compose_all_scenes
+from src.step08.script_generator import generate_script
+from src.step08.sd_generator import generate_scene_images as gen_sd_images
+from src.step08.subtitle_generator import generate_subtitles
+
 
 def run_step08(channel_id: str, topic: dict, style_policy: dict,
                revenue_policy: dict, algorithm_policy: dict) -> str:
     import google.generativeai as genai
-    from src.core.config import GEMINI_API_KEY, GEMINI_TEXT_MODEL, BGM_DIR, RUNS_DIR
+
+    from src.core.config import BGM_DIR, GEMINI_API_KEY, GEMINI_TEXT_MODEL, RUNS_DIR
     run_id = f"run_{channel_id}_{int(time.time())}"
     run_dir = get_run_dir(channel_id, run_id)
     step08_dir = run_dir / "step08"
@@ -185,7 +195,10 @@ def run_step08(channel_id: str, topic: dict, style_policy: dict,
     final_video = step08_dir / "video.mp4"
     shutil.copy2(with_subs, final_video)
 
-    generate_metadata(channel_id, run_id, script, step08_dir, topic)
+    try:
+        generate_metadata(channel_id, run_id, script, step08_dir, topic)
+    except Exception as meta_err:
+        logger.warning(f"[STEP08] 메타데이터 생성 실패 (영상은 유지): {meta_err}")
 
     needed = ["script.json", "narration.wav", "subtitles.srt", "video.mp4",
               "render_report.json"]

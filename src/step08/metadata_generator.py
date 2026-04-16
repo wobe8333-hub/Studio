@@ -24,11 +24,11 @@ def generate_metadata(channel_id: str, run_id: str, script: dict,
     """
     import google.generativeai as genai
 
-    from src.core.config import GEMINI_API_KEY
+    from src.core.config import GEMINI_API_KEY, GEMINI_TEXT_MODEL
     from src.quota.gemini_quota import record_request, throttle_if_needed
 
     genai.configure(api_key=GEMINI_API_KEY)
-    model = genai.GenerativeModel("gemini-2.0-flash")
+    model = genai.GenerativeModel(GEMINI_TEXT_MODEL)
 
     # 제목 후보
     title_candidates = script.get("title_candidates", [topic.get("title", "제목 없음")])
