@@ -112,3 +112,24 @@ def test_generate_character_sheet_callable():
         nbh = importlib.import_module("nano_banana_helper")
     assert hasattr(nbh, "generate_character_sheet"), "generate_character_sheet 함수 없음"
     assert callable(nbh.generate_character_sheet)
+
+
+def test_generate_wonee_character_sheet_in_character_gen():
+    """character_gen에 generate_wonee_character_sheet 함수가 있는지 확인."""
+    import sys, types as _t
+    from pathlib import Path
+    import importlib
+    sys.path.insert(0, str(Path(__file__).parent.parent / "scripts" / "generate_branding"))
+    _ensure_google_genai_mocked()
+    if "character_gen" not in sys.modules:
+        importlib.import_module("character_gen")
+    cg = sys.modules["character_gen"]
+    assert hasattr(cg, "generate_wonee_character_sheet"), \
+        "character_gen에 generate_wonee_character_sheet 없음"
+    assert callable(cg.generate_wonee_character_sheet)
+
+
+def test_ch1_characters_are_10_poses():
+    """config 기반 CH1 캐릭터 목록이 10개인지 재확인."""
+    from config import CHANNELS
+    assert len(CHANNELS["CH1"]["characters"]) == 10
