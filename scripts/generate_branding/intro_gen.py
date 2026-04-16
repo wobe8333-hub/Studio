@@ -14,7 +14,7 @@ CH1_TEMPLATE = """<!DOCTYPE html>
 <head>
 <meta charset="utf-8">
 <style>
-:root {{ --dur: 3s; }}
+:root {{ --dur: 3s; --gold: #F4C420; --ink: #333333; }}
 html, body {{ margin:0; height:100%; background:#FFFFFF; overflow:hidden; }}
 .stage {{
   position: relative; width: 100vw; height: 100vh;

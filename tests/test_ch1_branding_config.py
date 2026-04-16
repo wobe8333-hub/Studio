@@ -135,6 +135,15 @@ def test_ch1_characters_are_10_poses():
     assert len(CHANNELS["CH1"]["characters"]) == 10
 
 
+def test_ch1_intro_uses_correct_gold():
+    from pathlib import Path
+    intro = Path(__file__).parent.parent / "scripts" / "generate_branding" / "intro_gen.py"
+    content = intro.read_text(encoding="utf-8")
+    # 구 색상값이 남아있으면 실패
+    assert "#F5C518" not in content, "intro_gen.py에 구 색상 #F5C518 남아있음"
+    assert "#F4C420" in content, "intro_gen.py에 새 색상 #F4C420 없음"
+
+
 def test_ch1_template_svgs_generated(tmp_path):
     """generate_templates(CH1) 실행 시 12개 SVG 생성 확인."""
     import sys, shutil
