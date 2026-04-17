@@ -1,11 +1,14 @@
 """STEP 10 — 제목 3종 + 썸네일 3종 변형 빌더."""
 import json
+import re
+
+import google.generativeai as genai
 from loguru import logger
 from tenacity import retry, stop_after_attempt, wait_exponential
-import google.generativeai as genai
-from src.core.ssot import read_json, write_json, json_exists, sha256_dict, now_iso, get_run_dir
-from src.core.config import GEMINI_API_KEY, MEMORY_DIR, GEMINI_TEXT_MODEL
-from src.quota.gemini_quota import throttle_if_needed, record_request
+
+from src.core.config import GEMINI_API_KEY, GEMINI_TEXT_MODEL, MEMORY_DIR
+from src.core.ssot import get_run_dir, json_exists, now_iso, read_json, sha256_dict, write_json
+from src.quota.gemini_quota import record_request, throttle_if_needed
 from src.step10.thumbnail_generator import generate_thumbnail
 
 genai.configure(api_key=GEMINI_API_KEY)
@@ -32,7 +35,13 @@ def _generate_titles(channel_id: str, base_title: str, keyword: str) -> list:
     raw = model.generate_content(
         prompt, generation_config=genai.GenerationConfig(max_output_tokens=300),
     ).text.strip()
-    if raw.startswith("```"): raw = "\n".join(raw.split("\n")[1:-1])
+    # 마크다운 코드 펜스 제거
+    if raw.startswith("```"):
+        raw = "\n".join(raw.split("\n")[1:-1])
+    # Gemini가 설명 텍스트를 앞뒤에 붙이는 경우 JSON 배열만 추출
+    m = re.search(r'\[.+?\]', raw, re.DOTALL)
+    if m:
+        raw = m.group(0)
     variants = json.loads(raw)
     for v in variants: v["seo_keyword_included"] = keyword in v.get("title","")
     return variants
@@ -48,7 +57,15 @@ def run_step10(channel_id: str, run_id: str) -> bool:
     tc       = script.get("title_candidates",["제목 없음"])
     base     = tc[0] if tc else "제목 없음"
     keyword  = script.get("seo",{}).get("primary_keyword","")
-    variants = _generate_titles(channel_id, base, keyword)
+    try:
+        variants = _generate_titles(channel_id, base, keyword)
+    except Exception as e:
+        logger.warning(f"[STEP10] 제목 생성 실패 (폴백 사용): {e}")
+        variants = [
+            {"ref": "v1", "mode": "authority",  "title": base, "seo_keyword_included": keyword in base},
+            {"ref": "v2", "mode": "curiosity",  "title": base, "seo_keyword_included": keyword in base},
+            {"ref": "v3", "mode": "benefit",    "title": base, "seo_keyword_included": keyword in base},
+        ]
     # 썸네일은 step10/ 에 저장 (대시보드 /api/artifacts/{ch}/{run}/step10/ 경로와 일치)
     step10_dir = run_dir / "step10"
     step10_dir.mkdir(parents=True, exist_ok=True)

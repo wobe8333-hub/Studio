@@ -1,16 +1,22 @@
 """
 STEP 08 — 이미지 생성기
-Gemini 이미지 생성 시도 → 실패 시 ffmpeg/최소PNG 플레이스홀더 폴백
+google.genai (신버전 SDK) 기반 이미지 생성 → 실패 시 ffmpeg/최소PNG 플레이스홀더 폴백
 """
-import time, base64, struct, zlib, subprocess, shutil
-from loguru import logger
+import shutil
+import struct
+import subprocess
+import time
+import zlib
 from pathlib import Path
-from tenacity import retry, stop_after_attempt, wait_exponential
-import google.generativeai as genai
-from src.core.config import GEMINI_API_KEY, GEMINI_IMAGE_MODEL
-from src.quota.gemini_quota import throttle_if_needed, record_request, record_image
 
-genai.configure(api_key=GEMINI_API_KEY)
+from google import genai
+from google.genai import types
+from loguru import logger
+from tenacity import retry, stop_after_attempt, wait_exponential
+
+from src.core.config import GEMINI_API_KEY, GEMINI_IMAGE_MODEL
+from src.quota.gemini_quota import record_image, record_request, throttle_if_needed
+
 IMAGE_PROMPT_TEMPLATE = """Create a clean, educational animation frame for a Korean YouTube knowledge video.
 Description: {description}
 Style: Flat design, educational infographic style
@@ -25,20 +31,25 @@ BATCH_INTERVAL_SEC = 2
 _image_gen_supported: bool | None = None
 
 
+def _make_client() -> genai.Client:
+    return genai.Client(api_key=GEMINI_API_KEY)
+
+
 def _check_image_generation_support() -> bool:
     global _image_gen_supported
     if _image_gen_supported is not None:
         return _image_gen_supported
     try:
-        model = genai.GenerativeModel(GEMINI_IMAGE_MODEL)
-        resp = model.generate_content(
-            "A simple blue circle on dark background",
-            generation_config=genai.GenerationConfig(
-                response_mime_type="image/png"
+        client = _make_client()
+        response = client.models.generate_content(
+            model=GEMINI_IMAGE_MODEL,
+            contents="A simple blue circle on dark background",
+            config=types.GenerateContentConfig(
+                response_modalities=["IMAGE"],
             ),
         )
-        for part in resp.parts:
-            if hasattr(part, "inline_data") and part.inline_data:
+        for part in response.candidates[0].content.parts:
+            if part.inline_data and part.inline_data.mime_type.startswith("image/"):
                 _image_gen_supported = True
                 logger.info(f"[STEP08] 이미지 생성 지원 확인: {GEMINI_IMAGE_MODEL}")
                 return True
@@ -95,15 +106,18 @@ def generate_single_image(description: str, output_path: Path) -> bool:
         return _generate_placeholder(description, output_path)
     throttle_if_needed()
     record_request()
-    model = genai.GenerativeModel(GEMINI_IMAGE_MODEL)
-    response = model.generate_content(
-        IMAGE_PROMPT_TEMPLATE.format(description=description),
-        generation_config=genai.GenerationConfig(response_mime_type="image/png"),
+    client = _make_client()
+    response = client.models.generate_content(
+        model=GEMINI_IMAGE_MODEL,
+        contents=IMAGE_PROMPT_TEMPLATE.format(description=description),
+        config=types.GenerateContentConfig(
+            response_modalities=["IMAGE"],
+        ),
     )
-    for part in response.parts:
-        if hasattr(part, "inline_data") and part.inline_data:
+    for part in response.candidates[0].content.parts:
+        if part.inline_data and part.inline_data.mime_type.startswith("image/"):
             output_path.parent.mkdir(parents=True, exist_ok=True)
-            output_path.write_bytes(base64.b64decode(part.inline_data.data))
+            output_path.write_bytes(part.inline_data.data)
             return True
     return _generate_placeholder(description, output_path)
 
@@ -129,4 +143,3 @@ def generate_batch(sections: list, output_dir: Path) -> dict:
                 time.sleep(BATCH_INTERVAL_SEC)
             batch = []
     return results
-
