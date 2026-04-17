@@ -95,31 +95,26 @@ def _generate_sd_image(
 
 
 def _generate_gemini_image(prompt: str, output_path: Path) -> bool:
-    """Gemini 이미지 생성 폴백."""
+    """Gemini 이미지 생성 폴백 (google.genai 신버전 SDK)."""
     try:
-        import base64
-
-        import google.generativeai as genai
+        from google import genai
+        from google.genai import types
 
         from src.core.config import GEMINI_API_KEY, GEMINI_IMAGE_MODEL
 
-        genai.configure(api_key=GEMINI_API_KEY)
-        model = genai.GenerativeModel(GEMINI_IMAGE_MODEL)
-
-        # Gemini 이미지 생성
-        resp = model.generate_content(
-            [f"Generate a cute anime-style illustration: {prompt}"],
-            generation_config=genai.GenerationConfig(
-                response_mime_type="image/png",
+        client = genai.Client(api_key=GEMINI_API_KEY)
+        response = client.models.generate_content(
+            model=GEMINI_IMAGE_MODEL,
+            contents=f"Generate a cute anime-style illustration: {prompt}",
+            config=types.GenerateContentConfig(
+                response_modalities=["IMAGE"],
             ),
         )
 
         output_path.parent.mkdir(parents=True, exist_ok=True)
-        # 이미지 데이터 저장
-        for part in resp.parts:
-            if hasattr(part, "inline_data") and part.inline_data:
-                image_data = base64.b64decode(part.inline_data.data)
-                output_path.write_bytes(image_data)
+        for part in response.candidates[0].content.parts:
+            if part.inline_data and part.inline_data.mime_type.startswith("image/"):
+                output_path.write_bytes(part.inline_data.data)
                 logger.debug(f"[SD-Gemini] 이미지 생성 완료: {output_path.name}")
                 return True
 

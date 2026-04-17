@@ -1,6 +1,7 @@
-from pathlib import Path
-from dotenv import load_dotenv
 import os
+from pathlib import Path
+
+from dotenv import load_dotenv
 
 load_dotenv(override=True)
 
@@ -36,8 +37,8 @@ USD_TO_KRW = int(os.getenv("USD_TO_KRW", "1350"))
 
 # ─── 로그 / 모델 설정 ────────────────────────────────────────────
 LOG_LEVEL         = os.getenv("KAS_LOG_LEVEL", "INFO")
-GEMINI_TEXT_MODEL = os.getenv("GEMINI_TEXT_MODEL", "gemini-2.5-flash")
-GEMINI_IMAGE_MODEL = os.getenv("GEMINI_IMAGE_MODEL", "gemini-2.0-flash-preview-image-generation")
+GEMINI_TEXT_MODEL = os.getenv("GEMINI_TEXT_MODEL", "gemini-2.5-pro")
+GEMINI_IMAGE_MODEL = os.getenv("GEMINI_IMAGE_MODEL", "gemini-3-pro-image-preview")
 MANIM_QUALITY     = os.getenv("MANIM_QUALITY", "l")
 FFMPEG_PATH       = os.getenv("FFMPEG_PATH", "ffmpeg")
 GTTS_LANG         = os.getenv("GTTS_LANG", "ko")
