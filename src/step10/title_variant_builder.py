@@ -38,10 +38,11 @@ def _generate_titles(channel_id: str, base_title: str, keyword: str) -> list:
     # 마크다운 코드 펜스 제거
     if raw.startswith("```"):
         raw = "\n".join(raw.split("\n")[1:-1])
-    # Gemini가 설명 텍스트를 앞뒤에 붙이는 경우 JSON 배열만 추출
-    m = re.search(r'\[.+?\]', raw, re.DOTALL)
-    if m:
-        raw = m.group(0)
+    # Gemini가 설명 텍스트를 앞뒤에 붙이는 경우 — 첫 [ ~ 마지막 ] 추출
+    start = raw.find('[')
+    end = raw.rfind(']')
+    if start != -1 and end > start:
+        raw = raw[start:end + 1]
     variants = json.loads(raw)
     for v in variants: v["seo_keyword_included"] = keyword in v.get("title","")
     return variants
