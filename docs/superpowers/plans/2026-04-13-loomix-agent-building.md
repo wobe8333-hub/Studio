@@ -1,0 +1,1114 @@
+# Loomix Agent Building Implementation Plan
+
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+
+**Goal:** 37개 AI 에이전트를 픽셀 아트 + 층별 건물 탑다운 뷰로 시각화하는 단독 HTML 파일 생성
+
+**Architecture:** 순수 HTML/CSS/Vanilla JS 단일 파일. CSS 커스텀 프로퍼티로 라이트/다크 테마 분기. `data-theme` 속성 + localStorage로 테마 유지. `@media (max-width: 768px)`로 모바일 대응.
+
+**Tech Stack:** HTML5, CSS3 (Custom Properties), Vanilla JS (ES6+), SVG 인라인 픽셀 아트
+
+---
+
+## 파일 구조
+
+```
+docs/
+└── loomix-agents.html   ← 유일한 산출물 (생성)
+```
+
+---
+
+### Task 1: 파일 뼈대 + CSS 테마 변수 시스템
+
+**Files:**
+- Create: `docs/loomix-agents.html`
+
+- [ ] **Step 1: 파일 생성 — HTML 뼈대 + CSS 변수 블록**
+
+```html
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Loomix HQ — Agent Building</title>
+<style>
+/* ── 테마 변수 ── */
+:root {
+  --bg:           #F0F4FF;
+  --surface:      #ffffff;
+  --surface2:     #f8fafc;
+  --border:       #e2e8f0;
+  --border2:      #f1f5f9;
+  --text:         #1e293b;
+  --text-muted:   #64748b;
+  --text-faint:   #94a3b8;
+  --penthouse-bg: #FEF3C7;
+  --penthouse-bdr:#F59E0B;
+  --ground-bg:    linear-gradient(to bottom,#f1f5f9,#e2e8f0);
+  --zone-bg:      #f8fafc;
+  --room-bg:      #fafbff;
+  --shadow-sm:    0 1px 4px rgba(0,0,0,0.06);
+  --shadow-md:    0 2px 12px rgba(0,0,0,0.06);
+  --shadow-bld:   drop-shadow(0 6px 20px rgba(0,0,0,0.12));
+}
+[data-theme="dark"] {
+  --bg:           #060a0f;
+  --surface:      #0f172a;
+  --surface2:     #060a0f;
+  --border:       #1e293b;
+  --border2:      #1a2234;
+  --text:         #e2e8f0;
+  --text-muted:   #64748b;
+  --text-faint:   #475569;
+  --penthouse-bg: #1a1200;
+  --penthouse-bdr:#D97706;
+  --ground-bg:    linear-gradient(to bottom,#0f172a,#060a0f);
+  --zone-bg:      #0a0f1a;
+  --room-bg:      #050810;
+  --shadow-sm:    0 1px 4px rgba(0,0,0,0.3);
+  --shadow-md:    0 2px 12px rgba(0,0,0,0.4);
+  --shadow-bld:   drop-shadow(0 6px 20px rgba(0,0,0,0.5));
+}
+
+/* ── 기본 리셋 ── */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Courier New', monospace;
+  padding: 24px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  transition: background 0.2s, color 0.2s;
+}
+</style>
+</head>
+<body>
+  <!-- 이후 Task에서 채워 넣음 -->
+  <p style="color:var(--text-muted)">scaffold ok</p>
+</body>
+</html>
+```
+
+- [ ] **Step 2: 브라우저에서 열어 확인**
+
+`docs/loomix-agents.html`을 브라우저에서 직접 열기.  
+기대: 연파랑 배경에 "scaffold ok" 텍스트가 보임.
+
+- [ ] **Step 3: 커밋**
+
+```bash
+git add docs/loomix-agents.html
+git commit -m "feat: loomix-agents HTML 뼈대 + 테마 변수 시스템"
+```
+
+---
+
+### Task 2: 다크 모드 토글 버튼
+
+**Files:**
+- Modify: `docs/loomix-agents.html`
+
+- [ ] **Step 1: `<body>` 최상단에 토글 버튼 HTML 추가**
+
+`<p style="...">scaffold ok</p>` 를 아래로 교체:
+
+```html
+<!-- 다크 모드 토글 -->
+<div style="position:fixed;top:16px;right:16px;z-index:100;">
+  <button id="theme-toggle"
+    style="background:var(--surface);border:1px solid var(--border);
+           border-radius:20px;padding:6px 14px;cursor:pointer;
+           font-family:'Courier New',monospace;font-size:12px;
+           color:var(--text-muted);box-shadow:var(--shadow-sm);
+           transition:all 0.2s;">
+    ☾ dark
+  </button>
+</div>
+```
+
+- [ ] **Step 2: `</body>` 직전에 테마 스크립트 추가**
+
+```html
+<script>
+(function() {
+  // localStorage 복원 → 없으면 시스템 선호도
+  const saved = localStorage.getItem('loomix-theme');
+  const sys = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  const initial = saved || sys;
+  document.documentElement.dataset.theme = initial;
+  document.getElementById('theme-toggle').textContent =
+    initial === 'dark' ? '☀ light' : '☾ dark';
+})();
+
+document.getElementById('theme-toggle').addEventListener('click', function() {
+  const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+  document.documentElement.dataset.theme = next;
+  localStorage.setItem('loomix-theme', next);
+  this.textContent = next === 'dark' ? '☀ light' : '☾ dark';
+});
+</script>
+```
+
+- [ ] **Step 3: 브라우저 확인**
+
+기대:
+- 우측 상단에 `☾ dark` 버튼 보임
+- 클릭 시 배경이 `#060a0f` 다크로 전환되고 버튼 텍스트가 `☀ light`로 변경됨
+- 새로고침해도 마지막 선택한 테마 유지됨
+
+- [ ] **Step 4: 커밋**
+
+```bash
+git add docs/loomix-agents.html
+git commit -m "feat: 다크 모드 토글 + localStorage 유지"
+```
+
+---
+
+### Task 3: 레이아웃 + 헤더 영역
+
+**Files:**
+- Modify: `docs/loomix-agents.html`
+
+- [ ] **Step 1: `<style>` 블록에 레이아웃 CSS 추가** (기존 `body` 스타일 다음에 이어서)
+
+```css
+/* ── 안내 배너 ── */
+.guide {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 20px;
+  font-size: 11px;
+  color: var(--text-muted);
+  text-align: center;
+  max-width: 900px;
+  width: 100%;
+  box-shadow: var(--shadow-sm);
+}
+.guide span { color: #D97706; font-weight: 700; }
+
+/* ── 계층 범례 ── */
+.hierarchy-legend {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  flex-wrap: wrap;
+  max-width: 900px;
+  width: 100%;
+}
+.h-badge {
+  display: flex; align-items: center; gap: 6px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 4px 12px;
+  font-size: 9px;
+  color: var(--text-muted);
+  box-shadow: var(--shadow-sm);
+  white-space: nowrap;
+}
+.h-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+/* ── 메인 래퍼 ── */
+.hq-wrapper {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  max-width: 920px;
+  width: 100%;
+}
+```
+
+- [ ] **Step 2: `<body>` 안 토글 버튼 다음에 HTML 추가**
+
+```html
+<div class="guide">
+  <span>✦ LOOMIX HQ</span> — 층 클릭 → 탑다운 평면도 · 책상 클릭 → 에이전트 스탯
+</div>
+
+<div class="hierarchy-legend">
+  <div class="h-badge"><div class="h-dot" style="background:#D97706;"></div>PH · 경영진</div>
+  <div class="h-badge"><div class="h-dot" style="background:#8B5CF6;"></div>9F · 전략감독</div>
+  <div class="h-badge"><div class="h-dot" style="background:#EF4444;"></div>8F · 품질관리</div>
+  <div class="h-badge"><div class="h-dot" style="background:#0891B2;"></div>7F · 핵심기술</div>
+  <div class="h-badge"><div class="h-dot" style="background:#6366F1;"></div>6F · 기술운영</div>
+  <div class="h-badge"><div class="h-dot" style="background:#0D9488;"></div>5F · 데이터</div>
+  <div class="h-badge"><div class="h-dot" style="background:#F59E0B;"></div>4F · 크리에이티브</div>
+  <div class="h-badge"><div class="h-dot" style="background:#EC4899;"></div>3F · 성장</div>
+  <div class="h-badge"><div class="h-dot" style="background:#22C55E;"></div>2F · 영업</div>
+  <div class="h-badge"><div class="h-dot" style="background:#16A34A;"></div>1F · 재무</div>
+</div>
+
+<div class="hq-wrapper">
+  <!-- Task 4: 건물 (왼쪽) -->
+  <!-- Task 6: 상세 패널 (오른쪽) -->
+</div>
+```
+
+- [ ] **Step 3: 브라우저 확인**
+
+기대: 안내 배너 + 10개 컬러 배지 범례가 가운데 정렬로 표시됨.
+
+- [ ] **Step 4: 커밋**
+
+```bash
+git add docs/loomix-agents.html
+git commit -m "feat: 레이아웃 + 계층 범례 헤더"
+```
+
+---
+
+### Task 4: 건물 컴포넌트 CSS + HTML
+
+**Files:**
+- Modify: `docs/loomix-agents.html`
+
+- [ ] **Step 1: `<style>` 블록에 건물 CSS 추가**
+
+```css
+/* ── 빌딩 컬럼 ── */
+.building-col { flex-shrink: 0; }
+.building-title {
+  text-align: center; font-size: 10px; color: #D97706;
+  letter-spacing: 3px; margin-bottom: 8px; font-weight: 700;
+}
+.building { width: 340px; filter: var(--shadow-bld); }
+
+/* 펜트하우스 */
+.penthouse {
+  background: var(--penthouse-bg);
+  border: 2px solid var(--penthouse-bdr);
+  border-bottom: none;
+  border-radius: 10px 10px 0 0;
+  overflow: hidden;
+}
+.penthouse-tag {
+  background: #F59E0B; color: #fff;
+  font-size: 8px; font-weight: 700;
+  letter-spacing: 2px; padding: 4px 12px; text-align: center;
+}
+
+/* 구역 구분선 */
+.zone-divider {
+  background: var(--zone-bg);
+  border-left: 2px solid var(--border);
+  border-right: 2px solid var(--border);
+  padding: 4px 10px 4px 40px;
+  font-size: 8px; color: var(--text-faint);
+  letter-spacing: 1.5px; text-transform: uppercase;
+  border-top: 1px dashed var(--border);
+  display: flex; align-items: center; gap: 8px;
+}
+.zone-line { flex: 1; height: 1px; background: linear-gradient(to right, var(--border), transparent); }
+
+/* 층 카드 */
+.floor {
+  display: flex; align-items: stretch;
+  border-left: 2px solid var(--border);
+  border-right: 2px solid var(--border);
+  border-bottom: 1px solid var(--border2);
+  cursor: pointer; background: var(--surface);
+  position: relative; overflow: hidden;
+  transition: background 0.15s;
+}
+.floor:hover { background: var(--surface2); }
+.floor.active {
+  border-left-color: var(--dc);
+  border-right-color: var(--dc);
+  background: color-mix(in srgb, var(--dc) 6%, var(--surface));
+}
+.floor.active .floor-label { color: var(--dc); font-weight: 700; }
+.floor.active::before {
+  content: ''; position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 3px; background: var(--dc);
+}
+.floor.penthouse-floor { background: var(--penthouse-bg); }
+.floor.penthouse-floor.active { background: color-mix(in srgb, #F59E0B 10%, var(--penthouse-bg)); }
+
+/* 층 번호 영역 */
+.floor-num {
+  width: 36px;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  background: var(--surface2); border-right: 1px solid var(--border2);
+  flex-shrink: 0; gap: 3px; padding: 6px 0;
+}
+.floor.penthouse-floor .floor-num { background: color-mix(in srgb, #F59E0B 10%, var(--surface)); }
+.fnum { font-size: 8px; color: var(--text-faint); font-weight: 700; }
+.fdot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--border); transition: all 0.2s;
+}
+.floor.active .fdot { background: var(--dc); box-shadow: 0 0 5px var(--dc); }
+
+/* 층 본문 */
+.floor-body {
+  flex: 1; padding: 7px 10px;
+  display: flex; align-items: center; gap: 10px;
+  min-height: 50px;
+}
+.floor-icon { font-size: 16px; flex-shrink: 0; }
+.floor-info { flex: 1; min-width: 0; }
+.floor-label { font-size: 10px; font-weight: 600; color: var(--text); transition: color 0.2s; }
+.floor-desc { font-size: 8px; color: var(--text-faint); margin-top: 2px; }
+
+/* 미니맵 */
+.floor-minimap { display: flex; gap: 2px; flex-shrink: 0; }
+.mini-desk {
+  width: 16px; height: 16px; border-radius: 2px;
+  border: 1px solid var(--border); background: var(--surface2);
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s;
+}
+.floor.active .mini-desk { border-color: var(--dc) !important; }
+
+/* 건물 바닥 */
+.building-ground {
+  background: var(--ground-bg);
+  border: 2px solid var(--border);
+  border-top: 2px solid color-mix(in srgb, #F59E0B 30%, var(--border));
+  border-radius: 0 0 8px 8px;
+  padding: 7px 12px; text-align: center;
+  font-size: 8px; color: var(--text-faint);
+  letter-spacing: 1px; font-weight: 700;
+}
+```
+
+- [ ] **Step 2: `.hq-wrapper` 안에 건물 HTML 삽입** (주석 `<!-- Task 4: 건물 -->` 교체)
+
+```html
+<div class="building-col">
+  <div class="building-title">✦ LOOMIX HQ ✦</div>
+  <div class="building">
+    <div class="penthouse">
+      <div class="penthouse-tag">★ PENTHOUSE — EXECUTIVE OFFICE</div>
+      <div class="floor penthouse-floor" id="floor-exec" style="--dc:#D97706" onclick="selectFloor('exec')">
+        <div class="floor-num"><div class="fnum">PH</div><div class="fdot"></div></div>
+        <div class="floor-body">
+          <div class="floor-icon">👔</div>
+          <div class="floor-info">
+            <div class="floor-label">Executive Office</div>
+            <div class="floor-desc">5명 · CEO/CTO/Legal/Research/Compliance</div>
+          </div>
+          <div class="floor-minimap" id="mini-exec"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="zone-divider"><span>전략 감독층</span><div class="zone-line"></div></div>
+
+    <div class="floor" id="floor-meta" style="--dc:#8B5CF6" onclick="selectFloor('meta')">
+      <div class="floor-num"><div class="fnum">9F</div><div class="fdot"></div></div>
+      <div class="floor-body">
+        <div class="floor-icon">⭐</div>
+        <div class="floor-info">
+          <div class="floor-label">Meta Division</div>
+          <div class="floor-desc">3명 (Virtual) · Eval/Router/Debate</div>
+        </div>
+        <div style="margin-left:auto;flex-shrink:0;">
+          <span style="background:#EDE9FE;color:#5B21B6;font-size:7px;padding:2px 6px;border-radius:3px;font-weight:700;">VIRTUAL</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="zone-divider"><span>품질 · 핵심기술</span><div class="zone-line"></div></div>
+
+    <div class="floor" id="floor-qa" style="--dc:#EF4444" onclick="selectFloor('qa')">
+      <div class="floor-num"><div class="fnum">8F</div><div class="fdot"></div></div>
+      <div class="floor-body">
+        <div class="floor-icon">✅</div>
+        <div class="floor-info">
+          <div class="floor-label">Quality Assurance</div>
+          <div class="floor-desc">4명 · QA/Perf/UX/Security</div>
+        </div>
+        <div class="floor-minimap" id="mini-qa"></div>
+      </div>
+    </div>
+
+    <div class="floor" id="floor-eng" style="--dc:#0891B2" onclick="selectFloor('eng')">
+      <div class="floor-num"><div class="fnum">7F</div><div class="fdot"></div></div>
+      <div class="floor-body">
+        <div class="floor-icon">💻</div>
+        <div class="floor-info">
+          <div class="floor-label">Engineering</div>
+          <div class="floor-desc">6명 · DB/Backend/Frontend/UI/MLOps/Media</div>
+        </div>
+        <div class="floor-minimap" id="mini-eng"></div>
+      </div>
+    </div>
+
+    <div class="zone-divider"><span>운영 · 데이터</span><div class="zone-line"></div></div>
+
+    <div class="floor" id="floor-ops" style="--dc:#6366F1" onclick="selectFloor('ops')">
+      <div class="floor-num"><div class="fnum">6F</div><div class="fdot"></div></div>
+      <div class="floor-body">
+        <div class="floor-icon">⚙️</div>
+        <div class="floor-info">
+          <div class="floor-label">Platform Operations</div>
+          <div class="floor-desc">6명 · DevOps/SRE/Refactor/Debug/Release/Doc</div>
+        </div>
+        <div class="floor-minimap" id="mini-ops"></div>
+      </div>
+    </div>
+
+    <div class="floor" id="floor-data" style="--dc:#0D9488" onclick="selectFloor('data')">
+      <div class="floor-num"><div class="fnum">5F</div><div class="fdot"></div></div>
+      <div class="floor-body">
+        <div class="floor-icon">📊</div>
+        <div class="floor-info">
+          <div class="floor-label">Data Intelligence</div>
+          <div class="floor-desc">3명 · Analyst/Engineer/Prompt</div>
+        </div>
+        <div class="floor-minimap" id="mini-data"></div>
+      </div>
+    </div>
+
+    <div class="zone-divider"><span>비즈니스 · 크리에이티브</span><div class="zone-line"></div></div>
+
+    <div class="floor" id="floor-creative" style="--dc:#F59E0B" onclick="selectFloor('creative')">
+      <div class="floor-num"><div class="fnum">4F</div><div class="fdot"></div></div>
+      <div class="floor-body">
+        <div class="floor-icon">🎬</div>
+        <div class="floor-info">
+          <div class="floor-label">Creative Studio</div>
+          <div class="floor-desc">2명 · ContentDir/RevenueStrat</div>
+        </div>
+        <div class="floor-minimap" id="mini-creative"></div>
+      </div>
+    </div>
+
+    <div class="floor" id="floor-growth" style="--dc:#EC4899" onclick="selectFloor('growth')">
+      <div class="floor-num"><div class="fnum">3F</div><div class="fdot"></div></div>
+      <div class="floor-body">
+        <div class="floor-icon">📣</div>
+        <div class="floor-info">
+          <div class="floor-label">Growth & Brand</div>
+          <div class="floor-desc">4명 · Marketing/CS/Community/Moderator</div>
+        </div>
+        <div class="floor-minimap" id="mini-growth"></div>
+      </div>
+    </div>
+
+    <div class="floor" id="floor-sales" style="--dc:#22C55E" onclick="selectFloor('sales')">
+      <div class="floor-num"><div class="fnum">2F</div><div class="fdot"></div></div>
+      <div class="floor-body">
+        <div class="floor-icon">💼</div>
+        <div class="floor-info">
+          <div class="floor-label">Sales & Delivery</div>
+          <div class="floor-desc">3명 · Sales/PM/Partnerships</div>
+        </div>
+        <div class="floor-minimap" id="mini-sales"></div>
+      </div>
+    </div>
+
+    <div class="zone-divider"><span>지원 부서</span><div class="zone-line"></div></div>
+
+    <div class="floor" id="floor-finance" style="--dc:#16A34A" onclick="selectFloor('finance')">
+      <div class="floor-num"><div class="fnum">1F</div><div class="fdot"></div></div>
+      <div class="floor-body">
+        <div class="floor-icon">💰</div>
+        <div class="floor-info">
+          <div class="floor-label">Finance Operations</div>
+          <div class="floor-desc">1명 · FinanceManager ($50 한도)</div>
+        </div>
+        <div class="floor-minimap" id="mini-finance"></div>
+      </div>
+    </div>
+
+    <div class="building-ground">B1 · INFRASTRUCTURE / SERVER / NETWORK</div>
+  </div>
+</div>
+```
+
+- [ ] **Step 3: 브라우저 확인**
+
+기대: 왼쪽에 건물이 렌더됨. PH 펜트하우스 노란 배경, 구역 구분선 4개, 10개 층 카드. 다크 모드 토글 시 배경/카드 색상 모두 전환됨.
+
+- [ ] **Step 4: 커밋**
+
+```bash
+git add docs/loomix-agents.html
+git commit -m "feat: 건물 컴포넌트 HTML/CSS (PH~1F + 구역 구분선)"
+```
+
+---
+
+### Task 5: 상세 패널 CSS
+
+**Files:**
+- Modify: `docs/loomix-agents.html`
+
+- [ ] **Step 1: `<style>`에 상세 패널 CSS 추가**
+
+```css
+/* ── 상세 패널 ── */
+.detail-panel {
+  flex: 1;
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  min-height: 580px;
+  box-shadow: var(--shadow-md);
+}
+.detail-header {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border2);
+  display: flex; align-items: center; gap: 10px;
+}
+.floor-badge {
+  font-size: 9px; padding: 3px 8px;
+  border-radius: 4px; font-weight: 700; letter-spacing: 1px;
+}
+
+/* 탑다운 평면도 */
+.room-view {
+  padding: 14px;
+  background: var(--room-bg);
+  border-bottom: 1px solid var(--border2);
+}
+.room-label {
+  font-size: 8px; color: var(--text-faint);
+  letter-spacing: 2px; margin-bottom: 10px;
+  text-align: center; text-transform: uppercase;
+}
+.room-grid { display: grid; gap: 8px; justify-content: center; }
+
+/* 책상 (탑다운) */
+.desk-topdown {
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  cursor: pointer; padding: 8px 6px;
+  border-radius: 8px; border: 1.5px solid var(--border);
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+  transition: all 0.15s;
+}
+.desk-topdown:hover {
+  border-color: var(--dc);
+  background: color-mix(in srgb, var(--dc) 5%, var(--surface));
+  transform: translateY(-1px);
+}
+.desk-topdown.selected {
+  border-color: var(--dc);
+  background: color-mix(in srgb, var(--dc) 8%, var(--surface));
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--dc) 20%, transparent);
+}
+.desk-draw { width: 44px; height: 30px; position: relative; }
+.desk-surface {
+  width: 44px; height: 22px; border-radius: 4px;
+  position: absolute; bottom: 0; border: 1px solid;
+}
+.desk-monitor {
+  width: 14px; height: 10px; background: #1e293b;
+  border-radius: 2px; position: absolute;
+  top: 1px; left: 50%; transform: translateX(-50%);
+}
+.desk-monitor::after {
+  content: ''; display: block;
+  width: 8px; height: 5px;
+  background: #3b82f633; border-radius: 1px; margin: 1.5px auto 0;
+}
+.char-head {
+  width: 18px; height: 18px; border-radius: 50%;
+  position: absolute; top: -9px;
+  left: 50%; transform: translateX(-50%);
+  display: flex; align-items: center; justify-content: center;
+  border: 2px solid var(--surface);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+.char-name-sm {
+  font-size: 8px; color: var(--text-muted);
+  text-align: center; line-height: 1.3; font-weight: 600;
+}
+.model-badge {
+  font-size: 7px; padding: 1px 5px;
+  border-radius: 3px; font-weight: 700; letter-spacing: 0.5px;
+}
+
+/* 에이전트 스탯 */
+.agent-stat { padding: 14px 16px; }
+.stat-section { margin-bottom: 10px; }
+.stat-lbl {
+  font-size: 8px; color: var(--text-faint);
+  letter-spacing: 1.5px; text-transform: uppercase;
+  margin-bottom: 3px; font-weight: 700;
+}
+.stat-val { font-size: 10px; color: var(--text); line-height: 1.6; }
+.ability-list { list-style: none; }
+.ability-list li {
+  font-size: 9px; color: var(--text-muted);
+  padding: 4px 0; border-bottom: 1px solid var(--border2);
+  display: flex; align-items: center; gap: 6px;
+}
+.ability-list li::before { content: "▸"; color: #F59E0B; flex-shrink: 0; }
+.power-bar { height: 6px; background: var(--border); border-radius: 4px; overflow: hidden; margin-top: 5px; }
+.power-fill { height: 100%; border-radius: 4px; }
+.agent-avatar-wrap {
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 14px; padding-bottom: 12px;
+  border-bottom: 1px solid var(--border2);
+}
+.agent-avatar {
+  width: 36px; height: 36px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  border: 2px solid var(--surface);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+.empty-state {
+  padding: 50px 20px; text-align: center;
+  color: var(--text-faint); font-size: 12px; line-height: 2.5;
+}
+```
+
+- [ ] **Step 2: `.hq-wrapper` 안 주석 `<!-- Task 6: 상세 패널 -->` 교체**
+
+```html
+<div class="detail-panel" id="detail-panel">
+  <div class="empty-state">🏢<br>왼쪽 건물에서<br>층을 선택하세요</div>
+</div>
+```
+
+- [ ] **Step 3: 브라우저 확인**
+
+기대: 오른쪽에 흰색 패널이 나타나고 "🏢 층을 선택하세요" 표시됨. 다크 모드 시 패널 배경도 어두워짐.
+
+- [ ] **Step 4: 커밋**
+
+```bash
+git add docs/loomix-agents.html
+git commit -m "feat: 상세 패널 CSS + 빈 상태 렌더"
+```
+
+---
+
+### Task 6: 픽셀 아트 캐릭터 헬퍼 + 에이전트 데이터
+
+**Files:**
+- Modify: `docs/loomix-agents.html`
+
+- [ ] **Step 1: `</body>` 직전 스크립트 블록에 헬퍼 함수 + 전체 DEPTS 데이터 추가**
+
+테마 스크립트 바로 **앞에** `<script>` 블록을 별도로 추가:
+
+```html
+<script>
+/* ── 픽셀 아트 헬퍼 ── */
+const MC  = { opus:'#7C3AED', sonnet:'#F59E0B', haiku:'#22C55E' };
+const MBG = { opus:'#EDE9FE', sonnet:'#FEF3C7', haiku:'#DCFCE7' };
+const MTC = { opus:'#5B21B6', sonnet:'#92400E', haiku:'#166534' };
+const ML  = { opus:'OPS', sonnet:'SNT', haiku:'HKU' };
+const MF  = { opus:'claude-opus-4', sonnet:'claude-sonnet-4-5', haiku:'claude-haiku-4-5' };
+
+// size: SVG width/height (px)
+function px(model, size = 14) {
+  const c = MC[model];
+  return `<svg width="${size}" height="${size}" viewBox="0 0 7 7"
+    xmlns="http://www.w3.org/2000/svg" style="image-rendering:pixelated;display:block;">
+    <rect x="1" y="0" width="5" height="1" fill="${c}"/>
+    <rect x="1" y="1" width="5" height="3" fill="${c}cc"/>
+    <rect x="2" y="2" width="1" height="1" fill="#1e293b"/>
+    <rect x="4" y="2" width="1" height="1" fill="#1e293b"/>
+    <rect x="2" y="4" width="3" height="1" fill="${c}66"/>
+    <rect x="1" y="5" width="5" height="2" fill="${c}"/>
+  </svg>`;
+}
+
+// 미니맵용 (10×10 픽셀 — 책상 위 작은 머리)
+function pxMini(model) {
+  const c = MC[model];
+  return `<svg width="10" height="10" viewBox="0 0 7 7"
+    xmlns="http://www.w3.org/2000/svg" style="image-rendering:pixelated;display:block;">
+    <rect x="1" y="1" width="5" height="4" fill="${c}55"/>
+    <rect x="2" y="2" width="1" height="1" fill="${c}"/>
+    <rect x="4" y="2" width="1" height="1" fill="${c}"/>
+  </svg>`;
+}
+
+/* ── 전체 에이전트 데이터 (37명) ── */
+const DEPTS = {
+  exec: { floor:'PH', icon:'👔', label:'Executive Office', color:'#D97706', desc:'5명',
+    members:[
+      {id:'ceo',      name:'CEO',           model:'sonnet', role:'HITL 판단 · 월간 경영보고 · Debate 최종 결정',          abilities:['전략 수립','HITL 승인','팀 편성 지시']},
+      {id:'cto',      name:'CTO',           model:'opus',   role:'기술 조율 · 에이전트 라이프사이클 · ultrathink',         abilities:['아키텍처 설계','에이전트 관리','기술 의사결정']},
+      {id:'legal',    name:'Legal',         model:'haiku',  role:'계약서·NDA·저작권 검토 (read-only)',                    abilities:['계약서 검토','NDA 작성','저작권 감시']},
+      {id:'research', name:'Research',      model:'sonnet', role:'AI 신기술 탐색 · POC (read-only, plan)',               abilities:['AI 트렌드 분석','POC 제안','기술 레이더']},
+      {id:'comply',   name:'Compliance',    model:'sonnet', role:'YouTube 정책·GDPR·Content ID (ultrathink)',            abilities:['정책 감시','GDPR 준수','Content ID 대응']},
+    ]},
+  meta: { floor:'9F', icon:'⭐', label:'Meta Division', color:'#8B5CF6', desc:'3명 (Virtual)',
+    members:[
+      {id:'eval',   name:'Evaluator',    model:'sonnet', role:'Golden test 채점 · LLM-as-judge · eval regression', abilities:['자동 평가','회귀 감지','품질 게이트']},
+      {id:'router', name:'Cost Router',  model:'haiku',  role:'과업 복잡도 → 모델 자동 선택 (Haiku/Sonnet/Opus)',  abilities:['모델 선택','비용 최적화','복잡도 분류']},
+      {id:'debate', name:'Debate Facil', model:'sonnet', role:'3명 병렬 의견 → Constitutional synthesis',          abilities:['의견 수렴','합의 도출','HITL 지원']},
+    ]},
+  qa: { floor:'8F', icon:'✅', label:'Quality Assurance', color:'#EF4444', desc:'4명',
+    members:[
+      {id:'qa',       name:'QA Auditor',   model:'sonnet', role:'OWASP 감사 · 감사팀 결성 (ultrathink)',           abilities:['보안 감사','팀 결성','품질 게이트']},
+      {id:'perf',     name:'Perf Analyst', model:'haiku',  role:'N+1 · 메모리 · 번들 분석 (read-only)',            abilities:['N+1 탐지','메모리 분석','번들 최적화']},
+      {id:'ux',       name:'UX Auditor',   model:'haiku',  role:'WCAG 2.1 AA · UX 감사 (read-only)',               abilities:['접근성 검토','키보드 네비','색상 대비']},
+      {id:'security', name:'Security Eng', model:'sonnet', role:'OAuth · RLS 런타임 (ultrathink)',                  abilities:['OAuth 검토','RLS 감사','취약점 분석']},
+    ]},
+  eng: { floor:'7F', icon:'💻', label:'Engineering', color:'#0891B2', desc:'6명',
+    members:[
+      {id:'db',       name:'DB Architect', model:'opus',   role:'DB 스키마 · RLS · types.ts (ultrathink)',         abilities:['스키마 설계','RLS 정책','타입 동기화']},
+      {id:'backend',  name:'Backend Eng',  model:'sonnet', role:'src/ · 파이프라인 · 테스트 (worktree)',            abilities:['파이프라인 구현','테스트 작성','Step 모듈']},
+      {id:'frontend', name:'Frontend Eng', model:'sonnet', role:'web/ · Next.js · E2E',                            abilities:['Next.js 개발','컴포넌트 설계','E2E 테스트']},
+      {id:'uidesign', name:'UI Designer',  model:'sonnet', role:'globals.css · 디자인 시스템 · 썸네일',             abilities:['디자인 시스템','Tailwind','썸네일 생성']},
+      {id:'mlops',    name:'MLOps Eng',    model:'sonnet', role:'SD XL/LoRA/ElevenLabs/Whisper',                   abilities:['모델 관리','LoRA 파인튜닝','드리프트 감지']},
+      {id:'media',    name:'Media Eng',    model:'sonnet', role:'FFmpeg CRF/preset · EBU R128 · HLS',              abilities:['FFmpeg 파이프라인','오디오 정규화','HLS 인코딩']},
+    ]},
+  ops: { floor:'6F', icon:'⚙️', label:'Platform Operations', color:'#6366F1', desc:'6명',
+    members:[
+      {id:'devops',    name:'DevOps',      model:'sonnet', role:'인프라 · hooks · CLAUDE.md 관리',                 abilities:['인프라 관리','훅 설정','CLAUDE.md 유지']},
+      {id:'sre',       name:'SRE',         model:'sonnet', role:'Sentry 알람 · SLO · 런타임 대응',                 abilities:['SLO 모니터링','알람 대응','장애 분석']},
+      {id:'refactor',  name:'Refactorer',  model:'sonnet', role:'God Module 분해 (worktree)',                      abilities:['코드 분해','의존성 정리','테스트 유지']},
+      {id:'debugger',  name:'Debugger',    model:'sonnet', role:'Step 실패 원인 분석 (read-only)',                  abilities:['Step 분석','오류 추적','수정 방향']},
+      {id:'release',   name:'Release Mgr', model:'haiku',  role:'CHANGELOG · git tag · PR',                       abilities:['CHANGELOG 생성','git tag','PR 생성']},
+      {id:'docwriter', name:'Doc Writer',  model:'haiku',  role:'docs/ ADR·API·온보딩 문서',                       abilities:['ADR 작성','API 문서','온보딩 가이드']},
+    ]},
+  data: { floor:'5F', icon:'📊', label:'Data Intelligence', color:'#0D9488', desc:'3명',
+    members:[
+      {id:'analyst', name:'Data Analyst',  model:'haiku',  role:'Supabase BI · 주간 대시보드',                   abilities:['BI 대시보드','KPI 집계','주간 리포트']},
+      {id:'dataeng', name:'Data Engineer', model:'sonnet', role:'Step05 ETL · Supabase idempotency (worktree)', abilities:['ETL 파이프라인','멱등성 보장','Supabase 연동']},
+      {id:'prompt',  name:'Prompt Eng',    model:'sonnet', role:'Gemini/ElevenLabs 프롬프트 A/B · 토큰 절감',    abilities:['A/B 테스트','토큰 최적화','프롬프트 관리']},
+    ]},
+  creative: { floor:'4F', icon:'🎬', label:'Creative Studio', color:'#F59E0B', desc:'2명',
+    members:[
+      {id:'content', name:'Content Dir',   model:'sonnet', role:'스크립트·썸네일·SEO (read-only)',              abilities:['스크립트 리뷰','썸네일 CTR','SEO 최적화']},
+      {id:'revenue', name:'Revenue Strat', model:'sonnet', role:'수익 주제 선별 · scorer · 포트폴리오',         abilities:['주제 선별','RPM 최적화','포트폴리오 균형']},
+    ]},
+  growth: { floor:'3F', icon:'📣', label:'Growth & Brand', color:'#EC4899', desc:'4명',
+    members:[
+      {id:'mktg',      name:'Marketing',    model:'sonnet', role:'브랜드 성장 · 인바운드 마케팅',              abilities:['브랜드 전략','인바운드 마케팅','캠페인 기획']},
+      {id:'cs',        name:'Customer Sup', model:'haiku',  role:'외주 클라이언트 B2B CS',                    abilities:['B2B 문의','이슈 에스컬레이션','만족도 관리']},
+      {id:'community', name:'Community',    model:'haiku',  role:'7채널 시청자 소통 (read-only)',              abilities:['시청자 소통','피드백 수집','커뮤니티 빌딩']},
+      {id:'moderat',   name:'Moderator',    model:'haiku',  role:'댓글 악플·위기 대응 (read-only)',            abilities:['악플 탐지','위기 대응','정책 집행']},
+    ]},
+  sales: { floor:'2F', icon:'💼', label:'Sales & Delivery', color:'#22C55E', desc:'3명',
+    members:[
+      {id:'sales',   name:'Sales Mgr',    model:'sonnet', role:'리드 · 제안서 · 계약',                       abilities:['리드 발굴','제안서 작성','계약 협상']},
+      {id:'pm',      name:'Project Mgr',  model:'haiku',  role:'수주 프로젝트 딜리버리',                     abilities:['일정 관리','딜리버리','마일스톤 추적']},
+      {id:'partner', name:'Partnerships', model:'sonnet', role:'브랜드 콜라보 · 스폰서십',                   abilities:['브랜드 콜라보','스폰서십','파트너 발굴']},
+    ]},
+  finance: { floor:'1F', icon:'💰', label:'Finance Operations', color:'#16A34A', desc:'1명',
+    members:[
+      {id:'finance', name:'Finance Mgr', model:'haiku', role:'청구서 · P&L · API 비용 (BUDGET_LIMIT_USD=$50)', abilities:['청구서 발행','P&L 관리','API 비용 추적']},
+    ]},
+};
+</script>
+```
+
+- [ ] **Step 2: 브라우저 콘솔 확인**
+
+브라우저 개발자 도구 콘솔에서 실행:
+```js
+Object.values(DEPTS).reduce((sum, d) => sum + d.members.length, 0)
+```
+기대 출력: `37`
+
+- [ ] **Step 3: 커밋**
+
+```bash
+git add docs/loomix-agents.html
+git commit -m "feat: 픽셀 캐릭터 헬퍼 + 37명 에이전트 데이터"
+```
+
+---
+
+### Task 7: 미니맵 초기화 + 인터랙션 로직
+
+**Files:**
+- Modify: `docs/loomix-agents.html`
+
+- [ ] **Step 1: 에이전트 데이터 스크립트 블록 끝 (닫는 `</script>` 직전)에 함수 추가**
+
+```js
+/* ── 미니맵 초기화 ── */
+function initMinimaps() {
+  Object.keys(DEPTS).forEach(key => {
+    const el = document.getElementById('mini-' + key);
+    if (!el) return;
+    const dept = DEPTS[key];
+    el.innerHTML = dept.members.slice(0, 5).map(m =>
+      `<div class="mini-desk" style="border-color:${dept.color}44;background:color-mix(in srgb,${dept.color} 8%,var(--surface));">
+        ${pxMini(m.model)}
+      </div>`
+    ).join('');
+  });
+}
+
+/* ── 층 선택 ── */
+function selectFloor(key) {
+  document.querySelectorAll('.floor').forEach(f => f.classList.remove('active'));
+  document.getElementById('floor-' + key).classList.add('active');
+
+  const dept = DEPTS[key];
+  const cols = Math.min(dept.members.length, 4);
+
+  const desks = dept.members.map(m => `
+    <div class="desk-topdown" id="desk-${m.id}"
+         onclick="selectAgent('${key}','${m.id}')"
+         style="--dc:${dept.color}">
+      <div class="desk-draw">
+        <div class="desk-surface"
+             style="background:color-mix(in srgb,${dept.color} 12%,var(--surface));
+                    border-color:${dept.color}44;"></div>
+        <div class="desk-monitor"></div>
+        <div class="char-head"
+             style="background:${MC[m.model]};box-shadow:0 2px 8px ${MC[m.model]}55;">
+          ${px(m.model, 12)}
+        </div>
+      </div>
+      <div class="char-name-sm">${m.name}</div>
+      <div class="model-badge"
+           style="background:${MBG[m.model]};color:${MTC[m.model]};">${ML[m.model]}</div>
+    </div>`).join('');
+
+  document.getElementById('detail-panel').innerHTML = `
+    <div class="detail-header"
+         style="background:color-mix(in srgb,${dept.color} 6%,var(--surface));
+                border-bottom:1px solid ${dept.color}22;">
+      <span class="floor-badge"
+            style="background:${dept.color}18;color:${dept.color};">${dept.floor}</span>
+      <span style="font-size:13px;font-weight:700;color:var(--text);">${dept.icon} ${dept.label}</span>
+      <span style="margin-left:auto;font-size:9px;color:${dept.color};font-weight:600;">${dept.desc}</span>
+    </div>
+    <div class="room-view">
+      <div class="room-label">▼ top-down floor view ▼</div>
+      <div class="room-grid"
+           style="grid-template-columns:repeat(${cols},1fr);">${desks}</div>
+    </div>
+    <div id="agent-stat" class="agent-stat">
+      <div style="color:var(--text-faint);font-size:11px;text-align:center;padding:14px 0;line-height:2.2;">
+        ↑ 책상을 클릭하면<br>에이전트 정보가 표시됩니다
+      </div>
+    </div>`;
+
+  // 첫 번째 에이전트 자동 선택
+  selectAgent(key, dept.members[0].id);
+}
+
+/* ── 에이전트 선택 ── */
+function selectAgent(deptKey, agentId) {
+  const dept = DEPTS[deptKey];
+  const agent = dept.members.find(a => a.id === agentId);
+  if (!agent) return;
+
+  document.querySelectorAll('.desk-topdown').forEach(d => d.classList.remove('selected'));
+  const desk = document.getElementById('desk-' + agentId);
+  if (desk) desk.classList.add('selected');
+
+  const mc  = MC[agent.model];
+  const pct = agent.model === 'opus' ? 95 : agent.model === 'sonnet' ? 78 : 55;
+
+  document.getElementById('agent-stat').innerHTML = `
+    <div class="agent-avatar-wrap">
+      <div class="agent-avatar"
+           style="background:${mc};box-shadow:0 3px 10px ${mc}44;">
+        ${px(agent.model, 20)}
+      </div>
+      <div>
+        <div style="font-size:12px;font-weight:700;color:var(--text);">${agent.name}</div>
+        <div style="font-size:9px;color:${dept.color};margin-top:2px;font-weight:600;">
+          ${dept.label} · ${dept.floor}
+        </div>
+      </div>
+      <div style="margin-left:auto;">
+        <span style="background:${MBG[agent.model]};color:${MTC[agent.model]};
+                     font-size:9px;padding:3px 8px;border-radius:4px;font-weight:700;">
+          ${MF[agent.model]}
+        </span>
+      </div>
+    </div>
+    <div class="stat-section">
+      <div class="stat-lbl">ROLE</div>
+      <div class="stat-val" style="font-size:9px;color:var(--text-muted);">${agent.role}</div>
+    </div>
+    <div class="stat-section">
+      <div class="stat-lbl">ABILITIES</div>
+      <ul class="ability-list">
+        ${agent.abilities.map(a => `<li>${a}</li>`).join('')}
+      </ul>
+    </div>
+    <div class="stat-section">
+      <div class="stat-lbl">POWER LEVEL</div>
+      <div class="power-bar">
+        <div class="power-fill" style="width:${pct}%;background:${mc};"></div>
+      </div>
+    </div>`;
+}
+
+/* ── 초기화 ── */
+initMinimaps();
+selectFloor('exec');
+```
+
+- [ ] **Step 2: 브라우저 확인**
+
+기대:
+- 페이지 로드 시 Executive(PH) 층이 자동 선택됨
+- 오른쪽 패널에 5명 책상이 탑다운 뷰로 표시됨
+- CEO 자동 선택 → 스탯 패널에 역할/능력치/POWER LEVEL 바 표시됨
+- 다른 층 클릭 시 상세 패널 갱신됨
+- 책상 클릭 시 에이전트 스탯 갱신됨
+
+- [ ] **Step 3: 커밋**
+
+```bash
+git add docs/loomix-agents.html
+git commit -m "feat: 층/에이전트 인터랙션 로직 + 미니맵 초기화"
+```
+
+---
+
+### Task 8: 모바일 반응형 CSS
+
+**Files:**
+- Modify: `docs/loomix-agents.html`
+
+- [ ] **Step 1: `<style>` 블록 맨 끝에 미디어 쿼리 추가**
+
+```css
+/* ── 모바일 반응형 (≤768px) ── */
+@media (max-width: 768px) {
+  body { padding: 12px; }
+
+  /* 헤더 범례: 가로 스크롤 */
+  .hierarchy-legend {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    justify-content: flex-start;
+    padding-bottom: 4px;
+    /* 스크롤바 숨김 */
+    scrollbar-width: none;
+  }
+  .hierarchy-legend::-webkit-scrollbar { display: none; }
+
+  /* 메인 래퍼: 세로 스택 */
+  .hq-wrapper {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  /* 건물: 전체 너비 */
+  .building-col { width: 100%; }
+  .building { width: 100%; }
+
+  /* 층 미니맵: 작은 화면에서 숨김 */
+  .floor-minimap { display: none; }
+
+  /* 상세 패널: 전체 너비, 높이 auto */
+  .detail-panel {
+    width: 100%;
+    min-height: auto;
+  }
+
+  /* 평면도 그리드: 모바일 최대 3열 */
+  .room-grid {
+    grid-template-columns: repeat(3, 1fr) !important;
+  }
+
+  /* 다크 토글 버튼 위치 조정 */
+  #theme-toggle-wrap { top: 8px; right: 8px; }
+
+  /* 에이전트 헤더: 줄바꿈 허용 */
+  .agent-avatar-wrap { flex-wrap: wrap; }
+}
+
+@media (max-width: 400px) {
+  /* 극소형: 2열 그리드 */
+  .room-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+  .building-title { font-size: 9px; }
+}
+```
+
+- [ ] **Step 2: 토글 버튼 div에 id 추가** (Task 2에서 만든 버튼 div를 수정)
+
+```html
+<!-- 기존 -->
+<div style="position:fixed;top:16px;right:16px;z-index:100;">
+
+<!-- 변경 -->
+<div id="theme-toggle-wrap" style="position:fixed;top:16px;right:16px;z-index:100;">
+```
+
+- [ ] **Step 3: 브라우저 개발자 도구 → 모바일 뷰(375px) 확인**
+
+기대:
+- 건물이 전체 너비로 늘어남
+- 상세 패널이 건물 아래에 쌓임
+- 범례 배지가 가로 스크롤됨
+- 평면도 그리드가 3열로 표시됨
+- 미니맵 숨김
+
+- [ ] **Step 4: 커밋**
+
+```bash
+git add docs/loomix-agents.html
+git commit -m "feat: 모바일 반응형 CSS (≤768px, ≤400px)"
+```
+
+---
+
+### Task 9: 최종 확인 + 커밋
+
+**Files:**
+- Modify: `docs/loomix-agents.html`
+
+- [ ] **Step 1: 전체 기능 체크리스트 확인**
+
+브라우저에서 `docs/loomix-agents.html` 직접 열고 아래 항목 확인:
+
+| 항목 | 확인 방법 | 기대 |
+|---|---|---|
+| 10개 층 모두 클릭 가능 | 각 층 클릭 | 상세 패널 갱신 + 좌측 인디케이터 켜짐 |
+| 37명 모두 클릭 가능 | 각 부서에서 모든 책상 클릭 | 스탯 패널 올바른 정보 표시 |
+| 다크 모드 | 토글 버튼 클릭 | 배경/카드/텍스트 모두 전환 |
+| 다크 모드 유지 | 다크 모드 후 새로고침 | 다크 상태 유지됨 |
+| 모바일 레이아웃 | DevTools 375px | 세로 스택, 3열 그리드 |
+| Opus 배지 | Engineering→DB Architect 클릭 | `OPS` 라벤더 배지 + 보라 아바타 |
+| Finance 1명 | 1F Finance 클릭 | 책상 1개만 표시 |
+| Meta Virtual 배지 | 9F Meta 클릭 | `VIRTUAL` 배지 + 3명 책상 |
+
+- [ ] **Step 2: 콘솔 에러 없음 확인**
+
+브라우저 개발자 도구 Console 탭 열기.  
+기대: 에러 없음 (빨간 텍스트 없음)
+
+- [ ] **Step 3: 최종 커밋**
+
+```bash
+git add docs/loomix-agents.html
+git commit -m "feat: Loomix Agent Building 시각화 완성 (라이트/다크·모바일 지원)"
+```
+
+---
+
+## 자체 검토 결과
+
+**스펙 커버리지:**
+- ✅ 픽셀 아트 캐릭터 (7×7 SVG, 모델별 색상) → Task 6 `px()` / `pxMini()`
+- ✅ 건물 탑다운 뷰, 층별 구분 → Task 4
+- ✅ 조직도 계층 기반 층 배치 (PH~1F) → Task 4 HTML
+- ✅ 층 클릭 → 평면도 + 에이전트 → Task 7 `selectFloor()`
+- ✅ 에이전트 클릭 → 스탯 패널 → Task 7 `selectAgent()`
+- ✅ 라이트/다크 모드 토글 + localStorage → Task 2
+- ✅ 모바일 반응형 (≤768px) → Task 8
+- ✅ 37명 전원 데이터 → Task 6 `DEPTS`
+- ✅ 단독 HTML 파일, 외부 의존성 없음 → 전 Task
+
+**타입 일관성:**
+- `px(model, size)` — Task 6 정의, Task 7에서 동일 시그니처 사용 ✅
+- `pxMini(model)` — Task 6 정의, Task 7 `initMinimaps()`에서 사용 ✅
+- `DEPTS[key].color` — Task 4 CSS `--dc` 변수에 주입, Task 7 인라인 스타일에도 동일하게 사용 ✅
+- `MC`, `MBG`, `MTC`, `ML`, `MF` — Task 6 선언, Task 7에서 참조 ✅
