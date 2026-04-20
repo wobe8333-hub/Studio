@@ -6,10 +6,12 @@ python -m src.pipeline {month_number} 으로 실행.
 """
 import concurrent.futures
 import json
+import os
 import sys
 import time
 from datetime import datetime, timedelta
 
+import requests
 import sentry_sdk
 from loguru import logger
 
@@ -41,6 +43,9 @@ from src.step_final import run_intro_outro
 LOGS_DIR = KAS_ROOT / "logs"
 LOGS_DIR.mkdir(parents=True, exist_ok=True)
 
+# Slack 웹훅 URL (설정하면 Sentry 에러가 Slack으로도 즉시 전송됨)
+SLACK_WEBHOOK_URL = os.getenv("SLACK_WEBHOOK_URL", "")
+
 # loguru 파일 핸들러 설정
 logger.add(
     str(LOGS_DIR / "pipeline.log"),
@@ -50,10 +55,6 @@ logger.add(
     retention="30 days",
     level="INFO",
 )
-
-# Sentry 에러 추적 초기화
-if SENTRY_DSN:
-    sentry_sdk.init(dsn=SENTRY_DSN, traces_sample_rate=0.1)
 
 STEP08_TIMEOUT_SEC = 1800  # 30분
 
@@ -81,6 +82,32 @@ def _run_step08_timed(
         # wait=False: 실행 중인 스레드 완료를 기다리지 않고 즉시 반환
         executor.shutdown(wait=False)
 
+
+def _sentry_before_send(event: dict, hint: dict) -> dict:
+    """Sentry 이벤트 발생 시 Slack으로도 즉시 알림을 보낸다.
+    Sentry 전송을 막지 않도록 항상 event를 반환한다.
+    """
+    if SLACK_WEBHOOK_URL:
+        try:
+            exc_values = event.get("exception", {}).get("values", [])
+            error_msg = exc_values[0].get("value", "알 수 없는 오류") if exc_values else "알 수 없는 오류"
+            requests.post(
+                SLACK_WEBHOOK_URL,
+                json={"text": f":red_circle: *KAS 파이프라인 에러*\n```{error_msg}```"},
+                timeout=5,
+            )
+        except Exception:
+            pass  # Slack 전송 실패가 파이프라인을 멈추면 안 된다
+    return event
+
+
+# Sentry 에러 추적 초기화
+if SENTRY_DSN:
+    sentry_sdk.init(
+        dsn=SENTRY_DSN,
+        traces_sample_rate=0.1,
+        before_send=_sentry_before_send,
+    )
 
 # ── 대시보드 실시간 진행 상태 추적 ────────────────────────────────────────────
 _PROGRESS_FILE = KAS_ROOT / "data" / "global" / "step_progress.json"

@@ -291,3 +291,72 @@ class TestStep08Timed:
         from src.pipeline import STEP08_TIMEOUT_SEC
 
         assert STEP08_TIMEOUT_SEC == 1800
+
+
+# ──────────────────────────────────────────────
+# _sentry_before_send 테스트
+# ──────────────────────────────────────────────
+
+class TestSentryBeforeSend:
+    def test_sentry_before_send_posts_to_slack(self):
+        """_sentry_before_send는 SLACK_WEBHOOK_URL이 있으면 Slack에 POST해야 한다"""
+        from unittest.mock import patch, MagicMock
+
+        webhook_url = "https://hooks.slack.com/services/TEST/HOOK"
+        fake_event = {"exception": {"values": [{"value": "테스트 오류 메시지"}]}}
+
+        mock_post = MagicMock(return_value=MagicMock(status_code=200))
+        with patch("src.pipeline.SLACK_WEBHOOK_URL", webhook_url), \
+             patch("src.pipeline.requests.post", mock_post):
+            from src.pipeline import _sentry_before_send
+            result = _sentry_before_send(fake_event, {})
+
+        assert result == fake_event  # Sentry에도 전달
+        mock_post.assert_called_once()
+        call_kwargs = mock_post.call_args
+        assert webhook_url in str(call_kwargs)
+
+    def test_sentry_before_send_no_webhook_skips_slack(self):
+        """SLACK_WEBHOOK_URL이 없으면 Slack 전송 없이 event를 반환해야 한다"""
+        from unittest.mock import patch
+        fake_event = {"exception": {"values": [{"value": "오류"}]}}
+
+        with patch("src.pipeline.SLACK_WEBHOOK_URL", ""), \
+             patch("src.pipeline.requests.post") as mock_post:
+            from src.pipeline import _sentry_before_send
+            result = _sentry_before_send(fake_event, {})
+
+        assert result == fake_event
+        mock_post.assert_not_called()
+
+    def test_sentry_before_send_returns_event_on_slack_failure(self):
+        """Slack POST 실패 시에도 event를 반환해야 한다 (파이프라인 무중단)"""
+        from unittest.mock import patch, MagicMock
+
+        webhook_url = "https://hooks.slack.com/services/TEST/HOOK"
+        fake_event = {"exception": {"values": [{"value": "오류"}]}}
+
+        with patch("src.pipeline.SLACK_WEBHOOK_URL", webhook_url), \
+             patch("src.pipeline.requests.post", side_effect=Exception("네트워크 오류")):
+            from src.pipeline import _sentry_before_send
+            result = _sentry_before_send(fake_event, {})
+
+        # Slack 실패해도 event는 반드시 반환 (Sentry 전송 보장)
+        assert result == fake_event
+
+    def test_sentry_before_send_handles_empty_exception(self):
+        """exception 키가 없는 이벤트도 안전하게 처리해야 한다"""
+        from unittest.mock import patch, MagicMock
+
+        webhook_url = "https://hooks.slack.com/services/TEST/HOOK"
+        fake_event = {}  # exception 없음
+
+        mock_post = MagicMock(return_value=MagicMock(status_code=200))
+        with patch("src.pipeline.SLACK_WEBHOOK_URL", webhook_url), \
+             patch("src.pipeline.requests.post", mock_post):
+            from src.pipeline import _sentry_before_send
+            result = _sentry_before_send(fake_event, {})
+
+        assert result == fake_event
+        # "알 수 없는 오류" 메시지로 POST 호출
+        mock_post.assert_called_once()
