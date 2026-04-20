@@ -1,8 +1,10 @@
 """STEP 13 — 변형 학습·정책 환류 + Phase 승격 판정."""
 import json
+
 from loguru import logger
-from src.core.ssot import read_json, write_json, json_exists, now_iso, get_run_dir
-from src.core.config import MEMORY_DIR, REVENUE_TARGET_PER_CHANNEL, CHANNELS_DIR
+
+from src.core.config import CHANNELS_DIR, MEMORY_DIR, REVENUE_TARGET_PER_CHANNEL
+from src.core.ssot import get_run_dir, json_exists, now_iso, read_json, write_json
 
 # 알고리즘 단계 승격 순서 (낮은 인덱스 → 높은 인덱스로만 승격)
 _STAGE_ORDER = ["PRE-ENTRY", "SEARCH-ONLY", "BROWSE-ENTRY", "ALGORITHM-ACTIVE"]
@@ -105,6 +107,13 @@ def run_step13(channel_id: str, run_id: str) -> dict:
     # Phase 승격 판정 — KPI가 충분한 경우에만 적용
     if stage and (ctr is not None or avp is not None):
         _check_phase_promotion(channel_id, stage)
+
+    # 유지율 데이터 수집 훅 (Plan C-4 B8) — 3개월 축적 후 예측 모델에 활용
+    video_id = read_json(s12 / "publish_receipt.json").get("video_id", "") \
+        if json_exists(s12 / "publish_receipt.json") else ""
+    if video_id:
+        from src.step13.retention_collector import collect_retention
+        collect_retention(channel_id, video_id, kpi)
 
     logger.info(f"[STEP13] {channel_id}/{run_id} 완료 stage={stage}")
     return read_json(s13/"variant_performance.json")
