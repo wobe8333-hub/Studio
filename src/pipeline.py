@@ -4,23 +4,39 @@
 버그 수정(BUG-6): STEP 13 pending 메커니즘 연결 (48h 후 자동 실행).
 python -m src.pipeline {month_number} 으로 실행.
 """
-import time, sys, json
+import concurrent.futures
+import json
+import sys
+import time
 from datetime import datetime, timedelta
-from loguru import logger
+
 import sentry_sdk
-from src.core.config import KAS_ROOT, CHANNEL_CATEGORIES, CHANNEL_MONTHLY_TARGET, SENTRY_DSN
+from loguru import logger
+
+from src.core.config import CHANNEL_CATEGORIES, KAS_ROOT, SENTRY_DSN
+from src.core.hitl_gate import (
+    approve_review,
+    reject_review,
+    write_review_request,
+)
+from src.core.manifest import mark_step_done, mark_step_failed
+from src.core.pre_cost_estimator import (
+    check_cost_limit,
+    estimate_pre_run_cost,
+    save_cost_projection,
+)
+from src.quota.youtube_quota import get_quota as get_youtube_quota
 from src.step00.channel_registry import get_active_channels
+from src.step03.algorithm_policy import get_algorithm_policy
 from src.step05.trend_collector import collect_trends, reinterpret_trend, save_knowledge
 from src.step06.style_policy import build_style_policy
 from src.step07.revenue_policy import get_revenue_policy
-from src.step03.algorithm_policy import get_algorithm_policy
 from src.step08 import run_step08
 from src.step09.bgm_overlay import run_step09
+from src.step10.thumbnail_generator import generate_thumbnail_from_topic
 from src.step10.title_variant_builder import run_step10
 from src.step11.qa_gate import run_step11
-from src.core.manifest import mark_step_done, mark_step_failed
-from src.core.pre_cost_estimator import estimate_pre_run_cost, check_cost_limit, save_cost_projection
-from src.quota.youtube_quota import get_quota as get_youtube_quota
+from src.step_final import run_intro_outro
 
 LOGS_DIR = KAS_ROOT / "logs"
 LOGS_DIR.mkdir(parents=True, exist_ok=True)
@@ -38,6 +54,33 @@ logger.add(
 # Sentry 에러 추적 초기화
 if SENTRY_DSN:
     sentry_sdk.init(dsn=SENTRY_DSN, traces_sample_rate=0.1)
+
+STEP08_TIMEOUT_SEC = 1800  # 30분
+
+
+def _run_step08_timed(
+    channel_id: str,
+    topic: dict,
+    style_policy: dict,
+    revenue_policy: dict,
+    algorithm_policy: dict,
+    timeout_sec: int = STEP08_TIMEOUT_SEC,
+) -> str:
+    """Step08을 별도 스레드에서 실행하고 timeout_sec 초과 시 TimeoutError를 발생시킨다.
+
+    ThreadPoolExecutor를 cancel_futures=True로 종료하여
+    타임아웃 시 블록되지 않도록 한다.
+    """
+    executor = concurrent.futures.ThreadPoolExecutor(max_workers=1)
+    try:
+        future = executor.submit(
+            run_step08, channel_id, topic, style_policy, revenue_policy, algorithm_policy
+        )
+        return future.result(timeout=timeout_sec)
+    finally:
+        # wait=False: 실행 중인 스레드 완료를 기다리지 않고 즉시 반환
+        executor.shutdown(wait=False)
+
 
 # ── 대시보드 실시간 진행 상태 추적 ────────────────────────────────────────────
 _PROGRESS_FILE = KAS_ROOT / "data" / "global" / "step_progress.json"
@@ -103,8 +146,8 @@ def _progress_step(index: int, status: str, started_at: str | None = None) -> No
         logger.warning(f"[PROGRESS] step{index} 업데이트 실패: {e}")
 
 def _mark_pending_step13(channel_id: str, run_id: str, video_id: str) -> None:
-    from src.core.ssot import write_json, now_iso
     from src.core.config import GLOBAL_DIR
+    from src.core.ssot import now_iso, write_json
     pending_dir = GLOBAL_DIR / "step13_pending"
     pending_dir.mkdir(parents=True, exist_ok=True)
     kpi_after = (datetime.utcnow() + timedelta(hours=48)).strftime("%Y-%m-%dT%H:%M:%SZ")
@@ -141,7 +184,7 @@ def _run_pending_step13() -> None:
 
 def _ensure_initialized() -> None:
     """Step00~04 초기화 가드 — data/global/.initialized 플래그가 없을 때 1회 실행"""
-    from src.core.config import GLOBAL_DIR, CHANNEL_CATEGORIES
+    from src.core.config import CHANNEL_CATEGORIES, GLOBAL_DIR
     flag = GLOBAL_DIR / ".initialized"
     if flag.exists():
         return
@@ -204,9 +247,9 @@ def _run_deferred_uploads() -> None:
         if not deferred:
             return
         logger.info(f"[PIPELINE] 이연된 업로드 {len(deferred)}건 재처리 시도")
-        from src.step12.uploader import upload_video
-        from src.quota.youtube_quota import can_upload, QUOTA_FILE
         from src.core.ssot import read_json, write_json
+        from src.quota.youtube_quota import QUOTA_FILE, can_upload
+        from src.step12.uploader import upload_video
         still_deferred = []
         for job in deferred:
             ch = job.get("channel_id", "")
@@ -301,15 +344,25 @@ def run_monthly_pipeline(month_number: int) -> dict:
                 algorithm_policy = get_algorithm_policy(channel_id)
                 _progress_step(2, "done")
 
-                # Step08: 영상 생성 (run_id 반환)
+                # ── 새 워크플로우 ─────────────────────────────────────────
+
+                # [2] 썸네일 초안 (script 없이 주제만으로 생성)
+                import time as _t
+                preview_run_id = f"run_{channel_id}_{int(_t.time())}"
+                try:
+                    generate_thumbnail_from_topic(channel_id, preview_run_id, topic)
+                    logger.info(f"[PIPELINE] {channel_id} 썸네일 초안 생성 완료")
+                except Exception as eth:
+                    logger.warning(f"[PIPELINE] 썸네일 초안 실패 (계속): {eth}")
+
+                # [3-5] Step08: 대본 → 이미지 생성 → 모션 → 나레이션 → 영상 조합
                 _progress_step(3, "running")
-                run_id = run_step08(channel_id, topic, style_policy,
-                                    revenue_policy, algorithm_policy)
-                # run_id 확정 → progress 파일에 run_id 갱신
+                run_id = _run_step08_timed(channel_id, topic, style_policy,
+                                           revenue_policy, algorithm_policy)
                 _progress_init(channel_id, run_id)
-                for i in range(3): _progress_step(i, "done")  # 0~2 다시 done 표시
+                for i in range(3): _progress_step(i, "done")
                 _progress_step(3, "running")
-                mark_step_done(channel_id, run_id, "step08")  # C-2
+                mark_step_done(channel_id, run_id, "step08")
                 _progress_step(3, "done")
 
                 # Step09: BGM 오버레이
@@ -323,7 +376,7 @@ def run_monthly_pipeline(month_number: int) -> dict:
                     _progress_step(4, "error")
                     logger.warning(f"[PIPELINE] Step09 실패 (계속): {e9}")
 
-                # Step10: 제목/썸네일 배리언트
+                # Step10: 썸네일 배리언트 (script 기반 최종본)
                 _progress_step(5, "running")
                 try:
                     run_step10(channel_id, run_id)
@@ -334,11 +387,11 @@ def run_monthly_pipeline(month_number: int) -> dict:
                     _progress_step(5, "error")
                     logger.warning(f"[PIPELINE] Step10 실패 (계속): {e10}")
 
-                # Step11: QA 게이트
+                # Step11: 자동 QA
                 _progress_step(6, "running")
                 try:
                     qa = run_step11(channel_id, run_id,
-                                    human_review_completed=(channel_id not in {"CH1","CH2","CH4"}))
+                                    human_review_completed=False)  # HITL 전 단계
                     mark_step_done(channel_id, run_id, "step11")
                     _progress_step(6, "done")
                 except Exception as e11:
@@ -347,39 +400,36 @@ def run_monthly_pipeline(month_number: int) -> dict:
                     logger.error(f"[PIPELINE] Step11 실패: {e11}")
                     qa = {"overall_pass": False}
 
-                # Step12: 업로드 (QA 통과 + 수동 검수 불필요 채널)
-                _progress_step(7, "running")
-                if qa.get("overall_pass") and channel_id not in {"CH1","CH2","CH4"}:
-                    try:
-                        from src.step12.uploader import upload_video
-                        receipt = upload_video(channel_id, run_id)
-                        mark_step_done(channel_id, run_id, "step12")
-                        _mark_pending_step13(channel_id, run_id, receipt.get("video_id",""))
-                        _progress_step(7, "done")
-                    except Exception as upload_err:
-                        mark_step_failed(channel_id, run_id, "step12",
-                                         "STEP12_FAIL", str(upload_err)[:200])
-                        _progress_step(7, "error")
-                        logger.error(f"[PIPELINE] STEP12 실패 {channel_id}/{run_id}: {upload_err}")
+                # ── [HITL] 사용자 검토 요청 ──────────────────────────────
+                from src.core.ssot import get_run_dir as _get_run_dir
+                _run_dir  = _get_run_dir(channel_id, run_id)
+                _vid_path = _run_dir / "step08" / "video_narr.mp4"
+                if not _vid_path.exists():
+                    _vid_path = _run_dir / "step08" / "video.mp4"
 
-                    # Shorts 파이프라인
-                    try:
-                        from src.step08_s.shorts_generator import run_step08s
-                        from src.step12.shorts_uploader import run_shorts_upload
-                        run_step08s(channel_id, run_id)
-                        run_shorts_upload(channel_id, run_id)
-                        logger.info(f"[PIPELINE] {channel_id}/{run_id} Shorts 생성/업로드 완료")
-                    except Exception as shorts_err:
-                        logger.warning(f"[PIPELINE] Shorts 파이프라인 실패 {channel_id}/{run_id}: {shorts_err}")
+                write_review_request(channel_id, run_id, _vid_path)
+                _progress_step(7, "running")  # 검토 대기 상태
 
                 channel_results.append({
                     "run_id":  run_id,
                     "topic":   topic_title,
                     "qa_pass": qa.get("overall_pass", False),
-                    "human_review_required": qa.get("human_review", {}).get("required", False),
+                    "human_review_required": True,
+                    "status": "pending_review",
                 })
-                logger.info(f"[PIPELINE] {channel_id}/{run_id} 완료, QA={qa.get('overall_pass')}")
+                logger.info(
+                    f"[PIPELINE] {channel_id}/{run_id} 영상 생성 완료 — 검토 대기 중\n"
+                    f"  영상: {_vid_path}\n"
+                    f"  썸네일: {_run_dir / 'step10'}\n"
+                    f"  승인: python -m src.pipeline approve {channel_id} {run_id}\n"
+                    f"  거부: python -m src.pipeline reject  {channel_id} {run_id}"
+                )
+                # 이 토픽은 HITL 대기 → 다음 토픽으로 진행하지 않음
+                break
 
+            except concurrent.futures.TimeoutError:
+                logger.error(f"[PIPELINE] Step08 {STEP08_TIMEOUT_SEC}초 타임아웃 — {channel_id} 주제 건너뜀")
+                continue
             except Exception as e:
                 if run_id:
                     mark_step_failed(channel_id, run_id, "step08", "STEP08_FAIL", str(e)[:200])
@@ -399,7 +449,8 @@ def run_monthly_pipeline(month_number: int) -> dict:
     import os
     if os.environ.get("SUPABASE_URL") and os.environ.get("SUPABASE_KEY"):
         try:
-            import subprocess, sys as _sys
+            import subprocess
+            import sys as _sys
             sync_script = KAS_ROOT / "scripts" / "sync_to_supabase.py"
             subprocess.run(
                 [_sys.executable, str(sync_script), "all"],
@@ -411,6 +462,40 @@ def run_monthly_pipeline(month_number: int) -> dict:
 
     return results
 
+def _cmd_approve(channel_id: str, run_id: str) -> None:
+    """승인 → 인트로/아웃트로 추가 → video_final.mp4 생성."""
+    approve_review(channel_id, run_id)
+    final_path = run_intro_outro(channel_id, run_id)
+    if final_path:
+        logger.info(f"[PIPELINE] 최종 영상 완성: {final_path}")
+        print(f"\n✅ 최종 영상: {final_path}")
+    else:
+        logger.error("[PIPELINE] 최종 영상 생성 실패")
+        print("\n❌ 최종 영상 생성 실패 — 로그 확인 필요")
+
+
+def _cmd_reject(channel_id: str, run_id: str) -> None:
+    """거부 → 해당 run 거부 표시. 재생성은 pipeline 재실행으로."""
+    reject_review(channel_id, run_id)
+    print(
+        f"\n🔄 {channel_id}/{run_id} 거부됨.\n"
+        f"   재생성: python -m src.pipeline {1}"
+    )
+
+
 if __name__ == "__main__":
-    month_num = int(sys.argv[1]) if len(sys.argv) > 1 else 1
-    run_monthly_pipeline(month_num)
+    # ── CLI 명령 분기 ─────────────────────────────────────────────
+    # python -m src.pipeline 1                          → 월간 파이프라인
+    # python -m src.pipeline approve CH1 run_CH1_XXX   → 승인 + 최종 영상
+    # python -m src.pipeline reject  CH1 run_CH1_XXX   → 거부 (재생성 필요)
+    if len(sys.argv) >= 4 and sys.argv[1] in ("approve", "reject"):
+        cmd        = sys.argv[1]
+        ch_id      = sys.argv[2]
+        r_id       = sys.argv[3]
+        if cmd == "approve":
+            _cmd_approve(ch_id, r_id)
+        else:
+            _cmd_reject(ch_id, r_id)
+    else:
+        month_num = int(sys.argv[1]) if len(sys.argv) > 1 else 1
+        run_monthly_pipeline(month_num)

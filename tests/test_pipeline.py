@@ -160,7 +160,7 @@ class TestRunMonthlyPipeline:
         }
 
     def test_pipeline_calls_step08_per_topic(self):
-        """각 토픽마다 run_step08이 호출된다."""
+        """HITL 워크플로우: 첫 토픽 처리 후 사용자 검토 대기 (break) — run_step08은 1회만 호출."""
         from src.pipeline import run_monthly_pipeline
         topics = [self._make_mock_topic("주제1"), self._make_mock_topic("주제2")]
 
@@ -175,15 +175,19 @@ class TestRunMonthlyPipeline:
              patch("src.pipeline.build_style_policy", return_value={}), \
              patch("src.pipeline.get_revenue_policy", return_value={}), \
              patch("src.pipeline.get_algorithm_policy", return_value={}), \
+             patch("src.pipeline.generate_thumbnail_from_topic"), \
              patch("src.pipeline.run_step08", return_value="run_CH1_001") as mock_step08, \
              patch("src.pipeline.mark_step_done"), \
              patch("src.pipeline.mark_step_failed"), \
              patch("src.pipeline.run_step09"), \
              patch("src.pipeline.run_step10"), \
-             patch("src.pipeline.run_step11", return_value={"overall_pass": False}):
+             patch("src.pipeline.run_step11", return_value={"overall_pass": False}), \
+             patch("src.pipeline.write_review_request") as mock_hitl:
             results = run_monthly_pipeline(1)
 
-        assert mock_step08.call_count == 2
+        # HITL 워크플로우: 첫 토픽 처리 후 break → step08은 1회만 호출
+        assert mock_step08.call_count == 1
+        assert mock_hitl.call_count == 1
         assert "CH1" in results
 
     def test_pipeline_skips_topic_on_cost_exceeded(self):
@@ -253,3 +257,37 @@ class TestRunMonthlyPipeline:
 
         mock_step10.assert_called_once()
         assert "CH1" in results
+
+
+# ──────────────────────────────────────────────
+# _run_step08_timed 타임아웃 테스트
+# ──────────────────────────────────────────────
+
+class TestStep08Timed:
+    def test_step08_timeout_raises_after_limit(self):
+        """_run_step08_timed는 timeout_sec 초과 시 TimeoutError를 발생시켜야 한다"""
+        import concurrent.futures
+        from src.pipeline import _run_step08_timed
+
+        def slow_step08(*args, **kwargs):
+            import time
+            time.sleep(9999)
+
+        with patch("src.pipeline.run_step08", side_effect=slow_step08):
+            with pytest.raises(concurrent.futures.TimeoutError):
+                _run_step08_timed("CH1", {}, {}, {}, {}, timeout_sec=1)
+
+    def test_step08_timed_returns_run_id_on_success(self):
+        """_run_step08_timed는 정상 실행 시 run_id 문자열을 반환해야 한다"""
+        from src.pipeline import _run_step08_timed
+
+        with patch("src.pipeline.run_step08", return_value="run_CH1_001"):
+            result = _run_step08_timed("CH1", {}, {}, {}, {}, timeout_sec=30)
+
+        assert result == "run_CH1_001"
+
+    def test_step08_timed_default_timeout_is_1800(self):
+        """STEP08_TIMEOUT_SEC 상수가 1800(30분)이어야 한다"""
+        from src.pipeline import STEP08_TIMEOUT_SEC
+
+        assert STEP08_TIMEOUT_SEC == 1800
