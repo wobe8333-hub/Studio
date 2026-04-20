@@ -2,14 +2,17 @@
 버그 수정: dict 기반 로드 대신 token JSON 파일 + from_authorized_user_file 사용.
 E-2: 만료 토큰 자동 갱신 + 갱신 결과 파일 저장 추가.
 """
-from loguru import logger
-from pathlib import Path
+
+from datetime import datetime, timedelta, timezone
+
+from google.auth.transport.requests import Request
+from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaFileUpload
-from google.oauth2.credentials import Credentials
-from google.auth.transport.requests import Request
-from src.core.ssot import read_json, write_json, json_exists, sha256_file, now_iso, get_run_dir
-from src.core.config import CREDENTIALS_DIR
+from loguru import logger
+
+from src.core.config import CHANNEL_OPTIMAL_UPLOAD_KST, CREDENTIALS_DIR
+from src.core.ssot import get_run_dir, now_iso, read_json, sha256_file, write_json
 from src.quota.youtube_quota import can_upload, consume, defer_job
 
 SCOPES = [
@@ -31,6 +34,20 @@ def _get_youtube_service(channel_id: str):
         token_path.write_text(creds.to_json(), encoding="utf-8")
         logger.info(f"[STEP12] {channel_id}: token 갱신 완료 → {token_path.name}")
     return build("youtube", "v3", credentials=creds)
+
+def _next_publish_time(channel_id: str) -> str:
+    """채널별 최적 KST 시간 기준 다음 예약 업로드 시각을 RFC 3339 UTC로 반환한다.
+    당일 최적 시간이 이미 지났으면 다음 날 같은 시간으로 설정한다.
+    """
+    kst_time_str = CHANNEL_OPTIMAL_UPLOAD_KST.get(channel_id, "15:00")
+    hour, minute = map(int, kst_time_str.split(":"))
+    kst = timezone(timedelta(hours=9))
+    now_kst = datetime.now(kst)
+    target = now_kst.replace(hour=hour, minute=minute, second=0, microsecond=0)
+    if target <= now_kst:
+        target += timedelta(days=1)
+    return target.astimezone(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
 
 def upload_video(channel_id: str, run_id: str,
                   scheduled_time: str = None) -> dict:
