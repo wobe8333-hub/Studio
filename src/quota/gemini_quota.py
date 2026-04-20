@@ -1,9 +1,15 @@
+import threading
 import time
+
 from loguru import logger
-from src.core.ssot import read_json, write_json, now_iso, json_exists
+
 from src.core.config import QUOTA_DIR
+from src.core.ssot import json_exists, now_iso, read_json, write_json
 
 QUOTA_FILE        = QUOTA_DIR / "gemini_quota_daily.json"
+
+# 병렬 채널 실행 시 Gemini RPM 한도 초과를 방지하는 세마포어 (최대 3개 동시 요청)
+_GEMINI_SEMAPHORE = threading.Semaphore(3)
 RPM_LIMIT         = 1000
 RPM_TARGET_MAX    = 50
 RPM_WARNING       = 800
@@ -70,14 +76,15 @@ def record_request() -> None:
 
 
 def throttle_if_needed() -> None:
-    rpm = _current_rpm()
-    if rpm >= RPM_TARGET_MAX:
-        time.sleep(60.0 / RPM_TARGET_MAX)
-    if rpm >= RPM_WARNING:
-        data = get_quota()
-        data["sequential_mode_activations"] += 1
-        write_json(QUOTA_FILE, data)
-        logger.warning(f"[GEMINI] SEQUENTIAL_MODE: rpm={rpm}")
+    with _GEMINI_SEMAPHORE:
+        rpm = _current_rpm()
+        if rpm >= RPM_TARGET_MAX:
+            time.sleep(60.0 / RPM_TARGET_MAX)
+        if rpm >= RPM_WARNING:
+            data = get_quota()
+            data["sequential_mode_activations"] += 1
+            write_json(QUOTA_FILE, data)
+            logger.warning(f"[GEMINI] SEQUENTIAL_MODE: rpm={rpm}")
 
 
 def record_image(count: int = 1) -> bool:

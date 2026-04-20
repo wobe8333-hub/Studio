@@ -57,6 +57,7 @@ logger.add(
 )
 
 STEP08_TIMEOUT_SEC = 1800  # 30분
+MAX_PARALLEL_CHANNELS = 3  # Gemini RPM 한도 내 안전 병렬 수
 
 
 def _run_step08_timed(
@@ -171,6 +172,135 @@ def _progress_step(index: int, status: str, started_at: str | None = None) -> No
         _PROGRESS_FILE.write_text(json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8")
     except Exception as e:
         logger.warning(f"[PROGRESS] step{index} 업데이트 실패: {e}")
+
+def _run_channel_pipeline(channel_id: str, month_num: int) -> None:
+    """단일 채널의 Step05~Step12 파이프라인을 실행한다.
+    ThreadPoolExecutor에서 호출되므로 예외는 호출자가 처리한다.
+    """
+    category = CHANNEL_CATEGORIES[channel_id]
+    logger.info(f"--- {channel_id} ({category}) 처리 시작 ---")
+
+    # Step05: 트렌드+지식 수집
+    _progress_init(channel_id, f"run_{channel_id}_{int(time.time())}")
+    _progress_step(0, "running")
+    trends = collect_trends(channel_id, category, limit=5)
+    topics = [reinterpret_trend(t, category, channel_id) for t in trends[:3]]
+    save_knowledge(channel_id, topics)
+    _progress_step(0, "done")
+
+    channel_results = []
+    for topic in topics:
+        topic_title = topic.get("reinterpreted_title", "")
+
+        # C-5: 주제별 사전 비용 검증
+        if not _check_topic_cost(channel_id, topic_title):
+            logger.warning(f"[PIPELINE] {channel_id} 비용 초과 — 토픽 스킵: {topic_title[:40]}")
+            continue
+
+        run_id = None
+        qa = {"overall_pass": False}
+        try:
+            # Step06: 시나리오 정책
+            _progress_step(1, "running")
+            style_policy = build_style_policy(channel_id, topic, month_num)
+            _progress_step(1, "done")
+
+            # Step07: 알고리즘/수익 정책
+            _progress_step(2, "running")
+            revenue_policy   = get_revenue_policy(channel_id)
+            algorithm_policy = get_algorithm_policy(channel_id)
+            _progress_step(2, "done")
+
+            # [2] 썸네일 초안 (script 없이 주제만으로 생성)
+            import time as _t
+            preview_run_id = f"run_{channel_id}_{int(_t.time())}"
+            try:
+                generate_thumbnail_from_topic(channel_id, preview_run_id, topic)
+                logger.info(f"[PIPELINE] {channel_id} 썸네일 초안 생성 완료")
+            except Exception as eth:
+                logger.warning(f"[PIPELINE] 썸네일 초안 실패 (계속): {eth}")
+
+            # [3-5] Step08: 대본 → 이미지 생성 → 모션 → 나레이션 → 영상 조합
+            _progress_step(3, "running")
+            run_id = _run_step08_timed(channel_id, topic, style_policy,
+                                       revenue_policy, algorithm_policy)
+            _progress_init(channel_id, run_id)
+            for i in range(3): _progress_step(i, "done")
+            _progress_step(3, "running")
+            mark_step_done(channel_id, run_id, "step08")
+            _progress_step(3, "done")
+
+            # Step09: BGM 오버레이
+            _progress_step(4, "running")
+            try:
+                run_step09(channel_id, run_id)
+                mark_step_done(channel_id, run_id, "step09")
+                _progress_step(4, "done")
+            except Exception as e9:
+                mark_step_failed(channel_id, run_id, "step09", "STEP09_FAIL", str(e9)[:200])
+                _progress_step(4, "error")
+                logger.warning(f"[PIPELINE] Step09 실패 (계속): {e9}")
+
+            # Step10: 썸네일 배리언트 (script 기반 최종본)
+            _progress_step(5, "running")
+            try:
+                run_step10(channel_id, run_id)
+                mark_step_done(channel_id, run_id, "step10")
+                _progress_step(5, "done")
+            except Exception as e10:
+                mark_step_failed(channel_id, run_id, "step10", "STEP10_FAIL", str(e10)[:200])
+                _progress_step(5, "error")
+                logger.warning(f"[PIPELINE] Step10 실패 (계속): {e10}")
+
+            # Step11: 자동 QA
+            _progress_step(6, "running")
+            try:
+                qa = run_step11(channel_id, run_id,
+                                human_review_completed=False)  # HITL 전 단계
+                mark_step_done(channel_id, run_id, "step11")
+                _progress_step(6, "done")
+            except Exception as e11:
+                mark_step_failed(channel_id, run_id, "step11", "STEP11_FAIL", str(e11)[:200])
+                _progress_step(6, "error")
+                logger.error(f"[PIPELINE] Step11 실패: {e11}")
+                qa = {"overall_pass": False}
+
+            # ── [HITL] 사용자 검토 요청 ──────────────────────────────
+            from src.core.ssot import get_run_dir as _get_run_dir
+            _run_dir  = _get_run_dir(channel_id, run_id)
+            _vid_path = _run_dir / "step08" / "video_narr.mp4"
+            if not _vid_path.exists():
+                _vid_path = _run_dir / "step08" / "video.mp4"
+
+            write_review_request(channel_id, run_id, _vid_path)
+            _progress_step(7, "running")  # 검토 대기 상태
+
+            channel_results.append({
+                "run_id":  run_id,
+                "topic":   topic_title,
+                "qa_pass": qa.get("overall_pass", False),
+                "human_review_required": True,
+                "status": "pending_review",
+            })
+            logger.info(
+                f"[PIPELINE] {channel_id}/{run_id} 영상 생성 완료 — 검토 대기 중\n"
+                f"  영상: {_vid_path}\n"
+                f"  썸네일: {_run_dir / 'step10'}\n"
+                f"  승인: python -m src.pipeline approve {channel_id} {run_id}\n"
+                f"  거부: python -m src.pipeline reject  {channel_id} {run_id}"
+            )
+            # 이 토픽은 HITL 대기 → 다음 토픽으로 진행하지 않음
+            break
+
+        except concurrent.futures.TimeoutError:
+            logger.error(f"[PIPELINE] Step08 {STEP08_TIMEOUT_SEC}초 타임아웃 — {channel_id} 주제 건너뜀")
+            continue
+        except Exception as e:
+            if run_id:
+                mark_step_failed(channel_id, run_id, "step08", "STEP08_FAIL", str(e)[:200])
+            logger.error(f"[PIPELINE] {channel_id} 오류: {e}")
+            continue
+
 
 def _mark_pending_step13(channel_id: str, run_id: str, video_id: str) -> None:
     from src.core.config import GLOBAL_DIR
@@ -336,135 +466,21 @@ def run_monthly_pipeline(month_number: int) -> dict:
     active_channels = get_active_channels(month_number)
     logger.info(f"활성 채널: {active_channels}")
 
-    for channel_id in active_channels:
-        category = CHANNEL_CATEGORIES[channel_id]
-        logger.info(f"--- {channel_id} ({category}) 처리 시작 ---")
-
-        # Step05: 트렌드+지식 수집
-        _progress_init(channel_id, f"run_{channel_id}_{int(time.time())}")  # 임시 run_id (Step08 전)
-        _progress_step(0, "running")
-        trends = collect_trends(channel_id, category, limit=5)
-        topics = [reinterpret_trend(t, category, channel_id) for t in trends[:3]]
-        save_knowledge(channel_id, topics)
-        _progress_step(0, "done")
-
-        channel_results = []
-        for topic in topics:
-            topic_title = topic.get("reinterpreted_title", "")
-
-            # C-5: 주제별 사전 비용 검증
-            if not _check_topic_cost(channel_id, topic_title):
-                logger.warning(f"[PIPELINE] {channel_id} 비용 초과 — 토픽 스킵: {topic_title[:40]}")
-                continue
-
-            run_id = None
-            qa = {"overall_pass": False}
+    logger.info(f"[PIPELINE] {len(active_channels)}개 채널 병렬 실행 (max={MAX_PARALLEL_CHANNELS})")
+    with concurrent.futures.ThreadPoolExecutor(max_workers=MAX_PARALLEL_CHANNELS) as executor:
+        futures = {
+            executor.submit(_run_channel_pipeline, ch, month_number): ch
+            for ch in active_channels
+        }
+        for future in concurrent.futures.as_completed(futures):
+            ch = futures[future]
             try:
-                # Step06: 시나리오 정책
-                _progress_step(1, "running")
-                style_policy = build_style_policy(channel_id, topic, month_number)
-                _progress_step(1, "done")
-
-                # Step07: 알고리즘/수익 정책
-                _progress_step(2, "running")
-                revenue_policy   = get_revenue_policy(channel_id)
-                algorithm_policy = get_algorithm_policy(channel_id)
-                _progress_step(2, "done")
-
-                # ── 새 워크플로우 ─────────────────────────────────────────
-
-                # [2] 썸네일 초안 (script 없이 주제만으로 생성)
-                import time as _t
-                preview_run_id = f"run_{channel_id}_{int(_t.time())}"
-                try:
-                    generate_thumbnail_from_topic(channel_id, preview_run_id, topic)
-                    logger.info(f"[PIPELINE] {channel_id} 썸네일 초안 생성 완료")
-                except Exception as eth:
-                    logger.warning(f"[PIPELINE] 썸네일 초안 실패 (계속): {eth}")
-
-                # [3-5] Step08: 대본 → 이미지 생성 → 모션 → 나레이션 → 영상 조합
-                _progress_step(3, "running")
-                run_id = _run_step08_timed(channel_id, topic, style_policy,
-                                           revenue_policy, algorithm_policy)
-                _progress_init(channel_id, run_id)
-                for i in range(3): _progress_step(i, "done")
-                _progress_step(3, "running")
-                mark_step_done(channel_id, run_id, "step08")
-                _progress_step(3, "done")
-
-                # Step09: BGM 오버레이
-                _progress_step(4, "running")
-                try:
-                    run_step09(channel_id, run_id)
-                    mark_step_done(channel_id, run_id, "step09")
-                    _progress_step(4, "done")
-                except Exception as e9:
-                    mark_step_failed(channel_id, run_id, "step09", "STEP09_FAIL", str(e9)[:200])
-                    _progress_step(4, "error")
-                    logger.warning(f"[PIPELINE] Step09 실패 (계속): {e9}")
-
-                # Step10: 썸네일 배리언트 (script 기반 최종본)
-                _progress_step(5, "running")
-                try:
-                    run_step10(channel_id, run_id)
-                    mark_step_done(channel_id, run_id, "step10")
-                    _progress_step(5, "done")
-                except Exception as e10:
-                    mark_step_failed(channel_id, run_id, "step10", "STEP10_FAIL", str(e10)[:200])
-                    _progress_step(5, "error")
-                    logger.warning(f"[PIPELINE] Step10 실패 (계속): {e10}")
-
-                # Step11: 자동 QA
-                _progress_step(6, "running")
-                try:
-                    qa = run_step11(channel_id, run_id,
-                                    human_review_completed=False)  # HITL 전 단계
-                    mark_step_done(channel_id, run_id, "step11")
-                    _progress_step(6, "done")
-                except Exception as e11:
-                    mark_step_failed(channel_id, run_id, "step11", "STEP11_FAIL", str(e11)[:200])
-                    _progress_step(6, "error")
-                    logger.error(f"[PIPELINE] Step11 실패: {e11}")
-                    qa = {"overall_pass": False}
-
-                # ── [HITL] 사용자 검토 요청 ──────────────────────────────
-                from src.core.ssot import get_run_dir as _get_run_dir
-                _run_dir  = _get_run_dir(channel_id, run_id)
-                _vid_path = _run_dir / "step08" / "video_narr.mp4"
-                if not _vid_path.exists():
-                    _vid_path = _run_dir / "step08" / "video.mp4"
-
-                write_review_request(channel_id, run_id, _vid_path)
-                _progress_step(7, "running")  # 검토 대기 상태
-
-                channel_results.append({
-                    "run_id":  run_id,
-                    "topic":   topic_title,
-                    "qa_pass": qa.get("overall_pass", False),
-                    "human_review_required": True,
-                    "status": "pending_review",
-                })
-                logger.info(
-                    f"[PIPELINE] {channel_id}/{run_id} 영상 생성 완료 — 검토 대기 중\n"
-                    f"  영상: {_vid_path}\n"
-                    f"  썸네일: {_run_dir / 'step10'}\n"
-                    f"  승인: python -m src.pipeline approve {channel_id} {run_id}\n"
-                    f"  거부: python -m src.pipeline reject  {channel_id} {run_id}"
-                )
-                # 이 토픽은 HITL 대기 → 다음 토픽으로 진행하지 않음
-                break
-
-            except concurrent.futures.TimeoutError:
-                logger.error(f"[PIPELINE] Step08 {STEP08_TIMEOUT_SEC}초 타임아웃 — {channel_id} 주제 건너뜀")
-                continue
+                future.result()
+                logger.info(f"[PIPELINE] {ch} 완료")
+                results[ch] = [{"status": "completed"}]
             except Exception as e:
-                if run_id:
-                    mark_step_failed(channel_id, run_id, "step08", "STEP08_FAIL", str(e)[:200])
-                logger.error(f"[PIPELINE] {channel_id} 오류: {e}")
-                continue
-
-        results[channel_id] = channel_results
-        time.sleep(2)
+                logger.error(f"[PIPELINE] {ch} 실패: {e}")
+                results[ch] = [{"status": "failed", "error": str(e)}]
 
     # C-6: Step14/16/17 월말 집계 보고서
     month_str = datetime.utcnow().strftime("%Y-%m")
