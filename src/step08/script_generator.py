@@ -1,19 +1,30 @@
 """STEP 08 — 스크립트 생성기.
 
-Phase 2 수정: 7채널 프롬프트 갱신 (CH2 부동산, CH4 미스터리, CH5 전쟁사)
+Phase 2 수정: 7채널 프롬프트 갱신 (CH2 과학, CH5 미스터리, CH7 전쟁사)
 Phase 4 연동: knowledge_package의 core_facts/statistics/counterpoints 활용
 Phase 8 추가: 7채널 카테고리별 면책조항 자동 삽입 + character_directions 필드
 """
 
 import json
-from loguru import logger
-from tenacity import retry, stop_after_attempt, wait_exponential, retry_if_exception_type
-import google.generativeai as genai
-from src.core.config import GEMINI_API_KEY, CHANNEL_CATEGORIES, GEMINI_TEXT_MODEL
-from src.quota.gemini_quota import throttle_if_needed, record_request
-from src.cache.gemini_cache import get as cache_get, set as cache_set
 
-genai.configure(api_key=GEMINI_API_KEY)
+from google import genai
+from google.genai import types as genai_types
+from loguru import logger
+from tenacity import retry, retry_if_exception_type, stop_after_attempt, wait_exponential
+
+from src.cache.gemini_cache import get as cache_get
+from src.cache.gemini_cache import set as cache_set
+from src.core.config import CHANNEL_CATEGORIES, GEMINI_API_KEY, GEMINI_TEXT_MODEL
+from src.quota.gemini_quota import record_request, throttle_if_needed
+
+_genai_client: genai.Client | None = None
+
+
+def _get_client() -> genai.Client:
+    global _genai_client
+    if _genai_client is None:
+        _genai_client = genai.Client(api_key=GEMINI_API_KEY)
+    return _genai_client
 
 # ── 7채널 시스템 프롬프트 ────────────────────────────────────────
 SCRIPT_SYSTEM_PROMPTS = {
@@ -104,13 +115,23 @@ def _get_system_prompt(channel_id: str, style_policy: dict) -> str:
     return base
 
 
-def _call_gemini_raw(model, prompt: str, max_tokens: int = 4000) -> str:
+def _call_gemini_raw(system_instruction: str, prompt: str, max_tokens: int = 4000) -> str:
     throttle_if_needed()
     record_request()
-    return model.generate_content(
-        prompt,
-        generation_config=genai.GenerationConfig(max_output_tokens=max_tokens),
-    ).text
+    response = _get_client().models.generate_content(
+        model=GEMINI_TEXT_MODEL,
+        contents=prompt,
+        config=genai_types.GenerateContentConfig(
+            system_instruction=system_instruction,
+            max_output_tokens=max_tokens,
+        ),
+    )
+    try:
+        return response.text
+    except (ValueError, AttributeError):
+        parts = response.candidates[0].content.parts if response.candidates else []
+        texts = [p.text for p in parts if hasattr(p, "text") and p.text]
+        return texts[-1] if texts else ""
 
 
 def _build_knowledge_context(knowledge_pkg: dict) -> str:
@@ -164,11 +185,8 @@ def generate_script(
     algorithm_policy: dict,
     knowledge_pkg: dict = None,
 ) -> dict:
-    model = genai.GenerativeModel(
-        GEMINI_TEXT_MODEL,
-        system_instruction=_get_system_prompt(channel_id, style_policy),
-    )
-    category     = CHANNEL_CATEGORIES[channel_id]
+    system_prompt = _get_system_prompt(channel_id, style_policy)
+    category      = CHANNEL_CATEGORIES[channel_id]
     anim_style   = style_policy.get("animation_style", "process")
     is_trending  = style_policy.get("is_trending", False)
     trend_note   = style_policy.get("trend_reinterpretation", "")
@@ -226,7 +244,13 @@ def generate_script(
 }}
 sections 6개 이상. chapter_markers 5개 이상. character_directions는 모든 섹션에 포함."""
 
-    raw = _call_gemini_raw(model, prompt, max_tokens=8192).strip()
+    try:
+        raw = _call_gemini_raw(system_prompt, prompt, max_tokens=8192).strip()
+    except Exception as gemini_err:
+        logger.warning(f"[Script] Gemini 실패 → Claude fallback: {gemini_err}")
+        from src.core.llm_client import _call_claude
+        raw = _call_claude(f"[System]\n{system_prompt}\n\n[User]\n{prompt}").strip()
+
     if raw.startswith("```"):
         raw = "\n".join(raw.split("\n")[1:-1]).strip()
     script = json.loads(raw)
