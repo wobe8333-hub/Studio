@@ -52,6 +52,39 @@ class TestUploader:
             assert result.get("ok") is False
 
 
+class TestRollback:
+    """uploader.py rollback_video 테스트."""
+
+    def test_rollback_video_calls_youtube_update(self):
+        """rollback_video는 videos().update()로 비공개 전환을 호출해야 한다"""
+        from unittest.mock import MagicMock, patch
+        from src.step12.uploader import rollback_video
+
+        mock_youtube = MagicMock()
+        with patch("src.step12.uploader._get_youtube_service", return_value=mock_youtube):
+            result = rollback_video("CH1", "VIDEO_ABC123")
+
+        mock_youtube.videos().update.assert_called_once_with(
+            part="status",
+            body={"status": {"privacyStatus": "private"}},
+            id="VIDEO_ABC123",
+        )
+        assert result["status"] == "private"
+        assert result["video_id"] == "VIDEO_ABC123"
+
+    def test_rollback_video_returns_channel_id(self):
+        """rollback_video 반환값에 channel_id가 포함되어야 한다"""
+        from unittest.mock import MagicMock, patch
+        from src.step12.uploader import rollback_video
+
+        mock_youtube = MagicMock()
+        with patch("src.step12.uploader._get_youtube_service", return_value=mock_youtube):
+            result = rollback_video("CH2", "VIDEO_XYZ999")
+
+        assert result["channel_id"] == "CH2"
+        assert result["video_id"] == "VIDEO_XYZ999"
+
+
 class TestKPICollector:
     """kpi_collector.py 테스트."""
 

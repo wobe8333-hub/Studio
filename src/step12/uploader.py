@@ -126,3 +126,18 @@ def upload_video(channel_id: str, run_id: str,
     write_json(step12_dir / "publish_receipt.json", receipt)
     logger.info(f"[STEP12] {channel_id}/{run_id} 업로드 완료: video_id={video_id}")
     return receipt
+
+
+def rollback_video(channel_id: str, video_id: str) -> dict:
+    """업로드된 YouTube 영상을 비공개로 전환한다 (롤백).
+    영상을 삭제하지 않고 비공개 전환만 하므로 복구 가능하다.
+    Returns: {"video_id": str, "status": "private", "channel_id": str}
+    """
+    youtube = _get_youtube_service(channel_id)
+    youtube.videos().update(
+        part="status",
+        body={"status": {"privacyStatus": "private"}},
+        id=video_id,
+    ).execute()
+    logger.info(f"[ROLLBACK] {channel_id} / {video_id} 비공개 전환 완료")
+    return {"video_id": video_id, "status": "private", "channel_id": channel_id}

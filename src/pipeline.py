@@ -531,6 +531,7 @@ if __name__ == "__main__":
     # python -m src.pipeline 1                          → 월간 파이프라인
     # python -m src.pipeline approve CH1 run_CH1_XXX   → 승인 + 최종 영상
     # python -m src.pipeline reject  CH1 run_CH1_XXX   → 거부 (재생성 필요)
+    # python -m src.pipeline rollback CH1 VIDEO_ID     → 영상 비공개 전환
     if len(sys.argv) >= 4 and sys.argv[1] in ("approve", "reject"):
         cmd        = sys.argv[1]
         ch_id      = sys.argv[2]
@@ -539,6 +540,13 @@ if __name__ == "__main__":
             _cmd_approve(ch_id, r_id)
         else:
             _cmd_reject(ch_id, r_id)
+    elif len(sys.argv) == 4 and sys.argv[1] == "rollback":
+        _channel_id = sys.argv[2]
+        _video_id   = sys.argv[3]
+        from src.step12.uploader import rollback_video
+        result = rollback_video(_channel_id, _video_id)
+        logger.info(f"[CLI] 롤백 완료: {result}")
+        sys.exit(0)
     else:
         month_num = int(sys.argv[1]) if len(sys.argv) > 1 else 1
         run_monthly_pipeline(month_num)
