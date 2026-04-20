@@ -6,21 +6,22 @@ Phase 8 추가:
 """
 
 from loguru import logger
-from src.core.ssot import read_json, write_json, json_exists, now_iso, get_run_dir
-from src.core.config import GEMINI_API_KEY, GEMINI_TEXT_MODEL
 
-REVIEW_REQUIRED    = {"CH1", "CH2", "CH4"}
-REVIEW_CONDITIONAL = {"CH3"}
+from src.core.config import GEMINI_API_KEY, GEMINI_TEXT_MODEL
+from src.core.ssot import get_run_dir, json_exists, now_iso, read_json, write_json
+
+REVIEW_REQUIRED    = {"CH1", "CH3"}   # 경제(CH1) + 부동산(CH3) — 금융/투자 콘텐츠
+REVIEW_CONDITIONAL = {"CH4"}          # 심리(CH4) — 민감 주제
 
 # 채널별 면책조항 키 (script_generator.py와 동기화)
 CHANNEL_DISCLAIMER_KEY = {
-    "CH1": "financial_disclaimer",
-    "CH2": "investment_disclaimer",
-    "CH3": "psychology_disclaimer",
-    "CH4": "mystery_disclaimer",
-    "CH5": "history_disclaimer",
-    "CH6": "science_disclaimer",
-    "CH7": "history_disclaimer",
+    "CH1": "financial_disclaimer",   # 경제
+    "CH2": "science_disclaimer",     # 과학
+    "CH3": "investment_disclaimer",  # 부동산 (투자 관련)
+    "CH4": "psychology_disclaimer",  # 심리
+    "CH5": "mystery_disclaimer",     # 미스터리
+    "CH6": "history_disclaimer",     # 역사
+    "CH7": "history_disclaimer",     # 전쟁사 (역사 계열)
 }
 
 
@@ -37,8 +38,9 @@ def _gemini_vision_qa(video_path) -> dict:
         return {"pass": False, "skipped": False, "reason": "video_not_found"}
 
     try:
-        import google.generativeai as genai
-        genai.configure(api_key=GEMINI_API_KEY)
+        from google import genai as _genai
+        from google.genai import types as genai_types
+        _client = _genai.Client(api_key=GEMINI_API_KEY)
 
         # ── 실제 영상 길이 측정 (ffprobe) ──────────────────────────────
         import subprocess
@@ -79,12 +81,13 @@ def _gemini_vision_qa(video_path) -> dict:
         if not frame_files:
             return {"pass": True, "skipped": True, "reason": "frame_extraction_failed"}
 
-        # Gemini Vision으로 프레임 분석
-        model = genai.GenerativeModel(GEMINI_TEXT_MODEL)
-        parts = []
+        # Gemini Vision으로 프레임 분석 (새 SDK)
+        image_parts = []
         for fp in frame_files[:5]:
             with open(fp, "rb") as f:
-                parts.append({"mime_type": "image/jpeg", "data": f.read()})
+                image_parts.append(
+                    genai_types.Part.from_bytes(data=f.read(), mime_type="image/jpeg")
+                )
 
         prompt_text = """이 영상 프레임들을 분석하여 다음 항목을 평가하세요:
 
@@ -96,9 +99,18 @@ def _gemini_vision_qa(video_path) -> dict:
 응답 형식 (JSON만):
 {"character_consistency": true/false, "text_readability": true/false, "content_safe": true/false, "overall_quality": true/false, "issues": ["문제 설명"]}"""
 
-        parts.append({"text": prompt_text})
-        resp = model.generate_content(parts)
-        text = resp.text.strip()
+        contents = image_parts + [genai_types.Part.from_text(text=prompt_text)]
+        resp = _client.models.generate_content(
+            model=GEMINI_TEXT_MODEL,
+            contents=contents,
+            config=genai_types.GenerateContentConfig(max_output_tokens=1000),
+        )
+        try:
+            text = resp.text.strip()
+        except (ValueError, AttributeError, TypeError):
+            parts_list = resp.candidates[0].content.parts if resp.candidates else []
+            texts = [p.text for p in parts_list if hasattr(p, "text") and p.text]
+            text = texts[-1].strip() if texts else ""
         if text.startswith("```"):
             text = "\n".join(text.split("\n")[1:-1]).strip()
 
@@ -164,6 +176,17 @@ def run_step11(
     ai_label = bool(script.get("ai_label"))
     policy_pass = ai_label and has_disc
 
+    # ── 저작권 위험 사전 체크 (Plan C-2 B7) ──────────────────────
+    script_text = " ".join(
+        sec.get("narration_text", "") for sec in script.get("sections", [])
+    )
+    from src.step11.copyright_checker import check_copyright_risk
+    copyright_result = check_copyright_risk(script_text)
+    if copyright_result["risk_score"] >= 0.7:
+        logger.warning(
+            f"[QA] 저작권 위험 높음 ({copyright_result['risk_score']:.2f}) — 수동 검토 권장"
+        )
+
     # ── 수익 공식 확인 ────────────────────────────────────────────
     aff = script.get("affiliate_insert", {})
     formula_ok = aff.get("purchase_rate_applied", 0) > 0
@@ -199,6 +222,8 @@ def run_step11(
             "purchase_rate_applied": aff.get("purchase_rate_applied", 0),
             "formula_correct": formula_ok,
         },
+        "copyright_risk_score": copyright_result["risk_score"],
+        "copyright_reasons": copyright_result["reasons"],
         "overall_pass": overall,
     }
 

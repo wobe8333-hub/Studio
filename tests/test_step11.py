@@ -75,7 +75,49 @@ class TestQAGate:
         assert result["animation_quality_check"]["vision_qa"]["skipped"] is True
 
     def test_review_required_channels(self):
-        """REVIEW_REQUIRED 채널 확인."""
+        """REVIEW_REQUIRED 채널 확인 — 경제(CH1) + 부동산(CH3)."""
         from src.step11.qa_gate import REVIEW_REQUIRED
-        assert "CH1" in REVIEW_REQUIRED
-        assert "CH2" in REVIEW_REQUIRED
+        assert "CH1" in REVIEW_REQUIRED   # 경제 — 금융/투자 콘텐츠
+        assert "CH3" in REVIEW_REQUIRED   # 부동산 — 투자 관련 콘텐츠
+
+
+# ── 저작권 체크 테스트 (Plan C-2 B7) ─────────────────────────────────────
+
+def test_copyright_check_high_risk_script():
+    """저작권 위험 대본은 risk_score가 0.7 이상이어야 한다."""
+    from src.step11.copyright_checker import check_copyright_risk
+
+    risky_script = (
+        "이 영상에서 디즈니 미키마우스 캐릭터의 정확한 대사를 인용합니다. "
+        "'오, 미키야!' 라는 대사는 1928년 월트 디즈니가 직접 작성한 것입니다."
+    )
+    with patch("src.step11.copyright_checker.generate_text",
+               return_value='{"risk_score": 0.85, "reasons": ["고유 캐릭터 언급", "직접 인용"]}'):
+        result = check_copyright_risk(risky_script)
+
+    assert result["risk_score"] >= 0.7
+    assert len(result["reasons"]) > 0
+
+
+def test_copyright_check_safe_script():
+    """일반 교육 대본은 risk_score가 0.3 미만이어야 한다."""
+    from src.step11.copyright_checker import check_copyright_risk
+
+    safe_script = "금리가 오르면 채권 가격은 내려갑니다. 이는 경제학의 기본 원리입니다."
+    with patch("src.step11.copyright_checker.generate_text",
+               return_value='{"risk_score": 0.05, "reasons": []}'):
+        result = check_copyright_risk(safe_script)
+
+    assert result["risk_score"] < 0.3
+
+
+def test_copyright_check_returns_safe_on_llm_failure():
+    """LLM 실패 시 안전(risk_score=0.0)으로 처리해야 한다."""
+    from src.step11.copyright_checker import check_copyright_risk
+
+    with patch("src.step11.copyright_checker.generate_text",
+               side_effect=RuntimeError("LLM_ALL_PROVIDERS_FAILED")):
+        result = check_copyright_risk("대본 텍스트")
+
+    assert result["risk_score"] == 0.0
+    assert result["reasons"] == []
