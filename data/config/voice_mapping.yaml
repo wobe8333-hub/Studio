@@ -1,0 +1,157 @@
+# 채널별 캐릭터 Voice ID 매핑 (pipeline_v2 Track B — 최적화 ④)
+# ElevenLabs voice_id는 .env에서 로드 → 여기는 설정값(stability, similarity_boost 등)
+
+meta:
+  version: "2.1"
+  updated: "2026-04-22"
+  maintainer: "devops-engineer"
+  total_voices: 14
+
+# 공통 ElevenLabs 설정 기본값
+defaults:
+  model_id: "eleven_multilingual_v2"
+  output_format: "mp3_44100_128"
+  optimize_streaming_latency: 2
+  narrator:
+    stability: 0.75
+    similarity_boost: 0.80
+    style: 0.20
+    use_speaker_boost: true
+  guest:
+    stability: 0.65
+    similarity_boost: 0.75
+    style: 0.35
+    use_speaker_boost: true
+
+# 대화 자연스러움 설정
+dialogue:
+  pause_between_speakers_ms: 120  # 화자 교체 시 무음 삽입
+  pause_end_of_sentence_ms: 80    # 문장 끝 숨
+
+channels:
+  CH1:
+    name: "경제"
+    narrator:
+      role: "narrator"
+      character: "신뢰감 있는 경제 전문가"
+      voice_persona: "30대 남성, 차분하고 신뢰감 있는 목소리"
+      voice_id_env: "CH1_NARRATOR_VOICE_ID"
+      stability: 0.80
+      similarity_boost: 0.85
+    guest:
+      role: "guest"
+      character: "호기심 많은 직장인"
+      voice_persona: "20대 여성, 밝고 호기심 넘치는 목소리"
+      voice_id_env: "CH1_GUEST_VOICE_ID"
+      stability: 0.60
+      similarity_boost: 0.75
+      style: 0.45
+
+  CH2:
+    name: "과학"
+    narrator:
+      role: "narrator"
+      character: "침착한 과학자"
+      voice_persona: "40대 남성, 명확하고 지적인 목소리"
+      voice_id_env: "CH2_NARRATOR_VOICE_ID"
+      stability: 0.82
+      similarity_boost: 0.82
+    guest:
+      role: "guest"
+      character: "열정적인 학생"
+      voice_persona: "20대 남성, 열정적이고 탐구적인 목소리"
+      voice_id_env: "CH2_GUEST_VOICE_ID"
+      stability: 0.58
+      similarity_boost: 0.72
+      style: 0.50
+
+  CH3:
+    name: "부동산"
+    narrator:
+      role: "narrator"
+      character: "경험 많은 부동산 전문가"
+      voice_persona: "40대 여성, 신뢰감 있고 실용적인 목소리"
+      voice_id_env: "CH3_NARRATOR_VOICE_ID"
+      stability: 0.78
+      similarity_boost: 0.80
+    guest:
+      role: "guest"
+      character: "내 집 마련을 꿈꾸는 직장인"
+      voice_persona: "30대 남성, 친근하고 현실적인 목소리"
+      voice_id_env: "CH3_GUEST_VOICE_ID"
+      stability: 0.65
+      similarity_boost: 0.75
+
+  CH4:
+    name: "심리"
+    narrator:
+      role: "narrator"
+      character: "따뜻한 심리 상담사"
+      voice_persona: "30대 여성, 따뜻하고 공감적인 목소리"
+      voice_id_env: "CH4_NARRATOR_VOICE_ID"
+      stability: 0.72
+      similarity_boost: 0.78
+      style: 0.25
+    guest:
+      role: "guest"
+      character: "공감하며 배우는 청취자"
+      voice_persona: "30대 남성, 차분하고 중립적인 목소리"
+      voice_id_env: "CH4_GUEST_VOICE_ID"
+      stability: 0.68
+      similarity_boost: 0.73
+
+  CH5:
+    name: "미스터리"
+    narrator:
+      role: "narrator"
+      character: "서스펜스 가득한 미스터리 탐정"
+      voice_persona: "30대 남성, 긴장감 있고 신비로운 목소리"
+      voice_id_env: "CH5_NARRATOR_VOICE_ID"
+      stability: 0.70
+      similarity_boost: 0.82
+      style: 0.40
+    guest:
+      role: "guest"
+      character: "의문을 제기하는 조사관"
+      voice_persona: "40대 여성, 날카롭고 의문스러운 목소리"
+      voice_id_env: "CH5_GUEST_VOICE_ID"
+      stability: 0.65
+      similarity_boost: 0.77
+      style: 0.38
+
+  CH6:
+    name: "역사"
+    narrator:
+      role: "narrator"
+      character: "역사 대가 교수"
+      voice_persona: "50대 남성, 장엄하고 지혜로운 목소리"
+      voice_id_env: "CH6_NARRATOR_VOICE_ID"
+      stability: 0.85
+      similarity_boost: 0.88
+      style: 0.15
+    guest:
+      role: "guest"
+      character: "역사를 배우는 학생"
+      voice_persona: "30대 여성, 명료하고 질문이 많은 목소리"
+      voice_id_env: "CH6_GUEST_VOICE_ID"
+      stability: 0.68
+      similarity_boost: 0.75
+
+  CH7:
+    name: "전쟁사"
+    narrator:
+      role: "narrator"
+      character: "전쟁사 전문 역사학자"
+      voice_persona: "40대 남성, 묵직하고 긴장감 있는 목소리"
+      voice_id_env: "CH7_NARRATOR_VOICE_ID"
+      stability: 0.82
+      similarity_boost: 0.86
+      style: 0.18
+    guest:
+      role: "guest"
+      character: "전략을 분석하는 군사 전문가"
+      voice_persona: "50대 남성, 무게감 있고 분석적인 목소리"
+      voice_id_env: "CH7_GUEST_VOICE_ID"
+      stability: 0.80
+      similarity_boost: 0.84
+      style: 0.12

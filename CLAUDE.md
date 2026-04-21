@@ -15,7 +15,14 @@ GitHub: `https://github.com/wobe8333-hub/Studio`
 ## 주요 명령어
 
 ```bash
-python -m src.pipeline 1                         # 월간 파이프라인 (1~12)
+# ── G2 파이프라인 v2.1 (신규, 권장) ────────────────────────────────────────
+python -m src.pipeline_v2.weekly_batch           # 주간 배치 실행 (일요일 00:00)
+pytest tests/pipeline_v2/ -q                     # G2 파이프라인 테스트
+
+# ── 레거시 파이프라인 (DEPRECATED — 기존 운영 유지용) ────────────────────────
+python -m src.pipeline 1                         # 월간 파이프라인 (1~12) [DEPRECATED]
+
+# ── 공통 ─────────────────────────────────────────────────────────────────────
 pytest tests/ -q                                 # 전체 테스트
 python scripts/preflight_check.py               # 환경 점검
 python scripts/generate_oauth_token.py --channel CH1  # OAuth 최초 발급
@@ -51,7 +58,9 @@ claude agents                                   # 37개 에이전트 목록 (v10
 **백엔드 `.env`** (`.env.example` 참고):
 `GEMINI_API_KEY`, `YOUTUBE_API_KEY`, `CH1~7_CHANNEL_ID`, `KAS_ROOT`(필수),
 `ELEVENLABS_API_KEY`, `CH1~7_VOICE_ID`, `GEMINI_TEXT_MODEL`(gemini-2.5-flash),
-`GEMINI_IMAGE_MODEL`, `MANIM_QUALITY`(l/h), `SENTRY_DSN`, `TAVILY_API_KEY`, `SERPAPI_KEY`
+`GEMINI_IMAGE_MODEL`, `MANIM_QUALITY`(l/h), `SENTRY_DSN`, `TAVILY_API_KEY`, `SERPAPI_KEY`,
+`SUNO_API_KEY`, `FIGMA_TOKEN`, `FIGMA_MASTER_FILE_ID`,
+`CH{1-7}_NARRATOR_VOICE_ID`, `CH{1-7}_GUEST_VOICE_ID` (14 목소리 ID — v2.1 최적화 ④)
 
 **웹 `web/.env.local`** (`.env.local.example` 참고):
 `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`,

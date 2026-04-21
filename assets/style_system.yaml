@@ -1,0 +1,141 @@
+# Loomix Style System v2.1
+# 14 캐릭터 × 7채널 공통 두들 스타일 규약
+# 변경 시 → 42 Figma 템플릿 자동 재생성 필요
+
+meta:
+  version: "2.1"
+  updated: "2026-04-22"
+  maintainer: "ui-designer"
+
+# ── 공통 그래픽 규칙 ─────────────────────────────────────────
+graphics:
+  line_weight_px: 2
+  proportion: "5등신"          # 두들 스탠다드 5head figure
+  background: "크래프트페이퍼"  # #F5E6C8 기준 텍스처 오버레이
+  animation_fps: 12
+  outline_color: "#1A1A1A"    # 거의 검정, 순수 검정 금지
+  shadow: false                # 두들 스타일 = 그림자 없음
+  anti_alias: true
+
+# ── 공통 폰트 ────────────────────────────────────────────────
+typography:
+  font_family: "Noto Sans KR"
+  fallback: "sans-serif"
+  title_size_pt: 48
+  subtitle_size_pt: 32
+  caption_size_pt: 24
+  weight_title: 700
+  weight_body: 400
+  line_height: 1.4
+
+# ── 채널별 컬러 팔레트 ───────────────────────────────────────
+# main: 채널 메인 컬러 (캐릭터 의상, 하단바, 인트로)
+# sub_*: 공통 서브 컬러 (배경 강조, 아이콘 포인트)
+channels:
+  CH1:
+    name: "경제"
+    main: "#E8A44C"          # 골드 — 부와 신뢰
+    sub_light: "#FFF3DC"
+    sub_dark: "#B8762C"
+    accent: "#2C5F8A"        # 네이비 대비색
+  CH2:
+    name: "과학"
+    main: "#4C9AE8"          # 스카이블루 — 탐구와 지식
+    sub_light: "#DCF0FF"
+    sub_dark: "#2C5F8A"
+    accent: "#E84C4C"        # 레드 대비색
+  CH3:
+    name: "부동산"
+    main: "#5CA85C"          # 그린 — 안정과 성장
+    sub_light: "#DCFFE0"
+    sub_dark: "#3A7A3A"
+    accent: "#8A5C2C"        # 브라운 대비색
+  CH4:
+    name: "심리"
+    main: "#9B6BBF"          # 라벤더 퍼플 — 힐링
+    sub_light: "#F0DCFF"
+    sub_dark: "#6B3A8A"
+    accent: "#4CAE8A"        # 민트 대비색
+  CH5:
+    name: "미스터리"
+    main: "#3A3A5C"          # 딥네이비 — 서스펜스
+    sub_light: "#DCE0FF"
+    sub_dark: "#1A1A3A"
+    accent: "#E8C84C"        # 골드 포인트
+  CH6:
+    name: "역사"
+    main: "#8A5C2C"          # 브라운 — 고풍스러움
+    sub_light: "#FFE8DC"
+    sub_dark: "#5C3A1A"
+    accent: "#C8A84C"        # 황금 대비색
+  CH7:
+    name: "전쟁사"
+    main: "#5C2C2C"          # 다크레드 — 긴장
+    sub_light: "#FFE0DC"
+    sub_dark: "#3A1A1A"
+    accent: "#8A8A5C"        # 올리브 대비색
+
+# ── 캐릭터 공통 규칙 ─────────────────────────────────────────
+character:
+  roles:
+    - narrator  # 주 진행자
+    - guest     # 상대역 / 대화 파트너
+  reference_spec:
+    width_px: 1024
+    height_px: 1024
+    background: "white"       # 순백 (#FFFFFF)
+    pose: "정면 전신 중립 표정"
+    format: "PNG"
+  pose_count_per_character: 40
+  total_characters: 14        # 7채널 × 2역할
+  total_poses: 560            # 14 × 40
+
+# ── 포즈 분류 (nano-banana 생성 기준) ────────────────────────
+pose_categories:
+  neutral:        [neutral_standing, neutral_seated, neutral_thinking]
+  positive:       [pointing_up, thumbs_up, arms_open, celebrating, clapping]
+  explaining:     [pointing_right, pointing_left, showing_board, gesturing_wide, hand_raised]
+  reacting:       [surprised, confused, shocked, nodding, head_tilt]
+  emotional:      [happy_smile, laughing, concerned, serious, determined]
+  action:         [walking, running, jumping, waving, bow]
+  prop_based:     [holding_book, holding_mic, writing, reading, phone]
+  seated:         [seated_front, seated_side, seated_leaning, seated_cross, seated_excited]
+  duo_interaction: [listening, talking_to, high_five, disagreeing, agreeing]
+  special:        [signature_pose]  # 채널 고유 포즈 (1개)
+
+# ── 애니메이션 규칙 ──────────────────────────────────────────
+animation:
+  ken_burns:
+    scale_range: [1.0, 1.08]    # 최대 8% 줌
+    pan_range_px: 40            # 최대 40px 이동
+    duration_sec: [3, 8]        # 컷 지속시간 범위
+  transitions:
+    types: [cut, fade, wipe_right, push_up, zoom_in]
+    duration_frames: 6          # 0.5초 @ 12fps
+  manim_insert:                 # CH1/CH2 전용
+    channels: ["CH1", "CH2"]
+    overlay_alpha: 0.92         # 두들 배경 위 투명도
+    bg_blend_mode: "multiply"
+
+# ── 인트로/아웃트로 규격 ─────────────────────────────────────
+template:
+  intro:
+    duration_sec: 6
+    resolution: [1920, 1080]
+    format: "MP4"
+    fps: 30
+  outro:
+    duration_sec: 4
+    resolution: [1920, 1080]
+    format: "MP4"
+    fps: 30
+  lower_third:
+    height_px: 120
+    position: "bottom"
+    padding_px: 32
+  title_card:
+    resolution: [1920, 1080]
+    format: "PNG"
+  chapter_divider:
+    duration_sec: 1.5
+    format: "MP4"
