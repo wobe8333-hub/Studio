@@ -1,12 +1,12 @@
 """
-arXiv API 소스 (Layer 4 — 월간, CH6 과학 전용)
+arXiv API 소스 (Layer 4 — 월간, CH2 과학 전용)
 최신 과학 논문 제목/초록에서 트렌드 주제 추출
 """
 
-import urllib.request
 import urllib.parse
+import urllib.request
 import xml.etree.ElementTree as ET
-from typing import Dict, Any, List
+from typing import Any, Dict, List
 
 # 과학 카테고리별 arXiv 검색 쿼리
 _ARXIV_QUERIES: Dict[str, List[str]] = {

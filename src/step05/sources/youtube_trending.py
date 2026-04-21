@@ -5,8 +5,8 @@ YouTube Data API v3 트렌딩 소스 (Layer 2 — 일간)
 
 import os
 import re
-from typing import Dict, Any, List
 from collections import Counter
+from typing import Any, Dict, List
 
 # 7채널 카테고리별 YouTube 검색 키워드 (경쟁 채널 분석용)
 _CATEGORY_SEARCH_TERMS: Dict[str, List[str]] = {
@@ -26,9 +26,9 @@ def _load_api_key() -> str:
 
 def _search_videos(query: str, api_key: str, max_results: int = 10) -> List[Dict[str, Any]]:
     """YouTube Data API v3 search.list 호출"""
-    import urllib.request
-    import urllib.parse
     import json
+    import urllib.parse
+    import urllib.request
 
     params = urllib.parse.urlencode({
         "part": "snippet",

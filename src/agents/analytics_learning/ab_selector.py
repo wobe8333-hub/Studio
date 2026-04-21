@@ -1,6 +1,8 @@
 """A/B 테스트(authority/curiosity/benefit) CTR 기반 승자를 선택한다."""
 from pathlib import Path
+
 from loguru import logger
+
 from src.core.ssot import read_json, write_json
 
 _DEFAULT_WINNER = "curiosity"

@@ -10,7 +10,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **Loomix** (AI 콘텐츠 에이전시 · 내부 코드명: KAS) — AI 7채널 YouTube 풀 자동화. 채널당 월 200만원, 총 1,400만원/월 수익 목표.
 GitHub: `https://github.com/wobe8333-hub/Studio`
-7채널: CH1(경제) / CH2(부동산) / CH3(심리) / CH4(미스터리) / CH5(전쟁사) / CH6(과학) / CH7(역사)
+7채널: CH1(경제) / CH2(과학) / CH3(부동산) / CH4(심리) / CH5(미스터리) / CH6(역사) / CH7(전쟁사)
 
 ## 주요 명령어
 

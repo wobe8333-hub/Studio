@@ -1,6 +1,8 @@
 """채널별 캐릭터 일관성 점수를 집계하고 드리프트를 감지한다."""
 from pathlib import Path
+
 from loguru import logger
+
 from src.core.ssot import read_json
 
 _DRIFT_THRESHOLD = 0.7

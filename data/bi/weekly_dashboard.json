@@ -1,0 +1,20 @@
+﻿{
+  "schema_version": "1.0",
+  "period": "2026-W16",
+  "generated_at": "2026-04-13T01:01:00.865073+00:00",
+  "channel_kpi": {},
+  "cost_summary": {
+    "gemini_api_usd": 0.0,
+    "elevenlabs_usd": 0.0,
+    "total_usd": 0.0,
+    "cost_per_video_usd": 0.0
+  },
+  "sales_funnel": {
+    "leads": 0,
+    "proposals": 0,
+    "contracts": 0,
+    "conversion_rate_pct": 0.0
+  },
+  "key_insights": [],
+  "recommendations": []
+}

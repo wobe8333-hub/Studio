@@ -4,7 +4,7 @@ Reddit API 소스 (Layer 3 — 주간)
 """
 
 import os
-from typing import Dict, Any, List
+from typing import Any, Dict, List
 
 # 7채널 카테고리별 서브레딧 매핑
 _SUBREDDIT_MAP: Dict[str, List[str]] = {

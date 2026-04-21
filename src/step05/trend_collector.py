@@ -11,13 +11,14 @@ Layer 5 (에버그린):   Wikipedia + Curated Pool
 """
 
 import json
-from typing import Dict, Any, List
+from typing import Any, Dict, List
+
 from loguru import logger
 
-from src.core.ssot import write_json, now_iso, sha256_dict
-from src.core.config import KNOWLEDGE_DIR, CHANNEL_CATEGORIES
-from src.step05.scorer import score_topic
+from src.core.config import KNOWLEDGE_DIR
+from src.core.ssot import now_iso, sha256_dict, write_json
 from src.step05.dedup import deduplicate_topics
+from src.step05.scorer import score_topic
 
 # 수집 비율 상수
 TRENDING_RATIO = 0.60

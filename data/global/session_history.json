@@ -1,0 +1,110 @@
+{
+  "schema_version": "1.0",
+  "sessions": [
+    {
+      "ended_at": "2026-04-13T09:02:56.593983+00:00",
+      "cost_summary": {
+        "total_cost_usd": 0.0,
+        "request_count": 0
+      }
+    },
+    {
+      "ended_at": "2026-04-13T14:50:44.787556+00:00",
+      "cost_summary": {
+        "total_cost_usd": 0.0,
+        "request_count": 0
+      }
+    },
+    {
+      "ended_at": "2026-04-14T08:12:08.097595+00:00",
+      "cost_summary": {
+        "total_cost_usd": 0.0,
+        "request_count": 0
+      }
+    },
+    {
+      "ended_at": "2026-04-14T12:35:01.869404+00:00",
+      "cost_summary": {
+        "total_cost_usd": 0.0,
+        "request_count": 0
+      }
+    },
+    {
+      "ended_at": "2026-04-14T12:39:35.864056+00:00",
+      "cost_summary": {
+        "total_cost_usd": 0.0,
+        "request_count": 0
+      }
+    },
+    {
+      "ended_at": "2026-04-15T08:03:08.185212+00:00",
+      "cost_summary": {
+        "total_cost_usd": 0.0,
+        "request_count": 0
+      }
+    },
+    {
+      "ended_at": "2026-04-15T09:37:25.642766+00:00",
+      "cost_summary": {
+        "total_cost_usd": 0.0,
+        "request_count": 0
+      }
+    },
+    {
+      "ended_at": "2026-04-15T15:27:01.678265+00:00",
+      "cost_summary": {
+        "total_cost_usd": 0.0,
+        "request_count": 0
+      }
+    },
+    {
+      "ended_at": "2026-04-16T08:02:18.041021+00:00",
+      "cost_summary": {
+        "total_cost_usd": 0.0,
+        "request_count": 0
+      }
+    },
+    {
+      "ended_at": "2026-04-17T08:01:39.485558+00:00",
+      "cost_summary": {
+        "total_cost_usd": 0.0,
+        "request_count": 0
+      }
+    },
+    {
+      "ended_at": "2026-04-18T08:05:01.784343+00:00",
+      "cost_summary": {
+        "total_cost_usd": 0.0,
+        "request_count": 0
+      }
+    },
+    {
+      "ended_at": "2026-04-19T08:01:19.061889+00:00",
+      "cost_summary": {
+        "total_cost_usd": 0.0,
+        "request_count": 0
+      }
+    },
+    {
+      "ended_at": "2026-04-20T01:55:55.020517+00:00",
+      "cost_summary": {
+        "total_cost_usd": 0.0,
+        "request_count": 0
+      }
+    },
+    {
+      "ended_at": "2026-04-20T08:01:39.381694+00:00",
+      "cost_summary": {
+        "total_cost_usd": 0.0,
+        "request_count": 0
+      }
+    },
+    {
+      "ended_at": "2026-04-21T08:03:30.039014+00:00",
+      "cost_summary": {
+        "total_cost_usd": 0.0,
+        "request_count": 0
+      }
+    }
+  ]
+}

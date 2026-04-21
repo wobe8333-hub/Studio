@@ -5,9 +5,10 @@ Layer 5 (상시): 카테고리별 큐레이션된 영구 주제 풀에서 수집
 """
 
 from loguru import logger
+
 from src.core.ssot import now_iso
-from src.step05.sources.curated import fetch_curated_topics
 from src.step05.dedup import deduplicate_topics
+from src.step05.sources.curated import fetch_curated_topics
 
 # 카테고리 → 에버그린 수집 비율 (월간 편수 기준)
 EVERGREEN_RATIO = 0.25  # 25%

@@ -1,5 +1,7 @@
 from pathlib import Path
-from src.core.ssot import read_json, write_json, now_iso, json_exists
+
+from src.core.ssot import json_exists, now_iso, read_json, write_json
+
 
 def append_trace(trace_path: Path, event: str, detail: dict) -> None:
     data = {}

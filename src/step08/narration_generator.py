@@ -6,9 +6,10 @@ Phase 6 전환:
 """
 
 from pathlib import Path
+
 from loguru import logger
 
-from src.core.config import GEMINI_API_KEY, GTTS_LANG, ELEVENLABS_API_KEY, CHANNEL_VOICE_IDS
+from src.core.config import CHANNEL_VOICE_IDS, ELEVENLABS_API_KEY, GTTS_LANG
 
 
 def _build_narration_text(script: dict) -> str:
@@ -37,8 +38,8 @@ def _generate_elevenlabs(text: str, channel_id: str, output_path: Path) -> bool:
         return False
 
     try:
-        from elevenlabs.client import ElevenLabs
         from elevenlabs import VoiceSettings
+        from elevenlabs.client import ElevenLabs
 
         client = ElevenLabs(api_key=ELEVENLABS_API_KEY)
         audio_gen = client.text_to_speech.convert(

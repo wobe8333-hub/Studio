@@ -3,7 +3,8 @@ Perplexity API 클라이언트
 AI 리서치 + 출처 추적 — 주제에 대한 심층 AI 요약 및 인용 출처 수집
 """
 
-from typing import Dict, Any, List
+from typing import Any, Dict, List
+
 from loguru import logger
 
 from src.core.config import PERPLEXITY_API_KEY

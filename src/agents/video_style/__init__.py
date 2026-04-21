@@ -1,7 +1,9 @@
 """Video Style & Character Agent — 채널별 시각 아이덴티티 유지 및 스타일 최적화."""
 from pathlib import Path
 from typing import Any, Optional
+
 from loguru import logger
+
 from src.agents.base_agent import BaseAgent
 from src.agents.video_style.character_monitor import check_character_drift
 from src.agents.video_style.style_optimizer import check_manim_fallback_rate

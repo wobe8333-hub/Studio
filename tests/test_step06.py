@@ -57,10 +57,10 @@ class TestBuildStylePolicy:
         monkeypatch.setattr("src.core.config.KAS_ROOT", tmp_path)
 
         expected = {
-            "CH1": "comparison",
-            "CH3": "metaphor",
-            "CH5": "timeline",
-            "CH6": "process",
+            "CH1": "comparison",  # 경제: 비교 그래프
+            "CH3": "comparison",  # 부동산: 가격 비교
+            "CH5": "hybrid",      # 미스터리: 혼합 연출
+            "CH6": "timeline",    # 역사: 연대기
         }
         for ch, expected_style in expected.items():
             (tmp_path / ch).mkdir(exist_ok=True)

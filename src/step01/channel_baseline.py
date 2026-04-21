@@ -1,26 +1,33 @@
 """STEP 01 — 채널 준비도 측정."""
 import sys
-from loguru import logger
-from googleapiclient.discovery import build
+
 from google.oauth2.credentials import Credentials
+from googleapiclient.discovery import build
+from loguru import logger
+
 from src.core.config import (
-    KAS_ROOT, CHANNELS_DIR, CHANNEL_IDS, CHANNEL_RPM_PROXY,
-    CHANNEL_RPM_INITIAL, CHANNEL_MONTHLY_TARGET,
-    CHANNEL_LAUNCH_PHASE, REVENUE_TARGET_PER_CHANNEL,
+    CHANNEL_IDS,
+    CHANNEL_LAUNCH_PHASE,
+    CHANNEL_MONTHLY_TARGET,
+    CHANNEL_RPM_INITIAL,
+    CHANNEL_RPM_PROXY,
+    CHANNELS_DIR,
+    KAS_ROOT,
+    REVENUE_TARGET_PER_CHANNEL,
 )
-from src.core.ssot import write_json, now_iso
+from src.core.ssot import now_iso, write_json
 from src.quota.youtube_quota import consume
 
 SCOPES = ["https://www.googleapis.com/auth/youtube.readonly"]
 
 AFFILIATE_PARAMS = {
     "CH1": {"product": "증권사 계좌 개설 CPA",        "purchase_rate": 0.20},
-    "CH2": {"product": "부동산 강의 / 청약 앱 CPA",   "purchase_rate": 0.15},
-    "CH3": {"product": "심리학 도서 CPS",              "purchase_rate": 0.10},
-    "CH4": {"product": "미스터리 도서 / 공포 OTT CPA", "purchase_rate": 0.10},
-    "CH5": {"product": "밀리터리 도서 / 전쟁사 게임",  "purchase_rate": 0.12},
-    "CH6": {"product": "과학 키트 / 온라인 강의 CPA",  "purchase_rate": 0.15},
-    "CH7": {"product": "역사 도서 / 역사 여행 CPS",    "purchase_rate": 0.15},
+    "CH2": {"product": "과학 키트 / 온라인 강의 CPA",  "purchase_rate": 0.15},
+    "CH3": {"product": "부동산 강의 / 청약 앱 CPA",   "purchase_rate": 0.15},
+    "CH4": {"product": "심리학 도서 CPS",              "purchase_rate": 0.10},
+    "CH5": {"product": "미스터리 도서 / 공포 OTT CPA", "purchase_rate": 0.10},
+    "CH6": {"product": "역사 도서 / 역사 여행 CPS",    "purchase_rate": 0.15},
+    "CH7": {"product": "밀리터리 도서 / 전쟁사 게임",  "purchase_rate": 0.12},
 }
 OPERATING_COST = {
     "CH1": 80000, "CH2": 100000, "CH3": 100000,
@@ -41,7 +48,7 @@ def _fetch_channel_stats(channel_id: str) -> dict:
         logger.warning(f"[STEP01] {channel_id} CHANNEL_ID 미설정")
         return default
     if not consume(1, "channels_list"):
-        logger.error(f"[STEP01] 쿼터 초과")
+        logger.error("[STEP01] 쿼터 초과")
         return default
     try:
         resp  = _get_youtube_service(channel_id).channels().list(

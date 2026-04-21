@@ -3,8 +3,7 @@
 관심도(40%) + 적합도(25%) + 수익성(20%) + 긴급도(15%) 종합 점수 계산
 """
 
-import re
-from typing import Dict, Any, List, Optional
+from typing import Any, Dict, List, Optional
 
 # 채널별 RPM 프록시 (원화 기준, 한국 YouTube 교육 카테고리 실측 기반)
 _CHANNEL_RPM: Dict[str, int] = {

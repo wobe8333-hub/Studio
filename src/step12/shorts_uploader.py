@@ -7,10 +7,11 @@ Phase 7 추가:
 """
 
 from pathlib import Path
+
 from loguru import logger
 
-from src.core.ssot import write_json, now_iso
-from src.core.config import CHANNEL_IDS, CHANNEL_CATEGORIES, CHANNEL_CATEGORY_KO
+from src.core.config import CHANNEL_CATEGORIES, CHANNEL_CATEGORY_KO
+from src.core.ssot import now_iso, write_json
 
 # 카테고리별 Shorts 해시태그
 SHORTS_HASHTAGS = {
@@ -110,9 +111,10 @@ def _upload_to_youtube(
         return f"simulated_shorts_{channel_id}_{video_path.stem}"
 
     try:
+        import json
+
         from googleapiclient.discovery import build
         from googleapiclient.http import MediaFileUpload
-        import json
 
         # credentials 파일로 인증 (OAuth2)
         creds_path = Path("credentials") / f"{channel_id}_oauth.json"
@@ -161,7 +163,7 @@ def _upload_to_youtube(
 
 def run_shorts_upload(channel_id: str, run_id: str) -> dict:
     """pipeline.py에서 호출하는 Shorts 업로드 진입점."""
-    from src.core.ssot import read_json, json_exists, get_run_dir
+    from src.core.ssot import get_run_dir, json_exists, read_json
 
     run_dir = get_run_dir(channel_id, run_id)
     shorts_dir = run_dir / "step08s"

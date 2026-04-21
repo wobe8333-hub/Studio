@@ -1,4 +1,4 @@
-{
+﻿{
   "estimated_api_calls": 15,
   "estimated_tokens": 5000,
   "api_cost": 0.015,
@@ -8,5 +8,5 @@
   "cost_per_call": 0.001,
   "token_price": 2e-06,
   "channel_id": "CH2",
-  "topic": "이런 집들은 피하세요가 부동산 시장에 미치는 영향"
+  "topic": "\uc591\uc790\uc5ed\ud559\uc758 \uacfc\ud559\uc801 \uc6d0\ub9ac"
 }

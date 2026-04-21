@@ -6,8 +6,8 @@
 주기적으로 사람이 검토·추가하는 반영구적 주제 저장소.
 """
 
-from typing import Dict, Any, List
 import random
+from typing import Any, Dict, List
 
 # 카테고리별 에버그린 주제 풀
 _CURATED_TOPICS: Dict[str, List[str]] = {

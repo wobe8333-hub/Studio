@@ -1,6 +1,8 @@
 """알고리즘 단계를 단방향으로 승격한다 (강등 없음)."""
 from pathlib import Path
+
 from loguru import logger
+
 from src.core.ssot import read_json, write_json
 
 STAGE_ORDER = ["PRE-ENTRY", "SEARCH-ONLY", "BROWSE-ENTRY", "ALGORITHM-ACTIVE"]

@@ -9,9 +9,10 @@ Phase 4 추가:
 """
 
 from loguru import logger
+
 from src.core.config import CHANNEL_CATEGORIES
+from src.step05.evergreen_collector import EVERGREEN_RATIO, get_evergreen_topics
 from src.step05.trend_collector import collect_trends, reinterpret_trend, save_knowledge
-from src.step05.evergreen_collector import get_evergreen_topics, EVERGREEN_RATIO
 
 TRENDING_RATIO = 0.60   # 60% 트렌딩
 # EVERGREEN_RATIO = 0.25 (evergreen_collector에서 가져옴)
@@ -34,13 +35,15 @@ def collect_knowledge(topic: str, category: str, channel_id: str) -> dict:
     Returns:
         KnowledgePackage를 dict로 직렬화한 결과
     """
+    from src.step05.knowledge.category_enricher import enrich_by_category
     from src.step05.knowledge.knowledge_package import (
-        build_empty_package, package_to_dict, save_package,
+        build_empty_package,
+        package_to_dict,
+        save_package,
     )
     from src.step05.knowledge.stage1_research import stage1_research
     from src.step05.knowledge.stage2_enrich import stage2_enrich
     from src.step05.knowledge.stage3_factcheck import stage3_factcheck
-    from src.step05.knowledge.category_enricher import enrich_by_category
 
     logger.info(f"[KnowledgeStore] '{topic}' ({category}) 3단계 수집 시작")
 

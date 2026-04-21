@@ -1,0 +1,37 @@
+﻿{
+  "schema_version": "1.0",
+  "description": "community-manager \uc2dc\uccad\uc790 \ud53c\ub4dc\ubc31 \uc694\uc57d",
+  "created_at": "2026-04-13T01:57:02.689751+00:00",
+  "channels": {
+    "CH1": {
+      "pending_comments": 0,
+      "escalated": 0
+    },
+    "CH2": {
+      "pending_comments": 0,
+      "escalated": 0
+    },
+    "CH3": {
+      "pending_comments": 0,
+      "escalated": 0
+    },
+    "CH4": {
+      "pending_comments": 0,
+      "escalated": 0
+    },
+    "CH5": {
+      "pending_comments": 0,
+      "escalated": 0
+    },
+    "CH6": {
+      "pending_comments": 0,
+      "escalated": 0
+    },
+    "CH7": {
+      "pending_comments": 0,
+      "escalated": 0
+    }
+  },
+  "topic_suggestions": [],
+  "last_scan": null
+}

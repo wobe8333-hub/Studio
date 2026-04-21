@@ -337,12 +337,16 @@
   filter: brightness(0.9);
 }
 
+/* ── 상단 탭 스크롤바 숨김 ────────────────────── */
+.kas-top-nav nav::-webkit-scrollbar { display: none; }
+
 /* ── 모바일 반응형 ──────────────────────────────── */
 .kas-bottom-nav { display: none; }
 
 @media (max-width: 767px) {
-  /* 사이드바 숨김 */
-  .kas-sidebar { display: none !important; }
+  /* 상단 탭 텍스트 숨김 — 아이콘만 표시 */
+  .kas-top-nav nav a span { display: none; }
+  .kas-top-nav nav a { padding: 4px 8px; }
 
   /* 하단 탭 표시 */
   .kas-bottom-nav { display: flex !important; }

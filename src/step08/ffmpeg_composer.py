@@ -1,7 +1,10 @@
 import subprocess
-from loguru import logger
 from pathlib import Path
+
+from loguru import logger
+
 from src.core.config import FFMPEG_PATH
+
 
 def image_to_clip(image_path: Path, output_path: Path, duration_sec: float = 5.0) -> bool:
     cmd = [FFMPEG_PATH, "-y", "-loop", "1", "-i", str(image_path),

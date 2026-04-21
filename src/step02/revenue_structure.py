@@ -1,28 +1,31 @@
 """STEP 02 — 수익 구조 정책."""
 from src.core.config import (
-    CHANNELS_DIR, CHANNEL_RPM_PROXY, CHANNEL_RPM_INITIAL,
-    REVENUE_TARGET_PER_CHANNEL, CHANNEL_MONTHLY_TARGET,
+    CHANNEL_MONTHLY_TARGET,
+    CHANNEL_RPM_INITIAL,
+    CHANNEL_RPM_PROXY,
+    CHANNELS_DIR,
+    REVENUE_TARGET_PER_CHANNEL,
 )
-from src.core.ssot import write_json, now_iso
+from src.core.ssot import now_iso, write_json
 
 AFFILIATE_FULL = {
     "CH1": {"product":"증권사 계좌 개설 CPA","type":"CPA","cpa_amount":15000,
             "click_rate_initial":0.003,"click_rate_growth":0.008,"purchase_conversion_rate":0.20},
-    "CH2": {"product":"부동산 강의 / 청약 앱 CPA","type":"CPA","cpa_amount":20000,
+    "CH2": {"product":"과학 키트 / 온라인 강의 CPA","type":"CPA","cpa_amount":12000,
+            "click_rate_initial":0.004,"click_rate_growth":0.010,"purchase_conversion_rate":0.15},
+    "CH3": {"product":"부동산 강의 / 청약 앱 CPA","type":"CPA","cpa_amount":20000,
             "click_rate_initial":0.004,"click_rate_growth":0.009,"purchase_conversion_rate":0.15},
-    "CH3": {"product":"심리학 도서 CPS","type":"CPS","product_price":20000,
+    "CH4": {"product":"심리학 도서 CPS","type":"CPS","product_price":20000,
             "commission_rate":0.05,"click_rate_initial":0.003,"click_rate_growth":0.008,
             "purchase_conversion_rate":0.10},
-    "CH4": {"product":"미스터리 도서 / 공포 OTT CPA","type":"CPA","cpa_amount":8000,
+    "CH5": {"product":"미스터리 도서 / 공포 OTT CPA","type":"CPA","cpa_amount":8000,
             "click_rate_initial":0.005,"click_rate_growth":0.012,"purchase_conversion_rate":0.10},
-    "CH5": {"product":"밀리터리 도서 / 전쟁사 게임 CPS","type":"CPS","product_price":25000,
-            "commission_rate":0.05,"click_rate_initial":0.004,"click_rate_growth":0.010,
-            "purchase_conversion_rate":0.12},
-    "CH6": {"product":"과학 키트 / 온라인 강의 CPA","type":"CPA","cpa_amount":12000,
-            "click_rate_initial":0.004,"click_rate_growth":0.010,"purchase_conversion_rate":0.15},
-    "CH7": {"product":"역사 도서 / 역사 여행 CPS","type":"CPS","product_price":18000,
+    "CH6": {"product":"역사 도서 / 역사 여행 CPS","type":"CPS","product_price":18000,
             "commission_rate":0.05,"click_rate_initial":0.004,"click_rate_growth":0.010,
             "purchase_conversion_rate":0.15},
+    "CH7": {"product":"밀리터리 도서 / 전쟁사 게임 CPS","type":"CPS","product_price":25000,
+            "commission_rate":0.05,"click_rate_initial":0.004,"click_rate_growth":0.010,
+            "purchase_conversion_rate":0.12},
 }
 OPERATING_COST = {
     "CH1": 80000, "CH2": 100000, "CH3": 100000,

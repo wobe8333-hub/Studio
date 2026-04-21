@@ -5,7 +5,7 @@ pytrends 라이브러리 기반 YouTube 검색 트렌드 수집
 Rate Limit(429) 발생 시 카테고리별 베이스라인 점수로 자동 대체
 """
 
-from typing import Dict, Any, List, Optional
+from typing import Any, Dict, List
 
 # Google Trends 429 발생 시 사용할 베이스라인 점수 (장기 검색 트렌드 기반)
 _KEYWORD_BASELINES: Dict[str, float] = {
@@ -113,5 +113,5 @@ def fetch_trends_scores(keywords: List[str], category: str) -> Dict[str, Any]:
             "source": "google_trends",
             "pytrends_available": True,
             "used_baseline": True,
-            "error": f"rate_limited → baseline 사용" if is_rate_limit else f"{type(e).__name__}: {str(e)}",
+            "error": "rate_limited → baseline 사용" if is_rate_limit else f"{type(e).__name__}: {str(e)}",
         }

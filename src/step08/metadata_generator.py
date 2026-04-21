@@ -22,13 +22,13 @@ def generate_metadata(channel_id: str, run_id: str, script: dict,
     - step08/render_report.json  — 렌더링 요약
     - step08/style_policy.json   — 채널 스타일 정책 스냅샷
     """
-    import google.generativeai as genai
+    from google import genai
+    from google.genai import types as genai_types
 
     from src.core.config import GEMINI_API_KEY, GEMINI_TEXT_MODEL
     from src.quota.gemini_quota import record_request, throttle_if_needed
 
-    genai.configure(api_key=GEMINI_API_KEY)
-    model = genai.GenerativeModel(GEMINI_TEXT_MODEL)
+    _client = genai.Client(api_key=GEMINI_API_KEY)
 
     # 제목 후보
     title_candidates = script.get("title_candidates", [topic.get("title", "제목 없음")])
@@ -72,11 +72,21 @@ def generate_metadata(channel_id: str, run_id: str, script: dict,
         f"YouTube 영상 태그 15개를 한국어와 영어로 섞어 콤마로 구분하여 나열하시오. "
         f"주제: {topic.get('title', '')} 카테고리: {category_ko}"
     )
-    tag_response = model.generate_content(
-        tag_prompt,
-        generation_config=genai.GenerationConfig(max_output_tokens=200),
+    tag_response = _client.models.generate_content(
+        model=GEMINI_TEXT_MODEL,
+        contents=tag_prompt,
+        config=genai_types.GenerateContentConfig(
+            max_output_tokens=2000,
+        ),
     )
-    tags = [t.strip() for t in tag_response.text.split(",")][:15]
+    # Thinking 모델 대응 — parts 순회하여 텍스트 추출
+    try:
+        raw_tags = tag_response.text
+    except (ValueError, AttributeError):
+        parts = tag_response.candidates[0].content.parts if tag_response.candidates else []
+        texts = [p.text for p in parts if hasattr(p, "text") and p.text]
+        raw_tags = texts[-1] if texts else ""
+    tags = [t.strip() for t in raw_tags.split(",") if t.strip()][:15]
     write_json(step08_dir / "tags.json", {"tags": tags})
     logger.debug(f"[METADATA] {channel_id}/{run_id} 태그 {len(tags)}개 생성 완료")
 

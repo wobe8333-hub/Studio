@@ -2,7 +2,9 @@
 import re
 from pathlib import Path
 from typing import Any, Optional
+
 from loguru import logger
+
 from src.agents.base_agent import BaseAgent
 from src.agents.ui_ux.schema_watcher import has_schema_changed, save_schema_hash
 from src.agents.ui_ux.type_syncer import extract_columns_from_sql, generate_ts_interface

@@ -1,11 +1,13 @@
-import json
 import hashlib
+import json
 import os
 import tempfile
-from pathlib import Path
 from datetime import datetime
+from pathlib import Path
 from typing import Any, Optional
+
 import filelock
+
 
 def read_json(path: Path) -> dict:
     with open(path, "r", encoding="utf-8-sig") as f:

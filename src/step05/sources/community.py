@@ -8,7 +8,7 @@ DC인사이드, 클리앙, 에펨코리아 등 인기글 제목 수집 (Beautifu
 
 import time
 import urllib.request
-from typing import Dict, Any, List
+from typing import Any, Dict, List
 
 # 카테고리별 크롤링 대상 (robots.txt 허용 공개 페이지)
 _COMMUNITY_SOURCES: Dict[str, List[Dict[str, str]]] = {

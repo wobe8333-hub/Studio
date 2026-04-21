@@ -1,7 +1,9 @@
 """STEP 15 — 세션 체인 엔진."""
 from loguru import logger
-from src.core.ssot import write_json, now_iso
+
 from src.core.config import KNOWLEDGE_DIR
+from src.core.ssot import now_iso, write_json
+
 
 def build_series_chain(channel_id: str, base_topic: str, episode_count: int = 3) -> dict:
     chain_dir = KNOWLEDGE_DIR/channel_id/"series"; chain_dir.mkdir(parents=True, exist_ok=True)

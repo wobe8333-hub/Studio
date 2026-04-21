@@ -4,14 +4,15 @@ STEP 00-P — Manim 파일럿 (LaTeX-free, dual-strategy)
 전략 2: 전략 1 실패 시 하드코딩 LaTeX-free 템플릿으로 폴백
 STEP 08 동일 validate_manim_code(3-tuple) 사용 보장.
 """
-import time, sys, subprocess, tempfile
+import subprocess
+import sys
+import tempfile
+import time
 from pathlib import Path
 
-from src.core.config import (
-    KAS_ROOT, GEMINI_API_KEY, GEMINI_TEXT_MODEL, MANIM_QUALITY
-)
-from src.core.ssot import write_json, now_iso
-from src.quota.gemini_quota import throttle_if_needed, record_request
+from src.core.config import GEMINI_API_KEY, GEMINI_TEXT_MODEL, KAS_ROOT, MANIM_QUALITY
+from src.core.ssot import now_iso, write_json
+from src.quota.gemini_quota import record_request, throttle_if_needed
 from src.step08.manim_generator import (
     LATEX_FREE_SYSTEM_INSTRUCTION,
     validate_manim_code,
@@ -139,20 +140,27 @@ class PilotScene(Scene):
 
 def _gemini_generate(scene_type: str, topic: str) -> str | None:
     try:
-        import google.generativeai as genai
-        genai.configure(api_key=GEMINI_API_KEY)
-        model = genai.GenerativeModel(
-            GEMINI_TEXT_MODEL,
-            system_instruction=LATEX_FREE_SYSTEM_INSTRUCTION,
-        )
+        from google import genai as _genai
+        from google.genai import types as genai_types
+        _client = _genai.Client(api_key=GEMINI_API_KEY)
         throttle_if_needed()
         record_request()
-        resp = model.generate_content(
-            f"'{topic}'을 주제로 한 {scene_type} 스타일 Manim 코드.\n"
-            f"class PilotScene(Scene). Python 코드만 출력.",
-            generation_config={"max_output_tokens": 1500},
+        full_prompt = (
+            LATEX_FREE_SYSTEM_INSTRUCTION + "\n\n"
+            + f"'{topic}'을 주제로 한 {scene_type} 스타일 Manim 코드.\n"
+            + "class PilotScene(Scene). Python 코드만 출력."
         )
-        code = resp.text.strip()
+        resp = _client.models.generate_content(
+            model=GEMINI_TEXT_MODEL,
+            contents=full_prompt,
+            config=genai_types.GenerateContentConfig(max_output_tokens=4000),
+        )
+        try:
+            code = resp.text.strip()
+        except (ValueError, AttributeError, TypeError):
+            cparts = resp.candidates[0].content.parts if resp.candidates else []
+            texts = [p.text for p in cparts if hasattr(p, "text") and p.text]
+            code = texts[-1].strip() if texts else ""
         if code.startswith("```"):
             code = "\n".join(code.split("\n")[1:-1])
         return code

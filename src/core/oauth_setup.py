@@ -1,9 +1,10 @@
 """YouTube OAuth2 인증 흐름. credentials/{ch}_token.json 생성."""
 import sys
 from pathlib import Path
-from google_auth_oauthlib.flow import InstalledAppFlow
+
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
+from google_auth_oauthlib.flow import InstalledAppFlow
 
 SCOPES = [
     "https://www.googleapis.com/auth/youtube.upload",

@@ -122,11 +122,12 @@ class TestE2EPipelineFlow:
             "financial_disclaimer": "투자 주의",
         }
 
-        mock_model = MagicMock()
+        mock_client = MagicMock()
         mock_resp = MagicMock()
         mock_resp.text = json.dumps(mock_script)
-        mock_model.generate_content.return_value = mock_resp
-        sg_mod.genai.GenerativeModel.return_value = mock_model
+        mock_client.models.generate_content.return_value = mock_resp
+        # 새 SDK 패턴: Client 싱글턴 직접 주입
+        sg_mod._genai_client = mock_client
 
         with patch.object(sg_mod, "throttle_if_needed", return_value=None):
             with patch.object(sg_mod, "record_request", return_value=None):

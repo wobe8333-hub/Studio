@@ -7,6 +7,7 @@ Phase 5 추가:
 
 from pathlib import Path
 from typing import Optional
+
 from loguru import logger
 
 
@@ -32,8 +33,8 @@ def compose_scene(
         True: 성공
     """
     try:
+
         from PIL import Image, ImageDraw, ImageFont
-        import textwrap
 
         # 1) 배경 레이어
         if background_path and background_path.exists():

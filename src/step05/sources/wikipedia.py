@@ -6,9 +6,9 @@ Wikipedia OpenSearch 소스
 from __future__ import annotations
 
 import json
-from typing import Dict, Any, List, Tuple
+from typing import Any, Dict, List, Tuple
 from urllib.parse import quote
-from urllib.request import urlopen, Request
+from urllib.request import Request, urlopen
 
 
 def _norm(s: str) -> str:

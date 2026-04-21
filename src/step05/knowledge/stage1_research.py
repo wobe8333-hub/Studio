@@ -4,13 +4,17 @@ Tavily AI Search + Perplexity API + Gemini Deep Research
 → 핵심 팩트 5~7개 + 출처 URL 통합
 """
 
-from typing import List, Dict, Any
+from typing import Any, Dict, List
+
 from loguru import logger
 
 from src.core.config import GEMINI_API_KEY, GEMINI_TEXT_MODEL
-from src.step05.knowledge.knowledge_package import KnowledgePackage, SourceEntry, build_empty_package
-from src.step05.knowledge.tavily_client import search_topic, extract_facts_from_results
-from src.step05.knowledge.perplexity_client import research_topic, extract_key_sentences
+from src.step05.knowledge.knowledge_package import (
+    KnowledgePackage,
+    SourceEntry,
+)
+from src.step05.knowledge.perplexity_client import extract_key_sentences, research_topic
+from src.step05.knowledge.tavily_client import extract_facts_from_results, search_topic
 
 
 def _gemini_deep_research(topic: str, category: str) -> Dict[str, Any]:
@@ -20,9 +24,9 @@ def _gemini_deep_research(topic: str, category: str) -> Dict[str, Any]:
         return {"facts": [], "ok": False}
 
     try:
-        import google.generativeai as genai
-        genai.configure(api_key=GEMINI_API_KEY)
-        model = genai.GenerativeModel(GEMINI_TEXT_MODEL)
+        from google import genai as _genai
+        from google.genai import types as genai_types
+        _client = _genai.Client(api_key=GEMINI_API_KEY)
 
         prompt = f"""주제: {topic} (카테고리: {category})
 
@@ -40,8 +44,17 @@ def _gemini_deep_research(topic: str, category: str) -> Dict[str, Any]:
 - 한국어로 작성
 - 각 팩트는 1~2문장
 """
-        resp = model.generate_content(prompt)
-        text = resp.text.strip()
+        resp = _client.models.generate_content(
+            model=GEMINI_TEXT_MODEL,
+            contents=prompt,
+            config=genai_types.GenerateContentConfig(max_output_tokens=2000),
+        )
+        try:
+            text = resp.text.strip()
+        except (ValueError, AttributeError, TypeError):
+            parts = resp.candidates[0].content.parts if resp.candidates else []
+            texts = [p.text for p in parts if hasattr(p, "text") and p.text]
+            text = texts[-1].strip() if texts else ""
         lines = [l.strip().lstrip("0123456789.-• ") for l in text.split("\n") if len(l.strip()) > 15]
         facts = [l for l in lines if l][:7]
         return {"facts": facts, "ok": True}

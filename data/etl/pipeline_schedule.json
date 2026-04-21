@@ -1,0 +1,37 @@
+﻿{
+  "schema_version": "1.0",
+  "description": "data-engineer ETL \ud30c\uc774\ud504\ub77c\uc778 \uc2a4\ucf00\uc904",
+  "created_at": "2026-04-13T01:57:02.686237+00:00",
+  "step05_sources": {
+    "stage1_tavily": {
+      "enabled": true,
+      "quality_threshold": 0.7,
+      "retry_count": 3
+    },
+    "stage2_fred": {
+      "enabled": true,
+      "quality_threshold": 0.6,
+      "retry_count": 2
+    },
+    "stage2_nasa": {
+      "enabled": true,
+      "quality_threshold": 0.6,
+      "retry_count": 2
+    },
+    "stage2_reddit": {
+      "enabled": true,
+      "quality_threshold": 0.5,
+      "retry_count": 2
+    },
+    "stage3_perplexity": {
+      "enabled": true,
+      "quality_threshold": 0.8,
+      "retry_count": 3
+    }
+  },
+  "supabase_sync": {
+    "idempotency_key": "run_id",
+    "last_sync": null,
+    "sync_failures": []
+  }
+}

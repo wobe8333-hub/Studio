@@ -1,6 +1,5 @@
-from pathlib import Path
-from src.core.ssot import read_json, write_json, json_exists, now_iso
-from src.core.config import CHANNELS_DIR, CHANNEL_HOOK_DIRECTION
+from src.core.config import CHANNEL_HOOK_DIRECTION, CHANNELS_DIR
+from src.core.ssot import json_exists, now_iso, read_json, write_json
 
 CHANNEL_AUDIENCE = {
     "CH1": {"primary_age_range": "30~50대", "primary_gender": "남성",

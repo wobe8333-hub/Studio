@@ -7,6 +7,7 @@ Phase 7 추가:
 """
 
 from pathlib import Path
+
 from loguru import logger
 
 from src.core.config import BGM_DIR
@@ -14,12 +15,12 @@ from src.core.config import BGM_DIR
 # 채널(카테고리)별 BGM 분위기 정의
 CHANNEL_BGM_STYLE = {
     "CH1": {"mood": "calm professional", "genre": "cinematic", "tempo": "moderate", "description": "차분하고 신뢰감 있는 경제 뉴스 배경음"},
-    "CH2": {"mood": "trustworthy stable", "genre": "corporate", "tempo": "moderate", "description": "안정적인 부동산 정보 배경음"},
-    "CH3": {"mood": "curious empathetic", "genre": "ambient", "tempo": "slow", "description": "심리 탐구의 따뜻하고 사색적인 배경음"},
-    "CH4": {"mood": "mysterious suspense", "genre": "dark ambient", "tempo": "slow", "description": "미스터리 서스펜스 긴장감 있는 배경음"},
-    "CH5": {"mood": "dramatic epic", "genre": "orchestral", "tempo": "moderate-fast", "description": "역사적 장대함을 표현하는 전쟁사 배경음"},
-    "CH6": {"mood": "wonder futuristic", "genre": "electronic ambient", "tempo": "moderate", "description": "과학의 신비로움을 표현하는 배경음"},
-    "CH7": {"mood": "nostalgic storytelling", "genre": "cinematic folk", "tempo": "slow-moderate", "description": "역사의 이야기를 담은 배경음"},
+    "CH2": {"mood": "wonder futuristic", "genre": "electronic ambient", "tempo": "moderate", "description": "과학의 신비로움을 표현하는 배경음"},
+    "CH3": {"mood": "trustworthy stable", "genre": "corporate", "tempo": "moderate", "description": "안정적인 부동산 정보 배경음"},
+    "CH4": {"mood": "curious empathetic", "genre": "ambient", "tempo": "slow", "description": "심리 탐구의 따뜻하고 사색적인 배경음"},
+    "CH5": {"mood": "mysterious suspense", "genre": "dark ambient", "tempo": "slow", "description": "미스터리 서스펜스 긴장감 있는 배경음"},
+    "CH6": {"mood": "nostalgic storytelling", "genre": "cinematic folk", "tempo": "slow-moderate", "description": "역사의 이야기를 담은 배경음"},
+    "CH7": {"mood": "dramatic epic", "genre": "orchestral", "tempo": "moderate-fast", "description": "웅장하고 역동적인 전쟁사 배경음"},
 }
 
 
@@ -57,8 +58,9 @@ def generate_bgm(channel_id: str, duration_sec: int = 720) -> Path:
 def _try_suno_api(style: dict, duration_sec: int, out_path: Path) -> bool:
     """Suno AI API로 BGM 생성 시도."""
     try:
-        import httpx
         import os
+
+        import httpx
 
         suno_api_key = os.getenv("SUNO_API_KEY", "")
         if not suno_api_key:

@@ -1,13 +1,13 @@
 """
-NASA Open API 소스 (Layer 2 — 일간, CH6 과학 전용)
+NASA Open API 소스 (Layer 2 — 일간, CH2 과학 전용)
 APOD (오늘의 천문사진), NEO (근지구 천체) 데이터 수집
 """
 
-import os
-import urllib.request
-import urllib.parse
 import json
-from typing import Dict, Any, List
+import os
+import urllib.parse
+import urllib.request
+from typing import Any, Dict, List
 
 
 def _load_api_key() -> str:

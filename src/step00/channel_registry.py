@@ -1,17 +1,18 @@
 """채널 레지스트리 — 활성 채널 목록 (런치 페이즈 기준)."""
 from loguru import logger
+
 from src.core.config import (
     CHANNEL_CATEGORIES,
     CHANNEL_CATEGORY_KO,
     CHANNEL_IDS,
     CHANNEL_LAUNCH_PHASE,
-    CHANNEL_RPM_PROXY,
     CHANNEL_MONTHLY_TARGET,
+    CHANNEL_RPM_PROXY,
     CHANNEL_SHORTS_TARGET,
-    REVENUE_TARGET_PER_CHANNEL,
     GLOBAL_DIR,
+    REVENUE_TARGET_PER_CHANNEL,
 )
-from src.core.ssot import write_json, now_iso
+from src.core.ssot import now_iso, write_json
 
 # 7채널 순서 (론칭 우선순위 순)
 _ORDER = ("CH1", "CH2", "CH3", "CH4", "CH5", "CH6", "CH7")

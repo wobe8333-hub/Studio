@@ -1,16 +1,15 @@
-from src.core.ssot import (read_json, write_json, json_exists,
-                             sha256_dict, now_iso, get_run_dir)
-from src.core.config import CHANNELS_DIR, MEMORY_DIR, CHANNEL_CATEGORIES, KAS_ROOT, CHANNEL_HOOK_DIRECTION
+from src.core.config import CHANNEL_HOOK_DIRECTION, CHANNELS_DIR, KAS_ROOT, MEMORY_DIR
+from src.core.ssot import json_exists, now_iso, read_json, sha256_dict, write_json
 from src.step00.channel_registry import get_channel
 
 CHANNEL_ANIMATION_STYLE = {
     "CH1": "comparison",  # 경제: 비교 그래프
-    "CH2": "comparison",  # 부동산: 가격 비교
-    "CH3": "metaphor",    # 심리: 은유/비유
-    "CH4": "hybrid",      # 미스터리: 혼합 연출
-    "CH5": "timeline",    # 전쟁사: 연대기
-    "CH6": "process",     # 과학: 프로세스 설명
-    "CH7": "timeline",    # 역사: 연대기
+    "CH2": "process",     # 과학: 프로세스 설명
+    "CH3": "comparison",  # 부동산: 가격 비교
+    "CH4": "metaphor",    # 심리: 은유/비유
+    "CH5": "hybrid",      # 미스터리: 혼합 연출
+    "CH6": "timeline",    # 역사: 연대기
+    "CH7": "timeline",    # 전쟁사: 연대기
 }
 RENDER_TOOL_MAP = {
     "metaphor": "gemini", "process": "manim",

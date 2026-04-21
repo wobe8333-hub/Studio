@@ -1,7 +1,7 @@
 ﻿{
   "channel_id": "CH1",
   "run_id": "test_run_003",
-  "qa_timestamp": "2026-04-11T08:54:13Z",
+  "qa_timestamp": "2026-04-20T11:09:12Z",
   "animation_quality_check": {
     "pass": false,
     "vision_qa": {
@@ -30,5 +30,7 @@
     "purchase_rate_applied": 0,
     "formula_correct": false
   },
+  "copyright_risk_score": 0.0,
+  "copyright_reasons": [],
   "overall_pass": false
 }

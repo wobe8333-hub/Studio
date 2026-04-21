@@ -1,6 +1,7 @@
 """STEP 10 — PIL 합성 기반 썸네일 생성 (Figma 베이스 + 텍스트 레이어)."""
 import re
 from pathlib import Path
+
 from loguru import logger
 from PIL import Image, ImageDraw, ImageFont
 
@@ -21,12 +22,12 @@ CHANNEL_BASE_TEMPLATES: dict[str, Path] = {
 # ── 채널별 색상 스펙 ───────────────────────────────────────────────────────────
 CHANNEL_COLORS: dict[str, dict] = {
     "CH1": {"overlay": (180, 120,  0, 235), "top_line": (255, 215,   0), "primary": "#FFD700", "name": "경제"},
-    "CH2": {"overlay": (  0,  80,  0, 235), "top_line": ( 76, 175,  80), "primary": "#4CAF50", "name": "부동산"},
-    "CH3": {"overlay": ( 80,   0, 120, 235), "top_line": (206, 147, 216), "primary": "#CE93D8", "name": "심리"},
-    "CH4": {"overlay": (100,  20,   0, 235), "top_line": (255, 112,  67), "primary": "#FF7043", "name": "미스터리"},
-    "CH5": {"overlay": (120,  20,  20, 235), "top_line": (239, 154, 154), "primary": "#EF9A9A", "name": "전쟁사"},
-    "CH6": {"overlay": (  0,  60,  80, 235), "top_line": ( 77, 208, 225), "primary": "#4DD0E1", "name": "과학"},
-    "CH7": {"overlay": ( 80,  55,   0, 235), "top_line": (200, 169, 110), "primary": "#C8A96E", "name": "역사"},
+    "CH2": {"overlay": (  0,  60,  80, 235), "top_line": ( 77, 208, 225), "primary": "#4DD0E1", "name": "과학"},
+    "CH3": {"overlay": (  0,  80,  0, 235), "top_line": ( 76, 175,  80), "primary": "#4CAF50", "name": "부동산"},
+    "CH4": {"overlay": ( 80,   0, 120, 235), "top_line": (206, 147, 216), "primary": "#CE93D8", "name": "심리"},
+    "CH5": {"overlay": (100,  20,   0, 235), "top_line": (255, 112,  67), "primary": "#FF7043", "name": "미스터리"},
+    "CH6": {"overlay": ( 80,  55,   0, 235), "top_line": (200, 169, 110), "primary": "#C8A96E", "name": "역사"},
+    "CH7": {"overlay": (120,  20,  20, 235), "top_line": (239, 154, 154), "primary": "#EF9A9A", "name": "전쟁사"},
 }
 
 # ── 폰트 ─────────────────────────────────────────────────────────────────────
@@ -160,6 +161,24 @@ def _generate_placeholder(title: str, output_path: Path) -> bool:
     except Exception as e:
         logger.warning(f"[STEP10] 플레이스홀더 생성 실패: {e}")
         return False
+
+
+def generate_thumbnail_from_topic(channel_id: str, run_id: str, topic: dict) -> bool:
+    """주제(topic dict)만으로 썸네일 초안 생성 — script.json 불필요.
+
+    Step08 실행 전 '썸네일 먼저' 워크플로우용.
+    runs/{channel_id}/{run_id}/step10/thumbnail_preview.png 에 저장.
+    """
+    from src.core.ssot import get_run_dir
+    title = topic.get("reinterpreted_title") or topic.get("topic", "제목 없음")
+    run_dir  = get_run_dir(channel_id, run_id)
+    out_dir  = run_dir / "step10"
+    out_dir.mkdir(parents=True, exist_ok=True)
+    out_path = out_dir / "thumbnail_preview.png"
+    ok = generate_thumbnail(channel_id, title, "01", out_path)
+    if ok:
+        logger.info(f"[STEP10] 썸네일 초안 생성: {out_path}")
+    return ok
 
 
 def generate_thumbnail(channel_id: str, title: str, mode: str, output_path: Path) -> bool:

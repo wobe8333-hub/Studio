@@ -1,6 +1,8 @@
 """FAILED 상태의 파이프라인 실행을 감지한다."""
 from pathlib import Path
+
 from loguru import logger
+
 from src.core.ssot import read_json
 
 

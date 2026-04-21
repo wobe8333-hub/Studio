@@ -35,8 +35,6 @@ from src.step08.subtitle_generator import generate_subtitles
 
 def run_step08(channel_id: str, topic: dict, style_policy: dict,
                revenue_policy: dict, algorithm_policy: dict) -> str:
-    import google.generativeai as genai
-
     from src.core.config import BGM_DIR, GEMINI_API_KEY, GEMINI_TEXT_MODEL, RUNS_DIR
     run_id = f"run_{channel_id}_{int(time.time())}"
     run_dir = get_run_dir(channel_id, run_id)
@@ -85,82 +83,61 @@ def run_step08(channel_id: str, topic: dict, style_policy: dict,
     write_json(step08_dir / "script.json", script)
 
     sections = script.get("sections", [])
-    manim_sections = [s for s in sections if s.get("render_tool") == "manim"]
-    gemini_sections = [s for s in sections if s.get("render_tool") != "manim"]
-
     clip_paths = []
-    manim_fallback_count = 0
 
-    logger.info(f"[STEP08] {channel_id}/{run_id} 이미지 생성 중 (SD XL → Gemini 폴백)...")
-    # SD XL + LoRA 우선 시도, 실패 섹션은 Gemini 폴백
-    sd_paths = gen_sd_images(channel_id, gemini_sections, images_ai)
-    img_results = {
-        sec["id"]: p
-        for sec, p in zip(gemini_sections, sd_paths)
-        if p and p.exists()
-    }
-    missing_sections = [s for s in gemini_sections if s["id"] not in img_results]
-    if missing_sections:
-        fallback_results = gen_images(missing_sections, images_ai)
-        img_results.update(fallback_results)
-    # scene_composer: 캐릭터 이미지 + 텍스트 오버레이 합성
+    # ── Phase 9: Gemini 배경 + 에셋 캐릭터 PNG 합성 파이프라인 ─────────────
+    # SD XL / Manim 대신: Gemini로 배경 생성 → assets/ 캐릭터 PNG 오버레이
+    from src.step08.character_manager import (
+        get_character_asset_path,
+        select_expression_for_section,
+    )
+    from src.step08.scene_composer import compose_scene
+
+    logger.info(f"[STEP08] {channel_id}/{run_id} Gemini 배경 이미지 생성 중...")
+    bg_results = gen_images(sections, images_ai)
+
     composed_dir = step08_dir / "images" / "composed"
-    char_paths_ordered = []
-    sections_for_compose = []
-    for sec in gemini_sections:
-        img_path = img_results.get(sec["id"])
-        if img_path and img_path.exists():
-            char_paths_ordered.append(img_path)
-            sections_for_compose.append(sec)
+    composed_dir.mkdir(parents=True, exist_ok=True)
+    total_secs = len(sections)
+    composed_frames: list[Path] = []
 
-    composed_paths = compose_all_scenes(char_paths_ordered, sections_for_compose, composed_dir)
-    # 합성 실패 시 원본 이미지 폴백
-    final_img_paths = composed_paths if composed_paths else char_paths_ordered
+    for sec in sections:
+        expression = select_expression_for_section(sec["id"], total_secs)
+        char_png   = get_character_asset_path(channel_id, expression)
+        bg_path    = bg_results.get(sec["id"])
+        out_path   = composed_dir / f"composed_{sec['id']:03d}.png"
 
-    # motion_engine: Ken Burns 팬/줌 효과 적용
+        ok = compose_scene(
+            character_path=char_png,
+            background_path=bg_path,
+            narration_text=sec.get("narration_text", ""),
+            output_path=out_path,
+        )
+        if ok and out_path.exists():
+            composed_frames.append(out_path)
+        elif bg_path and bg_path.exists():
+            composed_frames.append(bg_path)   # 배경만이라도 사용
+            logger.debug(f"[STEP08] section={sec['id']} 합성 실패 → 배경 단독 사용")
+
+    # motion_engine: Ken Burns 팬/줌 효과
     motion_clips_dir = step08_dir / "clips" / "motion"
-    motion_clips = batch_create_motion_clips(final_img_paths, motion_clips_dir, duration_sec=6.0)
-
-    for sec, clip_path in zip(sections_for_compose, motion_clips):
+    motion_clips = batch_create_motion_clips(composed_frames, motion_clips_dir, duration_sec=6.0)
+    for i, clip_path in enumerate(motion_clips):
         if clip_path and clip_path.exists():
-            clip_paths.append((sec["id"], clip_path))
+            clip_paths.append((i, clip_path))
 
-    logger.info(f"[STEP08] {channel_id}/{run_id} Manim 클립 생성 중...")
-    stability_log = []
-    for sec in manim_sections:
-        success, clip_path, fallback = manim_run(sec, clips_manim)
-        if success and clip_path:
-            clip_paths.append((sec["id"], clip_path))
-            stability_log.append({"section_id": sec["id"], "success": True, "fallback": False})
-        else:
-            manim_fallback_count += 1
-            stability_log.append({"section_id": sec["id"], "success": False, "fallback": True})
-            img_desc = sec.get("animation_prompt", "")
-            img_path = images_ai / f"section_{sec['id']:03d}_fallback.png"
-            from src.step08.image_generator import generate_single_image
-            generate_single_image(img_desc, img_path)
-            if img_path.exists():
-                clip_path_fb = clips_gemini / f"section_{sec['id']:03d}_fallback.mp4"
-                create_motion_clip(img_path, clip_path_fb, duration_sec=6.0)
-                if clip_path_fb.exists():
-                    clip_paths.append((sec["id"], clip_path_fb))
-
-    fallback_rate = manim_fallback_count / max(len(manim_sections), 1)
+    # manim_stability_report — 호환성 유지 (Gemini+에셋 파이프라인으로 대체됨)
     manim_stability = {
         "run_id": run_id,
-        "manim_sections_attempted": len(manim_sections),
-        "manim_sections_success": len(manim_sections) - manim_fallback_count,
-        "manim_sections_fallback": manim_fallback_count,
-        "fallback_rate": round(fallback_rate, 3),
-        "hitl_required": fallback_rate > 0.50,
-        "details": stability_log,
+        "manim_sections_attempted": 0,
+        "manim_sections_success": 0,
+        "manim_sections_fallback": 0,
+        "fallback_rate": 0.0,
+        "hitl_required": False,
+        "details": [],
+        "note": "Phase 9: Gemini 배경 + 에셋 캐릭터 PNG 파이프라인으로 대체됨",
     }
     write_json(step08_dir / "manim_stability_report.json", manim_stability)
-
-    if fallback_rate > 0.50:
-        logger.error(f"MANIM_HITL_REQUIRED: fallback_rate={fallback_rate}")
-        append_trace(run_dir / "decision_trace.json", "MANIM_HITL",
-                     {"fallback_rate": fallback_rate, "action": "인간 점검 필요"})
 
     clip_paths.sort(key=lambda x: x[0])
     ordered_clips = [p for _, p in clip_paths]

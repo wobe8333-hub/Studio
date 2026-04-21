@@ -3,8 +3,8 @@ STEP 00-P 오류 정밀 진단 스크립트
 실패한 scene_type 1개씩 실행하여 stderr 전문을 출력한다.
 """
 import subprocess
-import tempfile
 import sys
+import tempfile
 from pathlib import Path
 
 KAS_ROOT = Path(r"C:\Users\조찬우\Desktop\AI_Animation_Stuidio")

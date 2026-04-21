@@ -3,10 +3,10 @@
 뉴스 / 블로그 / 지식iN 검색으로 한국어 트렌드 수집
 """
 
+import json
 import os
 import urllib.request
-import json
-from typing import Dict, Any, List, Tuple
+from typing import Any, Dict, List, Tuple
 
 
 def _load_credentials() -> Tuple[str, str]:

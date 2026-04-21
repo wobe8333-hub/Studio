@@ -3,7 +3,8 @@ Tavily AI Search 클라이언트
 실시간 웹 검색 — 주제에 대한 최신 정보 + 출처 URL 추출
 """
 
-from typing import List, Dict, Any
+from typing import Any, Dict, List
+
 from loguru import logger
 
 from src.core.config import TAVILY_API_KEY

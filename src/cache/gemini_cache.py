@@ -5,7 +5,6 @@ TTL 24시간, 자동 만료, 크기 제한 500MB
 
 import hashlib
 import time
-from pathlib import Path
 from typing import Optional
 
 import diskcache

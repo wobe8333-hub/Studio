@@ -7,13 +7,13 @@ MP4 클립을 생성한다.
 GPU 필요 없음 — FFmpeg 기반 순수 소프트웨어 렌더링.
 """
 
+import subprocess
 from pathlib import Path
 from typing import List, Optional
-import subprocess
-import shutil
-from loguru import logger
-from src.core.config import FFMPEG_PATH
 
+from loguru import logger
+
+from src.core.config import FFMPEG_PATH
 
 # 지원 전환 효과 (FFmpeg xfade filter)
 TRANSITION_TYPES = ["fade", "slideleft", "slideright", "slideup", "wipeleft", "wiperight"]

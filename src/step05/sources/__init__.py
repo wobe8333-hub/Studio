@@ -10,25 +10,24 @@ Layer 5 (에버그린): wikipedia, curated
 """
 
 # Layer 1 — 실시간
+# Layer 4 — 월간
+from src.step05.sources.arxiv import fetch_arxiv_papers
+from src.step05.sources.community import fetch_community_topics
+from src.step05.sources.curated import fetch_curated_topics
 from src.step05.sources.google_trends import fetch_trends_scores
+from src.step05.sources.nasa import fetch_nasa_data
 from src.step05.sources.naver import fetch_naver_trends as fetch_naver_topics
-
-# Layer 2 — 일간
-from src.step05.sources.youtube_trending import fetch_youtube_trending
-from src.step05.sources.rss import fetch_news_context
 
 # Layer 3 — 주간
 from src.step05.sources.reddit import fetch_reddit_topics
-from src.step05.sources.community import fetch_community_topics
-
-# Layer 4 — 월간
-from src.step05.sources.arxiv import fetch_arxiv_papers
+from src.step05.sources.rss import fetch_news_context
 from src.step05.sources.scholar import fetch_scholar_papers
-from src.step05.sources.nasa import fetch_nasa_data
 
 # Layer 5 — 에버그린
 from src.step05.sources.wikipedia import expand_keywords
-from src.step05.sources.curated import fetch_curated_topics
+
+# Layer 2 — 일간
+from src.step05.sources.youtube_trending import fetch_youtube_trending
 
 __all__ = [
     # Layer 1

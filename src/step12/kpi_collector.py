@@ -2,13 +2,15 @@
 버그 수정(BUG-kpi): 토큰은 authorized_user JSON 파일 경로로 Credentials 로드.
 E-3: impressions / impressionClickThroughRate(CTR) 메트릭 추가.
 """
-from loguru import logger
 from pathlib import Path
-from googleapiclient.discovery import build
-from google.oauth2.credentials import Credentials
+
 from google.auth.transport.requests import Request
-from src.core.ssot import read_json, write_json, json_exists, now_iso, get_run_dir
+from google.oauth2.credentials import Credentials
+from googleapiclient.discovery import build
+from loguru import logger
+
 from src.core.config import CREDENTIALS_DIR, USD_TO_KRW
+from src.core.ssot import get_run_dir, now_iso, write_json
 from src.quota.youtube_quota import consume
 
 ANALYTICS_SCOPES = [

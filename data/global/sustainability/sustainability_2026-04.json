@@ -1,7 +1,7 @@
 ﻿{
   "schema_version": "2.0",
   "quarter": "2026-04",
-  "generated_at": "2026-04-02T23:50:56Z",
+  "generated_at": "2026-04-17T13:46:29Z",
   "total_channels": 7,
   "by_channel": {
     "CH1": {
@@ -12,44 +12,44 @@
       "refresh_eligible": false
     },
     "CH2": {
-      "category": "realestate",
+      "category": "science",
       "topics_produced": 3,
       "topics_remaining_estimate": 797,
       "depletion_risk": "LOW",
       "refresh_eligible": false
     },
     "CH3": {
-      "category": "psychology",
-      "topics_produced": 0,
-      "topics_remaining_estimate": 600,
+      "category": "realestate",
+      "topics_produced": 8,
+      "topics_remaining_estimate": 592,
       "depletion_risk": "LOW",
       "refresh_eligible": false
     },
     "CH4": {
-      "category": "mystery",
-      "topics_produced": 0,
-      "topics_remaining_estimate": 800,
+      "category": "psychology",
+      "topics_produced": 6,
+      "topics_remaining_estimate": 794,
       "depletion_risk": "LOW",
       "refresh_eligible": false
     },
     "CH5": {
-      "category": "war_history",
-      "topics_produced": 0,
-      "topics_remaining_estimate": 2000,
+      "category": "mystery",
+      "topics_produced": 5,
+      "topics_remaining_estimate": 1995,
       "depletion_risk": "LOW",
       "refresh_eligible": false
     },
     "CH6": {
-      "category": "science",
-      "topics_produced": 0,
-      "topics_remaining_estimate": 1500,
+      "category": "history",
+      "topics_produced": 10,
+      "topics_remaining_estimate": 1490,
       "depletion_risk": "LOW",
       "refresh_eligible": false
     },
     "CH7": {
-      "category": "history",
-      "topics_produced": 0,
-      "topics_remaining_estimate": 2000,
+      "category": "war_history",
+      "topics_produced": 10,
+      "topics_remaining_estimate": 1990,
       "depletion_risk": "LOW",
       "refresh_eligible": false
     }

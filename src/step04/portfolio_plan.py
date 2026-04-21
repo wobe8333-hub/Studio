@@ -2,8 +2,9 @@
 버그 수정(BUG-1): 중복 로직 제거. channel_registry.get_active_channels 재사용.
 """
 from datetime import datetime
-from src.core.config import GLOBAL_DIR, CHANNEL_MONTHLY_TARGET
-from src.core.ssot import write_json, now_iso
+
+from src.core.config import CHANNEL_MONTHLY_TARGET, GLOBAL_DIR
+from src.core.ssot import now_iso, write_json
 from src.step00.channel_registry import get_active_channels
 
 TRENDING_RATIO  = 0.60

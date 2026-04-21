@@ -8,22 +8,22 @@ import pytest
 def _load_metadata_generator():
     import importlib.util, sys, types
 
-    for mod_name in ["google.generativeai"]:
-        if mod_name not in sys.modules:
-            import google as _g
-            m = types.ModuleType(mod_name)
-            m.configure = lambda **kw: None
-            m.GenerativeModel = MagicMock()
-            m.GenerationConfig = MagicMock()
-            sys.modules[mod_name] = m
-            setattr(_g, "generativeai", m)
+    # 구 SDK 모킹 (하위 호환)
+    if "google.generativeai" not in sys.modules:
+        import google as _g
+        m = types.ModuleType("google.generativeai")
+        m.configure = lambda **kw: None
+        m.GenerativeModel = MagicMock()
+        m.GenerationConfig = MagicMock()
+        sys.modules["google.generativeai"] = m
+        setattr(_g, "generativeai", m)
 
-    for mod_name in ["src.quota.gemini_quota"]:
-        if mod_name not in sys.modules:
-            fake = types.ModuleType(mod_name)
-            fake.throttle_if_needed = lambda: None
-            fake.record_request = lambda: None
-            sys.modules[mod_name] = fake
+    # gemini_quota 모킹
+    if "src.quota.gemini_quota" not in sys.modules:
+        fake = types.ModuleType("src.quota.gemini_quota")
+        fake.throttle_if_needed = lambda: None
+        fake.record_request = lambda: None
+        sys.modules["src.quota.gemini_quota"] = fake
 
     spec = importlib.util.spec_from_file_location(
         "metadata_generator",
@@ -32,6 +32,15 @@ def _load_metadata_generator():
     mod = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(mod)
     return mod
+
+
+def _make_mock_genai_client(tag_text: str = "태그1, 태그2, 태그3"):
+    """google.genai.Client 모킹 헬퍼 — patch 컨텍스트 안에서 사용."""
+    mock_resp = MagicMock()
+    mock_resp.text = tag_text
+    mock_client = MagicMock()
+    mock_client.models.generate_content.return_value = mock_resp
+    return mock_client
 
 
 meta_gen = _load_metadata_generator()
@@ -66,14 +75,8 @@ class TestChapterMarkersInDescription:
         script = self._make_script_with_chapters()
         topic = {"title": "테스트 주제"}
 
-        mock_model = MagicMock()
-        mock_resp = MagicMock()
-        mock_resp.text = "태그1, 태그2, 태그3"
-        mock_model.generate_content.return_value = mock_resp
-
-        import google.generativeai as genai
-        with patch.object(genai, "GenerativeModel", return_value=mock_model), \
-             patch.object(genai, "configure"):
+        mock_client = _make_mock_genai_client("태그1, 태그2, 태그3")
+        with patch("google.genai.Client", return_value=mock_client):
             meta_gen.generate_metadata("CH1", "run_CH1_test", script, tmp_path, topic)
 
         desc_path = tmp_path / "description.txt"
@@ -98,14 +101,8 @@ class TestChapterMarkersInDescription:
         }
         topic = {"title": "주제"}
 
-        mock_model = MagicMock()
-        mock_resp = MagicMock()
-        mock_resp.text = "태그1, 태그2"
-        mock_model.generate_content.return_value = mock_resp
-
-        import google.generativeai as genai
-        with patch.object(genai, "GenerativeModel", return_value=mock_model), \
-             patch.object(genai, "configure"):
+        mock_client = _make_mock_genai_client("태그1, 태그2")
+        with patch("google.genai.Client", return_value=mock_client):
             meta_gen.generate_metadata("CH1", "run_CH1_test", script, tmp_path, topic)
 
         assert (tmp_path / "description.txt").exists()

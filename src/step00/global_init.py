@@ -1,10 +1,14 @@
 from loguru import logger
-from src.core.ssot import write_json, now_iso
+
 from src.core.config import (
-    GLOBAL_DIR, MEMORY_DIR, CHANNELS_DIR, KNOWLEDGE_DIR, RUNS_DIR,
-    CHANNEL_MONTHLY_TARGET, CHANNEL_SHORTS_TARGET,
-    REVENUE_TARGET_PER_CHANNEL, CHANNEL_CATEGORIES,
+    CHANNEL_CATEGORIES,
+    CHANNELS_DIR,
+    GLOBAL_DIR,
+    KNOWLEDGE_DIR,
+    MEMORY_DIR,
+    RUNS_DIR,
 )
+from src.core.ssot import now_iso, write_json
 from src.step00.channel_registry import create_registry
 
 _ALL_CHANNELS = list(CHANNEL_CATEGORIES.keys())
@@ -17,7 +21,7 @@ def _ensure_channel_dirs() -> None:
             (CHANNELS_DIR / ch / sub).mkdir(parents=True, exist_ok=True)
         (KNOWLEDGE_DIR / ch).mkdir(parents=True, exist_ok=True)
         (RUNS_DIR / ch).mkdir(parents=True, exist_ok=True)
-    logger.info(f"[STEP00] 7채널 디렉토리 구조 초기화 완료")
+    logger.info("[STEP00] 7채널 디렉토리 구조 초기화 완료")
 
 
 def create_review_capacity_policy() -> None:

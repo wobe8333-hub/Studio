@@ -17,13 +17,13 @@ from tenacity import retry, stop_after_attempt, wait_exponential
 from src.core.config import GEMINI_API_KEY, GEMINI_IMAGE_MODEL
 from src.quota.gemini_quota import record_image, record_request, throttle_if_needed
 
-IMAGE_PROMPT_TEMPLATE = """Create a clean, educational animation frame for a Korean YouTube knowledge video.
-Description: {description}
-Style: Flat design, educational infographic style
-Background: Dark background (#1a1a2e or #16213e)
-Color scheme: Blue, green, white, with accent colors
-Do NOT include: photorealistic images, faces, logos, watermarks
-DO include: diagrams, charts, arrows, geometric shapes, icons
+IMAGE_PROMPT_TEMPLATE = """Create a clean background illustration for a Korean YouTube knowledge video scene.
+Scene: {description}
+Style: Simple doodle / flat illustration. WHITE or very light pastel background. Korean YouTube educational channel aesthetic.
+Color scheme: Soft warm colors — gold, green, light blue, cream. Simple outlines, no heavy gradients.
+DO include: Simple icons, arrows, small charts, relevant objects to the scene topic (coins, graphs, buildings, etc.)
+DO NOT include: people, faces, realistic photos, dark backgrounds, text, watermarks, complex patterns.
+The image is a BACKGROUND — a character will be composited on top, so keep the center-right area clean.
 """
 
 BATCH_SIZE = 3

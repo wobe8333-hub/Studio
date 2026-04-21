@@ -4,12 +4,12 @@ knowledge_store에 이미 제작된 주제와 신규 후보 주제를 비교하�
 """
 
 import re
-from pathlib import Path
 from typing import List, Set
+
 from loguru import logger
 
-from src.core.ssot import read_json, json_exists
 from src.core.config import DATA_DIR
+from src.core.ssot import read_json
 
 
 def _normalize(text: str) -> str:

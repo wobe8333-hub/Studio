@@ -1,0 +1,176 @@
+{
+  "schema_version": "1.0",
+  "description": "PreCompact 훅 — 세션 간 교훈 누적",
+  "sessions": [
+    {
+      "session_id": "4bef8365-f70d-4ed3-8cb7-958007aa4cfb",
+      "compacted_at": "2026-04-13T03:56:30.020042+00:00",
+      "note": "PreCompact hook fired — context compressed"
+    },
+    {
+      "session_id": "4bef8365-f70d-4ed3-8cb7-958007aa4cfb",
+      "compacted_at": "2026-04-13T05:34:10.121200+00:00",
+      "note": "PreCompact hook fired — context compressed"
+    },
+    {
+      "session_id": "4bef8365-f70d-4ed3-8cb7-958007aa4cfb",
+      "compacted_at": "2026-04-13T08:27:15.261004+00:00",
+      "note": "PreCompact hook fired — context compressed"
+    },
+    {
+      "session_id": "76731a07-2374-40ef-8be0-85ab5f684ee4",
+      "compacted_at": "2026-04-13T11:19:01.195102+00:00",
+      "note": "PreCompact hook fired — context compressed"
+    },
+    {
+      "session_id": "76731a07-2374-40ef-8be0-85ab5f684ee4",
+      "compacted_at": "2026-04-13T14:32:59.497030+00:00",
+      "note": "PreCompact hook fired — context compressed"
+    },
+    {
+      "session_id": "ada5cea2-6c39-4bde-b924-8a7c082cd6e5",
+      "compacted_at": "2026-04-14T14:39:04.966220+00:00",
+      "note": "PreCompact hook fired — context compressed"
+    },
+    {
+      "session_id": "ada5cea2-6c39-4bde-b924-8a7c082cd6e5",
+      "compacted_at": "2026-04-14T15:32:09.858045+00:00",
+      "note": "PreCompact hook fired — context compressed"
+    },
+    {
+      "session_id": "ada5cea2-6c39-4bde-b924-8a7c082cd6e5",
+      "compacted_at": "2026-04-14T16:18:44.692692+00:00",
+      "note": "PreCompact hook fired — context compressed"
+    },
+    {
+      "session_id": "ada5cea2-6c39-4bde-b924-8a7c082cd6e5",
+      "compacted_at": "2026-04-14T16:43:22.414564+00:00",
+      "note": "PreCompact hook fired — context compressed"
+    },
+    {
+      "session_id": "ada5cea2-6c39-4bde-b924-8a7c082cd6e5",
+      "compacted_at": "2026-04-14T17:03:35.214591+00:00",
+      "note": "PreCompact hook fired — context compressed"
+    },
+    {
+      "session_id": "47d83f29-158b-4d55-b041-63cf75249f6a",
+      "compacted_at": "2026-04-15T02:17:58.944983+00:00",
+      "note": "PreCompact hook fired — context compressed"
+    },
+    {
+      "session_id": "47d83f29-158b-4d55-b041-63cf75249f6a",
+      "compacted_at": "2026-04-15T03:18:46.790914+00:00",
+      "note": "PreCompact hook fired — context compressed"
+    },
+    {
+      "session_id": "47d83f29-158b-4d55-b041-63cf75249f6a",
+      "compacted_at": "2026-04-15T04:35:16.134473+00:00",
+      "note": "PreCompact hook fired — context compressed"
+    },
+    {
+      "session_id": "47d83f29-158b-4d55-b041-63cf75249f6a",
+      "compacted_at": "2026-04-15T09:34:19.868654+00:00",
+      "note": "PreCompact hook fired — context compressed"
+    },
+    {
+      "session_id": "307c97d2-594b-425a-8df8-3060df33d84a",
+      "compacted_at": "2026-04-15T11:18:21.672813+00:00",
+      "note": "PreCompact hook fired — context compressed"
+    },
+    {
+      "session_id": "307c97d2-594b-425a-8df8-3060df33d84a",
+      "compacted_at": "2026-04-15T13:13:11.016699+00:00",
+      "note": "PreCompact hook fired — context compressed"
+    },
+    {
+      "session_id": "307c97d2-594b-425a-8df8-3060df33d84a",
+      "compacted_at": "2026-04-15T13:14:52.771542+00:00",
+      "note": "PreCompact hook fired — context compressed"
+    },
+    {
+      "session_id": "307c97d2-594b-425a-8df8-3060df33d84a",
+      "compacted_at": "2026-04-15T13:55:52.106605+00:00",
+      "note": "PreCompact hook fired — context compressed"
+    },
+    {
+      "session_id": "34c420e1-aa11-4130-bbd4-c421473bb28f",
+      "compacted_at": "2026-04-15T16:59:24.152397+00:00",
+      "note": "PreCompact hook fired — context compressed"
+    },
+    {
+      "session_id": "34c420e1-aa11-4130-bbd4-c421473bb28f",
+      "compacted_at": "2026-04-16T00:01:14.230154+00:00",
+      "note": "PreCompact hook fired — context compressed"
+    },
+    {
+      "session_id": "34c420e1-aa11-4130-bbd4-c421473bb28f",
+      "compacted_at": "2026-04-16T00:35:40.345849+00:00",
+      "note": "PreCompact hook fired — context compressed"
+    },
+    {
+      "session_id": "34c420e1-aa11-4130-bbd4-c421473bb28f",
+      "compacted_at": "2026-04-16T05:12:59.771754+00:00",
+      "note": "PreCompact hook fired — context compressed"
+    },
+    {
+      "session_id": "34c420e1-aa11-4130-bbd4-c421473bb28f",
+      "compacted_at": "2026-04-16T14:35:46.843503+00:00",
+      "note": "PreCompact hook fired — context compressed"
+    },
+    {
+      "session_id": "34c420e1-aa11-4130-bbd4-c421473bb28f",
+      "compacted_at": "2026-04-16T15:00:05.441212+00:00",
+      "note": "PreCompact hook fired — context compressed"
+    },
+    {
+      "session_id": "34c420e1-aa11-4130-bbd4-c421473bb28f",
+      "compacted_at": "2026-04-16T15:39:45.889372+00:00",
+      "note": "PreCompact hook fired — context compressed"
+    },
+    {
+      "session_id": "34c420e1-aa11-4130-bbd4-c421473bb28f",
+      "compacted_at": "2026-04-17T00:56:41.832117+00:00",
+      "note": "PreCompact hook fired — context compressed"
+    },
+    {
+      "session_id": "34c420e1-aa11-4130-bbd4-c421473bb28f",
+      "compacted_at": "2026-04-17T01:35:33.904690+00:00",
+      "note": "PreCompact hook fired — context compressed"
+    },
+    {
+      "session_id": "34c420e1-aa11-4130-bbd4-c421473bb28f",
+      "compacted_at": "2026-04-17T02:18:18.577877+00:00",
+      "note": "PreCompact hook fired — context compressed"
+    },
+    {
+      "session_id": "34c420e1-aa11-4130-bbd4-c421473bb28f",
+      "compacted_at": "2026-04-17T02:51:20.522402+00:00",
+      "note": "PreCompact hook fired — context compressed"
+    },
+    {
+      "session_id": "34c420e1-aa11-4130-bbd4-c421473bb28f",
+      "compacted_at": "2026-04-17T04:05:02.672162+00:00",
+      "note": "PreCompact hook fired — context compressed"
+    },
+    {
+      "session_id": "34c420e1-aa11-4130-bbd4-c421473bb28f",
+      "compacted_at": "2026-04-17T13:32:05.494734+00:00",
+      "note": "PreCompact hook fired — context compressed"
+    },
+    {
+      "session_id": "34c420e1-aa11-4130-bbd4-c421473bb28f",
+      "compacted_at": "2026-04-18T14:44:29.931272+00:00",
+      "note": "PreCompact hook fired — context compressed"
+    },
+    {
+      "session_id": "a8d94850-0eaf-4683-800f-3187f0651672",
+      "compacted_at": "2026-04-20T04:54:40.893717+00:00",
+      "note": "PreCompact hook fired — context compressed"
+    },
+    {
+      "session_id": "a8d94850-0eaf-4683-800f-3187f0651672",
+      "compacted_at": "2026-04-21T13:53:07.400071+00:00",
+      "note": "PreCompact hook fired — context compressed"
+    }
+  ]
+}

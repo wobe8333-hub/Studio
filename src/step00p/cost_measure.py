@@ -6,7 +6,6 @@ Gemini API 토큰 소모량 및 비용을 추적하고
 """
 
 from loguru import logger
-from src.core.ssot import now_iso
 
 # Gemini 2.5 Flash 기준 단가 (KRW, 2025년 3월 기준 환율 1 USD = 1,350원 적용)
 # input: $0.075/1M tokens → 0.075 * 1350 / 1_000_000 = 0.10125원/token

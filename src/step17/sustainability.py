@@ -1,7 +1,8 @@
 """STEP 17 — 콘텐츠 지속성 관리. 분기 1회."""
 from loguru import logger
-from src.core.ssot import read_json, write_json, json_exists, now_iso
-from src.core.config import GLOBAL_DIR, KNOWLEDGE_DIR, CHANNEL_CATEGORIES
+
+from src.core.config import CHANNEL_CATEGORIES, GLOBAL_DIR, KNOWLEDGE_DIR
+from src.core.ssot import json_exists, now_iso, read_json, write_json
 
 # 채널별 주제 총 용량 추정
 TOPIC_CAPACITY = {

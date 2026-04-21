@@ -16,12 +16,12 @@ def test_channel_categories_complete():
     """7채널 카테고리 매핑이 완전한지 확인."""
     expected = {
         "CH1": "economy",
-        "CH2": "realestate",
-        "CH3": "psychology",
-        "CH4": "mystery",
-        "CH5": "war_history",
-        "CH6": "science",
-        "CH7": "history",
+        "CH2": "science",
+        "CH3": "realestate",
+        "CH4": "psychology",
+        "CH5": "mystery",
+        "CH6": "history",
+        "CH7": "war_history",
     }
     for ch, cat in expected.items():
         assert CHANNEL_CATEGORIES[ch] == cat, f"{ch} 카테고리 불일치: {CHANNEL_CATEGORIES[ch]} != {cat}"

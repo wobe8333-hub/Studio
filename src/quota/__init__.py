@@ -1,13 +1,13 @@
-﻿import json
-import time
-import hashlib
+﻿import hashlib
+import json
 import os
-import sys
-import subprocess
 import shutil
-from pathlib import Path
+import subprocess
+import sys
+import time
 from datetime import datetime
-from typing import Any, Dict, List, Tuple, Optional
+from pathlib import Path
+from typing import Any, Dict, List, Optional, Tuple
 
 import certifi
 
@@ -80,12 +80,12 @@ def _find_ytdlp_executable() -> str:
     ytdlp_path = os.getenv("YTDLP_PATH", "")
     if ytdlp_path and shutil.which(ytdlp_path):
         return ytdlp_path
-    
+
     # PATH에서 찾기
     ytdlp = shutil.which("yt-dlp")
     if ytdlp:
         return ytdlp
-    
+
     # Python 모듈로 설치된 경우
     try:
         import yt_dlp
@@ -96,7 +96,7 @@ def _find_ytdlp_executable() -> str:
             return ytdlp_exe
     except Exception:
         pass
-    
+
     # 최후 수단: yt-dlp 직접 호출 시도
     return "yt-dlp"
 
@@ -131,10 +131,10 @@ def _process_channel_cli(
             "--print", "%(title)s",
             target_url,
         ]
-        
+
         # SSL_CERT_FILE은 환경변수로 전달 (옵션으로 전달하지 않음)
         env = os.environ.copy()
-        
+
         # subprocess.run으로 실행 (timeout으로 상한 보장)
         result = subprocess.run(
             cmd,
@@ -145,41 +145,41 @@ def _process_channel_cli(
             errors="replace",
             env=env,  # SSL_CERT_FILE이 env에 포함되어 자식 프로세스에 전달됨
         )
-        
+
         # 2) 잘못된 옵션/파라미터 FAIL-FAST
         stderr_text = (result.stderr or "").strip()
         stdout_text = (result.stdout or "").strip()
         combined_output = stderr_text + "\n" + stdout_text
-        
+
         if "error: no such option:" in combined_output or "Usage: yt-dlp" in combined_output:
             # bad_cli_options 감지 - 즉시 RuntimeError로 전체 run 중단
             raise RuntimeError(f"YTDLP_BAD_CLI_OPTIONS: {combined_output[:300]}")
-        
+
         if result.returncode != 0:
             error_msg = stderr_text[:200] if stderr_text else "yt-dlp CLI failed"
             return [], [], 0, None, error_msg
-        
+
         # 출력 파싱 (제목만 추출)
         titles = []
         for line in result.stdout.splitlines():
             line = line.strip()
             if line and not line.startswith("WARNING") and not line.startswith("ERROR"):
                 titles.append(line)
-        
+
         if not titles:
             return [], [], 0, None, "no titles extracted"
-        
+
         # 레코드 생성
         video_records = []
         tabmeta_records = []
         titles_count = 0
-        
+
         for title in titles:
             # video_id는 제목에서 추출 불가하므로 해시 기반 생성
             video_id = _sha256_hex(f"{channel_url}|{title}")[:11]
-            
+
             is_meta, meta_reason = _is_tab_meta(title, video_id, channel_url)
-            
+
             record = {
                 "source": "ytdlp",
                 "cycle_id": cycle_id,
@@ -200,19 +200,19 @@ def _process_channel_cli(
                 "is_tab_meta": bool(is_meta),
                 "tab_meta_reason": meta_reason,
             }
-            
+
             record["dedupe_key"] = _sha256_hex(f"{record.get('channel_url')}|{record.get('video_id')}|{record.get('title_norm')}")
             record["evidence_hash"] = _sha256_hex(json.dumps(record, ensure_ascii=False, sort_keys=True))
-            
+
             if is_meta:
                 tabmeta_records.append(record)
             else:
                 video_records.append(record)
                 if title:
                     titles_count += 1
-        
+
         return video_records, tabmeta_records, titles_count, "youtube", None
-        
+
     except subprocess.TimeoutExpired:
         return [], [], 0, None, f"subprocess timeout>{hard_timeout}s"
     except Exception as ex:
@@ -261,7 +261,7 @@ def collect_snapshot(
         print(line, flush=True)
         with open(debug_path, "a", encoding="utf-8", errors="replace") as f:
             f.write(line + "\n")
-    
+
     # B-1: CA 경로 강제(우회 금지) - debug 로그에 기록
     ca_path = os.getenv("SSL_CERT_FILE") or certifi.where()
     _log(f"CA_CERT={ca_path}")
@@ -326,7 +326,7 @@ def collect_snapshot(
     SOCKET_TIMEOUT = int(os.getenv("YTDLP_SOCKET_TIMEOUT", "15"))
     RETRIES = int(os.getenv("YTDLP_RETRIES", "1"))
     PLAYLIST_END = int(os.getenv("YTDLP_PLAYLIST_END", "20"))
-    
+
     # yt-dlp 실행 파일 찾기
     ytdlp_exe = _find_ytdlp_executable()
     _log(f"YTDLP_EXE={ytdlp_exe}")
@@ -371,7 +371,7 @@ def collect_snapshot(
         _log(f"CHANNEL {idx}/{len(channels)} START url={channel_url} timeout={HARD_TIMEOUT_SECONDS}")
 
         start_ts = time.time()
-        
+
         try:
             video_records, tabmeta_records, titles_count, extractor_key, error_msg = _process_channel_cli(
                 ytdlp_exe,
@@ -543,7 +543,7 @@ def collect_snapshot(
                 except json.JSONDecodeError:
                     # JSON 파싱 실패해도 탭메타 문자열이 있으면 FAIL
                     raise RuntimeError(f"YTDLP_TABMETA_DROP_FAILED_MAIN_SNAPSHOT_STILL_HAS_TAB_TITLES line={line_num}")
-    
+
     # B-7: 0 bytes 차단(이번 장애의 직접 증상)
     if int(total_after_dedupe) > 0 and snapshot_path.exists() and snapshot_path.stat().st_size == 0:
         raise RuntimeError("YTDLP_SNAPSHOT_ZERO_BYTES_BUT_METRICS_POSITIVE")

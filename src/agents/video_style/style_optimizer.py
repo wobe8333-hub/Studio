@@ -1,6 +1,8 @@
 """CTR 피드백 기반으로 스타일 정책을 업데이트하고 Manim 안정성을 감시한다."""
 from pathlib import Path
+
 from loguru import logger
+
 from src.core.ssot import read_json, write_json
 
 _MANIM_ALERT_THRESHOLD = 0.5

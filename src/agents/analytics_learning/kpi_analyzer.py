@@ -1,7 +1,9 @@
 """48h KPI 데이터를 분석하고 알고리즘 단계를 판정한다."""
 import time
 from pathlib import Path
+
 from loguru import logger
+
 from src.core.ssot import read_json
 
 

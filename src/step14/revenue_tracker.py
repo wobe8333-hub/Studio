@@ -1,10 +1,14 @@
 """STEP 14 — 수익 다각화 트래킹."""
 from loguru import logger
-from src.core.ssot import read_json, write_json, json_exists, now_iso
+
 from src.core.config import (
-    CHANNELS_DIR, GLOBAL_DIR,
-    REVENUE_TARGET_PER_CHANNEL, REVENUE_TARGET_TOTAL, CHANNEL_CATEGORIES,
+    CHANNEL_CATEGORIES,
+    CHANNELS_DIR,
+    GLOBAL_DIR,
+    REVENUE_TARGET_PER_CHANNEL,
+    REVENUE_TARGET_TOTAL,
 )
+from src.core.ssot import json_exists, now_iso, read_json, write_json
 
 _ALL_CHANNELS = list(CHANNEL_CATEGORIES.keys())
 

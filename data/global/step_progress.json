@@ -2,16 +2,16 @@
   "active": true,
   "dry_run": false,
   "channel_id": "CH1",
-  "run_id": "run_CH1_1775914995",
+  "run_id": "run_CH1_1776779720",
   "month_number": 1,
   "steps": [
     {
       "index": 0,
       "name": "Step05 트렌드+지식 수집",
       "status": "done",
-      "started_at": "2026-04-11T13:43:16.001813Z",
-      "completed_at": "2026-04-11T13:43:16.019001Z",
-      "elapsed_ms": 17
+      "started_at": "2026-04-21T13:55:20.192027Z",
+      "completed_at": "2026-04-21T13:55:20.203778Z",
+      "elapsed_ms": 11
     },
     {
       "index": 1,
@@ -70,5 +70,5 @@
       "elapsed_ms": null
     }
   ],
-  "updated_at": "2026-04-11T13:43:16.019001Z"
+  "updated_at": "2026-04-21T13:55:20.203778Z"
 }

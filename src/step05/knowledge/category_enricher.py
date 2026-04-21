@@ -4,11 +4,9 @@
 미스터리→원문 추적, 전쟁사→군사문헌, 과학→arXiv/NASA, 역사→국사편찬위
 """
 
-from typing import Dict, Any
 from loguru import logger
 
 from src.step05.knowledge.knowledge_package import KnowledgePackage, SourceEntry
-
 
 # ──────────────────────────────────────────────────────────────
 # 카테고리별 보강 함수

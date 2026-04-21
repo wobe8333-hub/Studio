@@ -4,12 +4,12 @@ Wikipedia + Semantic Scholar + Naver Search
 → timeline, statistics, expert_quotes, counterpoints 구조화
 """
 
-from typing import List, Dict, Any
+from typing import Any, Dict, List
+
 from loguru import logger
 
 from src.core.config import NAVER_CLIENT_ID, NAVER_CLIENT_SECRET
 from src.step05.knowledge.knowledge_package import KnowledgePackage, SourceEntry
-
 
 # ──────────────────────────────────────────────
 # Wikipedia 보강

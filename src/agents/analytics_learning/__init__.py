@@ -1,13 +1,15 @@
 """Analytics & Learning Agent — KPI 자동 분석 및 파이프라인 정책 반영."""
 from pathlib import Path
 from typing import Any, Optional
+
 from loguru import logger
-from src.agents.base_agent import BaseAgent
-from src.agents.analytics_learning.kpi_analyzer import load_pending_kpis, compute_algorithm_stage
+
+from src.agents.analytics_learning.ab_selector import select_winner, update_bias
+from src.agents.analytics_learning.kpi_analyzer import compute_algorithm_stage, load_pending_kpis
+from src.agents.analytics_learning.notifier import record_phase_promotion
 from src.agents.analytics_learning.pattern_extractor import is_winning, update_winning_patterns
 from src.agents.analytics_learning.phase_promoter import promote_if_eligible
-from src.agents.analytics_learning.ab_selector import select_winner, update_bias
-from src.agents.analytics_learning.notifier import record_phase_promotion
+from src.agents.base_agent import BaseAgent
 from src.core.ssot import read_json
 
 

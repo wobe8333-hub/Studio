@@ -1,6 +1,7 @@
 """supabase_schema.sql의 변경 여부를 SHA-256 해시로 감지한다."""
 import hashlib
 from pathlib import Path
+
 from src.core.ssot import read_json, write_json
 
 

@@ -1,26 +1,26 @@
 """STEP 09 — BGM 오버레이.
 
 Phase 7 개선:
-  - 7채널 BGM 톤 갱신 (CH2 부동산, CH4 미스터리, CH5 전쟁사)
+  - 7채널 BGM 톤 갱신 (CH2 과학, CH5 미스터리, CH7 전쟁사)
   - bgm_generator.py 연동 (Suno AI → 로컬 WAV 폴백)
 """
 
 import os
 import shutil
+
 from loguru import logger
 
-from src.core.ssot import read_json, write_json, json_exists, get_run_dir
-from src.core.config import BGM_DIR
+from src.core.ssot import get_run_dir, json_exists, read_json, write_json
 from src.step08.ffmpeg_composer import overlay_bgm
 
 CHANNEL_BGM_TONE = {
     "CH1": "차분하고_진지한_경제",
-    "CH2": "안정적이고_신뢰감있는_부동산",
-    "CH3": "사색적이고_따뜻한_심리",
-    "CH4": "미스터리하고_긴장감있는",
-    "CH5": "웅장하고_역동적인_전쟁사",
-    "CH6": "미래적이고_경이로운_과학",
-    "CH7": "노스탤직하고_이야기같은_역사",
+    "CH2": "미래적이고_경이로운_과학",
+    "CH3": "안정적이고_신뢰감있는_부동산",
+    "CH4": "사색적이고_따뜻한_심리",
+    "CH5": "미스터리하고_긴장감있는",
+    "CH6": "노스탤직하고_이야기같은_역사",
+    "CH7": "웅장하고_역동적인_전쟁사",
 }
 
 

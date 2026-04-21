@@ -1,7 +1,5 @@
 """supabase_schema.sql 컬럼 정보를 TypeScript 타입으로 변환한다."""
 import re
-from pathlib import Path
-from loguru import logger
 
 _SQL_TO_TS: dict = {
     "TEXT": "string",

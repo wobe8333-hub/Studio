@@ -8,10 +8,11 @@ Phase 7 추가:
 
 import subprocess
 from pathlib import Path
+
 from loguru import logger
 
-from src.core.ssot import write_json, get_run_dir, now_iso
 from src.core.config import FFMPEG_PATH
+from src.core.ssot import get_run_dir, now_iso, write_json
 
 
 def _run_ffmpeg(cmd: list, timeout: int = 120) -> bool:
@@ -168,7 +169,7 @@ def run_step08s(channel_id: str, run_id: str, shorts_count: int = 3) -> dict:
     longform = s08 / "video.mp4"
     srt_path = s08 / "subtitles.srt"
 
-    from src.core.ssot import read_json, json_exists
+    from src.core.ssot import json_exists, read_json
     script = read_json(s08 / "script.json") if json_exists(s08 / "script.json") else {}
 
     generated = generate_shorts(

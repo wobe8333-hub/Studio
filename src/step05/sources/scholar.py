@@ -1,13 +1,13 @@
 """
 Semantic Scholar API 소스 (Layer 4 — 월간)
 학술 논문 기반 트렌드 주제 수집 (무료, 100콜/초)
-CH3 심리, CH6 과학 우선 적용
+CH4 심리, CH2 과학 우선 적용
 """
 
-import urllib.request
-import urllib.parse
 import json
-from typing import Dict, Any, List
+import urllib.parse
+import urllib.request
+from typing import Any, Dict, List
 
 # 카테고리별 Semantic Scholar 검색 쿼리
 _SCHOLAR_QUERIES: Dict[str, List[str]] = {
