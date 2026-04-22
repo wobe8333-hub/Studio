@@ -32,7 +32,8 @@ JSON 배열로만 출력.
 """
 
 
-async def _generate_storyboard(script_text: str, channel_id: str) -> list[dict]:
+async def _generate_storyboard(script_text: str, channel_id: str, episode_id: str = "") -> list[dict]:
+    """LLM Storyboard 생성 → 실패 시 rule-based storyboard.build_storyboard() fallback."""
     prompt = f"채널: {channel_id}\n\n스크립트:\n{script_text}"
     raw = await call_llm(system=_STORYBOARD_PROMPT, user=prompt, max_tokens=4000)
     try:
@@ -40,10 +41,11 @@ async def _generate_storyboard(script_text: str, channel_id: str) -> list[dict]:
         if m:
             return json.loads(m.group())
     except Exception as e:
-        logger.warning(f"Storyboard JSON 파싱 실패: {e}, 기본값 사용")
-    return [{"scene_id": 0, "duration_sec": 5, "insert_type": "doodle",
-             "character_role": "narrator", "pose_tag": "neutral_standing",
-             "image_prompt": "두들 배경 장면", "narration_text": script_text[:100]}]
+        logger.warning(f"Storyboard JSON 파싱 실패: {e} — rule-based fallback 사용")
+
+    # rule-based fallback (storyboard.py)
+    from src.pipeline_v2.storyboard import build_storyboard
+    return build_storyboard(script_text, channel_id, episode_id or "unknown")
 
 
 def _lookup_pose_cache(channel_id: str, role: str, pose_tag: str) -> Path | None:
