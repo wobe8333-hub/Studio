@@ -210,3 +210,37 @@ CHANNELS = {
 }
 
 SUBDIRS = ["logo", "characters", "intro", "outro", "icons", "templates", "extras", "transitions"]
+
+# ── src/adapters/character_generator.py 상수 (스크립트 내 쉬운 import용) ──────
+
+# 두들 캐릭터 스타일 고정 프리픽스 — 바디/얼굴 불변, 의상만 변경
+STYLE_PREFIX = (
+    "Keep the EXACT same body as shown in the reference image: "
+    "3.5-head-tall doodle character, completely bald round head, same round face with "
+    "black dot eyes, tiny smile, pink blush cheeks, same body proportions and medium-length legs. "
+    "Pure white background. Flat 2D cartoon doodle style. Clean 2px black outline. "
+    "Flat colors only, no gradients, no shadows. Full body visible head to feet. "
+    "ONLY change the outfit, accessories, and expression as described. "
+)
+
+# 채널별 의상 컬러 가이드
+CHANNEL_COLOR_GUIDE: dict[str, str] = {
+    "CH1": "Prefer gold (#E8A44C) and navy (#1A237E) tones in the costume design.",
+    "CH2": "Prefer teal (#00CED1) and white tones in the costume design.",
+    "CH3": "Prefer orange (#FF8C42) and sage green (#52B788) tones in the costume design.",
+    "CH4": "Prefer lavender (#9B59B6) and soft coral tones in the costume design.",
+    "CH5": "Prefer dark navy (#1F3A5F) and purple tones in the costume design.",
+    "CH6": "Prefer golden brown (#8B6914) and burgundy tones in the costume design.",
+    "CH7": "Prefer forest green (#2E5B3C) and warm amber tones in the costume design.",
+}
+
+# 채널별 마스코트 의상 설명
+MASCOT_COSTUME: dict[str, str] = {
+    "CH1": "smart business suit with a briefcase, tie, clean formal look",
+    "CH2": "white lab coat with safety goggles, test tube in hand",
+    "CH3": "casual builder outfit with tool belt, hard hat",
+    "CH4": "soft cardigan with round glasses, holding a notebook",
+    "CH5": "dark detective trench coat with magnifying glass, mysterious look",
+    "CH6": "classical scholar robe with a quill pen and scroll",
+    "CH7": "historical military field uniform with a small flag",
+}

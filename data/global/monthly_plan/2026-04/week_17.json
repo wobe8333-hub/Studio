@@ -1,0 +1,62 @@
+[
+  {
+    "channel_id": "CH1",
+    "series_id": "금리_시리즈",
+    "episode_index": 1,
+    "topic": "미국 연준의 금리 인하가 한국 부동산 시장에 미치는 영향"
+  },
+  {
+    "channel_id": "CH1",
+    "series_id": "금리_시리즈",
+    "episode_index": 2,
+    "topic": "2025년 한국은행 기준금리 결정 배경과 향후 전망"
+  },
+  {
+    "channel_id": "CH2",
+    "series_id": "과학_탐구_시리즈",
+    "episode_index": 1,
+    "topic": "양자 컴퓨터가 현실화되면 암호화폐와 인터넷 보안은 어떻게 될까"
+  },
+  {
+    "channel_id": "CH2",
+    "series_id": "과학_탐구_시리즈",
+    "episode_index": 2,
+    "topic": "블랙홀 주변 시간 지연 현상 — 상대성이론이 GPS에 적용되는 이유"
+  },
+  {
+    "channel_id": "CH3",
+    "series_id": "부동산_실전_시리즈",
+    "episode_index": 1,
+    "topic": "2025년 서울 아파트 전세 vs 월세 — 어느 쪽이 유리한가"
+  },
+  {
+    "channel_id": "CH4",
+    "series_id": "심리학_생활_시리즈",
+    "episode_index": 1,
+    "topic": "확증 편향이 투자 실패를 부르는 이유 — 행동경제학으로 본 손실 회피"
+  },
+  {
+    "channel_id": "CH5",
+    "series_id": "미스터리_탐구_시리즈",
+    "episode_index": 1,
+    "topic": "버뮤다 삼각지대의 진실 — 과학이 밝혀낸 실제 원인"
+  },
+  {
+    "channel_id": "CH6",
+    "series_id": "역사_인물_시리즈",
+    "episode_index": 1,
+    "topic": "나폴레옹의 몰락 — 러시아 원정 실패가 가져온 유럽 역사의 전환점"
+  },
+  {
+    "channel_id": "CH7",
+    "series_id": "전쟁사_분석_시리즈",
+    "episode_index": 1,
+    "topic": "D-Day 노르망디 상륙작전 — 연합군 승리의 결정적 5가지 요인"
+  },
+  {
+    "channel_id": "CH7",
+    "series_id": "전쟁사_분석_시리즈",
+    "episode_index": 2,
+    "topic": "태평양 전쟁의 터닝포인트 — 미드웨이 해전이 2차 대전을 바꾼 방법"
+  }
+]

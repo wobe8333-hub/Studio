@@ -105,6 +105,62 @@
         "total_cost_usd": 0.0,
         "request_count": 0
       }
+    },
+    {
+      "ended_at": "2026-04-21T13:56:04.352678+00:00",
+      "cost_summary": {
+        "total_cost_usd": 0.0,
+        "request_count": 0
+      }
+    },
+    {
+      "ended_at": "2026-04-21T14:11:47.221411+00:00",
+      "cost_summary": {
+        "total_cost_usd": 0.0,
+        "request_count": 0
+      }
+    },
+    {
+      "ended_at": "2026-04-21T14:20:13.890498+00:00",
+      "cost_summary": {
+        "total_cost_usd": 0.0,
+        "request_count": 0
+      }
+    },
+    {
+      "ended_at": "2026-04-21T14:27:46.358110+00:00",
+      "cost_summary": {
+        "total_cost_usd": 0.0,
+        "request_count": 0
+      }
+    },
+    {
+      "ended_at": "2026-04-22T08:01:52.150123+00:00",
+      "cost_summary": {
+        "total_cost_usd": 0.0,
+        "request_count": 0
+      }
+    },
+    {
+      "ended_at": "2026-04-22T13:53:12.027620+00:00",
+      "cost_summary": {
+        "total_cost_usd": 0.0,
+        "request_count": 0
+      }
+    },
+    {
+      "ended_at": "2026-04-23T08:01:06.121131+00:00",
+      "cost_summary": {
+        "total_cost_usd": 0.0,
+        "request_count": 0
+      }
+    },
+    {
+      "ended_at": "2026-04-25T08:04:38.335366+00:00",
+      "cost_summary": {
+        "total_cost_usd": 0.0,
+        "request_count": 0
+      }
     }
   ]
 }

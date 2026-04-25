@@ -11,8 +11,8 @@ from pathlib import Path
 
 from loguru import logger
 
-CHARACTERS_ROOT = Path("assets/characters")
-CACHE_MANIFEST_PATH = CHARACTERS_ROOT / "cache_manifest.json"
+CHANNELS_ROOT = Path("assets/channels")
+CACHE_MANIFEST_PATH = Path("assets/shared") / "cache_manifest.json"
 
 POSE_CATEGORIES: dict[str, list[str]] = {
     "neutral": ["standing", "sitting", "leaning"],
@@ -66,7 +66,7 @@ def _save_manifest(manifest: dict) -> None:
 
 def get_pose_path(channel_id: str, role: str, pose_tag: str) -> Path:
     """포즈 파일 경로 반환 (존재 여부 무관)."""
-    return CHARACTERS_ROOT / channel_id / "poses" / f"{role}_{pose_tag}.png"
+    return CHANNELS_ROOT / channel_id / "poses" / f"{role}_{pose_tag}.png"
 
 
 def lookup_cached_pose(channel_id: str, role: str, pose_tag: str) -> Path | None:
@@ -127,13 +127,13 @@ async def generate_poses_for_character(
 
     Returns: {"generated": int, "skipped": int, "failed": int}
     """
-    ref_path = CHARACTERS_ROOT / channel_id / f"{role}_ref.png"
+    ref_path = CHANNELS_ROOT / channel_id / "characters" / f"{role}_ref.png"
     if not ref_path.exists():
         logger.error(f"레퍼런스 없음: {ref_path} — 포즈 생성 불가")
         return {"generated": 0, "skipped": 0, "failed": 0, "error": "ref_missing"}
 
     poses = pose_tags or ALL_POSES
-    out_dir = CHARACTERS_ROOT / channel_id / "poses"
+    out_dir = CHANNELS_ROOT / channel_id / "poses"
     out_dir.mkdir(parents=True, exist_ok=True)
 
     manifest = _load_manifest()

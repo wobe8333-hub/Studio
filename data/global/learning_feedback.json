@@ -1,176 +1,5205 @@
-{
-  "schema_version": "1.0",
-  "description": "PreCompact 훅 — 세션 간 교훈 누적",
-  "sessions": [
-    {
-      "session_id": "4bef8365-f70d-4ed3-8cb7-958007aa4cfb",
-      "compacted_at": "2026-04-13T03:56:30.020042+00:00",
-      "note": "PreCompact hook fired — context compressed"
-    },
-    {
-      "session_id": "4bef8365-f70d-4ed3-8cb7-958007aa4cfb",
-      "compacted_at": "2026-04-13T05:34:10.121200+00:00",
-      "note": "PreCompact hook fired — context compressed"
-    },
-    {
-      "session_id": "4bef8365-f70d-4ed3-8cb7-958007aa4cfb",
-      "compacted_at": "2026-04-13T08:27:15.261004+00:00",
-      "note": "PreCompact hook fired — context compressed"
-    },
-    {
-      "session_id": "76731a07-2374-40ef-8be0-85ab5f684ee4",
-      "compacted_at": "2026-04-13T11:19:01.195102+00:00",
-      "note": "PreCompact hook fired — context compressed"
-    },
-    {
-      "session_id": "76731a07-2374-40ef-8be0-85ab5f684ee4",
-      "compacted_at": "2026-04-13T14:32:59.497030+00:00",
-      "note": "PreCompact hook fired — context compressed"
-    },
-    {
-      "session_id": "ada5cea2-6c39-4bde-b924-8a7c082cd6e5",
-      "compacted_at": "2026-04-14T14:39:04.966220+00:00",
-      "note": "PreCompact hook fired — context compressed"
-    },
-    {
-      "session_id": "ada5cea2-6c39-4bde-b924-8a7c082cd6e5",
-      "compacted_at": "2026-04-14T15:32:09.858045+00:00",
-      "note": "PreCompact hook fired — context compressed"
-    },
-    {
-      "session_id": "ada5cea2-6c39-4bde-b924-8a7c082cd6e5",
-      "compacted_at": "2026-04-14T16:18:44.692692+00:00",
-      "note": "PreCompact hook fired — context compressed"
-    },
-    {
-      "session_id": "ada5cea2-6c39-4bde-b924-8a7c082cd6e5",
-      "compacted_at": "2026-04-14T16:43:22.414564+00:00",
-      "note": "PreCompact hook fired — context compressed"
-    },
-    {
-      "session_id": "ada5cea2-6c39-4bde-b924-8a7c082cd6e5",
-      "compacted_at": "2026-04-14T17:03:35.214591+00:00",
-      "note": "PreCompact hook fired — context compressed"
-    },
-    {
-      "session_id": "47d83f29-158b-4d55-b041-63cf75249f6a",
-      "compacted_at": "2026-04-15T02:17:58.944983+00:00",
-      "note": "PreCompact hook fired — context compressed"
-    },
-    {
-      "session_id": "47d83f29-158b-4d55-b041-63cf75249f6a",
-      "compacted_at": "2026-04-15T03:18:46.790914+00:00",
-      "note": "PreCompact hook fired — context compressed"
-    },
-    {
-      "session_id": "47d83f29-158b-4d55-b041-63cf75249f6a",
-      "compacted_at": "2026-04-15T04:35:16.134473+00:00",
-      "note": "PreCompact hook fired — context compressed"
-    },
-    {
-      "session_id": "47d83f29-158b-4d55-b041-63cf75249f6a",
-      "compacted_at": "2026-04-15T09:34:19.868654+00:00",
-      "note": "PreCompact hook fired — context compressed"
-    },
-    {
-      "session_id": "307c97d2-594b-425a-8df8-3060df33d84a",
-      "compacted_at": "2026-04-15T11:18:21.672813+00:00",
-      "note": "PreCompact hook fired — context compressed"
-    },
-    {
-      "session_id": "307c97d2-594b-425a-8df8-3060df33d84a",
-      "compacted_at": "2026-04-15T13:13:11.016699+00:00",
-      "note": "PreCompact hook fired — context compressed"
-    },
-    {
-      "session_id": "307c97d2-594b-425a-8df8-3060df33d84a",
-      "compacted_at": "2026-04-15T13:14:52.771542+00:00",
-      "note": "PreCompact hook fired — context compressed"
-    },
-    {
-      "session_id": "307c97d2-594b-425a-8df8-3060df33d84a",
-      "compacted_at": "2026-04-15T13:55:52.106605+00:00",
-      "note": "PreCompact hook fired — context compressed"
-    },
-    {
-      "session_id": "34c420e1-aa11-4130-bbd4-c421473bb28f",
-      "compacted_at": "2026-04-15T16:59:24.152397+00:00",
-      "note": "PreCompact hook fired — context compressed"
-    },
-    {
-      "session_id": "34c420e1-aa11-4130-bbd4-c421473bb28f",
-      "compacted_at": "2026-04-16T00:01:14.230154+00:00",
-      "note": "PreCompact hook fired — context compressed"
-    },
-    {
-      "session_id": "34c420e1-aa11-4130-bbd4-c421473bb28f",
-      "compacted_at": "2026-04-16T00:35:40.345849+00:00",
-      "note": "PreCompact hook fired — context compressed"
-    },
-    {
-      "session_id": "34c420e1-aa11-4130-bbd4-c421473bb28f",
-      "compacted_at": "2026-04-16T05:12:59.771754+00:00",
-      "note": "PreCompact hook fired — context compressed"
-    },
-    {
-      "session_id": "34c420e1-aa11-4130-bbd4-c421473bb28f",
-      "compacted_at": "2026-04-16T14:35:46.843503+00:00",
-      "note": "PreCompact hook fired — context compressed"
-    },
-    {
-      "session_id": "34c420e1-aa11-4130-bbd4-c421473bb28f",
-      "compacted_at": "2026-04-16T15:00:05.441212+00:00",
-      "note": "PreCompact hook fired — context compressed"
-    },
-    {
-      "session_id": "34c420e1-aa11-4130-bbd4-c421473bb28f",
-      "compacted_at": "2026-04-16T15:39:45.889372+00:00",
-      "note": "PreCompact hook fired — context compressed"
-    },
-    {
-      "session_id": "34c420e1-aa11-4130-bbd4-c421473bb28f",
-      "compacted_at": "2026-04-17T00:56:41.832117+00:00",
-      "note": "PreCompact hook fired — context compressed"
-    },
-    {
-      "session_id": "34c420e1-aa11-4130-bbd4-c421473bb28f",
-      "compacted_at": "2026-04-17T01:35:33.904690+00:00",
-      "note": "PreCompact hook fired — context compressed"
-    },
-    {
-      "session_id": "34c420e1-aa11-4130-bbd4-c421473bb28f",
-      "compacted_at": "2026-04-17T02:18:18.577877+00:00",
-      "note": "PreCompact hook fired — context compressed"
-    },
-    {
-      "session_id": "34c420e1-aa11-4130-bbd4-c421473bb28f",
-      "compacted_at": "2026-04-17T02:51:20.522402+00:00",
-      "note": "PreCompact hook fired — context compressed"
-    },
-    {
-      "session_id": "34c420e1-aa11-4130-bbd4-c421473bb28f",
-      "compacted_at": "2026-04-17T04:05:02.672162+00:00",
-      "note": "PreCompact hook fired — context compressed"
-    },
-    {
-      "session_id": "34c420e1-aa11-4130-bbd4-c421473bb28f",
-      "compacted_at": "2026-04-17T13:32:05.494734+00:00",
-      "note": "PreCompact hook fired — context compressed"
-    },
-    {
-      "session_id": "34c420e1-aa11-4130-bbd4-c421473bb28f",
-      "compacted_at": "2026-04-18T14:44:29.931272+00:00",
-      "note": "PreCompact hook fired — context compressed"
-    },
-    {
-      "session_id": "a8d94850-0eaf-4683-800f-3187f0651672",
-      "compacted_at": "2026-04-20T04:54:40.893717+00:00",
-      "note": "PreCompact hook fired — context compressed"
-    },
-    {
-      "session_id": "a8d94850-0eaf-4683-800f-3187f0651672",
-      "compacted_at": "2026-04-21T13:53:07.400071+00:00",
-      "note": "PreCompact hook fired — context compressed"
-    }
-  ]
-}
+﻿[
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-22T16:28:47.445108+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0433,
+    "avg_avd_pct": 41.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "list",
+      "question"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [
+      {
+        "episode_id": "ep002",
+        "avd_pct": 30.0
+      },
+      {
+        "episode_id": "ep003",
+        "avd_pct": 28.0
+      }
+    ],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "list"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-22T16:28:47.559648+00:00",
+    "episode_count": 5,
+    "avg_ctr": 0.08,
+    "avg_avd_pct": 60.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "curiosity_gap",
+      "curiosity_gap"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-22T17:46:00.113426+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0767,
+    "avg_avd_pct": 62.33,
+    "winning_hooks": [
+      "shocking",
+      "curiosity_gap",
+      "list"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "shocking",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-22T17:46:00.191420+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0433,
+    "avg_avd_pct": 41.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "list",
+      "question"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [
+      {
+        "episode_id": "ep002",
+        "avd_pct": 30.0
+      },
+      {
+        "episode_id": "ep003",
+        "avd_pct": 28.0
+      }
+    ],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "list"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-22T17:46:00.242567+00:00",
+    "episode_count": 5,
+    "avg_ctr": 0.08,
+    "avg_avd_pct": 60.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "curiosity_gap",
+      "curiosity_gap"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-22T17:49:19.447984+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0767,
+    "avg_avd_pct": 62.33,
+    "winning_hooks": [
+      "shocking",
+      "curiosity_gap",
+      "list"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "shocking",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-22T17:49:19.490918+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0433,
+    "avg_avd_pct": 41.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "list",
+      "question"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [
+      {
+        "episode_id": "ep002",
+        "avd_pct": 30.0
+      },
+      {
+        "episode_id": "ep003",
+        "avd_pct": 28.0
+      }
+    ],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "list"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-22T17:49:19.558726+00:00",
+    "episode_count": 5,
+    "avg_ctr": 0.08,
+    "avg_avd_pct": 60.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "curiosity_gap",
+      "curiosity_gap"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-22T17:49:36.114682+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0767,
+    "avg_avd_pct": 62.33,
+    "winning_hooks": [
+      "shocking",
+      "curiosity_gap",
+      "list"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "shocking",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-22T17:49:36.172063+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0433,
+    "avg_avd_pct": 41.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "list",
+      "question"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [
+      {
+        "episode_id": "ep002",
+        "avd_pct": 30.0
+      },
+      {
+        "episode_id": "ep003",
+        "avd_pct": 28.0
+      }
+    ],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "list"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-22T17:49:36.225563+00:00",
+    "episode_count": 5,
+    "avg_ctr": 0.08,
+    "avg_avd_pct": 60.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "curiosity_gap",
+      "curiosity_gap"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-22T20:35:56.119202+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0767,
+    "avg_avd_pct": 62.33,
+    "winning_hooks": [
+      "shocking",
+      "curiosity_gap",
+      "list"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "shocking",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-22T20:35:56.162104+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0433,
+    "avg_avd_pct": 41.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "list",
+      "question"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [
+      {
+        "episode_id": "ep002",
+        "avd_pct": 30.0
+      },
+      {
+        "episode_id": "ep003",
+        "avd_pct": 28.0
+      }
+    ],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "list"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-22T20:35:56.202797+00:00",
+    "episode_count": 5,
+    "avg_ctr": 0.08,
+    "avg_avd_pct": 60.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "curiosity_gap",
+      "curiosity_gap"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-22T21:10:09.446249+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0767,
+    "avg_avd_pct": 62.33,
+    "winning_hooks": [
+      "shocking",
+      "curiosity_gap",
+      "list"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "shocking",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-22T21:10:09.486754+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0433,
+    "avg_avd_pct": 41.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "list",
+      "question"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [
+      {
+        "episode_id": "ep002",
+        "avd_pct": 30.0
+      },
+      {
+        "episode_id": "ep003",
+        "avd_pct": 28.0
+      }
+    ],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "list"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-22T21:10:09.545943+00:00",
+    "episode_count": 5,
+    "avg_ctr": 0.08,
+    "avg_avd_pct": 60.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "curiosity_gap",
+      "curiosity_gap"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-23T00:10:49.957351+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0767,
+    "avg_avd_pct": 62.33,
+    "winning_hooks": [
+      "shocking",
+      "curiosity_gap",
+      "list"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "shocking",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-23T00:10:50.003348+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0433,
+    "avg_avd_pct": 41.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "list",
+      "question"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [
+      {
+        "episode_id": "ep002",
+        "avd_pct": 30.0
+      },
+      {
+        "episode_id": "ep003",
+        "avd_pct": 28.0
+      }
+    ],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "list"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-23T00:10:50.067707+00:00",
+    "episode_count": 5,
+    "avg_ctr": 0.08,
+    "avg_avd_pct": 60.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "curiosity_gap",
+      "curiosity_gap"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-23T00:47:54.533875+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0767,
+    "avg_avd_pct": 62.33,
+    "winning_hooks": [
+      "shocking",
+      "curiosity_gap",
+      "list"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "shocking",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-23T00:47:54.591719+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0433,
+    "avg_avd_pct": 41.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "list",
+      "question"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [
+      {
+        "episode_id": "ep002",
+        "avd_pct": 30.0
+      },
+      {
+        "episode_id": "ep003",
+        "avd_pct": 28.0
+      }
+    ],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "list"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-23T00:47:54.651857+00:00",
+    "episode_count": 5,
+    "avg_ctr": 0.08,
+    "avg_avd_pct": 60.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "curiosity_gap",
+      "curiosity_gap"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-23T01:54:17.309282+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0767,
+    "avg_avd_pct": 62.33,
+    "winning_hooks": [
+      "shocking",
+      "curiosity_gap",
+      "list"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "shocking",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-23T01:54:17.370292+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0433,
+    "avg_avd_pct": 41.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "list",
+      "question"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [
+      {
+        "episode_id": "ep002",
+        "avd_pct": 30.0
+      },
+      {
+        "episode_id": "ep003",
+        "avd_pct": 28.0
+      }
+    ],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "list"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-23T01:54:17.530776+00:00",
+    "episode_count": 5,
+    "avg_ctr": 0.08,
+    "avg_avd_pct": 60.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "curiosity_gap",
+      "curiosity_gap"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-23T02:02:18.640523+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0767,
+    "avg_avd_pct": 62.33,
+    "winning_hooks": [
+      "shocking",
+      "curiosity_gap",
+      "list"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "shocking",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-23T02:02:18.679092+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0433,
+    "avg_avd_pct": 41.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "list",
+      "question"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [
+      {
+        "episode_id": "ep002",
+        "avd_pct": 30.0
+      },
+      {
+        "episode_id": "ep003",
+        "avd_pct": 28.0
+      }
+    ],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "list"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-23T02:02:18.734320+00:00",
+    "episode_count": 5,
+    "avg_ctr": 0.08,
+    "avg_avd_pct": 60.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "curiosity_gap",
+      "curiosity_gap"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-23T02:13:05.488593+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0767,
+    "avg_avd_pct": 62.33,
+    "winning_hooks": [
+      "shocking",
+      "curiosity_gap",
+      "list"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "shocking",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-23T02:13:05.553248+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0433,
+    "avg_avd_pct": 41.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "list",
+      "question"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [
+      {
+        "episode_id": "ep002",
+        "avd_pct": 30.0
+      },
+      {
+        "episode_id": "ep003",
+        "avd_pct": 28.0
+      }
+    ],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "list"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-23T02:13:05.647197+00:00",
+    "episode_count": 5,
+    "avg_ctr": 0.08,
+    "avg_avd_pct": 60.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "curiosity_gap",
+      "curiosity_gap"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-23T02:26:58.918773+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0767,
+    "avg_avd_pct": 62.33,
+    "winning_hooks": [
+      "shocking",
+      "curiosity_gap",
+      "list"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "shocking",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-23T02:26:58.989441+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0433,
+    "avg_avd_pct": 41.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "list",
+      "question"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [
+      {
+        "episode_id": "ep002",
+        "avd_pct": 30.0
+      },
+      {
+        "episode_id": "ep003",
+        "avd_pct": 28.0
+      }
+    ],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "list"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-23T02:26:59.137767+00:00",
+    "episode_count": 5,
+    "avg_ctr": 0.08,
+    "avg_avd_pct": 60.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "curiosity_gap",
+      "curiosity_gap"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-23T02:31:11.259224+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0767,
+    "avg_avd_pct": 62.33,
+    "winning_hooks": [
+      "shocking",
+      "curiosity_gap",
+      "list"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "shocking",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-23T02:31:11.301517+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0433,
+    "avg_avd_pct": 41.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "list",
+      "question"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [
+      {
+        "episode_id": "ep002",
+        "avd_pct": 30.0
+      },
+      {
+        "episode_id": "ep003",
+        "avd_pct": 28.0
+      }
+    ],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "list"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-23T02:31:11.359427+00:00",
+    "episode_count": 5,
+    "avg_ctr": 0.08,
+    "avg_avd_pct": 60.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "curiosity_gap",
+      "curiosity_gap"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-23T02:32:17.593231+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0767,
+    "avg_avd_pct": 62.33,
+    "winning_hooks": [
+      "shocking",
+      "curiosity_gap",
+      "list"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "shocking",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-23T02:32:17.663944+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0433,
+    "avg_avd_pct": 41.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "list",
+      "question"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [
+      {
+        "episode_id": "ep002",
+        "avd_pct": 30.0
+      },
+      {
+        "episode_id": "ep003",
+        "avd_pct": 28.0
+      }
+    ],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "list"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-23T02:32:17.740886+00:00",
+    "episode_count": 5,
+    "avg_ctr": 0.08,
+    "avg_avd_pct": 60.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "curiosity_gap",
+      "curiosity_gap"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-23T02:33:54.972743+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0767,
+    "avg_avd_pct": 62.33,
+    "winning_hooks": [
+      "shocking",
+      "curiosity_gap",
+      "list"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "shocking",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-23T02:33:55.042515+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0433,
+    "avg_avd_pct": 41.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "list",
+      "question"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [
+      {
+        "episode_id": "ep002",
+        "avd_pct": 30.0
+      },
+      {
+        "episode_id": "ep003",
+        "avd_pct": 28.0
+      }
+    ],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "list"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-23T02:33:55.109312+00:00",
+    "episode_count": 5,
+    "avg_ctr": 0.08,
+    "avg_avd_pct": 60.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "curiosity_gap",
+      "curiosity_gap"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-23T02:34:06.714695+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0767,
+    "avg_avd_pct": 62.33,
+    "winning_hooks": [
+      "shocking",
+      "curiosity_gap",
+      "list"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "shocking",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-23T02:34:06.792077+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0433,
+    "avg_avd_pct": 41.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "list",
+      "question"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [
+      {
+        "episode_id": "ep002",
+        "avd_pct": 30.0
+      },
+      {
+        "episode_id": "ep003",
+        "avd_pct": 28.0
+      }
+    ],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "list"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-23T02:34:06.864058+00:00",
+    "episode_count": 5,
+    "avg_ctr": 0.08,
+    "avg_avd_pct": 60.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "curiosity_gap",
+      "curiosity_gap"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-23T02:34:16.561945+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0767,
+    "avg_avd_pct": 62.33,
+    "winning_hooks": [
+      "shocking",
+      "curiosity_gap",
+      "list"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "shocking",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-23T02:34:16.633178+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0433,
+    "avg_avd_pct": 41.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "list",
+      "question"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [
+      {
+        "episode_id": "ep002",
+        "avd_pct": 30.0
+      },
+      {
+        "episode_id": "ep003",
+        "avd_pct": 28.0
+      }
+    ],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "list"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-23T02:34:16.708094+00:00",
+    "episode_count": 5,
+    "avg_ctr": 0.08,
+    "avg_avd_pct": 60.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "curiosity_gap",
+      "curiosity_gap"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-23T03:23:16.486859+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0767,
+    "avg_avd_pct": 62.33,
+    "winning_hooks": [
+      "shocking",
+      "curiosity_gap",
+      "list"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "shocking",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-23T03:23:16.537888+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0433,
+    "avg_avd_pct": 41.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "list",
+      "question"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [
+      {
+        "episode_id": "ep002",
+        "avd_pct": 30.0
+      },
+      {
+        "episode_id": "ep003",
+        "avd_pct": 28.0
+      }
+    ],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "list"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-23T03:23:16.613671+00:00",
+    "episode_count": 5,
+    "avg_ctr": 0.08,
+    "avg_avd_pct": 60.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "curiosity_gap",
+      "curiosity_gap"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-23T03:57:01.961526+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0767,
+    "avg_avd_pct": 62.33,
+    "winning_hooks": [
+      "shocking",
+      "curiosity_gap",
+      "list"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "shocking",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-23T03:57:02.043718+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0433,
+    "avg_avd_pct": 41.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "list",
+      "question"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [
+      {
+        "episode_id": "ep002",
+        "avd_pct": 30.0
+      },
+      {
+        "episode_id": "ep003",
+        "avd_pct": 28.0
+      }
+    ],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "list"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-23T03:57:02.181525+00:00",
+    "episode_count": 5,
+    "avg_ctr": 0.08,
+    "avg_avd_pct": 60.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "curiosity_gap",
+      "curiosity_gap"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-23T04:20:18.882222+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0767,
+    "avg_avd_pct": 62.33,
+    "winning_hooks": [
+      "shocking",
+      "curiosity_gap",
+      "list"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "shocking",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-23T04:20:18.950024+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0433,
+    "avg_avd_pct": 41.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "list",
+      "question"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [
+      {
+        "episode_id": "ep002",
+        "avd_pct": 30.0
+      },
+      {
+        "episode_id": "ep003",
+        "avd_pct": 28.0
+      }
+    ],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "list"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-23T04:20:19.071298+00:00",
+    "episode_count": 5,
+    "avg_ctr": 0.08,
+    "avg_avd_pct": 60.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "curiosity_gap",
+      "curiosity_gap"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-23T04:40:56.209311+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0767,
+    "avg_avd_pct": 62.33,
+    "winning_hooks": [
+      "shocking",
+      "curiosity_gap",
+      "list"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "shocking",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-23T04:40:56.280409+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0433,
+    "avg_avd_pct": 41.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "list",
+      "question"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [
+      {
+        "episode_id": "ep002",
+        "avd_pct": 30.0
+      },
+      {
+        "episode_id": "ep003",
+        "avd_pct": 28.0
+      }
+    ],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "list"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-23T04:40:56.409178+00:00",
+    "episode_count": 5,
+    "avg_ctr": 0.08,
+    "avg_avd_pct": 60.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "curiosity_gap",
+      "curiosity_gap"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-23T05:27:20.965581+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0767,
+    "avg_avd_pct": 62.33,
+    "winning_hooks": [
+      "shocking",
+      "curiosity_gap",
+      "list"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "shocking",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-23T05:27:21.059267+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0433,
+    "avg_avd_pct": 41.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "list",
+      "question"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [
+      {
+        "episode_id": "ep002",
+        "avd_pct": 30.0
+      },
+      {
+        "episode_id": "ep003",
+        "avd_pct": 28.0
+      }
+    ],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "list"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-23T05:27:21.159018+00:00",
+    "episode_count": 5,
+    "avg_ctr": 0.08,
+    "avg_avd_pct": 60.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "curiosity_gap",
+      "curiosity_gap"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-23T06:28:51.981377+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0767,
+    "avg_avd_pct": 62.33,
+    "winning_hooks": [
+      "shocking",
+      "curiosity_gap",
+      "list"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "shocking",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-23T06:28:52.047018+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0433,
+    "avg_avd_pct": 41.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "list",
+      "question"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [
+      {
+        "episode_id": "ep002",
+        "avd_pct": 30.0
+      },
+      {
+        "episode_id": "ep003",
+        "avd_pct": 28.0
+      }
+    ],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "list"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-23T06:28:52.175822+00:00",
+    "episode_count": 5,
+    "avg_ctr": 0.08,
+    "avg_avd_pct": 60.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "curiosity_gap",
+      "curiosity_gap"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-23T13:43:02.842639+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0767,
+    "avg_avd_pct": 62.33,
+    "winning_hooks": [
+      "shocking",
+      "curiosity_gap",
+      "list"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "shocking",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-23T13:43:02.909209+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0433,
+    "avg_avd_pct": 41.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "list",
+      "question"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [
+      {
+        "episode_id": "ep002",
+        "avd_pct": 30.0
+      },
+      {
+        "episode_id": "ep003",
+        "avd_pct": 28.0
+      }
+    ],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "list"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-23T13:43:02.978966+00:00",
+    "episode_count": 5,
+    "avg_ctr": 0.08,
+    "avg_avd_pct": 60.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "curiosity_gap",
+      "curiosity_gap"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-23T13:56:23.675110+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0767,
+    "avg_avd_pct": 62.33,
+    "winning_hooks": [
+      "shocking",
+      "curiosity_gap",
+      "list"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "shocking",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-23T13:56:23.728540+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0433,
+    "avg_avd_pct": 41.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "list",
+      "question"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [
+      {
+        "episode_id": "ep002",
+        "avd_pct": 30.0
+      },
+      {
+        "episode_id": "ep003",
+        "avd_pct": 28.0
+      }
+    ],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "list"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-23T13:56:23.809973+00:00",
+    "episode_count": 5,
+    "avg_ctr": 0.08,
+    "avg_avd_pct": 60.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "curiosity_gap",
+      "curiosity_gap"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-23T15:16:32.725842+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0767,
+    "avg_avd_pct": 62.33,
+    "winning_hooks": [
+      "shocking",
+      "curiosity_gap",
+      "list"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "shocking",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-23T15:16:32.840374+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0433,
+    "avg_avd_pct": 41.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "list",
+      "question"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [
+      {
+        "episode_id": "ep002",
+        "avd_pct": 30.0
+      },
+      {
+        "episode_id": "ep003",
+        "avd_pct": 28.0
+      }
+    ],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "list"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-23T15:16:32.938904+00:00",
+    "episode_count": 5,
+    "avg_ctr": 0.08,
+    "avg_avd_pct": 60.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "curiosity_gap",
+      "curiosity_gap"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-23T15:30:09.365527+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0767,
+    "avg_avd_pct": 62.33,
+    "winning_hooks": [
+      "shocking",
+      "curiosity_gap",
+      "list"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "shocking",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-23T15:30:09.538335+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0433,
+    "avg_avd_pct": 41.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "list",
+      "question"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [
+      {
+        "episode_id": "ep002",
+        "avd_pct": 30.0
+      },
+      {
+        "episode_id": "ep003",
+        "avd_pct": 28.0
+      }
+    ],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "list"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-23T15:30:09.720405+00:00",
+    "episode_count": 5,
+    "avg_ctr": 0.08,
+    "avg_avd_pct": 60.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "curiosity_gap",
+      "curiosity_gap"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-23T15:35:13.339260+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0767,
+    "avg_avd_pct": 62.33,
+    "winning_hooks": [
+      "shocking",
+      "curiosity_gap",
+      "list"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "shocking",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-23T15:35:13.467843+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0433,
+    "avg_avd_pct": 41.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "list",
+      "question"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [
+      {
+        "episode_id": "ep002",
+        "avd_pct": 30.0
+      },
+      {
+        "episode_id": "ep003",
+        "avd_pct": 28.0
+      }
+    ],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "list"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-23T15:35:13.644519+00:00",
+    "episode_count": 5,
+    "avg_ctr": 0.08,
+    "avg_avd_pct": 60.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "curiosity_gap",
+      "curiosity_gap"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-24T00:47:13.067668+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0767,
+    "avg_avd_pct": 62.33,
+    "winning_hooks": [
+      "shocking",
+      "curiosity_gap",
+      "list"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "shocking",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-24T00:47:13.129677+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0433,
+    "avg_avd_pct": 41.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "list",
+      "question"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [
+      {
+        "episode_id": "ep002",
+        "avd_pct": 30.0
+      },
+      {
+        "episode_id": "ep003",
+        "avd_pct": 28.0
+      }
+    ],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "list"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-24T00:47:13.188193+00:00",
+    "episode_count": 5,
+    "avg_ctr": 0.08,
+    "avg_avd_pct": 60.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "curiosity_gap",
+      "curiosity_gap"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-24T01:29:43.169381+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0767,
+    "avg_avd_pct": 62.33,
+    "winning_hooks": [
+      "shocking",
+      "curiosity_gap",
+      "list"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "shocking",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-24T01:29:43.245525+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0433,
+    "avg_avd_pct": 41.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "list",
+      "question"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [
+      {
+        "episode_id": "ep002",
+        "avd_pct": 30.0
+      },
+      {
+        "episode_id": "ep003",
+        "avd_pct": 28.0
+      }
+    ],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "list"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-24T01:29:43.379425+00:00",
+    "episode_count": 5,
+    "avg_ctr": 0.08,
+    "avg_avd_pct": 60.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "curiosity_gap",
+      "curiosity_gap"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-24T01:59:41.299100+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0767,
+    "avg_avd_pct": 62.33,
+    "winning_hooks": [
+      "shocking",
+      "curiosity_gap",
+      "list"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "shocking",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-24T01:59:41.357545+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0433,
+    "avg_avd_pct": 41.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "list",
+      "question"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [
+      {
+        "episode_id": "ep002",
+        "avd_pct": 30.0
+      },
+      {
+        "episode_id": "ep003",
+        "avd_pct": 28.0
+      }
+    ],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "list"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-24T01:59:41.447478+00:00",
+    "episode_count": 5,
+    "avg_ctr": 0.08,
+    "avg_avd_pct": 60.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "curiosity_gap",
+      "curiosity_gap"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-24T02:46:34.735594+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0767,
+    "avg_avd_pct": 62.33,
+    "winning_hooks": [
+      "shocking",
+      "curiosity_gap",
+      "list"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "shocking",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-24T02:46:34.787101+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0433,
+    "avg_avd_pct": 41.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "list",
+      "question"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [
+      {
+        "episode_id": "ep002",
+        "avd_pct": 30.0
+      },
+      {
+        "episode_id": "ep003",
+        "avd_pct": 28.0
+      }
+    ],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "list"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-24T02:46:34.855103+00:00",
+    "episode_count": 5,
+    "avg_ctr": 0.08,
+    "avg_avd_pct": 60.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "curiosity_gap",
+      "curiosity_gap"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-24T02:52:39.971520+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0767,
+    "avg_avd_pct": 62.33,
+    "winning_hooks": [
+      "shocking",
+      "curiosity_gap",
+      "list"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "shocking",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-24T02:52:40.091770+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0433,
+    "avg_avd_pct": 41.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "list",
+      "question"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [
+      {
+        "episode_id": "ep002",
+        "avd_pct": 30.0
+      },
+      {
+        "episode_id": "ep003",
+        "avd_pct": 28.0
+      }
+    ],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "list"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-24T02:52:40.211613+00:00",
+    "episode_count": 5,
+    "avg_ctr": 0.08,
+    "avg_avd_pct": 60.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "curiosity_gap",
+      "curiosity_gap"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-24T04:05:34.711550+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0767,
+    "avg_avd_pct": 62.33,
+    "winning_hooks": [
+      "shocking",
+      "curiosity_gap",
+      "list"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "shocking",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-24T04:05:34.769456+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0433,
+    "avg_avd_pct": 41.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "list",
+      "question"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [
+      {
+        "episode_id": "ep002",
+        "avd_pct": 30.0
+      },
+      {
+        "episode_id": "ep003",
+        "avd_pct": 28.0
+      }
+    ],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "list"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-24T04:05:34.852968+00:00",
+    "episode_count": 5,
+    "avg_ctr": 0.08,
+    "avg_avd_pct": 60.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "curiosity_gap",
+      "curiosity_gap"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-24T04:46:52.650712+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0767,
+    "avg_avd_pct": 62.33,
+    "winning_hooks": [
+      "shocking",
+      "curiosity_gap",
+      "list"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "shocking",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-24T04:46:52.701428+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0433,
+    "avg_avd_pct": 41.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "list",
+      "question"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [
+      {
+        "episode_id": "ep002",
+        "avd_pct": 30.0
+      },
+      {
+        "episode_id": "ep003",
+        "avd_pct": 28.0
+      }
+    ],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "list"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-24T04:46:52.769725+00:00",
+    "episode_count": 5,
+    "avg_ctr": 0.08,
+    "avg_avd_pct": 60.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "curiosity_gap",
+      "curiosity_gap"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-24T05:00:02.031892+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0767,
+    "avg_avd_pct": 62.33,
+    "winning_hooks": [
+      "shocking",
+      "curiosity_gap",
+      "list"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "shocking",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-24T05:00:02.126075+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0433,
+    "avg_avd_pct": 41.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "list",
+      "question"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [
+      {
+        "episode_id": "ep002",
+        "avd_pct": 30.0
+      },
+      {
+        "episode_id": "ep003",
+        "avd_pct": 28.0
+      }
+    ],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "list"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-24T05:00:02.252879+00:00",
+    "episode_count": 5,
+    "avg_ctr": 0.08,
+    "avg_avd_pct": 60.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "curiosity_gap",
+      "curiosity_gap"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-24T05:50:23.267459+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0767,
+    "avg_avd_pct": 62.33,
+    "winning_hooks": [
+      "shocking",
+      "curiosity_gap",
+      "list"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "shocking",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-24T05:50:23.315792+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0433,
+    "avg_avd_pct": 41.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "list",
+      "question"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [
+      {
+        "episode_id": "ep002",
+        "avd_pct": 30.0
+      },
+      {
+        "episode_id": "ep003",
+        "avd_pct": 28.0
+      }
+    ],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "list"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-24T05:50:23.384177+00:00",
+    "episode_count": 5,
+    "avg_ctr": 0.08,
+    "avg_avd_pct": 60.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "curiosity_gap",
+      "curiosity_gap"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-24T05:55:43.823750+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0767,
+    "avg_avd_pct": 62.33,
+    "winning_hooks": [
+      "shocking",
+      "curiosity_gap",
+      "list"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "shocking",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-24T05:55:43.917955+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0433,
+    "avg_avd_pct": 41.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "list",
+      "question"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [
+      {
+        "episode_id": "ep002",
+        "avd_pct": 30.0
+      },
+      {
+        "episode_id": "ep003",
+        "avd_pct": 28.0
+      }
+    ],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "list"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-24T05:55:44.006097+00:00",
+    "episode_count": 5,
+    "avg_ctr": 0.08,
+    "avg_avd_pct": 60.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "curiosity_gap",
+      "curiosity_gap"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-24T06:46:18.270585+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0767,
+    "avg_avd_pct": 62.33,
+    "winning_hooks": [
+      "shocking",
+      "curiosity_gap",
+      "list"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "shocking",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-24T06:46:18.323566+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0433,
+    "avg_avd_pct": 41.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "list",
+      "question"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [
+      {
+        "episode_id": "ep002",
+        "avd_pct": 30.0
+      },
+      {
+        "episode_id": "ep003",
+        "avd_pct": 28.0
+      }
+    ],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "list"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-24T06:46:18.398228+00:00",
+    "episode_count": 5,
+    "avg_ctr": 0.08,
+    "avg_avd_pct": 60.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "curiosity_gap",
+      "curiosity_gap"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-24T07:55:55.217692+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0767,
+    "avg_avd_pct": 62.33,
+    "winning_hooks": [
+      "shocking",
+      "curiosity_gap",
+      "list"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "shocking",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-24T07:55:55.259964+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0433,
+    "avg_avd_pct": 41.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "list",
+      "question"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [
+      {
+        "episode_id": "ep002",
+        "avd_pct": 30.0
+      },
+      {
+        "episode_id": "ep003",
+        "avd_pct": 28.0
+      }
+    ],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "list"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-24T07:55:55.329967+00:00",
+    "episode_count": 5,
+    "avg_ctr": 0.08,
+    "avg_avd_pct": 60.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "curiosity_gap",
+      "curiosity_gap"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-24T08:11:02.774940+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0767,
+    "avg_avd_pct": 62.33,
+    "winning_hooks": [
+      "shocking",
+      "curiosity_gap",
+      "list"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "shocking",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-24T08:11:02.893680+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0433,
+    "avg_avd_pct": 41.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "list",
+      "question"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [
+      {
+        "episode_id": "ep002",
+        "avd_pct": 30.0
+      },
+      {
+        "episode_id": "ep003",
+        "avd_pct": 28.0
+      }
+    ],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "list"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-24T08:11:02.982878+00:00",
+    "episode_count": 5,
+    "avg_ctr": 0.08,
+    "avg_avd_pct": 60.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "curiosity_gap",
+      "curiosity_gap"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-24T08:35:21.773772+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0767,
+    "avg_avd_pct": 62.33,
+    "winning_hooks": [
+      "shocking",
+      "curiosity_gap",
+      "list"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "shocking",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-24T08:35:21.831882+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0433,
+    "avg_avd_pct": 41.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "list",
+      "question"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [
+      {
+        "episode_id": "ep002",
+        "avd_pct": 30.0
+      },
+      {
+        "episode_id": "ep003",
+        "avd_pct": 28.0
+      }
+    ],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "list"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-24T08:35:21.951573+00:00",
+    "episode_count": 5,
+    "avg_ctr": 0.08,
+    "avg_avd_pct": 60.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "curiosity_gap",
+      "curiosity_gap"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-24T09:39:30.331670+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0767,
+    "avg_avd_pct": 62.33,
+    "winning_hooks": [
+      "shocking",
+      "curiosity_gap",
+      "list"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "shocking",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-24T09:39:30.398668+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0433,
+    "avg_avd_pct": 41.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "list",
+      "question"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [
+      {
+        "episode_id": "ep002",
+        "avd_pct": 30.0
+      },
+      {
+        "episode_id": "ep003",
+        "avd_pct": 28.0
+      }
+    ],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "list"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-24T09:39:30.540704+00:00",
+    "episode_count": 5,
+    "avg_ctr": 0.08,
+    "avg_avd_pct": 60.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "curiosity_gap",
+      "curiosity_gap"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-24T09:56:10.088541+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0767,
+    "avg_avd_pct": 62.33,
+    "winning_hooks": [
+      "shocking",
+      "curiosity_gap",
+      "list"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "shocking",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-24T09:56:10.154914+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0433,
+    "avg_avd_pct": 41.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "list",
+      "question"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [
+      {
+        "episode_id": "ep002",
+        "avd_pct": 30.0
+      },
+      {
+        "episode_id": "ep003",
+        "avd_pct": 28.0
+      }
+    ],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "list"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-24T09:56:10.258435+00:00",
+    "episode_count": 5,
+    "avg_ctr": 0.08,
+    "avg_avd_pct": 60.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "curiosity_gap",
+      "curiosity_gap"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-24T11:52:34.422868+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0767,
+    "avg_avd_pct": 62.33,
+    "winning_hooks": [
+      "shocking",
+      "curiosity_gap",
+      "list"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "shocking",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-24T11:52:34.527400+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0433,
+    "avg_avd_pct": 41.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "list",
+      "question"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [
+      {
+        "episode_id": "ep002",
+        "avd_pct": 30.0
+      },
+      {
+        "episode_id": "ep003",
+        "avd_pct": 28.0
+      }
+    ],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "list"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-24T11:52:34.656925+00:00",
+    "episode_count": 5,
+    "avg_ctr": 0.08,
+    "avg_avd_pct": 60.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "curiosity_gap",
+      "curiosity_gap"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-24T14:42:09.596794+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0767,
+    "avg_avd_pct": 62.33,
+    "winning_hooks": [
+      "shocking",
+      "curiosity_gap",
+      "list"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "shocking",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-24T14:42:09.748043+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0433,
+    "avg_avd_pct": 41.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "list",
+      "question"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [
+      {
+        "episode_id": "ep002",
+        "avd_pct": 30.0
+      },
+      {
+        "episode_id": "ep003",
+        "avd_pct": 28.0
+      }
+    ],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "list"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-24T14:42:09.902282+00:00",
+    "episode_count": 5,
+    "avg_ctr": 0.08,
+    "avg_avd_pct": 60.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "curiosity_gap",
+      "curiosity_gap"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-24T15:08:41.488646+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0767,
+    "avg_avd_pct": 62.33,
+    "winning_hooks": [
+      "shocking",
+      "curiosity_gap",
+      "list"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "shocking",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-24T15:08:41.585172+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0433,
+    "avg_avd_pct": 41.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "list",
+      "question"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [
+      {
+        "episode_id": "ep002",
+        "avd_pct": 30.0
+      },
+      {
+        "episode_id": "ep003",
+        "avd_pct": 28.0
+      }
+    ],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "list"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-24T15:08:41.736071+00:00",
+    "episode_count": 5,
+    "avg_ctr": 0.08,
+    "avg_avd_pct": 60.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "curiosity_gap",
+      "curiosity_gap"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-25T10:24:30.572450+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0767,
+    "avg_avd_pct": 62.33,
+    "winning_hooks": [
+      "shocking",
+      "curiosity_gap",
+      "list"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "shocking",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-25T10:24:30.647112+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0433,
+    "avg_avd_pct": 41.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "list",
+      "question"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [
+      {
+        "episode_id": "ep002",
+        "avd_pct": 30.0
+      },
+      {
+        "episode_id": "ep003",
+        "avd_pct": 28.0
+      }
+    ],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "list"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-25T10:24:30.728740+00:00",
+    "episode_count": 5,
+    "avg_ctr": 0.08,
+    "avg_avd_pct": 60.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "curiosity_gap",
+      "curiosity_gap"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-25T10:48:56.767218+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0767,
+    "avg_avd_pct": 62.33,
+    "winning_hooks": [
+      "shocking",
+      "curiosity_gap",
+      "list"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "shocking",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-25T10:48:56.855262+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0433,
+    "avg_avd_pct": 41.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "list",
+      "question"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [
+      {
+        "episode_id": "ep002",
+        "avd_pct": 30.0
+      },
+      {
+        "episode_id": "ep003",
+        "avd_pct": 28.0
+      }
+    ],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "list"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-25T10:48:56.944789+00:00",
+    "episode_count": 5,
+    "avg_ctr": 0.08,
+    "avg_avd_pct": 60.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "curiosity_gap",
+      "curiosity_gap"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-25T10:56:31.522344+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0767,
+    "avg_avd_pct": 62.33,
+    "winning_hooks": [
+      "shocking",
+      "curiosity_gap",
+      "list"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "shocking",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-25T10:56:31.629878+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0433,
+    "avg_avd_pct": 41.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "list",
+      "question"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [
+      {
+        "episode_id": "ep002",
+        "avd_pct": 30.0
+      },
+      {
+        "episode_id": "ep003",
+        "avd_pct": 28.0
+      }
+    ],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "list"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-25T10:56:31.736398+00:00",
+    "episode_count": 5,
+    "avg_ctr": 0.08,
+    "avg_avd_pct": 60.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "curiosity_gap",
+      "curiosity_gap"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-25T11:07:11.162627+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0767,
+    "avg_avd_pct": 62.33,
+    "winning_hooks": [
+      "shocking",
+      "curiosity_gap",
+      "list"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "shocking",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-25T11:07:11.202201+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0433,
+    "avg_avd_pct": 41.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "list",
+      "question"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [
+      {
+        "episode_id": "ep002",
+        "avd_pct": 30.0
+      },
+      {
+        "episode_id": "ep003",
+        "avd_pct": 28.0
+      }
+    ],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "list"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-25T11:07:11.314881+00:00",
+    "episode_count": 5,
+    "avg_ctr": 0.08,
+    "avg_avd_pct": 60.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "curiosity_gap",
+      "curiosity_gap"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-25T11:15:03.132567+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0767,
+    "avg_avd_pct": 62.33,
+    "winning_hooks": [
+      "shocking",
+      "curiosity_gap",
+      "list"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "shocking",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-25T11:15:03.179142+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0433,
+    "avg_avd_pct": 41.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "list",
+      "question"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [
+      {
+        "episode_id": "ep002",
+        "avd_pct": 30.0
+      },
+      {
+        "episode_id": "ep003",
+        "avd_pct": 28.0
+      }
+    ],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "list"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-25T11:15:03.288817+00:00",
+    "episode_count": 5,
+    "avg_ctr": 0.08,
+    "avg_avd_pct": 60.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "curiosity_gap",
+      "curiosity_gap"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-25T11:23:42.156611+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0767,
+    "avg_avd_pct": 62.33,
+    "winning_hooks": [
+      "shocking",
+      "curiosity_gap",
+      "list"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "shocking",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-25T11:23:42.218726+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0433,
+    "avg_avd_pct": 41.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "list",
+      "question"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [
+      {
+        "episode_id": "ep002",
+        "avd_pct": 30.0
+      },
+      {
+        "episode_id": "ep003",
+        "avd_pct": 28.0
+      }
+    ],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "list"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-25T11:23:42.313904+00:00",
+    "episode_count": 5,
+    "avg_ctr": 0.08,
+    "avg_avd_pct": 60.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "curiosity_gap",
+      "curiosity_gap"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-25T14:18:13.027738+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0767,
+    "avg_avd_pct": 62.33,
+    "winning_hooks": [
+      "shocking",
+      "curiosity_gap",
+      "list"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "shocking",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-25T14:18:13.215008+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0433,
+    "avg_avd_pct": 41.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "list",
+      "question"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [
+      {
+        "episode_id": "ep002",
+        "avd_pct": 30.0
+      },
+      {
+        "episode_id": "ep003",
+        "avd_pct": 28.0
+      }
+    ],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "list"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-25T14:18:13.294155+00:00",
+    "episode_count": 5,
+    "avg_ctr": 0.08,
+    "avg_avd_pct": 60.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "curiosity_gap",
+      "curiosity_gap"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-25T14:22:32.405513+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0767,
+    "avg_avd_pct": 62.33,
+    "winning_hooks": [
+      "shocking",
+      "curiosity_gap",
+      "list"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "shocking",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-25T14:22:32.500696+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0433,
+    "avg_avd_pct": 41.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "list",
+      "question"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [
+      {
+        "episode_id": "ep002",
+        "avd_pct": 30.0
+      },
+      {
+        "episode_id": "ep003",
+        "avd_pct": 28.0
+      }
+    ],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "list"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-25T14:22:32.584827+00:00",
+    "episode_count": 5,
+    "avg_ctr": 0.08,
+    "avg_avd_pct": 60.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "curiosity_gap",
+      "curiosity_gap"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-25T14:26:30.197134+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0767,
+    "avg_avd_pct": 62.33,
+    "winning_hooks": [
+      "shocking",
+      "curiosity_gap",
+      "list"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "shocking",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-25T14:26:30.249222+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0433,
+    "avg_avd_pct": 41.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "list",
+      "question"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [
+      {
+        "episode_id": "ep002",
+        "avd_pct": 30.0
+      },
+      {
+        "episode_id": "ep003",
+        "avd_pct": 28.0
+      }
+    ],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "list"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-25T14:26:30.325846+00:00",
+    "episode_count": 5,
+    "avg_ctr": 0.08,
+    "avg_avd_pct": 60.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "curiosity_gap",
+      "curiosity_gap"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-25T14:30:33.408979+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0767,
+    "avg_avd_pct": 62.33,
+    "winning_hooks": [
+      "shocking",
+      "curiosity_gap",
+      "list"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "shocking",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-25T14:30:33.480600+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0433,
+    "avg_avd_pct": 41.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "list",
+      "question"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [
+      {
+        "episode_id": "ep002",
+        "avd_pct": 30.0
+      },
+      {
+        "episode_id": "ep003",
+        "avd_pct": 28.0
+      }
+    ],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "list"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-25T14:30:33.564210+00:00",
+    "episode_count": 5,
+    "avg_ctr": 0.08,
+    "avg_avd_pct": 60.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "curiosity_gap",
+      "curiosity_gap"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-25T14:34:30.508228+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0767,
+    "avg_avd_pct": 62.33,
+    "winning_hooks": [
+      "shocking",
+      "curiosity_gap",
+      "list"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "shocking",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-25T14:34:30.561309+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0433,
+    "avg_avd_pct": 41.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "list",
+      "question"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [
+      {
+        "episode_id": "ep002",
+        "avd_pct": 30.0
+      },
+      {
+        "episode_id": "ep003",
+        "avd_pct": 28.0
+      }
+    ],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "list"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-25T14:34:30.636918+00:00",
+    "episode_count": 5,
+    "avg_ctr": 0.08,
+    "avg_avd_pct": 60.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "curiosity_gap",
+      "curiosity_gap"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-25T14:38:28.836818+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0767,
+    "avg_avd_pct": 62.33,
+    "winning_hooks": [
+      "shocking",
+      "curiosity_gap",
+      "list"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "shocking",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-25T14:38:28.877370+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0433,
+    "avg_avd_pct": 41.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "list",
+      "question"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [
+      {
+        "episode_id": "ep002",
+        "avd_pct": 30.0
+      },
+      {
+        "episode_id": "ep003",
+        "avd_pct": 28.0
+      }
+    ],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "list"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-25T14:38:28.952960+00:00",
+    "episode_count": 5,
+    "avg_ctr": 0.08,
+    "avg_avd_pct": 60.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "curiosity_gap",
+      "curiosity_gap"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-25T14:42:24.433853+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0767,
+    "avg_avd_pct": 62.33,
+    "winning_hooks": [
+      "shocking",
+      "curiosity_gap",
+      "list"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "shocking",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-25T14:42:24.476424+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0433,
+    "avg_avd_pct": 41.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "list",
+      "question"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [
+      {
+        "episode_id": "ep002",
+        "avd_pct": 30.0
+      },
+      {
+        "episode_id": "ep003",
+        "avd_pct": 28.0
+      }
+    ],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "list"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-25T14:42:24.542520+00:00",
+    "episode_count": 5,
+    "avg_ctr": 0.08,
+    "avg_avd_pct": 60.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "curiosity_gap",
+      "curiosity_gap"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-25T14:46:27.456463+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0767,
+    "avg_avd_pct": 62.33,
+    "winning_hooks": [
+      "shocking",
+      "curiosity_gap",
+      "list"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "shocking",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-25T14:46:27.503032+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0433,
+    "avg_avd_pct": 41.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "list",
+      "question"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [
+      {
+        "episode_id": "ep002",
+        "avd_pct": 30.0
+      },
+      {
+        "episode_id": "ep003",
+        "avd_pct": 28.0
+      }
+    ],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "list"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-25T14:46:27.578642+00:00",
+    "episode_count": 5,
+    "avg_ctr": 0.08,
+    "avg_avd_pct": 60.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "curiosity_gap",
+      "curiosity_gap"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-25T14:50:29.566021+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0767,
+    "avg_avd_pct": 62.33,
+    "winning_hooks": [
+      "shocking",
+      "curiosity_gap",
+      "list"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "shocking",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-25T14:50:29.632679+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0433,
+    "avg_avd_pct": 41.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "list",
+      "question"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [
+      {
+        "episode_id": "ep002",
+        "avd_pct": 30.0
+      },
+      {
+        "episode_id": "ep003",
+        "avd_pct": 28.0
+      }
+    ],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "list"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-25T14:50:29.720859+00:00",
+    "episode_count": 5,
+    "avg_ctr": 0.08,
+    "avg_avd_pct": 60.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "curiosity_gap",
+      "curiosity_gap"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-25T14:54:29.643030+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0767,
+    "avg_avd_pct": 62.33,
+    "winning_hooks": [
+      "shocking",
+      "curiosity_gap",
+      "list"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "shocking",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-25T14:54:29.719703+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0433,
+    "avg_avd_pct": 41.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "list",
+      "question"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [
+      {
+        "episode_id": "ep002",
+        "avd_pct": 30.0
+      },
+      {
+        "episode_id": "ep003",
+        "avd_pct": 28.0
+      }
+    ],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "list"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-25T14:54:29.959170+00:00",
+    "episode_count": 5,
+    "avg_ctr": 0.08,
+    "avg_avd_pct": 60.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "curiosity_gap",
+      "curiosity_gap"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-25T14:58:29.762950+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0767,
+    "avg_avd_pct": 62.33,
+    "winning_hooks": [
+      "shocking",
+      "curiosity_gap",
+      "list"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "shocking",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-25T14:58:29.816954+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0433,
+    "avg_avd_pct": 41.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "list",
+      "question"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [
+      {
+        "episode_id": "ep002",
+        "avd_pct": 30.0
+      },
+      {
+        "episode_id": "ep003",
+        "avd_pct": 28.0
+      }
+    ],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "list"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-25T14:58:29.887467+00:00",
+    "episode_count": 5,
+    "avg_ctr": 0.08,
+    "avg_avd_pct": 60.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "curiosity_gap",
+      "curiosity_gap"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-25T15:02:27.646363+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0767,
+    "avg_avd_pct": 62.33,
+    "winning_hooks": [
+      "shocking",
+      "curiosity_gap",
+      "list"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "shocking",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-25T15:02:27.777906+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0433,
+    "avg_avd_pct": 41.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "list",
+      "question"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [
+      {
+        "episode_id": "ep002",
+        "avd_pct": 30.0
+      },
+      {
+        "episode_id": "ep003",
+        "avd_pct": 28.0
+      }
+    ],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "list"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-25T15:02:27.912949+00:00",
+    "episode_count": 5,
+    "avg_ctr": 0.08,
+    "avg_avd_pct": 60.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "curiosity_gap",
+      "curiosity_gap"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-25T15:09:32.847642+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0767,
+    "avg_avd_pct": 62.33,
+    "winning_hooks": [
+      "shocking",
+      "curiosity_gap",
+      "list"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "shocking",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-25T15:09:32.891672+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0433,
+    "avg_avd_pct": 41.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "list",
+      "question"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [
+      {
+        "episode_id": "ep002",
+        "avd_pct": 30.0
+      },
+      {
+        "episode_id": "ep003",
+        "avd_pct": 28.0
+      }
+    ],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "list"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-25T15:09:32.983187+00:00",
+    "episode_count": 5,
+    "avg_ctr": 0.08,
+    "avg_avd_pct": 60.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "curiosity_gap",
+      "curiosity_gap"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-25T16:04:31.369142+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0767,
+    "avg_avd_pct": 62.33,
+    "winning_hooks": [
+      "shocking",
+      "curiosity_gap",
+      "list"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "shocking",
+      "curiosity_gap"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-25T16:04:31.486836+00:00",
+    "episode_count": 3,
+    "avg_ctr": 0.0433,
+    "avg_avd_pct": 41.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "list",
+      "question"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [
+      {
+        "episode_id": "ep002",
+        "avd_pct": 30.0
+      },
+      {
+        "episode_id": "ep003",
+        "avd_pct": 28.0
+      }
+    ],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "list"
+    ]
+  },
+  {
+    "channel_id": "CH1",
+    "analyzed_at": "2026-04-25T16:04:31.665107+00:00",
+    "episode_count": 5,
+    "avg_ctr": 0.08,
+    "avg_avd_pct": 60.0,
+    "winning_hooks": [
+      "curiosity_gap",
+      "curiosity_gap",
+      "curiosity_gap"
+    ],
+    "best_bgm_tags": [
+      "calm_piano",
+      "calm_piano",
+      "calm_piano"
+    ],
+    "losing_segments": [],
+    "recommended_topics": [],
+    "recommended_hook_types": [
+      "curiosity_gap",
+      "curiosity_gap"
+    ]
+  }
+]

@@ -22,8 +22,9 @@ MAX_CONCURRENT = 4
 
 def _load_weekly_plan(iso_week: str) -> list[dict]:
     """주간 영상 기획 목록 로드 (data/global/monthly_plan/{YYYY-MM}/week_{W}.json)."""
-    year_month = iso_week[:7]
-    week_num = datetime.now().isocalendar()[1]
+    now = datetime.now()
+    year_month = now.strftime("%Y-%m")
+    week_num = now.isocalendar()[1]
     plan_file = PLAN_PATH / year_month / f"week_{week_num:02d}.json"
 
     if not plan_file.exists():
@@ -56,6 +57,7 @@ def _build_jobs(plan_items: list[dict]) -> list[EpisodeJob]:
         job = EpisodeJob(
             channel_id=channel_id,
             series_id=series_id,
+            episode_index=episode_index,
             topic=topic,
             episode_meta=meta,
         )
@@ -76,8 +78,8 @@ async def _run_batch(jobs: list[EpisodeJob]) -> dict:
         "batch_start": start_time.isoformat(),
         "elapsed_sec": int(elapsed),
         "total_jobs": len(jobs),
-        "succeeded": sum(1 for r in results if not isinstance(r, Exception)),
-        "failed": sum(1 for r in results if isinstance(r, Exception)),
+        "succeeded": sum(1 for r in results if r.final_video_path),
+        "failed": sum(1 for r in results if not r.final_video_path),
     }
 
     log_path = Path("data/global/batch_history.json")

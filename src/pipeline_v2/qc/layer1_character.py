@@ -28,18 +28,23 @@ def _get_clip():
 
 def _score_vision_gemini(img_path: str, ref_path: str) -> float:
     """Gemini Vision으로 캐릭터 일관성 점수 계산."""
+    import os
     try:
-        import google.generativeai as genai
-        model = genai.GenerativeModel("gemini-2.0-flash")
+        from google import genai
+        from google.genai import types
+        client = genai.Client(api_key=os.getenv("GEMINI_API_KEY", ""))
         with open(img_path, "rb") as f:
             img_data = f.read()
         with open(ref_path, "rb") as f:
             ref_data = f.read()
-        resp = model.generate_content([
-            "두 이미지의 두들 애니메이션 캐릭터가 같은 캐릭터인지 0.0~1.0 점수로만 답하세요.",
-            {"mime_type": "image/png", "data": img_data},
-            {"mime_type": "image/png", "data": ref_data},
-        ])
+        resp = client.models.generate_content(
+            model="gemini-2.0-flash",
+            contents=[
+                "두 이미지의 두들 애니메이션 캐릭터가 같은 캐릭터인지 0.0~1.0 점수로만 답하세요.",
+                types.Part.from_bytes(data=img_data, mime_type="image/png"),
+                types.Part.from_bytes(data=ref_data, mime_type="image/png"),
+            ],
+        )
         return float(resp.text.strip()[:4])
     except Exception as e:
         logger.debug(f"Vision 점수 실패: {e}")
@@ -111,7 +116,7 @@ def check_scene_images(
 
     Returns: (all_pass, avg_score, per_image_results)
     """
-    ref_path = f"assets/characters/{channel_id}/{role}_ref.png"
+    ref_path = f"assets/channels/{channel_id}/characters/{role}_ref.png"
     if not Path(ref_path).exists():
         logger.warning(f"레퍼런스 이미지 없음: {ref_path} — Layer1 스킵")
         return True, 0.85, []

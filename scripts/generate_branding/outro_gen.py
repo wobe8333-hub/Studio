@@ -147,6 +147,34 @@ TEMPLATE = """<!DOCTYPE html>
 </html>"""
 
 
+def _composite_logo_outro(card, ch_id: str):
+    """아웃트로 카드에 채널 로고 alpha 합성 (우측 상단 120×120).
+
+    logo_sm.png를 120×120으로 축소해 카드 우측 상단 (w-140, 20) 에 합성한다.
+    logo_sm.png가 없으면 경고 없이 원본 카드를 그대로 반환한다.
+
+    Args:
+        card: PIL Image 객체 (RGB 또는 RGBA)
+        ch_id: 채널 ID (예: "CH1")
+
+    Returns:
+        로고가 합성된 PIL Image 객체
+    """
+    from PIL import Image
+
+    logo_path = CHANNELS_DIR / ch_id / "logo" / "logo_sm.png"
+    if not logo_path.exists():
+        return card
+
+    logo = Image.open(logo_path).convert("RGBA")
+    logo = logo.resize((120, 120), Image.LANCZOS)
+    w, h = card.size
+    result = card.copy().convert("RGBA")
+    result.paste(logo, (w - 140, 20), logo)
+    # 원본 모드로 복원
+    return result.convert(card.mode)
+
+
 def generate_outro(ch_id: str) -> None:
     cfg = CHANNELS[ch_id]
     out = CHANNELS_DIR / ch_id / "outro" / "outro.html"

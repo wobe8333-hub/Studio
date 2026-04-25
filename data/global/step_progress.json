@@ -2,73 +2,73 @@
   "active": true,
   "dry_run": false,
   "channel_id": "CH1",
-  "run_id": "run_CH1_1776779720",
+  "run_id": "run_001",
   "month_number": 1,
   "steps": [
     {
       "index": 0,
       "name": "Step05 트렌드+지식 수집",
       "status": "done",
-      "started_at": "2026-04-21T13:55:20.192027Z",
-      "completed_at": "2026-04-21T13:55:20.203778Z",
-      "elapsed_ms": 11
+      "started_at": null,
+      "completed_at": "2026-04-23T02:37:39.394626Z",
+      "elapsed_ms": null
     },
     {
       "index": 1,
       "name": "Step06 시나리오 정책",
-      "status": "idle",
+      "status": "done",
       "started_at": null,
-      "completed_at": null,
+      "completed_at": "2026-04-23T02:37:39.405500Z",
       "elapsed_ms": null
     },
     {
       "index": 2,
       "name": "Step07 알고리즘 정책",
-      "status": "idle",
+      "status": "done",
       "started_at": null,
-      "completed_at": null,
+      "completed_at": "2026-04-23T02:37:39.416986Z",
       "elapsed_ms": null
     },
     {
       "index": 3,
       "name": "Step08 영상 생성",
-      "status": "idle",
-      "started_at": null,
-      "completed_at": null,
-      "elapsed_ms": null
+      "status": "done",
+      "started_at": "2026-04-23T02:37:39.428727Z",
+      "completed_at": "2026-04-23T02:37:39.440288Z",
+      "elapsed_ms": 11
     },
     {
       "index": 4,
       "name": "Step09 BGM",
-      "status": "idle",
-      "started_at": null,
-      "completed_at": null,
-      "elapsed_ms": null
+      "status": "error",
+      "started_at": "2026-04-23T02:37:39.449948Z",
+      "completed_at": "2026-04-23T02:37:39.462544Z",
+      "elapsed_ms": 12
     },
     {
       "index": 5,
       "name": "Step10 제목+썸네일",
-      "status": "idle",
-      "started_at": null,
-      "completed_at": null,
-      "elapsed_ms": null
+      "status": "done",
+      "started_at": "2026-04-23T02:37:39.472615Z",
+      "completed_at": "2026-04-23T02:37:39.483967Z",
+      "elapsed_ms": 11
     },
     {
       "index": 6,
       "name": "Step11 QA 검수",
-      "status": "idle",
-      "started_at": null,
-      "completed_at": null,
-      "elapsed_ms": null
+      "status": "done",
+      "started_at": "2026-04-23T02:37:39.497326Z",
+      "completed_at": "2026-04-23T02:37:39.515645Z",
+      "elapsed_ms": 18
     },
     {
       "index": 7,
       "name": "Step12 업로드",
-      "status": "idle",
-      "started_at": null,
+      "status": "running",
+      "started_at": "2026-04-23T02:37:39.534462Z",
       "completed_at": null,
       "elapsed_ms": null
     }
   ],
-  "updated_at": "2026-04-21T13:55:20.203778Z"
+  "updated_at": "2026-04-23T02:37:39.534462Z"
 }

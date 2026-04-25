@@ -1,5 +1,8 @@
 # scripts/generate_branding/intro_gen.py
-"""영상 인트로 HTML 생성 — 3초, 채널 컬러 적용"""
+"""영상 인트로 HTML 생성 — 3초, 채널 컬러 적용.
+
+Pillow 카드 워크플로우에서는 _composite_logo() 를 사용해 로고를 합성한다.
+"""
 import sys
 from pathlib import Path
 
@@ -9,62 +12,62 @@ sys.path.insert(0, str(Path(__file__).parent))
 from config import CHANNELS, CHANNELS_DIR
 
 # CH1 전용: 레퍼런스 crop PNG 분해 요소 기반 CSS keyframes 인트로
-CH1_TEMPLATE = f"""<!DOCTYPE html>
+CH1_TEMPLATE = """<!DOCTYPE html>
 <html lang="ko">
 <head>
 <meta charset="utf-8">
 <style>
-:root {{ --dur: 3s; --gold: #F4C420; --ink: #333333; }}
-html, body {{ margin:0; height:100%; background:#FFFFFF; overflow:hidden; }}
-.stage {{
+:root { --dur: 3s; --gold: #F4C420; --ink: #333333; }
+html, body { margin:0; height:100%; background:#FFFFFF; overflow:hidden; }
+.stage {
   position: relative; width: 100vw; height: 100vh;
   display: flex; align-items: center; justify-content: center;
   animation: fade-out 0.3s calc(var(--dur) - 0.3s) ease-in forwards;
-}}
-.frame, .character, .text, .sparkle {{ position: absolute; }}
-.frame {{
+}
+.frame, .character, .text, .sparkle { position: absolute; }
+.frame {
   width: 60vmin;
   animation: zoom-in 0.6s ease-out backwards;
-}}
-.character {{
+}
+.character {
   width: 42vmin;
   animation: pop 0.7s 0.4s ease-out backwards;
-}}
-.text {{
+}
+.text {
   width: 50vmin; bottom: 20vmin;
   animation: slide-up 0.5s 1.0s ease-out backwards;
-}}
-.sparkle.s1 {{
+}
+.sparkle.s1 {
   width: 8vmin; top: 22vmin; left: 30vmin;
   animation: twinkle 1.2s 1.2s ease-in-out infinite;
-}}
-.sparkle.s2 {{
+}
+.sparkle.s2 {
   width: 6vmin; top: 35vmin; right: 28vmin;
   animation: twinkle 1.2s 1.5s ease-in-out infinite;
-}}
-.sparkle.s3 {{
+}
+.sparkle.s3 {
   width: 7vmin; bottom: 40vmin; left: 32vmin;
   animation: twinkle 1.2s 1.8s ease-in-out infinite;
-}}
-@keyframes zoom-in {{
-  from {{ opacity: 0; transform: scale(0.2); }}
-  to   {{ opacity: 1; transform: scale(1); }}
-}}
-@keyframes pop {{
-  from {{ opacity: 0; transform: scale(0.4) translateY(10vh); }}
-  to   {{ opacity: 1; transform: scale(1) translateY(0); }}
-}}
-@keyframes slide-up {{
-  from {{ opacity: 0; transform: translateY(4vmin); }}
-  to   {{ opacity: 1; transform: translateY(0); }}
-}}
-@keyframes twinkle {{
-  0%, 100% {{ opacity: 0; transform: scale(0.3); }}
-  50%       {{ opacity: 1; transform: scale(1); }}
-}}
-@keyframes fade-out {{
-  to {{ opacity: 0; }}
-}}
+}
+@keyframes zoom-in {
+  from { opacity: 0; transform: scale(0.2); }
+  to   { opacity: 1; transform: scale(1); }
+}
+@keyframes pop {
+  from { opacity: 0; transform: scale(0.4) translateY(10vh); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+@keyframes slide-up {
+  from { opacity: 0; transform: translateY(4vmin); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes twinkle {
+  0%, 100% { opacity: 0; transform: scale(0.3); }
+  50%       { opacity: 1; transform: scale(1); }
+}
+@keyframes fade-out {
+  to { opacity: 0; }
+}
 </style>
 </head>
 <body>
@@ -139,6 +142,40 @@ TEMPLATE = """<!DOCTYPE html>
   </script>
 </body>
 </html>"""
+
+
+def _composite_logo(card, ch_id: str):
+    """인트로 카드에 채널 로고 alpha 합성 (중앙 상단).
+
+    logo_sm.png (256x256)를 카드 중앙 상단 y=60 위치에 합성한다.
+    logo_sm.png가 없으면 경고 후 원본 카드를 그대로 반환한다.
+
+    Args:
+        card: PIL Image 객체 (RGB 또는 RGBA)
+        ch_id: 채널 ID (예: "CH1")
+
+    Returns:
+        로고가 합성된 PIL Image 객체
+    """
+    from PIL import Image
+
+    logo_path = CHANNELS_DIR / ch_id / "logo" / "logo_sm.png"
+    if not logo_path.exists():
+        logger.warning(
+            f"[{ch_id}] logo_sm.png 없음 — 로고 합성 스킵 "
+            "(logo_gen.py 먼저 실행 필요)"
+        )
+        return card
+
+    logo = Image.open(logo_path).convert("RGBA")
+    logo = logo.resize((256, 256), Image.LANCZOS)
+    w, h = card.size
+    paste_x = (w - 256) // 2
+    paste_y = 60
+    result = card.copy().convert("RGBA")
+    result.paste(logo, (paste_x, paste_y), logo)
+    # 원본 모드로 복원
+    return result.convert(card.mode)
 
 
 def generate_intro(ch_id: str) -> None:

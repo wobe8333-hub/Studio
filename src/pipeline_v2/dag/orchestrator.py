@@ -59,13 +59,16 @@ async def _run_track(name: str, coro) -> TrackResult:
 
 
 async def run_episode_dag(job: EpisodeJob) -> EpisodeJob:
-    """4 트랙을 가능한 병렬로 실행.
+    """4 트랙을 최적 순서로 실행.
 
     흐름:
-        A (Narrative) ─────────────────┐
-        B (Audio)      ─── 병렬 A ─────┤
-                                       ├─▶ D (Assembly) ─▶ 완료
-        C (Visual)     ─── 병렬 A,B ───┘
+        A (Narrative) ──────────────────────────┐
+                                                 ├─ B (Audio) ─┐
+                                                 │              ├─▶ D (Assembly) ─▶ 완료
+                                                 └─ C (Visual) ─┘
+
+    A가 먼저 완료되어야 B(BGM 감정 분석)·C(스크립트 기반 캐릭터 추출) 가능.
+    B와 C는 A 완료 후 병렬 실행.
     """
     from src.pipeline_v2.dag.track_a_narrative import run_track_a
     from src.pipeline_v2.dag.track_b_audio import run_track_b
@@ -75,18 +78,34 @@ async def run_episode_dag(job: EpisodeJob) -> EpisodeJob:
     meta = job.episode_meta
     logger.info(f"에피소드 DAG 시작: {meta.channel_id}/{meta.series_id}/{meta.episode_index}")
 
-    # Track A, B, C 병렬 실행
-    a_task = asyncio.create_task(_run_track("A-Narrative", run_track_a(job)))
+    # Step 1: Track A 먼저 실행 (스크립트가 B·C의 입력)
+    job.track_a_result = await _run_track("A-Narrative", run_track_a(job))
+    if job.track_a_result.status == TrackStatus.FAILED:
+        logger.error(f"Track A 실패 — 전체 중단: {job.track_a_result.error}")
+        job.completed_at = time.time()
+        save_episode(meta)
+        return job
+
+    # Track A 결과를 job에 즉시 반영 (B·C가 참조 가능하도록)
+    if job.track_a_result.output:
+        meta.title = job.track_a_result.output.get("titles", [meta.title])[0] or meta.title
+
+    # HITL Gate 1: 시리즈 승인 — Track A 완료 직후 신규 시리즈 첫 에피소드에만 트리거
+    if job.episode_index == 1:
+        await _trigger_series_approval(job)
+
+    # Step 2: Track B + C 병렬 실행 (둘 다 A의 스크립트 사용)
     b_task = asyncio.create_task(_run_track("B-Audio", run_track_b(job)))
     c_task = asyncio.create_task(_run_track("C-Visual", run_track_c(job)))
+    job.track_b_result, job.track_c_result = await asyncio.gather(b_task, c_task)
 
-    job.track_a_result, job.track_b_result, job.track_c_result = await asyncio.gather(
-        a_task, b_task, c_task, return_exceptions=False
-    )
+    # HITL Gate 2: 썸네일 거부권 — Track C 완료 후 썸네일이 생성된 경우 트리거
+    if job.track_c_result and job.track_c_result.status == TrackStatus.DONE:
+        await _trigger_thumbnail_veto(job)
 
     # 하나라도 실패하면 D 중단
     failed = [
-        r for r in [job.track_a_result, job.track_b_result, job.track_c_result]
+        r for r in [job.track_b_result, job.track_c_result]
         if r and r.status == TrackStatus.FAILED
     ]
     if failed:
@@ -95,12 +114,24 @@ async def run_episode_dag(job: EpisodeJob) -> EpisodeJob:
         save_episode(meta)
         return job
 
-    # Track D: 수렴 (A+B+C 결과 사용)
+    # Step 3: Track D: 수렴 (A+B+C 결과 사용)
     job.track_d_result = await _run_track("D-Assembly", run_track_d(job))
 
     if job.track_d_result.status == TrackStatus.DONE:
         job.final_video_path = job.track_d_result.output.get("video_path")
         meta.video_path = job.final_video_path or ""
+
+    # Step 4: QC 5 레이어 자동 실행 (Track D 성공 시)
+    if job.track_d_result and job.track_d_result.status == TrackStatus.DONE:
+        await _run_qc(job)
+
+    # HITL Gate 3: 최종 프리뷰 — QC 통과 후 업로드 직전 트리거
+    if (
+        job.track_d_result
+        and job.track_d_result.status == TrackStatus.DONE
+        and job.final_video_path
+    ):
+        await _trigger_final_preview(job)
 
     job.completed_at = time.time()
     elapsed_total = job.completed_at - job.started_at
@@ -109,6 +140,89 @@ async def run_episode_dag(job: EpisodeJob) -> EpisodeJob:
     meta.features.production_time_sec = int(elapsed_total)
     save_episode(meta)
     return job
+
+
+async def _trigger_series_approval(job: "EpisodeJob") -> None:
+    """HITL Gate 1: 시리즈 승인 신호 발송."""
+    from src.pipeline_v2.hitl_gate import trigger_series_approval
+    meta = job.episode_meta
+    titles: list[str] = []
+    if job.track_a_result and job.track_a_result.output:
+        raw = job.track_a_result.output.get("titles", [])
+        titles = raw if isinstance(raw, list) else [str(raw)]
+    loop = asyncio.get_event_loop()
+    await loop.run_in_executor(
+        None,
+        lambda: trigger_series_approval(meta.channel_id, job.series_id, titles),
+    )
+
+
+async def _trigger_thumbnail_veto(job: "EpisodeJob") -> None:
+    """HITL Gate 2: 썸네일 거부권 신호 발송."""
+    from src.pipeline_v2.hitl_gate import trigger_thumbnail_veto
+    meta = job.episode_meta
+    thumbnails: list[str] = meta.thumbnail_paths or []
+    if not thumbnails and job.track_c_result:
+        thumbnails = job.track_c_result.output.get("thumbnail_paths", [])
+    if not thumbnails:
+        logger.debug(f"썸네일 없음 — thumbnail_veto 게이트 스킵: {meta.episode_id}")
+        return
+    loop = asyncio.get_event_loop()
+    await loop.run_in_executor(
+        None,
+        lambda: trigger_thumbnail_veto(meta.channel_id, meta.episode_id, thumbnails),
+    )
+
+
+async def _trigger_final_preview(job: "EpisodeJob") -> None:
+    """HITL Gate 3: 최종 프리뷰 신호 발송."""
+    from src.pipeline_v2.hitl_gate import trigger_final_preview
+    meta = job.episode_meta
+    description = ""
+    if job.track_a_result and job.track_a_result.output:
+        description = job.track_a_result.output.get("script_text", "")[:200]
+    loop = asyncio.get_event_loop()
+    await loop.run_in_executor(
+        None,
+        lambda: trigger_final_preview(
+            meta.channel_id,
+            meta.episode_id,
+            job.final_video_path or "",
+            meta.title,
+            description,
+        ),
+    )
+
+
+async def _run_qc(job: "EpisodeJob") -> None:
+    """QC 5 레이어를 executor에서 비동기 실행."""
+    from src.pipeline_v2.qc.qc_runner import run_all_layers
+
+    meta = job.episode_meta
+    video_path = job.final_video_path or ""
+    scene_images = (
+        job.track_c_result.output.get("scene_images", []) if job.track_c_result else []
+    )
+    # Layer5 검증용 메타데이터 (제목/태그/설명)
+    track_a_output = job.track_a_result.output if job.track_a_result else {}
+    upload_meta = {
+        "title": meta.title,
+        "tags": track_a_output.get("titles", []),
+        "description": track_a_output.get("script_text", "")[:200],
+        "thumbnail_paths": meta.thumbnail_paths,
+    }
+
+    loop = asyncio.get_event_loop()
+    try:
+        qc_result = await loop.run_in_executor(
+            None,
+            lambda: run_all_layers(meta, video_path, scene_images, upload_meta),
+        )
+        passed = qc_result.get("all_passed", False)
+        failed = qc_result.get("failed_layers", [])
+        logger.info(f"QC 완료: {'전체 통과' if passed else f'실패 레이어={failed}'} — {meta.episode_id}")
+    except Exception as e:
+        logger.error(f"QC 실행 오류: {e} — {meta.episode_id}")
 
 
 async def run_weekly_batch(

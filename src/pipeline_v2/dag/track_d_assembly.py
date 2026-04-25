@@ -2,7 +2,6 @@
 from __future__ import annotations
 
 import subprocess
-import tempfile
 from pathlib import Path
 from typing import TYPE_CHECKING
 
@@ -14,7 +13,7 @@ if TYPE_CHECKING:
     from src.pipeline_v2.dag.orchestrator import EpisodeJob
 
 ASSEMBLY_ROOT = Path("runs/pipeline_v2")
-TEMPLATES_ROOT = Path("assets/templates")
+CHANNELS_ROOT = Path("assets/channels")
 
 # EBU R128 목표 라우드니스
 TARGET_LUFS = -14.0
@@ -52,15 +51,18 @@ def _concat_video_with_narration(
     if not scene_images:
         raise ValueError("scene_images가 비어 있습니다.")
 
-    with tempfile.NamedTemporaryFile("w", suffix=".txt", delete=False, encoding="utf-8") as f:
+    # output_path 의 부모 디렉토리에 concat list 생성 (FFmpeg 상대경로 문제 방지)
+    list_path = output_path.parent / "_concat_list.txt"
+    with open(list_path, "w", encoding="utf-8") as f:
         for img_path in scene_images:
             duration = next(
                 (s.get("duration_sec", 5) for s in storyboard if s.get("insert_type") == "doodle"),
                 5,
             )
-            f.write(f"file '{Path(img_path).as_posix()}'\n")
+            # 절대 경로로 변환 (작업 디렉토리에 무관하게 동작)
+            abs_path = Path(img_path).resolve().as_posix()
+            f.write(f"file '{abs_path}'\n")
             f.write(f"duration {duration}\n")
-        list_path = f.name
 
     cmd = [
         "ffmpeg", "-y",
@@ -92,18 +94,32 @@ def _add_bgm_ducking(video_path: Path, bgm_path: str, output_path: Path) -> Path
     return output_path
 
 
-def _add_subtitles(video_path: Path, subtitle_path: Path, output_path: Path) -> Path:
-    """자막 번인 (SRT → 하드코딩)."""
+def _add_subtitles(
+    video_path: Path,
+    subtitle_path: Path,
+    output_path: Path,
+    channel_id: str = "default",
+    tmp_dir: Path | None = None,
+) -> Path:
+    """자막 번인 (SRT → force_style 하드코딩)."""
     if not subtitle_path.exists():
         logger.warning(f"자막 파일 없음: {subtitle_path}, 자막 스킵")
         import shutil
         shutil.copy(video_path, output_path)
         return output_path
 
+    srt_str = subtitle_path.as_posix()
+    style = (
+        "FontName=Noto Sans KR,FontSize=18,"
+        "PrimaryColour=&H00FFFFFF&,OutlineColour=&H00000000&,Outline=1,Shadow=0"
+    )
+    vf = f"subtitles={srt_str}:force_style='{style}'"
+
+    # ── FFmpeg 실행 ─────────────────────────────────────────────────
     cmd = [
         "ffmpeg", "-y",
         "-i", str(video_path),
-        "-vf", f"subtitles={subtitle_path.as_posix()}:force_style='FontName=Noto Sans KR,FontSize=18,PrimaryColour=&HFFFFFF&,OutlineColour=&H000000&,Outline=1'",
+        "-vf", vf,
         "-c:v", "libx264", "-preset", "fast", "-crf", "23",
         "-c:a", "copy",
         str(output_path),
@@ -114,8 +130,8 @@ def _add_subtitles(video_path: Path, subtitle_path: Path, output_path: Path) -> 
 
 def _attach_intro_outro(video_path: Path, channel_id: str, output_path: Path) -> Path:
     """인트로/아웃트로 합성."""
-    intro = TEMPLATES_ROOT / channel_id / "intro.mp4"
-    outro = TEMPLATES_ROOT / channel_id / "outro.mp4"
+    intro = CHANNELS_ROOT / channel_id / "intro" / "intro.mp4"
+    outro = CHANNELS_ROOT / channel_id / "outro" / "outro.mp4"
 
     if not intro.exists() and not outro.exists():
         logger.warning("인트로/아웃트로 템플릿 없음, 스킵")
@@ -130,10 +146,10 @@ def _attach_intro_outro(video_path: Path, channel_id: str, output_path: Path) ->
     if outro.exists():
         parts.append(str(outro))
 
-    with tempfile.NamedTemporaryFile("w", suffix=".txt", delete=False, encoding="utf-8") as f:
+    list_path = output_path.parent / "_intro_outro_list.txt"
+    with open(list_path, "w", encoding="utf-8") as f:
         for p in parts:
-            f.write(f"file '{Path(p).as_posix()}'\n")
-        list_path = f.name
+            f.write(f"file '{Path(p).resolve().as_posix()}'\n")
 
     cmd = [
         "ffmpeg", "-y",
@@ -193,10 +209,16 @@ async def run_track_d(job: "EpisodeJob") -> dict:
         import shutil
         shutil.copy(step1, step2)
 
-    # 3. 자막 번인
+    # 3. 자막 번인 (채널별 ASS 스타일 우선, 없으면 force_style fallback)
     subtitle_path = Path(ASSEMBLY_ROOT / meta.episode_id / "audio" / "subtitle.srt")
     step3 = out_dir / "step3_sub.mp4"
-    _add_subtitles(step2, subtitle_path, step3)
+    _add_subtitles(
+        video_path=step2,
+        subtitle_path=subtitle_path,
+        output_path=step3,
+        channel_id=channel_id,
+        tmp_dir=out_dir / "tmp_ass",
+    )
 
     # 4. 인트로/아웃트로
     step4 = out_dir / "step4_intro_outro.mp4"

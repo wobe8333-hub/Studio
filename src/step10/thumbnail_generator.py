@@ -10,13 +10,13 @@ _ROOT = Path(__file__).resolve().parents[2]
 
 # ── 채널별 베이스 템플릿 경로 ──────────────────────────────────────────────────
 CHANNEL_BASE_TEMPLATES: dict[str, Path] = {
-    "CH1": _ROOT / "assets/thumbnails/CH1_base.png",
-    "CH2": _ROOT / "assets/thumbnails/CH2_base.png",
-    "CH3": _ROOT / "assets/thumbnails/CH3_base.png",
-    "CH4": _ROOT / "assets/thumbnails/CH4_base.png",
-    "CH5": _ROOT / "assets/thumbnails/CH5_base.png",
-    "CH6": _ROOT / "assets/thumbnails/CH6_base.png",
-    "CH7": _ROOT / "assets/thumbnails/CH7_base.png",
+    "CH1": _ROOT / "assets/channels/CH1/thumbnails/base.png",
+    "CH2": _ROOT / "assets/channels/CH2/thumbnails/base.png",
+    "CH3": _ROOT / "assets/channels/CH3/thumbnails/base.png",
+    "CH4": _ROOT / "assets/channels/CH4/thumbnails/base.png",
+    "CH5": _ROOT / "assets/channels/CH5/thumbnails/base.png",
+    "CH6": _ROOT / "assets/channels/CH6/thumbnails/base.png",
+    "CH7": _ROOT / "assets/channels/CH7/thumbnails/base.png",
 }
 
 # ── 채널별 색상 스펙 ───────────────────────────────────────────────────────────

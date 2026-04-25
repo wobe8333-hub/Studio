@@ -15,11 +15,11 @@ from loguru import logger
 
 
 def _call_gemini(prompt: str, model: str | None = None) -> str:
-    """Gemini 텍스트 생성 호출."""
-    import google.generativeai as genai
+    """Gemini 텍스트 생성 호출 (google.genai SDK)."""
+    from google import genai
     _model = model or os.getenv("GEMINI_TEXT_MODEL", "gemini-2.5-flash")
-    genai.configure(api_key=os.getenv("GEMINI_API_KEY", ""))
-    response = genai.GenerativeModel(_model).generate_content(prompt)
+    client = genai.Client(api_key=os.getenv("GEMINI_API_KEY", ""))
+    response = client.models.generate_content(model=_model, contents=prompt)
     return response.text
 
 

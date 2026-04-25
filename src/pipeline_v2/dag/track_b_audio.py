@@ -4,7 +4,6 @@ from __future__ import annotations
 import os
 import re
 import subprocess
-import tempfile
 from pathlib import Path
 from typing import TYPE_CHECKING
 
@@ -111,12 +110,13 @@ def _concat_segments_ffmpeg(segment_paths: list[Path], pause_ms: int, output_pat
     silence_duration = pause_ms / 1000.0
     parts: list[str] = []
     for seg in segment_paths:
-        parts.append(f"file '{seg.as_posix()}'")
+        # 절대 경로 사용 (작업 디렉토리 의존 제거)
+        parts.append(f"file '{seg.resolve().as_posix()}'")
         parts.append(f"duration {silence_duration}")
 
-    with tempfile.NamedTemporaryFile("w", suffix=".txt", delete=False, encoding="utf-8") as f:
+    list_path = output_path.parent / "_seg_concat_list.txt"
+    with open(list_path, "w", encoding="utf-8") as f:
         f.write("\n".join(parts))
-        list_path = f.name
 
     cmd = [
         "ffmpeg", "-y", "-f", "concat", "-safe", "0",

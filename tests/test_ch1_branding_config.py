@@ -81,10 +81,10 @@ def test_model_is_pro():
     sys.path.insert(0, str(Path(__file__).parent.parent / "scripts" / "generate_branding"))
     _ensure_google_genai_mocked()
     # 모듈이 이미 캐시되어 있으면 reload, 아니면 새로 import
-    if "nano_banana_helper" in sys.modules:
-        nbh = sys.modules["nano_banana_helper"]
+    if "gemini_image_gen" in sys.modules:
+        nbh = sys.modules["gemini_image_gen"]
     else:
-        nbh = importlib.import_module("nano_banana_helper")
+        nbh = importlib.import_module("gemini_image_gen")
     assert nbh.MODEL_MULTIMODAL == "gemini-3-pro-image-preview", \
         f"모델이 Pro가 아님: {nbh.MODEL_MULTIMODAL}"
 
@@ -95,10 +95,10 @@ def test_budget_limit_is_sufficient():
     import importlib
     sys.path.insert(0, str(Path(__file__).parent.parent / "scripts" / "generate_branding"))
     _ensure_google_genai_mocked()
-    if "nano_banana_helper" in sys.modules:
-        nbh = sys.modules["nano_banana_helper"]
+    if "gemini_image_gen" in sys.modules:
+        nbh = sys.modules["gemini_image_gen"]
     else:
-        nbh = importlib.import_module("nano_banana_helper")
+        nbh = importlib.import_module("gemini_image_gen")
     assert nbh.BUDGET_LIMIT >= 200, f"예산 부족: {nbh.BUDGET_LIMIT}"
 
 
@@ -109,10 +109,10 @@ def test_generate_character_sheet_callable():
     import importlib
     sys.path.insert(0, str(Path(__file__).parent.parent / "scripts" / "generate_branding"))
     _ensure_google_genai_mocked()
-    if "nano_banana_helper" in sys.modules:
-        nbh = sys.modules["nano_banana_helper"]
+    if "gemini_image_gen" in sys.modules:
+        nbh = sys.modules["gemini_image_gen"]
     else:
-        nbh = importlib.import_module("nano_banana_helper")
+        nbh = importlib.import_module("gemini_image_gen")
     assert hasattr(nbh, "generate_character_sheet"), "generate_character_sheet 함수 없음"
     assert callable(nbh.generate_character_sheet)
 

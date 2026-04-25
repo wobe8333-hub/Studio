@@ -155,6 +155,7 @@ def build_storyboard(
                 "duration_sec": round(sec_per_scene, 1),
                 "insert_type": insert_type,
                 "character_role": role,
+                "character_name": None,  # LLM 기반 추출 시 채워짐
                 "pose_tag": pose_tag,
                 "image_prompt": image_prompt,
                 "chart_type": chart_type,

@@ -12,7 +12,7 @@ import httpx
 from loguru import logger
 
 FIGMA_API_BASE = "https://api.figma.com/v1"
-TEMPLATES_ROOT = Path("assets/templates")
+CHANNELS_ROOT = Path("assets/channels")
 
 CHANNEL_TOKENS: dict[str, dict] = {
     "CH1": {"color": "#E8A44C", "name": "경제", "accent": "#C17F2A"},
@@ -95,7 +95,7 @@ def export_channel_assets(
     Returns: {"exported": int, "skipped": int, "failed": int}
     """
     file_id = _get_master_file_id()
-    out_dir = TEMPLATES_ROOT / channel_id
+    out_dir = CHANNELS_ROOT / channel_id / "templates"
     out_dir.mkdir(parents=True, exist_ok=True)
 
     exported = skipped = failed = 0
