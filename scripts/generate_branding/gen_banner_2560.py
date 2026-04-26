@@ -23,14 +23,16 @@ load_dotenv()
 from PIL import Image
 from loguru import logger
 
+# ─── 유튜브 최소 허용 크기 (이 이하면 경고) ──────────────────────────────────
+YOUTUBE_MIN_W, YOUTUBE_MIN_H = 2048, 1152
+
 import scripts.generate_branding.gemini_image_gen as img_gen
 img_gen.MODEL_MULTIMODAL = "gemini-3.1-flash-image-preview"
 
 from scripts.generate_branding.gemini_image_gen import generate_with_multi_reference, _make_client
 from google.genai import types
 
-# ─── 유튜브 배너 최종 규격 ────────────────────────────────────────────────────
-BANNER_W, BANNER_H = 2560, 1440
+# ─── 유튜브 배너 안전 영역 ────────────────────────────────────────────────────
 # 모든 디바이스에서 보이는 안전 영역 (가로 중앙 1235×338)
 SAFE_ZONE_HINT = (
     "YOUTUBE SAFE ZONE: This banner displays at 2560×1440 on TV, "
@@ -145,15 +147,15 @@ BASE_PROMPT = (
 )
 
 
-def finalize_to_2560(img_path: Path) -> None:
-    """PIL로 정확히 2560×1440 픽셀로 리사이즈 (LANCZOS)."""
+def check_dimensions(img_path: Path) -> tuple[int, int]:
+    """생성된 이미지 실제 해상도를 반환하고 YouTube 최소 규격을 검증한다."""
     img = Image.open(img_path)
     w, h = img.size
-    if w == BANNER_W and h == BANNER_H:
-        return
-    img_resized = img.resize((BANNER_W, BANNER_H), Image.LANCZOS)
-    img_resized.save(img_path, "PNG", optimize=True)
-    logger.info(f"  PIL 파이널라이즈: {w}×{h} → {BANNER_W}×{BANNER_H}")
+    if w < YOUTUBE_MIN_W or h < YOUTUBE_MIN_H:
+        logger.warning(f"  [주의] {w}×{h} — YouTube 최소 크기({YOUTUBE_MIN_W}×{YOUTUBE_MIN_H}) 미달")
+    else:
+        logger.info(f"  실제 해상도: {w}×{h} ✓")
+    return w, h
 
 
 def main(channels: list[str] | None = None) -> None:
@@ -191,7 +193,7 @@ def main(channels: list[str] | None = None) -> None:
             safe_zone=SAFE_ZONE_HINT,
         )
 
-        print(f"[{ch_id}] '{info['name']}' variant_{variant_no} 생성 중 (2560×1440)...")
+        print(f"[{ch_id}] '{info['name']}' variant_{variant_no} 생성 중 (16:9 2K)...")
 
         ok = generate_with_multi_reference(
             refs,
@@ -202,8 +204,8 @@ def main(channels: list[str] | None = None) -> None:
         )
 
         if ok:
-            finalize_to_2560(output_path)
-            print(f"  [OK] {output_path}")
+            w, h = check_dimensions(output_path)
+            print(f"  [OK] {output_path} ({w}×{h})")
         else:
             logger.error(f"  [FAIL] {ch_id} 배너 생성 실패")
 
