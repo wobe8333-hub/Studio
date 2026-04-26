@@ -2,6 +2,7 @@
 
 컨셉: 채널 메인 컬러 도화지에 낙서하는 스타일.
 구성: 채널명(크게, 중앙) + 소제목(작게, 중앙) — 텍스트만, 아이콘 없음.
+레퍼런스 없음: 단색 배경 + 텍스트 구조라 텍스트 프롬프트만으로 충분.
 
 사용법:
     python scripts/generate_branding/gen_banner_simple.py
@@ -26,15 +27,7 @@ from loguru import logger
 import scripts.generate_branding.gemini_image_gen as img_gen
 img_gen.MODEL_MULTIMODAL = "gemini-3.1-flash-image-preview"
 
-from scripts.generate_branding.gemini_image_gen import generate_with_multi_reference, _make_client
-
-# ─── 스타일 레퍼런스 (두들 스타일 강제) ──────────────────────────────────────
-STYLE_REFS = [
-    Path("assets/references/logo_ref_01.png"),
-    Path("assets/references/logo_ref_02.png"),
-    Path("assets/references/logo_ref_03.png"),
-    Path("assets/references/logo_ref_04.png"),
-]
+from scripts.generate_branding.gemini_image_gen import generate_image, _make_client
 
 # ─── 채널 정보 ────────────────────────────────────────────────────────────────
 CHANNEL_INFO = {
@@ -121,10 +114,6 @@ VARIATIONS = [
 ]
 
 BASE_PROMPT = (
-    "The first four reference images show a Korean YouTube channel logo style: "
-    "flat 2D doodle illustration, simple 2px black outline, clean flat colors, hand-drawn kawaii feel. "
-    "The LAST reference is the actual channel logo — for visual reference only. "
-
     "Create a YouTube channel art banner (2560×1440, 16:9). "
 
     "BACKGROUND: Fill the entire banner with solid {bg_color} ({bg_desc}) — "
@@ -159,11 +148,8 @@ def main(channels: list[str] | None = None, count: int = 20) -> None:
 
     for ch_id in target_channels:
         info = CHANNEL_INFO[ch_id]
-        logo_path = Path(f"assets/channels/{ch_id}/logo/logo.png")
         output_dir = Path(f"assets/channels/{ch_id}/_candidates/banner_simple")
         output_dir.mkdir(parents=True, exist_ok=True)
-
-        refs = STYLE_REFS + [logo_path]
 
         print(f"[{ch_id}] '{info['name']}' — {info['bg_desc']} 배경, {count}장 생성 중...")
         saved = 0
@@ -186,7 +172,7 @@ def main(channels: list[str] | None = None, count: int = 20) -> None:
                 variation=variation,
             )
 
-            ok = generate_with_multi_reference(refs, prompt, out_path, client=client)
+            ok = generate_image(prompt, out_path, client=client)
             if ok:
                 saved += 1
                 print(f"  [{ch_id}] variant_{i} [OK]")
