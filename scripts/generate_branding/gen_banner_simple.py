@@ -135,6 +135,8 @@ BASE_PROMPT = (
     "Both texts centered horizontally and vertically in the banner. "
     "NO text outside the center area. "
     "NO background icons or decorations. "
+    "LANGUAGE: Write ONLY in Korean (한국어). "
+    "NO English letters, NO romanization, NO Latin alphabet anywhere in the image. "
     "The overall aesthetic: someone casually hand-lettering on a colored paper — "
     "minimal, authentic, clean, and confident."
 )
