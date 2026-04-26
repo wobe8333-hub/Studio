@@ -161,12 +161,42 @@ def _detect_hook_type(title: str) -> str:
     return "curiosity_gap"
 
 
+_MASCOT_PERSONA: dict[str, str] = {
+    "CH1": "원이₩ — round bald kawaii doodle character with gold crown bearing 'w', business suit, briefcase",
+    "CH2": "가설낙서 scientist — neon-cyan lab coat doodle character with safety goggles and glowing test tube",
+    "CH3": "홈팔레트 builder — orange tool-belt doodle character with hard hat and blueprints",
+    "CH4": "오묘한심리 — lavender cardigan doodle character with round glasses and open notebook",
+    "CH5": "검은물음표 detective — dark trench coat doodle character with magnifying glass",
+    "CH6": "오래된두루마리 scholar — brown robe doodle character with quill pen and ancient scroll",
+    "CH7": "워메이징 general — red military uniform doodle character with small flag and medal",
+}
+
+
 def _generate_thumbnail_prompts(topic: str, ch_name: str, titles: list[str]) -> list[str]:
-    """썸네일 3 변형 이미지 프롬프트 생성."""
-    base = f"두들 애니메이션 스타일, 크래프트 페이퍼 배경, 2px 라인, 3.5등신 캐릭터, {ch_name} 채널"
-    t0 = titles[0][:15] if titles else topic[:15]
-    return [
-        f"{base}, 놀란 표정 캐릭터가 '{t0}' 텍스트를 가리키는 구도, 강렬한 빨간 포인트 텍스트",
-        f"{base}, 캐릭터가 차트/그래프를 설명하는 구도, '{topic}' 핵심 키워드 강조, 궁금증 유발",
-        f"{base}, 질문형 구도 — 캐릭터가 물음표를 들고 있음, 깔끔한 흰 배경 강조, 클릭 유도",
-    ]
+    """에피소드 핵심 장면 + 마스코트 통합 썸네일 프롬프트 생성 (A안 단일).
+
+    A안만 반환 — episode_illustration.py 가 이 프롬프트를 기반으로 Gemini 생성.
+    backward compat 을 위해 list[str] 유지.
+    """
+    ch_key = next((k for k, v in {
+        "머니그래픽": "CH1", "가설낙서": "CH2", "홈팔레트": "CH3",
+        "오묘한심리": "CH4", "검은물음표": "CH5", "오래된두루마리": "CH6",
+        "워메이징": "CH7",
+    }.items() if k == ch_name), None)
+    ch_id = {v: k for k, v in {
+        "CH1": "머니그래픽", "CH2": "가설낙서", "CH3": "홈팔레트",
+        "CH4": "오묘한심리", "CH5": "검은물음표", "CH6": "오래된두루마리",
+        "CH7": "워메이징",
+    }.items()}.get(ch_name, "CH1")
+    persona = _MASCOT_PERSONA.get(ch_id, f"cute doodle mascot for {ch_name}")
+
+    prompt_a = (
+        f"flat 2D doodle illustration, full-screen Korean YouTube thumbnail, "
+        f"{persona} in a dramatic scene about: {topic}. "
+        "Mascot showing shocked or curious emotion. "
+        "RESERVE bottom 25% for text overlay (keep simple). "
+        "RESERVE top-right corner 8% empty for logo watermark. "
+        "2px black outline, flat colors, no shadows, no gradients. "
+        "NO text or labels anywhere except mascot costume details."
+    )
+    return [prompt_a]

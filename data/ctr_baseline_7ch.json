@@ -1,0 +1,16 @@
+{
+  "description": "Step10 에피소드 일러스트 시스템 도입 전 4주 CTR baseline (수동 입력)",
+  "measurement_period_weeks": 4,
+  "system_applied_date": null,
+  "channels": {
+    "CH1": {"avg_ctr_percent": null, "note": "YouTube Analytics에서 수동 입력"},
+    "CH2": {"avg_ctr_percent": null, "note": "YouTube Analytics에서 수동 입력"},
+    "CH3": {"avg_ctr_percent": null, "note": "YouTube Analytics에서 수동 입력"},
+    "CH4": {"avg_ctr_percent": null, "note": "YouTube Analytics에서 수동 입력"},
+    "CH5": {"avg_ctr_percent": null, "note": "YouTube Analytics에서 수동 입력"},
+    "CH6": {"avg_ctr_percent": null, "note": "YouTube Analytics에서 수동 입력"},
+    "CH7": {"avg_ctr_percent": null, "note": "YouTube Analytics에서 수동 입력"}
+  },
+  "target_ctr_percent": 12.0,
+  "target_improvement_pct": 30
+}

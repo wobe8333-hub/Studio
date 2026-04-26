@@ -1,0 +1,8 @@
+{
+  "description": "Step10 에피소드 일러스트 Gemini Image API 비용 추적",
+  "budget_limit_usd": 150,
+  "cost_per_call_usd": 0.04,
+  "total_calls": 0,
+  "total_cost_usd": 0.0,
+  "records": []
+}
