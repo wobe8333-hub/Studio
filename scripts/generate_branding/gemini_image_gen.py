@@ -153,6 +153,7 @@ def generate_with_multi_reference(
     output_path: Path,
     *,
     client: Optional[genai.Client] = None,
+    image_config: Optional[types.ImageConfig] = None,
 ) -> bool:
     """여러 레퍼런스 이미지를 동시에 전달해 스타일 패턴을 학습 후 새 이미지를 생성한다.
 
@@ -161,6 +162,7 @@ def generate_with_multi_reference(
         prompt: 생성할 이미지 설명
         output_path: 저장 경로
         client: 재사용 클라이언트
+        image_config: 출력 이미지 크기/비율 설정 (예: types.ImageConfig(aspect_ratio="16:9", image_size="2K"))
 
     Returns:
         True if 성공, False if 실패
@@ -186,6 +188,7 @@ def generate_with_multi_reference(
             contents=contents,
             config=types.GenerateContentConfig(
                 response_modalities=["IMAGE"],
+                image_config=image_config,
             ),
         )
         _call_count += 1
