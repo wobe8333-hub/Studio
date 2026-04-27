@@ -23,7 +23,8 @@ def _get_client() -> _genai.Client:
 
 def _get_preferred_mode(channel_id: str) -> str:
     bias = MEMORY_DIR / "topic_priority_bias.json"
-    if not json_exists(bias): return "curiosity"
+    if not json_exists(bias):
+        return "curiosity"
     w = read_json(bias).get("title_mode_weights", {})
     return max(w, key=w.get) if w else "curiosity"
 
@@ -90,9 +91,9 @@ def run_step10(channel_id: str, run_id: str) -> bool:
     except Exception as e:
         logger.warning(f"[STEP10] 제목 생성 실패 (폴백 사용): {e}")
         variants = [
-            {"ref": "v1", "mode": "authority", "title": base, "seo_keyword_included": keyword in base},
-            {"ref": "v2", "mode": "curiosity", "title": base, "seo_keyword_included": keyword in base},
-            {"ref": "v3", "mode": "benefit",   "title": base, "seo_keyword_included": keyword in base},
+            {"ref": "v1", "mode": "authority", "title": base, "seo_keyword_included": keyword in base},  # noqa: E501
+            {"ref": "v2", "mode": "curiosity", "title": base, "seo_keyword_included": keyword in base},  # noqa: E501
+            {"ref": "v3", "mode": "benefit",   "title": base, "seo_keyword_included": keyword in base},  # noqa: E501
         ]
     # 썸네일은 step10/ 에 저장
     step10_dir = run_dir / "step10"

@@ -1,8 +1,169 @@
-{
-  "description": "Step10 에피소드 일러스트 Gemini Image API 비용 추적",
+﻿{
+  "description": "Step10 \uc5d0\ud53c\uc18c\ub4dc \uc77c\ub7ec\uc2a4\ud2b8 Gemini Image API \ube44\uc6a9 \ucd94\uc801",
   "budget_limit_usd": 150,
   "cost_per_call_usd": 0.04,
-  "total_calls": 0,
-  "total_cost_usd": 0.0,
-  "records": []
+  "total_calls": 20,
+  "total_cost_usd": 0.8,
+  "records": [
+    {
+      "run_id": "test_run_ch1",
+      "channel": "CH1",
+      "gemini_calls": 1,
+      "cost_usd": 0.04,
+      "success": true,
+      "timestamp": "2026-04-27T04:19:33.889412Z"
+    },
+    {
+      "run_id": "test_run_ch1",
+      "channel": "CH1",
+      "gemini_calls": 1,
+      "cost_usd": 0.04,
+      "success": true,
+      "timestamp": "2026-04-27T04:20:11.941676Z"
+    },
+    {
+      "run_id": "test_run_ch1",
+      "channel": "CH1",
+      "gemini_calls": 1,
+      "cost_usd": 0.04,
+      "success": true,
+      "timestamp": "2026-04-27T04:20:47.963494Z"
+    },
+    {
+      "run_id": "test_run_ch1",
+      "channel": "CH1",
+      "gemini_calls": 1,
+      "cost_usd": 0.04,
+      "success": true,
+      "timestamp": "2026-04-27T04:21:25.095301Z"
+    },
+    {
+      "run_id": "test_run_ch1",
+      "channel": "CH1",
+      "gemini_calls": 1,
+      "cost_usd": 0.04,
+      "success": true,
+      "timestamp": "2026-04-27T04:21:59.089180Z"
+    },
+    {
+      "run_id": "test_v2",
+      "channel": "CH1",
+      "gemini_calls": 1,
+      "cost_usd": 0.04,
+      "success": true,
+      "timestamp": "2026-04-27T05:09:00.679037Z"
+    },
+    {
+      "run_id": "test_v2",
+      "channel": "CH1",
+      "gemini_calls": 1,
+      "cost_usd": 0.04,
+      "success": true,
+      "timestamp": "2026-04-27T05:09:35.232995Z"
+    },
+    {
+      "run_id": "test_v2",
+      "channel": "CH1",
+      "gemini_calls": 1,
+      "cost_usd": 0.04,
+      "success": true,
+      "timestamp": "2026-04-27T05:10:13.483113Z"
+    },
+    {
+      "run_id": "test_v2",
+      "channel": "CH1",
+      "gemini_calls": 1,
+      "cost_usd": 0.04,
+      "success": true,
+      "timestamp": "2026-04-27T05:10:48.637517Z"
+    },
+    {
+      "run_id": "test_v2",
+      "channel": "CH1",
+      "gemini_calls": 1,
+      "cost_usd": 0.04,
+      "success": true,
+      "timestamp": "2026-04-27T05:11:24.300426Z"
+    },
+    {
+      "run_id": "test_v2",
+      "channel": "CH1",
+      "gemini_calls": 1,
+      "cost_usd": 0.04,
+      "success": true,
+      "timestamp": "2026-04-27T05:32:37.602534Z"
+    },
+    {
+      "run_id": "test_v2",
+      "channel": "CH1",
+      "gemini_calls": 1,
+      "cost_usd": 0.04,
+      "success": true,
+      "timestamp": "2026-04-27T05:33:13.825962Z"
+    },
+    {
+      "run_id": "test_v2",
+      "channel": "CH1",
+      "gemini_calls": 1,
+      "cost_usd": 0.04,
+      "success": true,
+      "timestamp": "2026-04-27T05:33:49.742837Z"
+    },
+    {
+      "run_id": "test_v2",
+      "channel": "CH1",
+      "gemini_calls": 1,
+      "cost_usd": 0.04,
+      "success": true,
+      "timestamp": "2026-04-27T05:34:29.170487Z"
+    },
+    {
+      "run_id": "test_v2",
+      "channel": "CH1",
+      "gemini_calls": 1,
+      "cost_usd": 0.04,
+      "success": true,
+      "timestamp": "2026-04-27T05:35:05.714175Z"
+    },
+    {
+      "run_id": "test_v2",
+      "channel": "CH1",
+      "gemini_calls": 1,
+      "cost_usd": 0.04,
+      "success": true,
+      "timestamp": "2026-04-27T05:47:16.338268Z"
+    },
+    {
+      "run_id": "test_v2",
+      "channel": "CH1",
+      "gemini_calls": 1,
+      "cost_usd": 0.04,
+      "success": true,
+      "timestamp": "2026-04-27T05:48:09.012871Z"
+    },
+    {
+      "run_id": "test_v2",
+      "channel": "CH1",
+      "gemini_calls": 1,
+      "cost_usd": 0.04,
+      "success": true,
+      "timestamp": "2026-04-27T05:48:58.049835Z"
+    },
+    {
+      "run_id": "test_v2",
+      "channel": "CH1",
+      "gemini_calls": 1,
+      "cost_usd": 0.04,
+      "success": true,
+      "timestamp": "2026-04-27T05:49:49.310939Z"
+    },
+    {
+      "run_id": "test_v2",
+      "channel": "CH1",
+      "gemini_calls": 1,
+      "cost_usd": 0.04,
+      "success": true,
+      "timestamp": "2026-04-27T05:50:37.259698Z"
+    }
+  ]
 }

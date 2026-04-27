@@ -1,13 +1,12 @@
-"""7채널 심플 배너 생성 — 채널 컬러 도화지 + 채널명 + 소제목.
+"""7채널 심플 배너 생성 — 채널 컬러 도화지 + 채널명 + 소제목 + 채널 특색 액센트.
 
 컨셉: 채널 메인 컬러 도화지에 낙서하는 스타일.
-구성: 채널명(크게, 중앙) + 소제목(작게, 중앙) — 텍스트만, 아이콘 없음.
-레퍼런스 없음: 단색 배경 + 텍스트 구조라 텍스트 프롬프트만으로 충분.
+구성: 채널명(중앙) + 소제목 + 채널 테마를 암시하는 아주 작은 손그림 액센트.
 
 사용법:
     python scripts/generate_branding/gen_banner_simple.py
     python scripts/generate_branding/gen_banner_simple.py --channels CH1 CH2
-    python scripts/generate_branding/gen_banner_simple.py --count 10
+    python scripts/generate_branding/gen_banner_simple.py --count 20
 
 저장 위치: assets/channels/CH{N}/_candidates/banner_simple/variant_{N}.png
 """
@@ -29,7 +28,7 @@ img_gen.MODEL_MULTIMODAL = "gemini-3.1-flash-image-preview"
 
 from scripts.generate_branding.gemini_image_gen import generate_image, _make_client
 
-# ─── 채널 정보 ────────────────────────────────────────────────────────────────
+# ─── 채널 정보 + 테마 액센트 ──────────────────────────────────────────────────
 CHANNEL_INFO = {
     "CH1": {
         "name": "머니그래픽",
@@ -38,6 +37,8 @@ CHANNEL_INFO = {
         "bg_desc": "golden yellow",
         "text_color": "#1A1A2E",
         "text_desc": "dark navy",
+        "theme_accent": "2~3 tiny hand-drawn ₩ coin symbols or a small minimalist rising graph line",
+        "theme_desc": "economics and money channel",
     },
     "CH2": {
         "name": "가설낙서",
@@ -46,6 +47,8 @@ CHANNEL_INFO = {
         "bg_desc": "bright cyan",
         "text_color": "#1A1A2E",
         "text_desc": "dark navy",
+        "theme_accent": "2~3 tiny hand-drawn atom rings or a small flask/beaker silhouette",
+        "theme_desc": "science and hypothesis channel",
     },
     "CH3": {
         "name": "홈팔레트",
@@ -54,6 +57,8 @@ CHANNEL_INFO = {
         "bg_desc": "warm orange",
         "text_color": "#FFFFFF",
         "text_desc": "white",
+        "theme_accent": "2~3 tiny hand-drawn house outlines or a small key silhouette",
+        "theme_desc": "real estate channel",
     },
     "CH4": {
         "name": "오묘한심리",
@@ -62,6 +67,8 @@ CHANNEL_INFO = {
         "bg_desc": "purple",
         "text_color": "#FFFFFF",
         "text_desc": "white",
+        "theme_accent": "2~3 tiny hand-drawn spiral or thought bubble doodles",
+        "theme_desc": "psychology channel",
     },
     "CH5": {
         "name": "검은물음표",
@@ -70,6 +77,8 @@ CHANNEL_INFO = {
         "bg_desc": "dark charcoal",
         "text_color": "#FFFFFF",
         "text_desc": "white",
+        "theme_accent": "2~3 tiny hand-drawn question marks or a small magnifying glass silhouette",
+        "theme_desc": "mystery channel",
     },
     "CH6": {
         "name": "오래된두루마리",
@@ -78,6 +87,8 @@ CHANNEL_INFO = {
         "bg_desc": "warm brown",
         "text_color": "#F5F0E0",
         "text_desc": "cream beige",
+        "theme_accent": "a small hand-drawn scroll edge or quill pen silhouette, or tiny hourglass",
+        "theme_desc": "history channel",
     },
     "CH7": {
         "name": "워메이징",
@@ -86,59 +97,66 @@ CHANNEL_INFO = {
         "bg_desc": "ranger green",
         "text_color": "#F5F0E0",
         "text_desc": "cream beige",
+        "theme_accent": "a tiny hand-drawn compass rose or star insignia, or crossed swords silhouette",
+        "theme_desc": "war history channel",
     },
 }
 
-# ─── 컴포지션 변형 20가지 (텍스트 스타일·장식 변화) ──────────────────────────
+# ─── 변형 20가지 — 텍스트 스타일 × 액센트 배치 조합 ─────────────────────────
 VARIATIONS = [
-    "channel name with thick bold marker strokes, subtitle in thin casual handwriting",
-    "channel name in slightly tilted hand-lettered style, subtitle perfectly horizontal",
-    "channel name with double underline doodle beneath it, subtitle below",
-    "channel name in large brushstroke style, subtitle with small arrow doodle pointing to it",
-    "channel name enclosed in a rough hand-drawn rectangle frame, subtitle below",
-    "channel name with star doodles on each side, subtitle in neat handwriting",
-    "channel name in all-caps bold doodle font, subtitle in lowercase cursive",
-    "channel name with wavy underline, subtitle with small dot decorations",
-    "channel name in chunky bubble letters outline style, subtitle clean",
-    "channel name with hand-drawn shadow effect, subtitle in lighter weight",
-    "channel name in casual graffiti-inspired doodle lettering, subtitle minimal",
-    "channel name with small heart doodle accent, subtitle in italic style",
-    "channel name in stacked two-line layout if long, subtitle single line below",
-    "channel name with zigzag underline doodle, subtitle with dash separators",
-    "channel name in retro hand-lettered style, subtitle in modern minimal",
-    "channel name with corner bracket doodles, subtitle centered below",
-    "channel name in playful uneven baseline lettering, subtitle aligned center",
-    "channel name with small lightning bolt doodle accent, subtitle below",
-    "channel name surrounded by minimal dot grid pattern, subtitle below",
-    "channel name in clean bold print style with hand-drawn feel, subtitle in script",
+    "channel name in bold marker style; accent elements placed symmetrically above the channel name",
+    "channel name slightly tilted; accent elements on the left side of the text block",
+    "channel name with double underline doodle; accent elements on the right side of text",
+    "channel name in brushstroke style; accent elements scattered above and below text",
+    "channel name in rough hand-drawn rectangle frame; accent elements outside the frame corners",
+    "channel name in clean bold lettering; accent elements in a small cluster below the subtitle",
+    "channel name with wavy underline; accent element centered above the channel name",
+    "channel name in chunky outline style; accent elements flanking both sides of the subtitle",
+    "channel name with hand-drawn shadow; accent element placed top-right of text block",
+    "channel name in casual doodle lettering; accent elements scattered loosely around text",
+    "channel name with zigzag underline; accent element placed bottom-left of text block",
+    "channel name in stacked layout; accent elements as a small row above the name",
+    "channel name with corner bracket doodles; accent element centered below the subtitle",
+    "channel name in retro hand-lettered style; accent elements on both sides of channel name",
+    "channel name with uneven baseline; accent element placed to the far right of text",
+    "channel name in bold print with hand-drawn feel; accent elements in diagonal arrangement",
+    "channel name with minimal dot decorations; accent element as a single centered icon above",
+    "channel name with thin elegant strokes; accent elements as a small horizontal row below",
+    "channel name in compact centered block; accent elements at four corners of the text area",
+    "channel name with small dash separators; accent element placed to the far left of text",
 ]
 
 BASE_PROMPT = (
-    "Create a YouTube channel art banner (2560×1440, 16:9). "
+    "Create a YouTube channel art banner, exactly 2560 pixels wide × 1440 pixels tall (16:9). "
+    "This is a {theme_desc}. "
 
-    "BACKGROUND: Fill the entire banner with solid {bg_color} ({bg_desc}) — "
-    "like a sheet of colored construction paper or sketchbook page. "
-    "Add very subtle paper texture (slight grain, natural imperfections) for hand-crafted feel. "
-    "NO gradients. NO patterns. NO icons. NO decorative elements anywhere in the background. "
-    "The background must be clean and flat — only the colored paper. "
+    "BACKGROUND: The entire 2560×1440 canvas is filled with solid {bg_color} ({bg_desc}). "
+    "Slight paper/sketchbook texture only. NO gradients — pure flat color canvas. "
 
-    "CENTER CONTENT — place everything at the absolute center of the banner "
-    "(center 48% width × center 24% height — the YouTube mobile safe zone): "
-    "① Korean channel name '{name}' in LARGE bold hand-drawn doodle lettering, color {text_color} ({text_desc}). "
-    "   Natural hand-written feel with slight wobble — like drawn with a thick marker on paper. "
-    "② Korean subtitle '{subtitle}' in smaller hand-drawn text, same color {text_color}. "
-    "   Placed just below the channel name, clearly readable. "
+    "TEXT — centered horizontally and vertically on the canvas: "
+    "① Channel name '{name}' in Korean hand-drawn lettering, color {text_color} ({text_desc}). "
+    "   TEXT HEIGHT: approximately 70 pixels tall (in the 2560×1440 image). "
+    "   TEXT WIDTH: no wider than 380 pixels total. "
+    "② Subtitle '{subtitle}' in Korean hand-drawn lettering, same color {text_color}. "
+    "   TEXT HEIGHT: approximately 39 pixels tall. "
+    "   Placed 17px below the channel name. "
+
+    "CHANNEL ACCENT — this is what makes the channel unique: {theme_accent}. "
+    "Draw 2~3 of these tiny accent elements near the text block (NOT overlapping the text). "
+    "Each accent element: approximately 25~35 pixels in size. "
+    "Color: same {text_color} ({text_desc}), hand-drawn doodle style, very light and delicate. "
+    "The accent is a whisper of the channel theme — subtle, not dominant. "
 
     "COMPOSITION STYLE: {variation}. "
 
-    "CRITICAL RULES: "
-    "Both texts centered horizontally and vertically in the banner. "
-    "NO text outside the center area. "
-    "NO background icons or decorations. "
-    "LANGUAGE: Write ONLY in Korean (한국어). "
-    "NO English letters, NO romanization, NO Latin alphabet anywhere in the image. "
-    "The overall aesthetic: someone casually hand-lettering on a colored paper — "
-    "minimal, authentic, clean, and confident."
+    "SIZE RULES: "
+    "The entire text block (channel name + subtitle + accent elements combined) must stay "
+    "within a 450×180 pixel area centered on the 2560×1440 canvas. "
+    "Vast empty colored space must surround this center area on all sides. "
+
+    "STRICT RULES: "
+    "Korean characters only — NO English, NO romanization, NO Latin letters anywhere. "
+    "The beauty is the large empty color canvas with a small, characterful center label."
 )
 
 
@@ -165,12 +183,14 @@ def main(channels: list[str] | None = None, count: int = 20) -> None:
 
             variation = VARIATIONS[(i - 1) % len(VARIATIONS)]
             prompt = BASE_PROMPT.format(
+                theme_desc=info["theme_desc"],
                 bg_color=info["bg_color"],
                 bg_desc=info["bg_desc"],
                 text_color=info["text_color"],
                 text_desc=info["text_desc"],
                 name=info["name"],
                 subtitle=info["subtitle"],
+                theme_accent=info["theme_accent"],
                 variation=variation,
             )
 
@@ -188,7 +208,7 @@ def main(channels: list[str] | None = None, count: int = 20) -> None:
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="심플 배너 생성 — 채널 컬러 도화지 + 채널명 + 소제목")
+    parser = argparse.ArgumentParser(description="심플 배너 생성 — 채널 특색 액센트 포함")
     parser.add_argument(
         "--channels",
         nargs="+",
