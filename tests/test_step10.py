@@ -127,7 +127,7 @@ class TestGetPreferredMode:
 
 
 class TestGenerateThumbnailPIL:
-    """PIL 합성 기반 generate_thumbnail() 단위 테스트."""
+    """PIL 합성 기반 generate_thumbnail() 단위 테스트 (3-레이어 아키텍처)."""
 
     def _make_fake_base(self, tmp_path: Path, channel_id: str = "CH1") -> Path:
         """1920×1080 단색 PNG를 베이스 이미지로 생성."""
@@ -140,7 +140,7 @@ class TestGenerateThumbnailPIL:
         return path
 
     def test_returns_true_when_base_exists(self, tmp_path, monkeypatch):
-        """베이스 PNG가 있으면 True를 반환하고 output 파일을 생성한다."""
+        """배경 생성 실패 시 베이스 PNG로 폴백, True 반환."""
         base_path = self._make_fake_base(tmp_path, "CH1")
         output = tmp_path / "out" / "thumbnail_variant_01.png"
         output.parent.mkdir(parents=True)
@@ -148,7 +148,11 @@ class TestGenerateThumbnailPIL:
         import src.step10.thumbnail_generator as tg
         monkeypatch.setitem(tg.CHANNEL_BASE_TEMPLATES, "CH1", base_path)
 
-        result = tg.generate_thumbnail("CH1", "금리 인하의 충격", "01", output)
+        with patch("src.step10.thumbnail_generator.generate_background_illustration",
+                   return_value=(None, None)), \
+             patch("src.adapters.runpod_sd.generate_character_to_file",
+                   return_value=False):
+            result = tg.generate_thumbnail("CH1", "금리 인하의 충격", output, run_id="test")
 
         assert result is True
         assert output.exists()
@@ -158,13 +162,16 @@ class TestGenerateThumbnailPIL:
         output = tmp_path / "thumb.png"
 
         import src.step10.thumbnail_generator as tg
-        result = tg.generate_thumbnail("CH_NONEXISTENT", "제목", "01", output)
+        with patch("src.step10.thumbnail_generator.generate_background_illustration",
+                   return_value=(None, None)), \
+             patch("src.step10.thumbnail_generator.CHANNEL_BASE_TEMPLATES", {}):
+            result = tg.generate_thumbnail("CH_NONEXISTENT", "제목", output, run_id="test")
 
         assert result is True
         assert output.exists()
 
     def test_mode02_detects_number(self):
-        """mode 02는 제목에서 아라비아 숫자를 감지한다."""
+        """제목에서 아라비아 숫자를 감지한다."""
         import re
         title = "10억 모은 비밀 전략"
         match = re.search(r'\d+', title)
@@ -172,14 +179,14 @@ class TestGenerateThumbnailPIL:
         assert match.group() == "10"
 
     def test_mode02_no_number_returns_none(self):
-        """mode 02에서 숫자 없는 제목은 None을 반환한다."""
+        """숫자 없는 제목은 검색 결과가 None이다."""
         import re
         title = "당신이 몰랐던 진실"
         match = re.search(r'\d+', title)
         assert match is None
 
     def test_mode03_appends_question_mark(self):
-        """mode 03은 제목 끝에 '?'를 추가한다."""
+        """제목 끝에 '?'를 추가할 수 있다."""
         title = "조선 왕들이 숨긴 비밀"
         question_title = title + "?"
         last_word = title.split()[-1]
@@ -194,7 +201,11 @@ class TestGenerateThumbnailPIL:
         import src.step10.thumbnail_generator as tg
         monkeypatch.setitem(tg.CHANNEL_BASE_TEMPLATES, "CH1", base_path)
 
-        result = tg.generate_thumbnail("CH1", "테스트 제목", "01", output)
+        with patch("src.step10.thumbnail_generator.generate_background_illustration",
+                   return_value=(None, None)), \
+             patch("src.adapters.runpod_sd.generate_character_to_file",
+                   return_value=False):
+            result = tg.generate_thumbnail("CH1", "테스트 제목", output, run_id="test")
 
         assert result is True
         assert output.parent.exists()

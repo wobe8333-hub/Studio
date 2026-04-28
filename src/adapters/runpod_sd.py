@@ -14,7 +14,7 @@ from typing import Optional
 
 from loguru import logger
 
-_RUNPOD_BASE = "https://api.runpod.io/v2"
+_RUNPOD_BASE = "https://api.runpod.ai/v2"
 _POLL_INTERVAL = 3.0
 _MAX_WAIT = 300  # 최대 5분 대기
 
@@ -71,6 +71,13 @@ def generate_character_runpod(
             "num_inference_steps": steps,
             "guidance_scale": guidance_scale,
             "seed": seed,
+            # SDXL 2.1.1 워커 필수 파라미터
+            "scheduler": "K_EULER",
+            "num_images": 1,
+            "refiner_inference_steps": 40,
+            "high_noise_frac": 0.8,
+            "strength": 0.3,
+            "image_url": None,
         }
     }
     if lora_url:

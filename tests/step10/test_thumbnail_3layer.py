@@ -6,6 +6,7 @@
 - _composite_character() 오른쪽 중앙 배치
 - generate_thumbnail() 성공/폴백/플레이스홀더 흐름
 - generate_thumbnail_from_topic() 워크플로우
+- select_costume_for_topic() Gemini 분석 + 폴백 체계
 """
 from unittest.mock import MagicMock, patch
 
@@ -146,7 +147,7 @@ class TestGenerateThumbnail:
         _make_base_image().save(str(bg))
 
         with patch("src.step10.thumbnail_generator.generate_background_illustration",
-                   return_value=bg), \
+                   return_value=(bg, None)), \
              patch("src.adapters.runpod_sd.generate_character_to_file",
                    return_value=False):
             ok = generate_thumbnail("CH1", "금리 인상", out, run_id="test")
@@ -161,7 +162,7 @@ class TestGenerateThumbnail:
         _make_base_image().save(str(base))
 
         with patch("src.step10.thumbnail_generator.generate_background_illustration",
-                   return_value=None), \
+                   return_value=(None, None)), \
              patch("src.step10.thumbnail_generator.CHANNEL_BASE_TEMPLATES",
                    {"CH1": base}):
             ok = generate_thumbnail("CH1", "금리 인상", out, run_id="test")
@@ -174,7 +175,7 @@ class TestGenerateThumbnail:
         out = tmp_path / "thumb.png"
 
         with patch("src.step10.thumbnail_generator.generate_background_illustration",
-                   return_value=None), \
+                   return_value=(None, None)), \
              patch("src.step10.thumbnail_generator.CHANNEL_BASE_TEMPLATES", {}):
             ok = generate_thumbnail("CH99", "테스트", out, run_id="test")
 
@@ -189,12 +190,31 @@ class TestGenerateThumbnail:
         _make_base_image().save(str(bg))
 
         with patch("src.step10.thumbnail_generator.generate_background_illustration",
-                   return_value=bg), \
+                   return_value=(bg, None)), \
              patch("src.adapters.runpod_sd.generate_character_to_file",
                    return_value=False):
             ok = generate_thumbnail(ch_id, "테스트 주제", out, run_id="test")
 
         assert ok is True
+
+    def test_parody_costume_skips_extract_character_keywords(self, tmp_path):
+        """패러디 의상 있으면 extract_character_keywords 호출하지 않음."""
+        out = tmp_path / "thumb.png"
+        bg = tmp_path / "_episode_bg.png"
+        _make_base_image().save(str(bg))
+        parody_kw = "Iron Man armor suit, arc reactor glow"
+
+        mock_extract = MagicMock()
+
+        with patch("src.step10.thumbnail_generator.generate_background_illustration",
+                   return_value=(bg, parody_kw)), \
+             patch("src.adapters.runpod_sd.generate_character_to_file",
+                   return_value=False), \
+             patch("src.step08.character_manager.extract_character_keywords",
+                   mock_extract):
+            generate_thumbnail("CH1", "주식 폭락", out, run_id="test")
+
+        mock_extract.assert_not_called()
 
 
 # ── 6. generate_thumbnail_from_topic ─────────────────────────────────────────
@@ -229,3 +249,66 @@ class TestGenerateThumbnailFromTopic:
             generate_thumbnail_from_topic("CH1", "run_001", topic)
 
         assert captured["title"] == "금리 인상"
+
+
+class TestExtractCharacterKeywords:
+    """extract_character_keywords() — Gemini 자유 추출 + 폴백 체계."""
+
+    def test_no_api_key_returns_channel_default(self, monkeypatch):
+        """GEMINI_API_KEY 없으면 채널 기본 키워드 반환."""
+        from src.step08.character_manager import extract_character_keywords
+
+        monkeypatch.delenv("GEMINI_API_KEY", raising=False)
+        result = extract_character_keywords("CH1", "미국 금리 인상의 진짜 이유")
+        assert "business suit" in result
+
+    def test_no_api_key_ch5_default(self, monkeypatch):
+        """CH5 API 키 없음 → detective 기본 키워드."""
+        from src.step08.character_manager import extract_character_keywords
+
+        monkeypatch.delenv("GEMINI_API_KEY", raising=False)
+        result = extract_character_keywords("CH5", "어떤 주제든")
+        assert "detective" in result
+
+    def test_gemini_success_returns_keywords(self, monkeypatch):
+        """Gemini 성공 시 추출 키워드 반환."""
+        from src.step08.character_manager import extract_character_keywords
+
+        monkeypatch.setenv("GEMINI_API_KEY", "fake-key")
+
+        mock_response = MagicMock()
+        mock_response.text = "holding red apple, lab coat, surprised expression"
+        mock_client = MagicMock()
+        mock_client.models.generate_content.return_value = mock_response
+
+        with patch("google.genai.Client", return_value=mock_client):
+            result = extract_character_keywords("CH2", "뉴턴의 사과와 중력 발견")
+
+        assert result == "holding red apple, lab coat, surprised expression"
+
+    def test_gemini_failure_returns_channel_default(self, monkeypatch):
+        """Gemini 오류 시 채널 기본 키워드 반환."""
+        from src.step08.character_manager import extract_character_keywords
+
+        monkeypatch.setenv("GEMINI_API_KEY", "fake-key")
+
+        with patch("google.genai.Client", side_effect=Exception("API 오류")):
+            result = extract_character_keywords("CH7", "2차 세계대전 전투 전략")
+
+        assert "military" in result
+
+    def test_gemini_empty_response_returns_channel_default(self, monkeypatch):
+        """Gemini가 빈 텍스트 반환 시 채널 기본 키워드 폴백."""
+        from src.step08.character_manager import extract_character_keywords
+
+        monkeypatch.setenv("GEMINI_API_KEY", "fake-key")
+
+        mock_response = MagicMock()
+        mock_response.text = "   "
+        mock_client = MagicMock()
+        mock_client.models.generate_content.return_value = mock_response
+
+        with patch("google.genai.Client", return_value=mock_client):
+            result = extract_character_keywords("CH6", "조선 시대 왕의 비밀")
+
+        assert "joseon" in result or "hanbok" in result

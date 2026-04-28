@@ -365,7 +365,7 @@ def generate_thumbnail(
     """
     # ── L1: 배경 전용 일러스트 ────────────────────────────────────────────────
     bg_path = output_path.parent / "_episode_bg.png"
-    bg_result = generate_background_illustration(
+    bg_result, parody_costume = generate_background_illustration(
         channel_id, title, run_id, bg_path, force_parody=force_parody
     )
 
@@ -395,12 +395,17 @@ def generate_thumbnail(
         from src.adapters.runpod_sd import generate_character_to_file
         from src.step08.character_manager import (
             build_loomix_char_prompt,
-            select_costume_for_topic,
+            extract_character_keywords,
         )
 
-        costume = select_costume_for_topic(channel_id, title)
+        # 패러디 감지 시 L1의 mascot_costume 우선 사용 — Gemini 호출 생략
+        if parody_costume:
+            character_keywords = parody_costume
+            logger.info(f"[STEP10] 패러디 의상 적용: {character_keywords!r}")
+        else:
+            character_keywords = extract_character_keywords(channel_id, title)
         char_prompts = build_loomix_char_prompt(
-            channel_id, expression="surprised", costume=costume
+            channel_id, expression="surprised", character_keywords=character_keywords
         )
         char_path = output_path.parent / "_episode_char.png"
         char_ok = generate_character_to_file(
@@ -413,7 +418,7 @@ def generate_thumbnail(
         )
         if char_ok and char_path.exists():
             char_img = _remove_background(Image.open(char_path))
-            logger.info(f"[STEP10] L2 캐릭터 준비: 의상={costume}")
+            logger.info(f"[STEP10] L2 캐릭터 준비: 키워드={character_keywords!r}")
     except Exception as e:
         logger.warning(f"[STEP10] L2 캐릭터 생성 실패 (L1+L3 만 사용): {e}")
 

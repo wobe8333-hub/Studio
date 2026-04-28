@@ -141,10 +141,10 @@ CHARACTER_PROFILES: Dict[str, Dict] = {
         "name": "워메이징",
         "gender": "male",
         "style": "cute_brave",
-        "base_prompt": "cute doodle style military general character, victory pose with raised fist, red military color scheme, white background, Korean war history YouTube, simple outlines",
+        "base_prompt": "single cute doodle character, military general uniform, standing alone, simple black outlines, pure white background, Korean war history YouTube, isolated figure",
         "lora_name": "ch7_warhistory_character",
-        "seed": 42007,
-        "negative_prompt": "ugly, deformed, nsfw, violence, realistic",
+        "seed": 42701,
+        "negative_prompt": "ugly, deformed, nsfw, realistic, tiling, repeated pattern, multiple characters, collage, grid, mosaic, duplicates",
     },
 }
 
@@ -219,77 +219,72 @@ def get_character_name(channel_id: str) -> str:
     return CHARACTER_PROFILES.get(channel_id, {}).get("name", "캐릭터")
 
 
-# ── 의상 시스템 (142장 실측 분석 기반) ────────────────────────────────────────
-# graduation_cap 48% / none 30% / astronaut 5% / chef_hat 3% / suit_tie 3%
-COSTUME_PROMPTS: Dict[str, str] = {
-    "graduation_cap": "wearing graduation cap and academic gown, holding diploma scroll",
-    "suit_tie":       "wearing neat business suit with necktie, formal professional attire",
-    "chef_hat":       "wearing tall white chef hat and apron, holding cooking utensil",
-    "astronaut":      "wearing astronaut space suit with helmet, space gear",
-    "detective":      "wearing detective trench coat and deerstalker hat, holding magnifying glass",
-    "joseon_gat":     "wearing traditional Korean joseon black gat hat and hanbok",
-    "military":       "wearing military uniform with medals and epaulettes",
-    "none":           "",
-}
+# ── 캐릭터 키워드 시스템 ──────────────────────────────────────────────────────
+# Gemini가 주제에서 소품/의상/포즈를 자유 형식 영어 키워드로 추출.
+# API 실패 시 채널 기본 키워드 사용.
 
-# 주제 키워드 → 의상 매핑
-TOPIC_COSTUME_MAP: Dict[str, str] = {
-    # 경제·재테크
-    "투자": "suit_tie",   "주식": "suit_tie",   "금리": "suit_tie",
-    "재테크": "suit_tie", "월급": "suit_tie",   "연봉": "suit_tie",
-    "부동산": "suit_tie", "청약": "suit_tie",   "세금": "suit_tie",
-    "경제": "suit_tie",   "증권": "suit_tie",   "펀드": "suit_tie",
-    # 과학·우주·기술
-    "우주": "astronaut",  "화성": "astronaut",  "달": "astronaut",
-    "로켓": "astronaut",  "위성": "astronaut",  "NASA": "astronaut",
-    "AI": "graduation_cap",     "과학": "graduation_cap", "물리": "graduation_cap",
-    "양자": "graduation_cap",   "수학": "graduation_cap", "연구": "graduation_cap",
-    # 심리·교육
-    "심리": "graduation_cap",   "공부": "graduation_cap", "학교": "graduation_cap",
-    "졸업": "graduation_cap",   "교육": "graduation_cap",
-    # 역사·문화
-    "조선": "joseon_gat",  "고려": "joseon_gat",  "삼국": "joseon_gat",
-    "왕": "joseon_gat",    "역사": "joseon_gat",  "조상": "joseon_gat",
-    # 전쟁·군사
-    "전쟁": "military",   "군사": "military",   "전투": "military",
-    "장군": "military",   "군대": "military",   "무기": "military",
-    # 미스터리·범죄
-    "사건": "detective",  "범죄": "detective",  "미스터리": "detective",
-    "음모": "detective",  "비밀": "detective",  "탐정": "detective",
-    # 음식
-    "요리": "chef_hat",   "음식": "chef_hat",   "맛집": "chef_hat",
-    "요식": "chef_hat",
-}
-
-# 채널 기본 의상 (키워드 미매칭 시 사용)
-CHANNEL_DEFAULT_COSTUME: Dict[str, str] = {
-    "CH1": "suit_tie",        # 경제
-    "CH2": "graduation_cap",  # 과학
-    "CH3": "suit_tie",        # 부동산
-    "CH4": "graduation_cap",  # 심리
-    "CH5": "detective",       # 미스터리
-    "CH6": "joseon_gat",      # 역사
-    "CH7": "military",        # 전쟁사
+CHANNEL_DEFAULT_KEYWORDS: Dict[str, str] = {
+    "CH1": "holding money bag, business suit, confident pose",
+    "CH2": "lab coat, holding magnifying glass, curious expression",
+    "CH3": "holding house model, business casual, explaining gesture",
+    "CH4": "thinking pose, casual clothing, gentle expression",
+    "CH5": "detective coat, holding magnifying glass, mysterious expression",
+    "CH6": "joseon hanbok, holding scroll, wise expression",
+    "CH7": "military uniform, holding binoculars, determined expression",
 }
 
 
-def select_costume_for_topic(channel_id: str, topic: str) -> str:
-    """토픽 기반 의상 자동 선택.
+def extract_character_keywords(channel_id: str, topic: str) -> str:
+    """Gemini로 주제에서 캐릭터 소품/의상/포즈 키워드를 자유 형식으로 추출.
 
-    키워드 매칭 우선, 없으면 채널 기본 의상.
+    반환: 영어 키워드 문자열 (SD XL 프롬프트에 직접 삽입)
+    예) "holding red apple, lab coat, surprised expression"
+    실패 시 CHANNEL_DEFAULT_KEYWORDS 폴백.
     """
-    for keyword, costume in TOPIC_COSTUME_MAP.items():
-        if keyword in topic:
-            return costume
-    return CHANNEL_DEFAULT_COSTUME.get(channel_id, "graduation_cap")
+    import os
+
+    api_key = os.getenv("GEMINI_API_KEY")
+    if api_key:
+        try:
+            from google import genai
+            from google.genai import types
+
+            prompt = (
+                f"YouTube thumbnail character design.\n"
+                f"Video topic (Korean): {topic}\n\n"
+                f"Extract 2-4 English keywords describing the character's "
+                f"costume, props, and pose that best match this topic.\n"
+                f"Output format: comma-separated English keywords only.\n"
+                f"Example: 'holding red apple, lab coat, surprised expression'\n"
+                f"Keep it concise and visually specific."
+            )
+            model_name = os.getenv("GEMINI_TEXT_MODEL", "gemini-2.5-flash")
+            client = genai.Client(api_key=api_key)
+            response = client.models.generate_content(
+                model=model_name,
+                contents=prompt,
+                config=types.GenerateContentConfig(
+                    temperature=0.0,
+                    max_output_tokens=60,
+                ),
+            )
+            raw = response.text or ""
+            keywords = raw.strip().strip('"').strip("'")
+            if keywords:
+                logger.info(f"[CharKeywords] {topic!r} → {keywords}")
+                return keywords
+        except Exception as e:
+            logger.warning(f"[CharKeywords] Gemini 실패: {e} → 채널 기본값")
+
+    return CHANNEL_DEFAULT_KEYWORDS.get(channel_id, "casual clothing, neutral pose")
 
 
 def build_loomix_char_prompt(
     channel_id: str,
     expression: str = "surprised",
-    costume: str = "graduation_cap",
+    character_keywords: str = "",
 ) -> Dict[str, str]:
-    """썸네일 L2 레이어용 캐릭터 프롬프트 (의상 포함, 순수 흰 배경).
+    """썸네일 L2 레이어용 캐릭터 프롬프트 (자유 키워드 포함, 순수 흰 배경).
 
     RunPod SD XL + LoRA 로 생성 후 배경 제거 → L2 레이어로 합성.
 
@@ -299,7 +294,7 @@ def build_loomix_char_prompt(
     profile = CHARACTER_PROFILES.get(channel_id, CHARACTER_PROFILES["CH1"])
     base = profile["base_prompt"]
     expr_mod = EXPRESSION_MODIFIERS.get(expression, "surprised wide eyes, open mouth")
-    costume_mod = COSTUME_PROMPTS.get(costume, "")
+    costume_mod = character_keywords
 
     parts = [
         base,
@@ -314,6 +309,7 @@ def build_loomix_char_prompt(
         "negative": (
             profile.get("negative_prompt", "ugly, deformed, nsfw")
             + ", complex background, scenery, landscape, gradient background"
+            + ", tiling, repeated pattern, multiple characters, grid, collage, duplicates"
         ),
         "seed": profile.get("seed", 42),
     }

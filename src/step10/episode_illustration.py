@@ -782,14 +782,15 @@ def generate_background_illustration(
     *,
     force_parody: bool = False,
     client: Optional[genai.Client] = None,
-) -> Path | None:
+) -> tuple[Path | None, str | None]:
     """배경 전용 일러스트 생성 (캐릭터 없음, A안).
 
     L2 캐릭터를 오른쪽에 합성하기 위해 배경만 생성.
     스타일 레퍼런스만 전달 (마스코트 레퍼런스 제외).
 
     Returns:
-        성공 시 output_path, 실패 시 None
+        (output_path | None, parody_costume | None)
+        parody_costume: 패러디 감지 시 mascot_costume 키워드 문자열, 아니면 None
     """
     ref_dir = _ROOT / "assets" / "references"
     style_refs = [
@@ -801,10 +802,19 @@ def generate_background_illustration(
     refs = [p for p in style_refs if os.path.exists(str(p))]
     if not refs:
         logger.warning(f"[STEP10-BG] 스타일 레퍼런스 없음 ({channel}) — 폴백 진행")
-        return None
+        return None, None
 
     scene_desc = _generate_thumbnail_scene(channel, topic, force_parody=force_parody)
     prompt = _build_background_prompt(channel, topic, scene_desc=scene_desc)
+
+    # 패러디 의상 키워드 추출 (배경 생성 성공/실패와 무관하게 L2에 전달)
+    parody_costume: str | None = None
+    _, parody_id = _parse_parody_tag(scene_desc)
+    if parody_id:
+        entry = next((e for e in _load_parody_bank() if e["id"] == parody_id), None)
+        if entry:
+            parody_costume = entry.get("mascot_costume")
+            logger.info(f"[STEP10-BG] 패러디 의상 추출: {parody_costume!r} ({parody_id})")
 
     if client is None:
         client = _make_client()
@@ -834,7 +844,7 @@ def generate_background_illustration(
                         f"({len(part.inline_data.data):,} bytes, 시도={attempt+1})"
                     )
                     _record_cost(run_id, channel, calls, True)
-                    return output_path
+                    return output_path, parody_costume
 
             logger.warning(f"[STEP10-BG] 이미지 응답 없음 (시도 {attempt+1}/{max_retries+1})")
 
@@ -847,7 +857,7 @@ def generate_background_illustration(
 
     _record_cost(run_id, channel, calls, False)
     logger.warning(f"[STEP10-BG] {max_retries+1}회 모두 실패 → 폴백 ({channel})")
-    return None
+    return None, parody_costume
 
 
 def generate_episode_illustration(
